@@ -32,7 +32,9 @@
         ]
     },
     "require": {
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "webignition/php-basil-models": ">=0.52.0,<1",
+        "webignition/php-basil-model-validator": ">=0.4.0,<1"
     },
     "require-dev": {
         "phpunit/phpunit": "~8.0",
