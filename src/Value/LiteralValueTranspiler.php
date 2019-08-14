@@ -2,19 +2,19 @@
 
 namespace webignition\BasilTranspiler\Value;
 
+use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
 
-class LiteralStringValueTranspiler implements ValueTypeTranspilerInterface
+class LiteralValueTranspiler implements ValueTypeTranspilerInterface
 {
     public static function createTranspiler(): ValueTypeTranspilerInterface
     {
-        return new LiteralStringValueTranspiler();
+        return new LiteralValueTranspiler();
     }
 
     public function handles(ValueInterface $value): bool
     {
-        return ValueTypes::STRING === $value->getType();
+        return $value instanceof LiteralValue;
     }
 
     public function transpile(ValueInterface $value): ?string

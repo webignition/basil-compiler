@@ -15,13 +15,13 @@ use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
-use webignition\BasilTranspiler\Value\LiteralStringValueTranspiler;
+use webignition\BasilTranspiler\Value\LiteralValueTranspiler;
 use webignition\BasilTranspiler\Value\ValueTypeTranspilerInterface;
 
-class LiteralStringValueTranspilerTest extends \PHPUnit\Framework\TestCase
+class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var LiteralStringValueTranspiler|ValueTypeTranspilerInterface
+     * @var LiteralValueTranspiler|ValueTypeTranspilerInterface
      */
     private $transpiler;
 
@@ -29,7 +29,7 @@ class LiteralStringValueTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = LiteralStringValueTranspiler::createTranspiler();
+        $this->transpiler = LiteralValueTranspiler::createTranspiler();
     }
 
     /**
@@ -50,14 +50,6 @@ class LiteralStringValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'value' => LiteralValue::createStringValue('value'),
                 'expectedHandles' => $expectedHandles,
             ],
-        ];
-    }
-
-    public function handlesDoesNotHandleDataProvider(): array
-    {
-        $expectedHandles = false;
-
-        return [
             'literal css selector' => [
                 'value' => LiteralValue::createCssSelectorValue('.selector'),
                 'expectedHandles' => $expectedHandles,
@@ -66,6 +58,14 @@ class LiteralStringValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'value' => LiteralValue::createCssSelectorValue('//h1'),
                 'expectedHandles' => $expectedHandles,
             ],
+        ];
+    }
+
+    public function handlesDoesNotHandleDataProvider(): array
+    {
+        $expectedHandles = false;
+
+        return [
             'browser object property' => [
                 'value' => new ObjectValue(ValueTypes::BROWSER_OBJECT_PROPERTY, '', '', ''),
                 'expectedHandles' => $expectedHandles,
@@ -118,6 +118,8 @@ class LiteralStringValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileDoesNotHandle()
     {
-        $this->assertNull($this->transpiler->transpile(LiteralValue::createCssSelectorValue('.selector')));
+        $value = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
+
+        $this->assertNull($this->transpiler->transpile($value));
     }
 }
