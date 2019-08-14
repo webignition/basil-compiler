@@ -7,8 +7,10 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
 use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\UnknownValueTypeException;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 
@@ -44,6 +46,15 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'literal string value: integer' => [
                 'value' => LiteralValue::createStringValue('100'),
                 'expectedString' => '"100"',
+            ],
+            'browser object property: size' => [
+                'value' => new ObjectValue(
+                    ValueTypes::BROWSER_OBJECT_PROPERTY,
+                    '$browser.size',
+                    ObjectNames::BROWSER,
+                    'size'
+                ),
+                'expectedString' => 'self::$client->getWebDriver()->manage()->window()->getSize()',
             ],
         ];
     }
