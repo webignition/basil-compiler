@@ -26,6 +26,7 @@ class ValueTranspiler
         return new ValueTranspiler([
             LiteralValueTranspiler::createTranspiler(),
             BrowserObjectValueTranspiler::createTranspiler(),
+            PageObjectValueTranspiler::createTranspiler(),
         ]);
     }
 
