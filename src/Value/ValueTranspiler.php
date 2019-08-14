@@ -27,6 +27,7 @@ class ValueTranspiler
             LiteralValueTranspiler::createTranspiler(),
             BrowserObjectValueTranspiler::createTranspiler(),
             PageObjectValueTranspiler::createTranspiler(),
+            EnvironmentParameterValueTranspiler::createTranspiler(),
         ]);
     }
 
