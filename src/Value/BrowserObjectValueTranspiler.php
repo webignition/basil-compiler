@@ -6,16 +6,15 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
-use webignition\BasilTranspiler\UnknownObjectPropertyException;
 
-class BrowserObjectValueTranspiler implements ValueTypeTranspilerInterface
+class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements ValueTypeTranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
+    const TRANSPILED_SIZE = 'self::$client->getWebDriver()->manage()->window()->getSize()';
 
-    public static function createTranspiler(): ValueTypeTranspilerInterface
-    {
-        return new BrowserObjectValueTranspiler();
-    }
+    private $transpiledValueMap = [
+        self::PROPERTY_NAME_SIZE => self::TRANSPILED_SIZE,
+    ];
 
     public function handles(ValueInterface $value): bool
     {
@@ -30,23 +29,8 @@ class BrowserObjectValueTranspiler implements ValueTypeTranspilerInterface
         return ObjectNames::BROWSER === $value->getObjectName();
     }
 
-    /**
-     * @param ValueInterface $value
-     *
-     * @return string|null
-     *
-     * @throws UnknownObjectPropertyException
-     */
-    public function transpile(ValueInterface $value): ?string
+    protected function getTranspiledValueMap(): array
     {
-        if (!$this->handles($value) || !$value instanceof ObjectValueInterface) {
-            return null;
-        }
-
-        if (self::PROPERTY_NAME_SIZE === $value->getObjectProperty()) {
-            return 'self::$client->getWebDriver()->manage()->window()->getSize()';
-        }
-
-        throw new UnknownObjectPropertyException($value);
+        return $this->transpiledValueMap;
     }
 }

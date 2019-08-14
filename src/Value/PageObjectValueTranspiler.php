@@ -6,9 +6,8 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
-use webignition\BasilTranspiler\UnknownObjectPropertyException;
 
-class PageObjectValueTranspiler implements ValueTypeTranspilerInterface
+class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements ValueTypeTranspilerInterface
 {
     const PROPERTY_NAME_TITLE = 'title';
     const PROPERTY_NAME_URL = 'url';
@@ -19,11 +18,6 @@ class PageObjectValueTranspiler implements ValueTypeTranspilerInterface
         self::PROPERTY_NAME_TITLE => self::TRANSPILED_TITLE,
         self::PROPERTY_NAME_URL => self::TRANSPILED_URL,
     ];
-
-    public static function createTranspiler(): ValueTypeTranspilerInterface
-    {
-        return new PageObjectValueTranspiler();
-    }
 
     public function handles(ValueInterface $value): bool
     {
@@ -38,25 +32,8 @@ class PageObjectValueTranspiler implements ValueTypeTranspilerInterface
         return ObjectNames::PAGE === $value->getObjectName();
     }
 
-    /**
-     * @param ValueInterface $value
-     *
-     * @return string|null
-     *
-     * @throws UnknownObjectPropertyException
-     */
-    public function transpile(ValueInterface $value): ?string
+    protected function getTranspiledValueMap(): array
     {
-        if (!$this->handles($value) || !$value instanceof ObjectValueInterface) {
-            return null;
-        }
-
-        $transpiledValue = $this->transpiledValueMap[$value->getObjectProperty()] ?? null;
-
-        if (is_string($transpiledValue)) {
-            return $transpiledValue;
-        }
-
-        throw new UnknownObjectPropertyException($value);
+        return $this->transpiledValueMap;
     }
 }
