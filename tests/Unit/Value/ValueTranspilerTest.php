@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
+use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
@@ -73,6 +74,13 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     'url'
                 ),
                 'expectedString' => 'self::$client->getCurrentURL()',
+            ],
+            'environment parameter value' => [
+                'value' => new EnvironmentValue(
+                    '$env.KEY',
+                    'KEY'
+                ),
+                'expectedString' => '$_ENV[\'KEY\']',
             ],
         ];
     }
