@@ -24,7 +24,7 @@ class ValueTranspiler
     public static function createTranspiler(): ValueTranspiler
     {
         return new ValueTranspiler([
-            LiteralStringValueTranspiler::createTranspiler(),
+            LiteralValueTranspiler::createTranspiler(),
         ]);
     }
 
