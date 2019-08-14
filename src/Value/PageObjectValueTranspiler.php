@@ -7,13 +7,16 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 
-class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements ValueTypeTranspilerInterface
+class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements ValueTypeTranspilerInterface
 {
-    const PROPERTY_NAME_SIZE = 'size';
-    const TRANSPILED_SIZE = 'self::$client->getWebDriver()->manage()->window()->getSize()';
+    const PROPERTY_NAME_TITLE = 'title';
+    const PROPERTY_NAME_URL = 'url';
+    const TRANSPILED_TITLE = 'self::$client->getTitle()';
+    const TRANSPILED_URL = 'self::$client->getCurrentURL()';
 
     private $transpiledValueMap = [
-        self::PROPERTY_NAME_SIZE => self::TRANSPILED_SIZE,
+        self::PROPERTY_NAME_TITLE => self::TRANSPILED_TITLE,
+        self::PROPERTY_NAME_URL => self::TRANSPILED_URL,
     ];
 
     public function handles(ValueInterface $value): bool
@@ -22,11 +25,11 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
             return false;
         }
 
-        if (ValueTypes::BROWSER_OBJECT_PROPERTY !== $value->getType()) {
+        if (ValueTypes::PAGE_OBJECT_PROPERTY !== $value->getType()) {
             return false;
         }
 
-        return ObjectNames::BROWSER === $value->getObjectName();
+        return ObjectNames::PAGE === $value->getObjectName();
     }
 
     protected function getTranspiledValueMap(): array

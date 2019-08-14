@@ -56,6 +56,24 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedString' => 'self::$client->getWebDriver()->manage()->window()->getSize()',
             ],
+            'page object property: title' => [
+                'value' => new ObjectValue(
+                    ValueTypes::PAGE_OBJECT_PROPERTY,
+                    '$page.title',
+                    ObjectNames::PAGE,
+                    'title'
+                ),
+                'expectedString' => 'self::$client->getTitle()',
+            ],
+            'page object property: url' => [
+                'value' => new ObjectValue(
+                    ValueTypes::PAGE_OBJECT_PROPERTY,
+                    '$page.url',
+                    ObjectNames::PAGE,
+                    'url'
+                ),
+                'expectedString' => 'self::$client->getCurrentURL()',
+            ],
         ];
     }
 
