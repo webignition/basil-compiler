@@ -45,7 +45,11 @@ class ValueTranspiler
         $valueTypeTranspiler = $this->findValueTypeTranspiler($value);
 
         if ($valueTypeTranspiler instanceof ValueTypeTranspilerInterface) {
-            return $valueTypeTranspiler->transpile($value);
+            $transpiledValue = $valueTypeTranspiler->transpile($value);
+
+            if (is_string($transpiledValue)) {
+                return $transpiledValue;
+            }
         }
 
         throw new UnknownValueTypeException($value);
