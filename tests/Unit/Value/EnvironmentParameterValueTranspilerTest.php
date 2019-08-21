@@ -6,20 +6,29 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Identifier\AttributeIdentifier;
-use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\AttributeValue;
-use webignition\BasilModel\Value\ElementValue;
-use webignition\BasilModel\Value\EnvironmentValue;
-use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\Tests\DataProvider\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\EnvironmentParameterValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\LiteralCssSelectorValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\LiteralStringValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\LiteralXpathExpressionValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\PageObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\EnvironmentParameterValueTranspiler;
 
 class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
+    use BrowserObjectValueDataProviderTrait;
+    use EnvironmentParameterValueDataProviderTrait;
+    use LiteralCssSelectorValueDataProviderTrait;
+    use LiteralStringValueDataProviderTrait;
+    use LiteralXpathExpressionValueDataProviderTrait;
+    use PageObjectValueDataProviderTrait;
+    use UnhandledValueDataProviderTrait;
+
     /**
      * @var EnvironmentParameterValueTranspiler
      */
@@ -33,98 +42,33 @@ class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCas
     }
 
     /**
-     * @dataProvider handlesDoesHandleDataProvider
-     * @dataProvider handlesDoesNotHandleDataProvider
+     * @dataProvider environmentParameterValueDataProvider
      */
-    public function testHandles(ValueInterface $value, bool $expectedHandles)
+    public function testHandlesDoesHandle(ValueInterface $value)
     {
-        $this->assertSame($expectedHandles, $this->transpiler->handles($value));
+        $this->assertTrue($this->transpiler->handles($value));
     }
 
-    public function handlesDoesHandleDataProvider(): array
+    /**
+     * @dataProvider browserObjectValueDataProvider
+     * @dataProvider literalCssSelectorValueDataProvider
+     * @dataProvider literalStringValueDataProvider
+     * @dataProvider literalXpathExpressionValueDataProvider
+     * @dataProvider pageObjectValueDataProvider
+     * @dataProvider unhandledValueDataProvider
+     */
+    public function testHandlesDoesNotHandle(ValueInterface $value)
     {
-        $expectedHandles = true;
-
-        return [
-            'environment parameter' => [
-                'value' => new EnvironmentValue('', ''),
-                'expectedHandles' => $expectedHandles,
-            ],
-        ];
+        $this->assertFalse($this->transpiler->handles($value));
     }
 
-    public function handlesDoesNotHandleDataProvider(): array
+    public function testTranspileNonTranspilableModel()
     {
-        $expectedHandles = false;
+        $this->expectException(NonTranspilableModelException::class);
+        $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
 
-        return [
-            'literal string' => [
-                'value' => LiteralValue::createStringValue('value'),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'literal css selector' => [
-                'value' => LiteralValue::createCssSelectorValue('.selector'),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'literal xpath expression' => [
-                'value' => LiteralValue::createCssSelectorValue('//h1'),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'browser object property' => [
-                'value' => new ObjectValue(
-                    ValueTypes::BROWSER_OBJECT_PROPERTY,
-                    '$browser.size',
-                    ObjectNames::BROWSER,
-                    'size'
-                ),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'data parameter' => [
-                'value' => new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', ''),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'element parameter' => [
-                'value' => new ObjectValue(ValueTypes::ELEMENT_PARAMETER, '', '', ''),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'page element reference' => [
-                'value' => new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', ''),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'page object property' => [
-                'value' => new ObjectValue(ValueTypes::PAGE_OBJECT_PROPERTY, '', '', ''),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'attribute parameter' => [
-                'value' => new ObjectValue(ValueTypes::ATTRIBUTE_PARAMETER, '', '', ''),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'element identifier' => [
-                'value' => new ElementValue(
-                    new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector')
-                    )
-                ),
-                'expectedHandles' => $expectedHandles,
-            ],
-            'attribute identifier' => [
-                'value' => new AttributeValue(
-                    new AttributeIdentifier(
-                        new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.selector')
-                        ),
-                        'attribute_name'
-                    )
-                ),
-                'expectedHandles' => $expectedHandles,
-            ],
-        ];
-    }
-
-    public function testTranspileDoesNotHandle()
-    {
         $value = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
 
-        $this->assertNull($this->transpiler->transpile($value));
+        $this->transpiler->transpile($value);
     }
 }
