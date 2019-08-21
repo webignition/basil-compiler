@@ -6,5 +6,13 @@ interface TranspilerInterface
 {
     public static function createTranspiler();
     public function handles(object $model): bool;
-    public function transpile(object $model): ?string;
+
+    /**
+     * @param object $model
+     *
+     * @return string
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function transpile(object $model): string;
 }

@@ -3,8 +3,8 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
-use webignition\BasilTranspiler\UnknownValueTypeException;
 
 class ValueTranspiler implements TranspilerInterface
 {
@@ -49,27 +49,21 @@ class ValueTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return string|null
+     * @return string
      *
-     * @throws UnknownValueTypeException
+     * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): ?string
+    public function transpile(object $model): string
     {
         if ($model instanceof ValueInterface) {
             $valueTypeTranspiler = $this->findValueTypeTranspiler($model);
 
             if ($valueTypeTranspiler instanceof TranspilerInterface) {
-                $transpiledValue = $valueTypeTranspiler->transpile($model);
-
-                if (is_string($transpiledValue)) {
-                    return $transpiledValue;
-                }
+                return $valueTypeTranspiler->transpile($model);
             }
-
-            throw new UnknownValueTypeException($model);
         }
 
-        return null;
+        throw new NonTranspilableModelException($model);
     }
 
     private function findValueTypeTranspiler(ValueInterface $value): ?TranspilerInterface
