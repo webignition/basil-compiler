@@ -74,5 +74,4 @@ class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
         $this->transpiler->transpile($value);
     }
-
 }
