@@ -6,14 +6,18 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
+use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\LiteralCssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\LiteralStringValueDataProviderTrait;
@@ -25,6 +29,7 @@ use webignition\BasilTranspiler\Value\ValueTranspiler;
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserObjectValueDataProviderTrait;
+    use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralCssSelectorValueDataProviderTrait;
     use LiteralStringValueDataProviderTrait;
@@ -46,6 +51,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserObjectValueDataProvider
+     * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalCssSelectorValueDataProvider
      * @dataProvider literalStringValueDataProvider
@@ -127,6 +133,37 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     'KEY'
                 ),
                 'expectedString' => '$_ENV[\'KEY\']',
+            ],
+            'element identifier, css selector' => [
+                'value' => new ElementValue(
+                    new ElementIdentifier(
+                        LiteralValue::createCssSelectorValue('.selector')
+                    )
+                ),
+                'expectedString' => '".selector"',
+            ],
+            'element identifier, css selector with non-default position' => [
+                'value' => new ElementValue(
+                    new ElementIdentifier(
+                        LiteralValue::createCssSelectorValue('.selector'),
+                        2
+                    )
+                ),
+                'expectedString' => '".selector"',
+            ],
+            'element identifier, css selector with name' => [
+                'value' => new ElementValue(
+                    TestIdentifierFactory::createCssElementIdentifier('.selector', null, 'element_name')
+                ),
+                'expectedString' => '".selector"',
+            ],
+            'element identifier, xpath expression' => [
+                'value' => new ElementValue(
+                    new ElementIdentifier(
+                        LiteralValue::createXpathExpressionValue('//h1')
+                    )
+                ),
+                'expectedString' => '"//h1"',
             ],
         ];
     }
