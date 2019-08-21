@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler;
 
 interface TranspilerInterface
 {
-    public static function createTranspiler(): TranspilerInterface;
+    public static function createTranspiler();
     public function handles(object $model): bool;
     public function transpile(object $model): ?string;
 }

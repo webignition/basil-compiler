@@ -3,26 +3,26 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilTranspiler\TranspilerInterface;
 
-class LiteralValueTranspiler implements ValueTypeTranspilerInterface
+class LiteralValueTranspiler implements TranspilerInterface
 {
-    public static function createTranspiler(): ValueTypeTranspilerInterface
+    public static function createTranspiler(): LiteralValueTranspiler
     {
         return new LiteralValueTranspiler();
     }
 
-    public function handles(ValueInterface $value): bool
+    public function handles(object $model): bool
     {
-        return $value instanceof LiteralValue;
+        return $model instanceof LiteralValue;
     }
 
-    public function transpile(ValueInterface $value): ?string
+    public function transpile(object $model): ?string
     {
-        if (!$this->handles($value)) {
+        if (!$this->handles($model)) {
             return null;
         }
 
-        return (string) $value;
+        return (string) $model;
     }
 }

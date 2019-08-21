@@ -6,8 +6,9 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\TranspilerInterface;
 
-class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements ValueTypeTranspilerInterface
+class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
     const TRANSPILED_SIZE = 'self::$client->getWebDriver()->manage()->window()->getSize()';
@@ -16,17 +17,22 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
         self::PROPERTY_NAME_SIZE => self::TRANSPILED_SIZE,
     ];
 
-    public function handles(ValueInterface $value): bool
+    public static function createTranspiler(): BrowserObjectValueTranspiler
     {
-        if (!$value instanceof ObjectValueInterface) {
+        return new BrowserObjectValueTranspiler();
+    }
+
+    public function handles(object $model): bool
+    {
+        if (!$model instanceof ObjectValueInterface) {
             return false;
         }
 
-        if (ValueTypes::BROWSER_OBJECT_PROPERTY !== $value->getType()) {
+        if (ValueTypes::BROWSER_OBJECT_PROPERTY !== $model->getType()) {
             return false;
         }
 
-        return ObjectNames::BROWSER === $value->getObjectName();
+        return ObjectNames::BROWSER === $model->getObjectName();
     }
 
     protected function getTranspiledValueMap(): array
