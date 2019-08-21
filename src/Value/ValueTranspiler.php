@@ -49,7 +49,7 @@ class ValueTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return string|null
+     * @return string
      *
      * @throws NonTranspilableModelException
      */
