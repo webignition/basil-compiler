@@ -43,13 +43,6 @@ trait UnhandledValueDataProviderTrait
             'unhandled value: attribute parameter' => [
                 'value' => new ObjectValue(ValueTypes::ATTRIBUTE_PARAMETER, '', '', ''),
             ],
-            'unhandled value: element identifier' => [
-                'value' => new ElementValue(
-                    new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector')
-                    )
-                ),
-            ],
             'unhandled value: attribute identifier' => [
                 'value' => new AttributeValue(
                     new AttributeIdentifier(

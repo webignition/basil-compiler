@@ -29,6 +29,7 @@ class ValueTranspiler implements TranspilerInterface
             BrowserObjectValueTranspiler::createTranspiler(),
             PageObjectValueTranspiler::createTranspiler(),
             EnvironmentParameterValueTranspiler::createTranspiler(),
+            ElementValueTranspiler::createTranspiler(),
         ]);
     }
 
