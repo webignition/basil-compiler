@@ -4,37 +4,37 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\TranspilerInterface;
 
-class EnvironmentParameterValueTranspiler implements ValueTypeTranspilerInterface
+class EnvironmentParameterValueTranspiler implements TranspilerInterface
 {
     private const MAPPED_VALUE = '$_ENV[\'%s\']';
 
-    public static function createTranspiler(): ValueTypeTranspilerInterface
+    public static function createTranspiler(): EnvironmentParameterValueTranspiler
     {
         return new EnvironmentParameterValueTranspiler();
     }
 
-    public function handles(ValueInterface $value): bool
+    public function handles(object $model): bool
     {
-        if (!$value instanceof ObjectValueInterface) {
+        if (!$model instanceof ObjectValueInterface) {
             return false;
         }
 
-        if (ValueTypes::ENVIRONMENT_PARAMETER !== $value->getType()) {
+        if (ValueTypes::ENVIRONMENT_PARAMETER !== $model->getType()) {
             return false;
         }
 
-        return ObjectNames::ENVIRONMENT === $value->getObjectName();
+        return ObjectNames::ENVIRONMENT === $model->getObjectName();
     }
 
-    public function transpile(ValueInterface $value): ?string
+    public function transpile(object $model): ?string
     {
-        if (!$this->handles($value) || !$value instanceof ObjectValueInterface) {
+        if (!$this->handles($model) || !$model instanceof ObjectValueInterface) {
             return null;
         }
 
-        return sprintf(self::MAPPED_VALUE, $value->getObjectProperty());
+        return sprintf(self::MAPPED_VALUE, $model->getObjectProperty());
     }
 }

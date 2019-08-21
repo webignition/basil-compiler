@@ -16,12 +16,11 @@ use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Value\LiteralValueTranspiler;
-use webignition\BasilTranspiler\Value\ValueTypeTranspilerInterface;
 
 class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var LiteralValueTranspiler|ValueTypeTranspilerInterface
+     * @var LiteralValueTranspiler
      */
     private $transpiler;
 

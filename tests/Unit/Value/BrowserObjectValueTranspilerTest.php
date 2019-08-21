@@ -18,12 +18,11 @@ use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;
 use webignition\BasilTranspiler\Value\BrowserObjectValueTranspiler;
-use webignition\BasilTranspiler\Value\ValueTypeTranspilerInterface;
 
 class BrowserObjectValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var BrowserObjectValueTranspiler|ValueTypeTranspilerInterface
+     * @var BrowserObjectValueTranspiler
      */
     private $transpiler;
 

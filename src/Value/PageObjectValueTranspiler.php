@@ -4,10 +4,10 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\TranspilerInterface;
 
-class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements ValueTypeTranspilerInterface
+class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_TITLE = 'title';
     const PROPERTY_NAME_URL = 'url';
@@ -19,17 +19,22 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
         self::PROPERTY_NAME_URL => self::TRANSPILED_URL,
     ];
 
-    public function handles(ValueInterface $value): bool
+    public static function createTranspiler(): PageObjectValueTranspiler
     {
-        if (!$value instanceof ObjectValueInterface) {
+        return new PageObjectValueTranspiler();
+    }
+
+    public function handles(object $model): bool
+    {
+        if (!$model instanceof ObjectValueInterface) {
             return false;
         }
 
-        if (ValueTypes::PAGE_OBJECT_PROPERTY !== $value->getType()) {
+        if (ValueTypes::PAGE_OBJECT_PROPERTY !== $model->getType()) {
             return false;
         }
 
-        return ObjectNames::PAGE === $value->getObjectName();
+        return ObjectNames::PAGE === $model->getObjectName();
     }
 
     protected function getTranspiledValueMap(): array

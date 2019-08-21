@@ -17,12 +17,11 @@ use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Value\EnvironmentParameterValueTranspiler;
-use webignition\BasilTranspiler\Value\ValueTypeTranspilerInterface;
 
 class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var EnvironmentParameterValueTranspiler|ValueTypeTranspilerInterface
+     * @var EnvironmentParameterValueTranspiler
      */
     private $transpiler;
 
