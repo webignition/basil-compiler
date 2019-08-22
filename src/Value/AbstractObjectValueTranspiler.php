@@ -9,20 +9,21 @@ use webignition\BasilTranspiler\UnknownObjectPropertyException;
 
 abstract class AbstractObjectValueTranspiler implements TranspilerInterface
 {
-    abstract protected function getTranspiledValueMap(): array;
+    abstract protected function getTranspiledValueMap(array $variableNames = []): array;
 
     /**
      * @param object $model
+     * @param array $variableNames
      *
      * @return string
      *
      * @throws NonTranspilableModelException
      * @throws UnknownObjectPropertyException
      */
-    public function transpile(object $model): string
+    public function transpile(object $model, array $variableNames = []): string
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
-            $transpiledValue = $this->getTranspiledValueMap()[$model->getObjectProperty()] ?? null;
+            $transpiledValue = $this->getTranspiledValueMap($variableNames)[$model->getObjectProperty()] ?? null;
 
             if (is_string($transpiledValue)) {
                 return $transpiledValue;

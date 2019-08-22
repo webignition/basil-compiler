@@ -4,7 +4,6 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -29,7 +28,7 @@ class ElementValueTranspiler implements TranspilerInterface
         return $model instanceof ElementValueInterface;
     }
 
-    public function transpile(object $model): string
+    public function transpile(object $model, array $variableNames = []): string
     {
         if ($model instanceof ElementValueInterface) {
             $identifier = $model->getIdentifier();

@@ -49,12 +49,13 @@ class ValueTranspiler implements TranspilerInterface
 
     /**
      * @param object $model
+     * @param array $variableNames
      *
      * @return string
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): string
+    public function transpile(object $model, array $variableNames = []): string
     {
         if ($model instanceof ValueInterface) {
             $valueTypeTranspiler = $this->findValueTypeTranspiler($model);

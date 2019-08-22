@@ -37,7 +37,7 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
         return ObjectNames::PAGE === $model->getObjectName();
     }
 
-    protected function getTranspiledValueMap(): array
+    protected function getTranspiledValueMap(array $variableNames = []): array
     {
         return $this->transpiledValueMap;
     }

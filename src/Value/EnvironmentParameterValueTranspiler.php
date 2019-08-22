@@ -30,7 +30,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
         return ObjectNames::ENVIRONMENT === $model->getObjectName();
     }
 
-    public function transpile(object $model): string
+    public function transpile(object $model, array $variableNames = []): string
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             return sprintf(self::MAPPED_VALUE, $model->getObjectProperty());
