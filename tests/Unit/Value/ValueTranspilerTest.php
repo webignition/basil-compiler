@@ -25,6 +25,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\LiteralXpathExpressionValueDa
 use webignition\BasilTranspiler\Tests\DataProvider\PageObjectValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
+use webignition\BasilTranspiler\VariableNames;
 
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
@@ -86,7 +87,11 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspile(ValueInterface $value, string $expectedString)
     {
-        $this->assertSame($expectedString, $this->transpiler->transpile($value));
+        $variableIdentifiers = [
+            VariableNames::PANTHER_CLIENT => 'self::$client',
+        ];
+
+        $this->assertSame($expectedString, $this->transpiler->transpile($value, $variableIdentifiers));
     }
 
     public function transpileLiteralStringValueDataProvider(): array

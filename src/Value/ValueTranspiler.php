@@ -5,16 +5,21 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\VariableNameResolver;
 
 class ValueTranspiler implements TranspilerInterface
 {
+    private $variableNameResolver;
+
     /**
      * @var TranspilerInterface[]
      */
     private $valueTypeTranspilers = [];
 
-    public function __construct(array $valueTypeTranspilers = [])
+    public function __construct(VariableNameResolver $variableNameResolver, array $valueTypeTranspilers = [])
     {
+        $this->variableNameResolver = $variableNameResolver;
+
         foreach ($valueTypeTranspilers as $valueTypeTranspiler) {
             if ($valueTypeTranspiler instanceof TranspilerInterface) {
                 $this->addValueTypeTranspiler($valueTypeTranspiler);
@@ -24,13 +29,16 @@ class ValueTranspiler implements TranspilerInterface
 
     public static function createTranspiler(): ValueTranspiler
     {
-        return new ValueTranspiler([
-            LiteralValueTranspiler::createTranspiler(),
-            BrowserObjectValueTranspiler::createTranspiler(),
-            PageObjectValueTranspiler::createTranspiler(),
-            EnvironmentParameterValueTranspiler::createTranspiler(),
-            ElementValueTranspiler::createTranspiler(),
-        ]);
+        return new ValueTranspiler(
+            new VariableNameResolver(),
+            [
+                LiteralValueTranspiler::createTranspiler(),
+                BrowserObjectValueTranspiler::createTranspiler(),
+                PageObjectValueTranspiler::createTranspiler(),
+                EnvironmentParameterValueTranspiler::createTranspiler(),
+                ElementValueTranspiler::createTranspiler(),
+            ]
+        );
     }
 
     public function addValueTypeTranspiler(TranspilerInterface $transpiler)
@@ -49,19 +57,22 @@ class ValueTranspiler implements TranspilerInterface
 
     /**
      * @param object $model
-     * @param array $variableNames
+     * @param array $variableIdentifiers
      *
      * @return string
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableNames = []): string
+    public function transpile(object $model, array $variableIdentifiers = []): string
     {
         if ($model instanceof ValueInterface) {
             $valueTypeTranspiler = $this->findValueTypeTranspiler($model);
 
             if ($valueTypeTranspiler instanceof TranspilerInterface) {
-                return $valueTypeTranspiler->transpile($model);
+                return $this->variableNameResolver->resolve(
+                    $valueTypeTranspiler->transpile($model),
+                    $variableIdentifiers
+                );
             }
         }
 

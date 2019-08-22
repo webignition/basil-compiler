@@ -6,13 +6,14 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\VariableNames;
 
 class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_TITLE = 'title';
     const PROPERTY_NAME_URL = 'url';
-    const TRANSPILED_TITLE = 'self::$client->getTitle()';
-    const TRANSPILED_URL = 'self::$client->getCurrentURL()';
+    const TRANSPILED_TITLE = '{{ ' . VariableNames::PANTHER_CLIENT . ' }}->getTitle()';
+    const TRANSPILED_URL = '{{ ' . VariableNames::PANTHER_CLIENT . ' }}->getCurrentURL()';
 
     private $transpiledValueMap = [
         self::PROPERTY_NAME_TITLE => self::TRANSPILED_TITLE,
@@ -37,7 +38,7 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
         return ObjectNames::PAGE === $model->getObjectName();
     }
 
-    protected function getTranspiledValueMap(array $variableNames = []): array
+    protected function getTranspiledValueMap(array $variableIdentifiers = []): array
     {
         return $this->transpiledValueMap;
     }
