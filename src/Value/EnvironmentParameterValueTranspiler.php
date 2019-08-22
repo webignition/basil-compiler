@@ -10,7 +10,7 @@ use webignition\BasilTranspiler\TranspilerInterface;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
 {
-    private const MAPPED_VALUE = '$_ENV[\'%s\']';
+    private const MAPPED_VALUE = '{{ ENVIRONMENT_VARIABLE_ARRAY }}[\'%s\']';
 
     public static function createTranspiler(): EnvironmentParameterValueTranspiler
     {
@@ -30,7 +30,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
         return ObjectNames::ENVIRONMENT === $model->getObjectName();
     }
 
-    public function transpile(object $model): string
+    public function transpile(object $model, array $variableIdentifiers = []): string
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             return sprintf(self::MAPPED_VALUE, $model->getObjectProperty());
