@@ -10,7 +10,7 @@ use webignition\BasilTranspiler\TranspilerInterface;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
 {
-    private const MAPPED_VALUE = '$_ENV[\'%s\']';
+    private const MAPPED_VALUE = '{{ ENVIRONMENT_VARIABLE_ARRAY }}[\'%s\']';
 
     public static function createTranspiler(): EnvironmentParameterValueTranspiler
     {

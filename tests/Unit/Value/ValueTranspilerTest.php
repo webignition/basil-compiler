@@ -89,6 +89,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         $variableIdentifiers = [
             VariableNames::PANTHER_CLIENT => 'self::$client',
+            VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
         ];
 
         $this->assertSame($expectedString, $this->transpiler->transpile($value, $variableIdentifiers));
