@@ -11,15 +11,15 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueTypes;
-use webignition\BasilTranspiler\ElementLocatorFactory;
+use webignition\BasilTranspiler\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
-class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
+class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var ElementLocatorFactory
+     * @var ElementLocatorCallFactory
      */
     private $factory;
 
@@ -27,17 +27,17 @@ class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->factory = ElementLocatorFactory::createFactory();
+        $this->factory = ElementLocatorCallFactory::createFactory();
     }
 
     /**
-     * @dataProvider createElementLocatorConstructorCallDataProvider
+     * @dataProvider createConstructorCallDataProvider
      */
-    public function testCreateElementLocatorConstructorCall(
+    public function testCreateConstructorCall(
         ElementIdentifierInterface $elementIdentifier,
         ElementLocator $expectedElementLocator
     ) {
-        $elementLocatorConstructorCall = $this->factory->createElementLocatorConstructorCall($elementIdentifier);
+        $elementLocatorConstructorCall = $this->factory->createConstructorCall($elementIdentifier);
 
         $executableCall =
             'use ' . ElementLocator::class . ';' . "\n" .
@@ -50,7 +50,7 @@ class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedElementLocator, $elementLocator);
     }
 
-    public function createElementLocatorConstructorCallDataProvider(): array
+    public function createConstructorCallDataProvider(): array
     {
         return [
             'css selector, no quotes in selector, position default' => [
@@ -118,7 +118,7 @@ class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testCreateElementLocatorConstructorCallThrowsNonTranspilableModelException()
+    public function testCreateConstructorCallThrowsNonTranspilableModelException()
     {
         $value = new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', '');
 
@@ -130,6 +130,6 @@ class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
         $this->expectException(NonTranspilableModelException::class);
         $this->expectExceptionMessage('Non-transpilable model "' . get_class($elementIdentifier) . '"');
 
-        $this->factory->createElementLocatorConstructorCall($elementIdentifier);
+        $this->factory->createConstructorCall($elementIdentifier);
     }
 }

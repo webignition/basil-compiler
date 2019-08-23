@@ -10,7 +10,7 @@ class DomCrawlerNavigatorCallFactory
     private $variableNameResolver;
 
     public function __construct(
-        ElementLocatorFactory $elementLocatorFactory,
+        ElementLocatorCallFactory $elementLocatorFactory,
         VariableNameResolver $variableNameResolver
     ) {
         $this->elementLocatorFactory = $elementLocatorFactory;
@@ -20,7 +20,7 @@ class DomCrawlerNavigatorCallFactory
     public static function createFactory(): DomCrawlerNavigatorCallFactory
     {
         return new DomCrawlerNavigatorCallFactory(
-            ElementLocatorFactory::createFactory(),
+            ElementLocatorCallFactory::createFactory(),
             new VariableNameResolver()
         );
     }
@@ -38,7 +38,7 @@ class DomCrawlerNavigatorCallFactory
         array $variableIdentifiers
     ): string {
         $targetElementLocatorConstructorCall =
-            $this->elementLocatorFactory->createElementLocatorConstructorCall($elementIdentifier);
+            $this->elementLocatorFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
 
@@ -46,7 +46,7 @@ class DomCrawlerNavigatorCallFactory
 
         if ($parentIdentifier instanceof ElementIdentifierInterface) {
             $parentElementLocatorConstructorCall =
-                $this->elementLocatorFactory->createElementLocatorConstructorCall($parentIdentifier);
+                $this->elementLocatorFactory->createConstructorCall($parentIdentifier);
 
             $findElementArguments .= ', ' . $parentElementLocatorConstructorCall;
         }

@@ -6,7 +6,7 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 
-class ElementLocatorFactory
+class ElementLocatorCallFactory
 {
     const TEMPLATE = 'new ElementLocator(%s, \'%s\', %s)';
     const DEFAULT_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
@@ -23,9 +23,9 @@ class ElementLocatorFactory
         $this->placeholderFactory = $placeholderFactory;
     }
 
-    public static function createFactory(): ElementLocatorFactory
+    public static function createFactory(): ElementLocatorCallFactory
     {
-        return new ElementLocatorFactory(
+        return new ElementLocatorCallFactory(
             PlaceholderFactory::createFactory()
         );
     }
@@ -37,7 +37,7 @@ class ElementLocatorFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createElementLocatorConstructorCall(ElementIdentifierInterface $elementIdentifier): string
+    public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): string
     {
         $identifierValue = $elementIdentifier->getValue();
 
