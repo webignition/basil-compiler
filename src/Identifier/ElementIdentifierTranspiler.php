@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\Identifier;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -37,11 +38,11 @@ class ElementIdentifierTranspiler implements TranspilerInterface
      * @param object $model
      * @param array $variableIdentifiers
      *
-     * @return string
+     * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableIdentifiers = []): string
+    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
     {
         if (!$model instanceof ElementIdentifierInterface) {
             throw new NonTranspilableModelException($model);

@@ -3,6 +3,7 @@
 namespace webignition\BasilTranspiler;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
+use webignition\BasilTranspiler\Model\TranspilationResult;
 
 class DomCrawlerNavigatorCallFactory
 {
@@ -29,26 +30,28 @@ class DomCrawlerNavigatorCallFactory
      * @param ElementIdentifierInterface $elementIdentifier
      * @param array $variableIdentifiers
      *
-     * @return string
+     * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
     public function createFindElementCall(
         ElementIdentifierInterface $elementIdentifier,
         array $variableIdentifiers
-    ): string {
-        $targetElementLocatorConstructorCall =
-            $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+    ): TranspilationResult {
+        $elementTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+        $useStatements = $elementTranspilationResult->getUseStatements();
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
 
-        $findElementArguments = $targetElementLocatorConstructorCall;
+        $findElementArguments = (string) $elementTranspilationResult;
 
         if ($parentIdentifier instanceof ElementIdentifierInterface) {
-            $parentElementLocatorConstructorCall =
-                $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
+            $parentTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
+            $useStatements = $useStatements->withAdditionalUseStatements(
+                $parentTranspilationResult->getUseStatements()
+            );
 
-            $findElementArguments .= ', ' . $parentElementLocatorConstructorCall;
+            $findElementArguments .= ', ' . (string) $parentTranspilationResult;
         }
 
         $domCrawlerNavigator = $this->variableNameResolver->resolve(
@@ -56,6 +59,9 @@ class DomCrawlerNavigatorCallFactory
             $variableIdentifiers
         );
 
-        return $domCrawlerNavigator . '->findElement(' . $findElementArguments . ')';
+        return new TranspilationResult(
+            $domCrawlerNavigator . '->findElement(' . $findElementArguments . ')',
+            $useStatements
+        );
     }
 }

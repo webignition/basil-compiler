@@ -5,6 +5,11 @@ namespace webignition\BasilTranspiler;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
+use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class ElementLocatorCallFactory
 {
@@ -33,11 +38,11 @@ class ElementLocatorCallFactory
     /**
      * @param ElementIdentifierInterface $elementIdentifier
      *
-     * @return string
+     * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): string
+    public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): TranspilationResult
     {
         $identifierValue = $elementIdentifier->getValue();
 
@@ -45,11 +50,19 @@ class ElementLocatorCallFactory
             throw new NonTranspilableModelException($elementIdentifier);
         }
 
-        return sprintf(
+        $content = sprintf(
             self::TEMPLATE,
             $this->valueTypeToLocatorTypeMap[$identifierValue->getType()] ?? self::DEFAULT_LOCATOR_TYPE,
             $this->escapeLocatorString($identifierValue->getValue()),
             $elementIdentifier->getPosition()
+        );
+
+        return new TranspilationResult(
+            $content,
+            new UseStatementCollection([
+                new UseStatement(ElementLocator::class),
+                new UseStatement(LocatorType::class),
+            ])
         );
     }
 

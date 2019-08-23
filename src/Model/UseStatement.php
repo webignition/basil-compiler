@@ -22,4 +22,12 @@ class UseStatement
     {
         return $this->alias;
     }
+
+    public function getHash(): string
+    {
+        return md5((string) json_encode([
+            'className' => $this->className,
+            'alias' => $this->alias,
+        ]));
+    }
 }

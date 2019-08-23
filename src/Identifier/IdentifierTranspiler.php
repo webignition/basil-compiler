@@ -3,6 +3,7 @@
 namespace webignition\BasilTranspiler\Identifier;
 
 use webignition\BasilModel\Identifier\IdentifierInterface;
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNameResolver;
@@ -55,20 +56,24 @@ class IdentifierTranspiler implements TranspilerInterface
      * @param object $model
      * @param array $variableIdentifiers
      *
-     * @return string
+     * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableIdentifiers = []): string
+    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
     {
         if ($model instanceof IdentifierInterface) {
             $identifierTypeTranspiler = $this->findIdentifierTypeTranspiler($model);
 
             if ($identifierTypeTranspiler instanceof TranspilerInterface) {
-                return $this->variableNameResolver->resolve(
-                    $identifierTypeTranspiler->transpile($model),
+                $transpilationResult = $identifierTypeTranspiler->transpile($model, $variableIdentifiers);
+
+                $resolvedContent = $this->variableNameResolver->resolve(
+                    $transpilationResult->getContent(),
                     $variableIdentifiers
                 );
+
+                return $transpilationResult->withContent($resolvedContent);
             }
         }
 

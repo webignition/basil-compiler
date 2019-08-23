@@ -5,21 +5,14 @@ namespace webignition\BasilTranspiler\Model;
 class TranspilationResult
 {
     private $content;
+    private $useStatements;
 
-    /**
-     * @var UseStatement[]
-     */
-    private $useStatements = [];
-
-    public function __construct(string $content, array $useStatements = [])
+    public function __construct(string $content, ?UseStatementCollection $useStatementCollection = null)
     {
-        $this->content = $content;
+        $useStatementCollection = $useStatementCollection ?? new UseStatementCollection();
 
-        foreach ($useStatements as $useStatement) {
-            if ($useStatement instanceof UseStatement) {
-                $this->useStatements[] = $useStatement;
-            }
-        }
+        $this->content = $content;
+        $this->useStatements = $useStatementCollection;
     }
 
     public function getContent(): string
@@ -27,10 +20,7 @@ class TranspilationResult
         return $this->content;
     }
 
-    /**
-     * @return UseStatement[]
-     */
-    public function getUseStatements(): array
+    public function getUseStatements(): UseStatementCollection
     {
         return $this->useStatements;
     }
@@ -41,5 +31,10 @@ class TranspilationResult
         $new->content = $content;
 
         return $new;
+    }
+
+    public function __toString(): string
+    {
+        return $this->content;
     }
 }
