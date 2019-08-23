@@ -34,4 +34,12 @@ class TranspilationResult
     {
         return $this->useStatements;
     }
+
+    public function withContent(string $content): TranspilationResult
+    {
+        $new = clone $this;
+        $new->content = $content;
+
+        return $new;
+    }
 }
