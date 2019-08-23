@@ -15,23 +15,27 @@ class ElementLocatorCallFactory
 {
     const TEMPLATE = 'new ElementLocator(%s, \'%s\', %s)';
     const DEFAULT_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
-    const DEFAULT_SLASH_QUOTE_PLACEHOLDER_VALUE = 'slash-quote-placeholder';
 
     private $placeholderFactory;
+    private $singleQuotedStringEscaper;
 
     private $valueTypeToLocatorTypeMap = [
         ValueTypes::XPATH_EXPRESSION => 'LocatorType::XPATH_EXPRESSION',
     ];
 
-    public function __construct(PlaceholderFactory $placeholderFactory)
-    {
+    public function __construct(
+        PlaceholderFactory $placeholderFactory,
+        SingleQuotedStringEscaper $singleQuotedStringEscaper
+    ) {
         $this->placeholderFactory = $placeholderFactory;
+        $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
     }
 
     public static function createFactory(): ElementLocatorCallFactory
     {
         return new ElementLocatorCallFactory(
-            PlaceholderFactory::createFactory()
+            PlaceholderFactory::createFactory(),
+            SingleQuotedStringEscaper::create()
         );
     }
 
@@ -53,7 +57,7 @@ class ElementLocatorCallFactory
         $content = sprintf(
             self::TEMPLATE,
             $this->valueTypeToLocatorTypeMap[$identifierValue->getType()] ?? self::DEFAULT_LOCATOR_TYPE,
-            $this->escapeLocatorString($identifierValue->getValue()),
+            $this->singleQuotedStringEscaper->escape($identifierValue->getValue()),
             $elementIdentifier->getPosition()
         );
 
@@ -64,19 +68,5 @@ class ElementLocatorCallFactory
                 new UseStatement(LocatorType::class),
             ])
         );
-    }
-
-    private function escapeLocatorString(string $locatorString): string
-    {
-        $slashQuotePlaceholder = $this->placeholderFactory->create(
-            $locatorString,
-            self::DEFAULT_SLASH_QUOTE_PLACEHOLDER_VALUE
-        );
-
-        $locatorString = str_replace("\'", $slashQuotePlaceholder, $locatorString);
-        $locatorString = str_replace("'", "\'", $locatorString);
-        $locatorString = str_replace($slashQuotePlaceholder, "\\\\\'", $locatorString);
-
-        return $locatorString;
     }
 }

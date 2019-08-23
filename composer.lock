@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0396765cba2b7558df43e941e6ef0e8e",
+    "content-hash": "fde2395116bfa8bc2b84746653add9d8",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -843,16 +843,16 @@
         },
         {
             "name": "webignition/php-basil-models",
-            "version": "0.59",
+            "version": "0.60",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-models.git",
-                "reference": "75310b3b01ae6c3e6b4c519d3cd04f7b70a98cdb"
+                "reference": "eb73aec8a8c39bab8843fc674fe8b868ff4cfdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-models/zipball/75310b3b01ae6c3e6b4c519d3cd04f7b70a98cdb",
-                "reference": "75310b3b01ae6c3e6b4c519d3cd04f7b70a98cdb",
+                "url": "https://api.github.com/repos/webignition/php-basil-models/zipball/eb73aec8a8c39bab8843fc674fe8b868ff4cfdae",
+                "reference": "eb73aec8a8c39bab8843fc674fe8b868ff4cfdae",
                 "shasum": ""
             },
             "require": {
@@ -885,7 +885,7 @@
             ],
             "description": "Models for basil language objects",
             "homepage": "https://github.com/webignition/php-basil-models",
-            "time": "2019-08-16T18:09:50+00:00"
+            "time": "2019-08-23T14:13:46+00:00"
         },
         {
             "name": "webignition/symfony-panther-dom-crawler-navigator",
