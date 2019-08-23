@@ -12,6 +12,7 @@ use Symfony\Component\Panther\DomCrawler\Crawler;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\UseStatementTranspiler;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Exception\UnknownElementException;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -25,11 +26,17 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
      */
     private $factory;
 
+    /**
+     * @var UseStatementTranspiler
+     */
+    private $useStatementTranspiler;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
+        $this->useStatementTranspiler = UseStatementTranspiler::createTranspiler();
     }
 
     /**
@@ -43,17 +50,21 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
         ];
 
-        $findElementCall = $this->factory->createFindElementCall($elementIdentifier, $variableIdentifiers);
+        $transpilationResult = $this->factory->createFindElementCall($elementIdentifier, $variableIdentifiers);
 
-        $executableCall =
+        $executableCall = '';
+
+        foreach ($transpilationResult->getUseStatements() as $key => $value) {
+            $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
+        }
+
+        $executableCall .=
             'use ' . Crawler::class . ';' . "\n" .
             'use ' . WebDriver::class . ';' . "\n" .
             'use ' . Navigator::class . ';' . "\n" .
-            'use ' . ElementLocator::class . ';' . "\n" .
-            'use ' . LocatorType::class . ';' . "\n" .
             '$crawler = new Crawler([], \Mockery::mock(WebDriver::class)); ' . "\n" .
             '$domCrawlerNavigator = Navigator::create($crawler); ' . "\n" .
-            'return ' . $findElementCall . ';'
+            'return ' . (string) $transpilationResult . ';'
         ;
 
         try {

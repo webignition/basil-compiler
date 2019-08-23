@@ -11,10 +11,15 @@ use webignition\BasilModel\Identifier\IdentifierInterface;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
+use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\ElementIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\UnhandledIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
+use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
 {
@@ -62,13 +67,16 @@ class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider transpileDataProvider
      */
-    public function testTranspile(IdentifierInterface $identifier, string $expectedString)
+    public function testTranspile(IdentifierInterface $identifier, TranspilationResult $expectedTranspilationResult)
     {
         $variableIdentifiers = [
             VariableNames::DOM_CRAWLER_NAVIGATOR => '$navigator',
         ];
 
-        $this->assertSame($expectedString, $this->transpiler->transpile($identifier, $variableIdentifiers));
+        $this->assertEquals(
+            $expectedTranspilationResult,
+            $this->transpiler->transpile($identifier, $variableIdentifiers)
+        );
     }
 
     public function transpileDataProvider(): array
@@ -76,8 +84,13 @@ class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
         return [
             'css selector, selector only' => [
                 'identifier' => TestIdentifierFactory::createCssElementIdentifier('.selector'),
-                'expectedString' =>
+                'expectedTranspilationResult' =>new TranspilationResult(
                     '$navigator->findElement(new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1))',
+                    new UseStatementCollection([
+                        new UseStatement(ElementLocator::class),
+                        new UseStatement(LocatorType::class),
+                    ])
+                ),
             ],
         ];
     }

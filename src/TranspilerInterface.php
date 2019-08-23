@@ -2,6 +2,8 @@
 
 namespace webignition\BasilTranspiler;
 
+use webignition\BasilTranspiler\Model\TranspilationResult;
+
 interface TranspilerInterface
 {
     public static function createTranspiler();
@@ -11,9 +13,9 @@ interface TranspilerInterface
      * @param object $model
      * @param array $variableIdentifiers
      *
-     * @return string
+     * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableIdentifiers = []): string;
+    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult;
 }

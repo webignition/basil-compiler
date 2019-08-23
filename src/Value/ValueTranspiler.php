@@ -3,6 +3,7 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNameResolver;
@@ -59,20 +60,24 @@ class ValueTranspiler implements TranspilerInterface
      * @param object $model
      * @param array $variableIdentifiers
      *
-     * @return string
+     * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableIdentifiers = []): string
+    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
     {
         if ($model instanceof ValueInterface) {
             $valueTypeTranspiler = $this->findValueTypeTranspiler($model);
 
             if ($valueTypeTranspiler instanceof TranspilerInterface) {
-                return $this->variableNameResolver->resolve(
-                    $valueTypeTranspiler->transpile($model),
+                $transpilationResult = $valueTypeTranspiler->transpile($model, $variableIdentifiers);
+
+                $resolvedContent = $this->variableNameResolver->resolve(
+                    $transpilationResult->getContent(),
                     $variableIdentifiers
                 );
+
+                return $transpilationResult->withContent($resolvedContent);
             }
         }
 
