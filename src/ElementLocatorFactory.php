@@ -11,11 +11,24 @@ class ElementLocatorFactory
     const TEMPLATE = 'new ElementLocator(%s, \'%s\', %s)';
     const DEFAULT_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
     const DEFAULT_SLASH_QUOTE_PLACEHOLDER_VALUE = 'slash-quote-placeholder';
-    const SLASH_QUOTE_PLACEHOLDER = '{{ %s }}';
+
+    private $placeholderFactory;
 
     private $valueTypeToLocatorTypeMap = [
         ValueTypes::XPATH_EXPRESSION => 'LocatorType::XPATH_EXPRESSION',
     ];
+
+    public function __construct(PlaceholderFactory $placeholderFactory)
+    {
+        $this->placeholderFactory = $placeholderFactory;
+    }
+
+    public static function createFactory(): ElementLocatorFactory
+    {
+        return new ElementLocatorFactory(
+            PlaceholderFactory::createFactory()
+        );
+    }
 
     /**
      * @param ElementIdentifierInterface $elementIdentifier
@@ -42,28 +55,15 @@ class ElementLocatorFactory
 
     private function escapeLocatorString(string $locatorString): string
     {
-        $slashQuotePlaceholder = $this->createSlashQuotePlaceholder($locatorString);
+        $slashQuotePlaceholder = $this->placeholderFactory->create(
+            $locatorString,
+            self::DEFAULT_SLASH_QUOTE_PLACEHOLDER_VALUE
+        );
 
         $locatorString = str_replace("\'", $slashQuotePlaceholder, $locatorString);
         $locatorString = str_replace("'", "\'", $locatorString);
         $locatorString = str_replace($slashQuotePlaceholder, "\\\\\'", $locatorString);
 
         return $locatorString;
-    }
-
-    private function createSlashQuotePlaceholder(string $locatorString)
-    {
-        $slashQuotePlaceholder = sprintf(self::SLASH_QUOTE_PLACEHOLDER, self::DEFAULT_SLASH_QUOTE_PLACEHOLDER_VALUE);
-        $slashQuotePlaceholderMutationCount = 0;
-
-        while (substr_count($locatorString, $slashQuotePlaceholder) > 0) {
-            $slashQuotePlaceholderMutationCount++;
-            $slashQuotePlaceholder = sprintf(
-                self::SLASH_QUOTE_PLACEHOLDER,
-                self::DEFAULT_SLASH_QUOTE_PLACEHOLDER_VALUE . $slashQuotePlaceholderMutationCount
-            );
-        }
-
-        return $slashQuotePlaceholder;
     }
 }
