@@ -5,16 +5,21 @@ namespace webignition\BasilTranspiler\Identifier;
 use webignition\BasilModel\Identifier\IdentifierInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\VariableNameResolver;
 
 class IdentifierTranspiler implements TranspilerInterface
 {
+    private $variableNameResolver;
+
     /**
      * @var TranspilerInterface[]
      */
     private $identifierTypeTranspilers = [];
 
-    public function __construct(array $identifierTypeTranspilers = [])
+    public function __construct(VariableNameResolver $variableNameResolver, array $identifierTypeTranspilers = [])
     {
+        $this->variableNameResolver = $variableNameResolver;
+
         foreach ($identifierTypeTranspilers as $identifierTypeTranspiler) {
             if ($identifierTypeTranspiler instanceof TranspilerInterface) {
                 $this->addIdentifierTypeTranspiler($identifierTypeTranspiler);
@@ -24,9 +29,12 @@ class IdentifierTranspiler implements TranspilerInterface
 
     public static function createTranspiler(): IdentifierTranspiler
     {
-        return new IdentifierTranspiler([
-            ElementIdentifierTranspiler::createTranspiler(),
-        ]);
+        return new IdentifierTranspiler(
+            new VariableNameResolver(),
+            [
+                ElementIdentifierTranspiler::createTranspiler(),
+            ]
+        );
     }
 
     public function addIdentifierTypeTranspiler(TranspilerInterface $transpiler)
@@ -45,18 +53,22 @@ class IdentifierTranspiler implements TranspilerInterface
 
     /**
      * @param object $model
+     * @param array $variableIdentifiers
      *
      * @return string
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): string
+    public function transpile(object $model, array $variableIdentifiers = []): string
     {
         if ($model instanceof IdentifierInterface) {
             $identifierTypeTranspiler = $this->findIdentifierTypeTranspiler($model);
 
             if ($identifierTypeTranspiler instanceof TranspilerInterface) {
-                return $identifierTypeTranspiler->transpile($model);
+                return $this->variableNameResolver->resolve(
+                    $identifierTypeTranspiler->transpile($model),
+                    $variableIdentifiers
+                );
             }
         }
 

@@ -7,10 +7,11 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\VariableNames;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
 {
-    private const MAPPED_VALUE = '{{ ENVIRONMENT_VARIABLE_ARRAY }}[\'%s\']';
+    private const MAPPED_VALUE = '{{ ' . VariableNames::ENVIRONMENT_VARIABLE_ARRAY . ' }}[\'%s\']';
 
     public static function createTranspiler(): EnvironmentParameterValueTranspiler
     {
