@@ -37,7 +37,7 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
             return false;
         }
 
-        return '' !== trim($model->getAttributeName());
+        return '' !== trim((string) $model->getAttributeName());
     }
 
     /**
@@ -54,7 +54,7 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $attributeName = trim($model->getAttributeName());
+        $attributeName = trim((string) $model->getAttributeName());
         if ('' === $attributeName) {
             throw new NonTranspilableModelException($model);
         }
