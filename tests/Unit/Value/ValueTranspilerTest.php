@@ -83,7 +83,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider transpileLiteralStringValueDataProvider
+     * @dataProvider transpileDataProvider
      */
     public function testTranspile(ValueInterface $value, string $expectedString)
     {
@@ -95,7 +95,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expectedString, $this->transpiler->transpile($value, $variableIdentifiers));
     }
 
-    public function transpileLiteralStringValueDataProvider(): array
+    public function transpileDataProvider(): array
     {
         return [
             'literal string value: string' => [
