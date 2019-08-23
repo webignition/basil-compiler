@@ -6,14 +6,14 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 
 class DomCrawlerNavigatorCallFactory
 {
-    private $elementLocatorFactory;
+    private $elementLocatorCallFactory;
     private $variableNameResolver;
 
     public function __construct(
-        ElementLocatorCallFactory $elementLocatorFactory,
+        ElementLocatorCallFactory $elementLocatorCallFactory,
         VariableNameResolver $variableNameResolver
     ) {
-        $this->elementLocatorFactory = $elementLocatorFactory;
+        $this->elementLocatorCallFactory = $elementLocatorCallFactory;
         $this->variableNameResolver = $variableNameResolver;
     }
 
@@ -38,7 +38,7 @@ class DomCrawlerNavigatorCallFactory
         array $variableIdentifiers
     ): string {
         $targetElementLocatorConstructorCall =
-            $this->elementLocatorFactory->createConstructorCall($elementIdentifier);
+            $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
 
@@ -46,7 +46,7 @@ class DomCrawlerNavigatorCallFactory
 
         if ($parentIdentifier instanceof ElementIdentifierInterface) {
             $parentElementLocatorConstructorCall =
-                $this->elementLocatorFactory->createConstructorCall($parentIdentifier);
+                $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
 
             $findElementArguments .= ', ' . $parentElementLocatorConstructorCall;
         }
