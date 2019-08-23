@@ -6,8 +6,11 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Identifier;
 
+use webignition\BasilModel\Identifier\AttributeIdentifier;
+use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Identifier\IdentifierInterface;
+use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
@@ -15,6 +18,7 @@ use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\Tests\DataProvider\AttributeIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\ElementIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\UnhandledIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\VariableNames;
@@ -23,6 +27,7 @@ use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
 {
+    use AttributeIdentifierDataProviderTrait;
     use ElementIdentifierDataProviderTrait;
     use UnhandledIdentifierDataProviderTrait;
 
@@ -39,9 +44,10 @@ class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider attributeIdentifierDataProvider
      * @dataProvider elementIdentifierDataProvider
      */
-    public function testHandlesDoesHandle(ElementIdentifierInterface $value)
+    public function testHandlesDoesHandle(IdentifierInterface $value)
     {
         $this->assertTrue($this->transpiler->handles($value));
     }
@@ -82,10 +88,27 @@ class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
     public function transpileDataProvider(): array
     {
         return [
-            'css selector, selector only' => [
+            'element identifier (css selector), selector only' => [
                 'identifier' => TestIdentifierFactory::createCssElementIdentifier('.selector'),
                 'expectedTranspilationResult' =>new TranspilationResult(
                     '$navigator->findElement(new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1))',
+                    new UseStatementCollection([
+                        new UseStatement(ElementLocator::class),
+                        new UseStatement(LocatorType::class),
+                    ])
+                ),
+            ],
+            'attribute identifier, selector only' => [
+                'identifier' => new AttributeIdentifier(
+                    new ElementIdentifier(
+                        LiteralValue::createCssSelectorValue('.selector')
+                    ),
+                    'attribute_name'
+                ),
+                'expectedTranspilationResult' =>new TranspilationResult(
+                    '$navigator'
+                        . '->findElement(new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1))'
+                        . '->getAttribute(\'attribute_name\')',
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class),
                         new UseStatement(LocatorType::class),

@@ -34,6 +34,7 @@ class IdentifierTranspiler implements TranspilerInterface
             new VariableNameResolver(),
             [
                 ElementIdentifierTranspiler::createTranspiler(),
+                AttributeIdentifierTranspiler::createTranspiler(),
             ]
         );
     }

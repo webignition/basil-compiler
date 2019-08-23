@@ -19,12 +19,12 @@ trait UnhandledIdentifierDataProviderTrait
     public function unhandledIdentifierDataProvider(): array
     {
         return [
-            'attribute identifier' => [
+            'invalid attribute identifier: empty attribute name' => [
                 'identifier' => new AttributeIdentifier(
                     new ElementIdentifier(
                         LiteralValue::createCssSelectorValue('.selector')
                     ),
-                    'attribute_name'
+                    ''
                 ),
             ],
             'page element reference' => [
