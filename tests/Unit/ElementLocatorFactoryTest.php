@@ -9,7 +9,10 @@ namespace webignition\BasilTranspiler\Tests\Unit;
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\ElementLocatorFactory;
+use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
@@ -24,7 +27,7 @@ class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->factory = new ElementLocatorFactory();
+        $this->factory = ElementLocatorFactory::createFactory();
     }
 
     /**
@@ -113,5 +116,20 @@ class ElementLocatorFactoryTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
         ];
+    }
+
+    public function testCreateElementLocatorConstructorCallThrowsNonTranspilableModelException()
+    {
+        $value = new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', '');
+
+        $elementIdentifier = \Mockery::mock(ElementIdentifierInterface::class);
+        $elementIdentifier
+            ->shouldReceive('getValue')
+            ->andReturn($value);
+
+        $this->expectException(NonTranspilableModelException::class);
+        $this->expectExceptionMessage('Non-transpilable model "' . get_class($elementIdentifier) . '"');
+
+        $this->factory->createElementLocatorConstructorCall($elementIdentifier);
     }
 }
