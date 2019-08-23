@@ -9,10 +9,8 @@ class TranspilationResult
 
     public function __construct(string $content, ?UseStatementCollection $useStatementCollection = null)
     {
-        $useStatementCollection = $useStatementCollection ?? new UseStatementCollection();
-
         $this->content = $content;
-        $this->useStatements = $useStatementCollection;
+        $this->useStatements = $useStatementCollection ?? new UseStatementCollection();
     }
 
     public function getContent(): string
