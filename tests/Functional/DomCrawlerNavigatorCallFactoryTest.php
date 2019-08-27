@@ -10,10 +10,9 @@ use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
-use webignition\BasilTranspiler\UseStatementTranspiler;
+use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
 
@@ -25,16 +24,16 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     private $factory;
 
     /**
-     * @var UseStatementTranspiler
+     * @var ExecutableCallFactory
      */
-    private $useStatementTranspiler;
+    private $executableCallFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
-        $this->useStatementTranspiler = UseStatementTranspiler::createTranspiler();
+        $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
     /**
@@ -51,12 +50,15 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 
         $transpilationResult = $this->factory->createFindElementCall($elementIdentifier, $variableIdentifiers);
 
-        $executableCall = $this->createExecutableCall(
+        $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ]
+            ],
+            new UseStatementCollection([
+                new UseStatement(Navigator::class),
+            ])
         );
         $element = eval($executableCall);
 
@@ -102,12 +104,15 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 
         $transpilationResult = $this->factory->createHasElementCall($elementIdentifier, $variableIdentifiers);
 
-        $executableCall = $this->createExecutableCall(
+        $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ]
+            ],
+            new UseStatementCollection([
+                new UseStatement(Navigator::class),
+            ])
         );
 
         $this->assertSame($expectedHasElement, eval($executableCall));
@@ -147,27 +152,5 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'expectedHasElement' => true,
             ],
         ];
-    }
-
-    private function createExecutableCall(TranspilationResult $transpilationResult, array $setUp = []): string
-    {
-        $useStatements = $transpilationResult->getUseStatements();
-        $useStatements = $useStatements->withAdditionalUseStatements(new UseStatementCollection([
-            new UseStatement(Navigator::class),
-        ]));
-
-        $executableCall = '';
-
-        foreach ($useStatements as $key => $value) {
-            $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
-        }
-
-        foreach ($setUp as $line) {
-            $executableCall .= $line . "\n";
-        }
-
-        $executableCall .= 'return ' . (string) $transpilationResult . ';';
-
-        return $executableCall;
     }
 }

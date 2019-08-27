@@ -13,7 +13,7 @@ use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\UseStatementTranspiler;
+use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
@@ -25,16 +25,16 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     private $factory;
 
     /**
-     * @var UseStatementTranspiler
+     * @var ExecutableCallFactory
      */
-    private $useStatementTranspiler;
+    private $executableCallFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->factory = ElementLocatorCallFactory::createFactory();
-        $this->useStatementTranspiler = UseStatementTranspiler::createTranspiler();
+        $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
     /**
@@ -45,14 +45,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         ElementLocator $expectedElementLocator
     ) {
         $transpilationResult = $this->factory->createConstructorCall($elementIdentifier);
-
-        $executableCall = '';
-
-        foreach ($transpilationResult->getUseStatements() as $key => $value) {
-            $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
-        }
-
-        $executableCall .='return ' . (string) $transpilationResult . ';';
+        $executableCall = $this->executableCallFactory->create($transpilationResult);
 
         $elementLocator = eval($executableCall);
 
