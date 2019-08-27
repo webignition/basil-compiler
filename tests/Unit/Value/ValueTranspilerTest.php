@@ -10,10 +10,8 @@ use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -106,35 +104,6 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'literal string value: integer' => [
                 'value' => LiteralValue::createStringValue('100'),
                 'expectedTranspilationResult' => new TranspilationResult('"100"'),
-            ],
-            'browser object property: size' => [
-                'value' => new ObjectValue(
-                    ValueTypes::BROWSER_OBJECT_PROPERTY,
-                    '$browser.size',
-                    ObjectNames::BROWSER,
-                    'size'
-                ),
-                'expectedTranspilationResult' => new TranspilationResult(
-                    'self::$client->getWebDriver()->manage()->window()->getSize()'
-                ),
-            ],
-            'page object property: title' => [
-                'value' => new ObjectValue(
-                    ValueTypes::PAGE_OBJECT_PROPERTY,
-                    '$page.title',
-                    ObjectNames::PAGE,
-                    'title'
-                ),
-                'expectedTranspilationResult' => new TranspilationResult('self::$client->getTitle()'),
-            ],
-            'page object property: url' => [
-                'value' => new ObjectValue(
-                    ValueTypes::PAGE_OBJECT_PROPERTY,
-                    '$page.url',
-                    ObjectNames::PAGE,
-                    'url'
-                ),
-                'expectedTranspilationResult' => new TranspilationResult('self::$client->getCurrentURL()'),
             ],
             'environment parameter value' => [
                 'value' => new EnvironmentValue(
