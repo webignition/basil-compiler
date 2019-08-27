@@ -10,18 +10,20 @@ use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\BrowserObjectValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\EnvironmentParameterValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\LiteralCssSelectorValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\LiteralStringValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\LiteralXpathExpressionValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\PageObjectValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\UnhandledValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralCssSelectorValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralStringValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralXpathExpressionValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\LiteralValueTranspiler;
 
 class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserObjectValueDataProviderTrait;
+    use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralCssSelectorValueDataProviderTrait;
     use LiteralStringValueDataProviderTrait;
@@ -53,6 +55,7 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserObjectValueDataProvider
+     * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider pageObjectValueDataProvider
      * @dataProvider unhandledValueDataProvider
