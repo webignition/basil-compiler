@@ -34,7 +34,7 @@ class DomCrawlerNavigatorCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createFindElementCall(
+    public function createFindElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier,
         array $variableIdentifiers
     ): TranspilationResult {

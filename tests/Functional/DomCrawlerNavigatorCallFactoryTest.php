@@ -37,9 +37,9 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createFindElementCallDataProvider
+     * @dataProvider createFindElementCallForIdentifierDataProvider
      */
-    public function testCreateFindElementCall(
+    public function testCreateFindElementCallForIdentifier(
         string $fixture,
         ElementIdentifierInterface $elementIdentifier,
         callable $assertions
@@ -48,7 +48,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
         ];
 
-        $transpilationResult = $this->factory->createFindElementCall($elementIdentifier, $variableIdentifiers);
+        $transpilationResult = $this->factory->createFindElementCallForIdentifier(
+            $elementIdentifier,
+            $variableIdentifiers
+        );
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
@@ -65,7 +68,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         $assertions($element);
     }
 
-    public function createFindElementCallDataProvider(): array
+    public function createFindElementCallForIdentifierDataProvider(): array
     {
         return [
             'css selector, no parent' => [

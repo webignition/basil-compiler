@@ -24,9 +24,9 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
     }
 
-    public function testCreateFindElementCall()
+    public function testCreateFindElementCallForIdentifier()
     {
-        $transpilationResult = $this->factory->createFindElementCall(
+        $transpilationResult = $this->factory->createFindElementCallForIdentifier(
             TestIdentifierFactory::createCssElementIdentifier('.selector'),
             [
                 VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
