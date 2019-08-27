@@ -7,16 +7,11 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\BasilTranspiler\VariablePlaceholder;
 
 class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
-    const TRANSPILED_SIZE =
-        '{{ ' . VariableNames::PANTHER_CLIENT . ' }}->getWebDriver()->manage()->window()->getSize()';
-
-    private $transpiledValueMap = [
-        self::PROPERTY_NAME_SIZE => self::TRANSPILED_SIZE,
-    ];
 
     public static function createTranspiler(): BrowserObjectValueTranspiler
     {
@@ -38,6 +33,10 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
 
     protected function getTranspiledValueMap(array $variableIdentifiers = []): array
     {
-        return $this->transpiledValueMap;
+        return [
+            self::PROPERTY_NAME_SIZE =>
+                (string) (new VariablePlaceholder(VariableNames::PANTHER_CLIENT)) .
+                '->getWebDriver()->manage()->window()->getSize()',
+        ];
     }
 }

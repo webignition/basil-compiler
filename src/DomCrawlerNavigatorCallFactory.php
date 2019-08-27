@@ -87,7 +87,7 @@ class DomCrawlerNavigatorCallFactory
         }
 
         $domCrawlerNavigator = $this->variableNameResolver->resolve(
-            '{{ ' . VariableNames::DOM_CRAWLER_NAVIGATOR . ' }}',
+            (string) new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
             $variableIdentifiers
         );
 
