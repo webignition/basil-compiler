@@ -162,9 +162,9 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createHasElementCallDataProvider
+     * @dataProvider createHasElementCallForIdentifierDataProvider
      */
-    public function testCreateHasElementCall(
+    public function testCreateHasElementCallForIdentifier(
         string $fixture,
         ElementIdentifierInterface $elementIdentifier,
         bool $expectedHasElement
@@ -173,7 +173,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
         ];
 
-        $transpilationResult = $this->factory->createHasElementCall($elementIdentifier, $variableIdentifiers);
+        $transpilationResult = $this->factory->createHasElementCallForIdentifier(
+            $elementIdentifier,
+            $variableIdentifiers
+        );
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
@@ -189,7 +192,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
 
-    public function createHasElementCallDataProvider(): array
+    public function createHasElementCallForIdentifierDataProvider(): array
     {
         return [
             'not hasElement: css selector, no parent' => [

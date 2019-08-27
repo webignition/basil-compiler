@@ -55,9 +55,9 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
     }
 
-    public function testCreateHasElementCall()
+    public function testCreateHasElementCallForIdentifier()
     {
-        $transpilationResult = $this->factory->createHasElementCall(
+        $transpilationResult = $this->factory->createHasElementCallForIdentifier(
             TestIdentifierFactory::createCssElementIdentifier('.selector'),
             [
                 VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
