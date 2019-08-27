@@ -48,9 +48,9 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider literalStringValueDataProvider
      * @dataProvider literalXpathExpressionValueDataProvider
      */
-    public function testHandlesDoesHandle(ValueInterface $value)
+    public function testHandlesDoesHandle(ValueInterface $model)
     {
-        $this->assertTrue($this->transpiler->handles($value));
+        $this->assertTrue($this->transpiler->handles($model));
     }
 
     /**
@@ -60,9 +60,9 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider pageObjectValueDataProvider
      * @dataProvider unhandledValueDataProvider
      */
-    public function testHandlesDoesNotHandle(ValueInterface $value)
+    public function testHandlesDoesNotHandle(ValueInterface $model)
     {
-        $this->assertFalse($this->transpiler->handles($value));
+        $this->assertFalse($this->transpiler->handles($model));
     }
 
     public function testTranspileNonTranspilableModel()
@@ -70,8 +70,8 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(NonTranspilableModelException::class);
         $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
 
-        $value = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
+        $model = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
 
-        $this->transpiler->transpile($value);
+        $this->transpiler->transpile($model);
     }
 }

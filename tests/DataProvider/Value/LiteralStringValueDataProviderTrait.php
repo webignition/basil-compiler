@@ -12,7 +12,7 @@ trait LiteralStringValueDataProviderTrait
     {
         return [
             'default literal string' => [
-                'value' => LiteralValue::createStringValue('value'),
+                'model' => LiteralValue::createStringValue('model'),
             ],
         ];
     }

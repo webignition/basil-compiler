@@ -14,7 +14,7 @@ trait BrowserObjectValueDataProviderTrait
     {
         return [
             'default browser object property' => [
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::BROWSER_OBJECT_PROPERTY,
                     '$browser.size',
                     ObjectNames::BROWSER,

@@ -14,7 +14,7 @@ trait ElementValueDataProviderTrait
     {
         return [
             'default element value' => [
-                'value' => new ElementValue(
+                'model' => new ElementValue(
                     new ElementIdentifier(
                         LiteralValue::createCssSelectorValue('.selector')
                     )

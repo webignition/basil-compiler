@@ -14,7 +14,7 @@ trait AttributeIdentifierDataProviderTrait
     {
         return [
             'attribute identifier' => [
-                'identifier' => new AttributeIdentifier(
+                'model' => new AttributeIdentifier(
                     new ElementIdentifier(
                         LiteralValue::createCssSelectorValue('.selector')
                     ),

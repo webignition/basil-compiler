@@ -37,18 +37,18 @@ class AttributeIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider attributeIdentifierDataProvider
      */
-    public function testHandlesDoesHandle(AttributeIdentifierInterface $value)
+    public function testHandlesDoesHandle(AttributeIdentifierInterface $model)
     {
-        $this->assertTrue($this->transpiler->handles($value));
+        $this->assertTrue($this->transpiler->handles($model));
     }
 
     /**
      * @dataProvider elementIdentifierDataProvider
      * @dataProvider unhandledIdentifierDataProvider
      */
-    public function testHandlesDoesNotHandle(object $value)
+    public function testHandlesDoesNotHandle(object $model)
     {
-        $this->assertFalse($this->transpiler->handles($value));
+        $this->assertFalse($this->transpiler->handles($model));
     }
 
     /**

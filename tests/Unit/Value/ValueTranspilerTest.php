@@ -60,18 +60,18 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider literalXpathExpressionValueDataProvider
      * @dataProvider pageObjectValueDataProvider
      */
-    public function testHandlesDoesHandle(ValueInterface $value)
+    public function testHandlesDoesHandle(ValueInterface $model)
     {
-        $this->assertTrue($this->transpiler->handles($value));
+        $this->assertTrue($this->transpiler->handles($model));
     }
 
     /**
      * @dataProvider handlesDoesNotHandleDataProvider
      * @dataProvider unhandledValueDataProvider
      */
-    public function testHandlesDoesNotHandle(object $value)
+    public function testHandlesDoesNotHandle(object $model)
     {
-        $this->assertFalse($this->transpiler->handles($value));
+        $this->assertFalse($this->transpiler->handles($model));
     }
 
     public function handlesDoesNotHandleDataProvider(): array
@@ -86,14 +86,14 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider transpileDataProvider
      */
-    public function testTranspile(ValueInterface $value, TranspilationResult $expectedTranspilationResult)
+    public function testTranspile(ValueInterface $model, TranspilationResult $expectedTranspilationResult)
     {
         $variableIdentifiers = [
             VariableNames::PANTHER_CLIENT => 'self::$client',
             VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
         ];
 
-        $this->assertEquals($expectedTranspilationResult, $this->transpiler->transpile($value, $variableIdentifiers));
+        $this->assertEquals($expectedTranspilationResult, $this->transpiler->transpile($model, $variableIdentifiers));
     }
 
     public function transpileDataProvider(): array
@@ -179,11 +179,11 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileNonTranspilableModel()
     {
-        $value = new ObjectValue('foo', '', '', '');
+        $model = new ObjectValue('foo', '', '', '');
 
         $this->expectException(NonTranspilableModelException::class);
         $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
 
-        $this->transpiler->transpile($value);
+        $this->transpiler->transpile($model);
     }
 }

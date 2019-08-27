@@ -18,7 +18,7 @@ trait UnhandledValueDataProviderTrait
     {
         return [
             'unhandled value: data parameter object' => [
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::DATA_PARAMETER,
                     '$data.key',
                     ObjectNames::DATA,
@@ -26,13 +26,13 @@ trait UnhandledValueDataProviderTrait
                 ),
             ],
             'unhandled value: element parameter object' => [
-                'value' => new ObjectValue(ValueTypes::ELEMENT_PARAMETER, '', '', ''),
+                'model' => new ObjectValue(ValueTypes::ELEMENT_PARAMETER, '', '', ''),
             ],
             'unhandled value: page element reference' => [
-                'value' => new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', ''),
+                'model' => new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', ''),
             ],
             'unhandled value: malformed page property object' => [
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::PAGE_OBJECT_PROPERTY,
                     '',
                     '',
@@ -40,10 +40,10 @@ trait UnhandledValueDataProviderTrait
                 ),
             ],
             'unhandled value: attribute parameter' => [
-                'value' => new ObjectValue(ValueTypes::ATTRIBUTE_PARAMETER, '', '', ''),
+                'model' => new ObjectValue(ValueTypes::ATTRIBUTE_PARAMETER, '', '', ''),
             ],
             'unhandled value: attribute identifier' => [
-                'value' => new AttributeValue(
+                'model' => new AttributeValue(
                     new AttributeIdentifier(
                         new ElementIdentifier(
                             LiteralValue::createCssSelectorValue('.selector')

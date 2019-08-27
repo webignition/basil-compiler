@@ -12,7 +12,7 @@ trait LiteralCssSelectorValueDataProviderTrait
     {
         return [
             'default literal string' => [
-                'value' => LiteralValue::createCssSelectorValue('.selector'),
+                'model' => LiteralValue::createCssSelectorValue('.selector'),
             ],
         ];
     }

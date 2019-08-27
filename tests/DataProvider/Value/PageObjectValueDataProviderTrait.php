@@ -14,7 +14,7 @@ trait PageObjectValueDataProviderTrait
     {
         return [
             'default page property object' => [
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::PAGE_OBJECT_PROPERTY,
                     '$page.url',
                     ObjectNames::PAGE,
