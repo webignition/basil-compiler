@@ -4,7 +4,6 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 
 class DomCrawlerNavigatorCallFactory
 {
@@ -65,14 +64,28 @@ class DomCrawlerNavigatorCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createHasElementCall(
+    public function createHasElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier,
         array $variableIdentifiers
     ): TranspilationResult {
         $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
 
-        return $this->createElementCall($hasElementCallArguments, 'hasElement', $variableIdentifiers);
+        return $this->createHasElementCallForTranspiledArguments($hasElementCallArguments, $variableIdentifiers);
     }
+
+    /**
+     * @param TranspilationResult $arguments
+     * @param array $variableIdentifiers
+     *
+     * @return TranspilationResult
+     */
+    public function createHasElementCallForTranspiledArguments(
+        TranspilationResult $arguments,
+        array $variableIdentifiers
+    ): TranspilationResult {
+        return $this->createElementCall($arguments, 'hasElement', $variableIdentifiers);
+    }
+
 
     /**
      * @param TranspilationResult $arguments
