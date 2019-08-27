@@ -12,7 +12,7 @@ trait EnvironmentParameterValueDataProviderTrait
     {
         return [
             'default page property object' => [
-                'value' => new EnvironmentValue('', ''),
+                'model' => new EnvironmentValue('', ''),
             ],
         ];
     }

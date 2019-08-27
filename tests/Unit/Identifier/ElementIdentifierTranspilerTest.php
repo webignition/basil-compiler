@@ -36,18 +36,18 @@ class ElementIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider elementIdentifierDataProvider
      */
-    public function testHandlesDoesHandle(ElementIdentifierInterface $value)
+    public function testHandlesDoesHandle(ElementIdentifierInterface $model)
     {
-        $this->assertTrue($this->transpiler->handles($value));
+        $this->assertTrue($this->transpiler->handles($model));
     }
 
     /**
      * @dataProvider attributeIdentifierDataProvider
      * @dataProvider unhandledIdentifierDataProvider
      */
-    public function testHandlesDoesNotHandle(object $value)
+    public function testHandlesDoesNotHandle(object $model)
     {
-        $this->assertFalse($this->transpiler->handles($value));
+        $this->assertFalse($this->transpiler->handles($model));
     }
 
     public function testTranspileNonTranspilableModel()
@@ -55,8 +55,8 @@ class ElementIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(NonTranspilableModelException::class);
         $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
 
-        $value = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
+        $model = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
 
-        $this->transpiler->transpile($value);
+        $this->transpiler->transpile($model);
     }
 }

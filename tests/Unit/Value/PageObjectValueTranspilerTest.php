@@ -48,9 +48,9 @@ class PageObjectValueTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider pageObjectValueDataProvider
      */
-    public function testHandlesDoesHandle(ValueInterface $value)
+    public function testHandlesDoesHandle(ValueInterface $model)
     {
-        $this->assertTrue($this->transpiler->handles($value));
+        $this->assertTrue($this->transpiler->handles($model));
     }
 
     /**
@@ -62,9 +62,9 @@ class PageObjectValueTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider literalXpathExpressionValueDataProvider
      * @dataProvider unhandledValueDataProvider
      */
-    public function testHandlesDoesNotHandle(ValueInterface $value)
+    public function testHandlesDoesNotHandle(ValueInterface $model)
     {
-        $this->assertFalse($this->transpiler->handles($value));
+        $this->assertFalse($this->transpiler->handles($model));
     }
 
     public function testTranspileNonTranspilableModel()
@@ -72,14 +72,14 @@ class PageObjectValueTranspilerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(NonTranspilableModelException::class);
         $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
 
-        $value = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
+        $model = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
 
-        $this->transpiler->transpile($value);
+        $this->transpiler->transpile($model);
     }
 
     public function testTranspileThrowsUnknownObjectPropertyException()
     {
-        $value = new ObjectValue(
+        $model = new ObjectValue(
             ValueTypes::PAGE_OBJECT_PROPERTY,
             '$page.foo',
             ObjectNames::PAGE,
@@ -89,6 +89,6 @@ class PageObjectValueTranspilerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(UnknownObjectPropertyException::class);
         $this->expectExceptionMessage('Unknown object property "foo"');
 
-        $this->transpiler->transpile($value);
+        $this->transpiler->transpile($model);
     }
 }

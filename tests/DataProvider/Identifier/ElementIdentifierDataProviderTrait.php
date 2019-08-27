@@ -12,10 +12,10 @@ trait ElementIdentifierDataProviderTrait
     {
         return [
             'css selector element identifier' => [
-                'identifier' => TestIdentifierFactory::createCssElementIdentifier('.selector'),
+                'model' => TestIdentifierFactory::createCssElementIdentifier('.selector'),
             ],
             'xpath expression element identifier' => [
-                'identifier' => TestIdentifierFactory::createXpathElementIdentifier('//h1'),
+                'model' => TestIdentifierFactory::createXpathElementIdentifier('//h1'),
             ],
         ];
     }

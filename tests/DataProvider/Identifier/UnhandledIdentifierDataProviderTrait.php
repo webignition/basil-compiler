@@ -20,7 +20,7 @@ trait UnhandledIdentifierDataProviderTrait
     {
         return [
             'invalid attribute identifier: empty attribute name' => [
-                'identifier' => new AttributeIdentifier(
+                'model' => new AttributeIdentifier(
                     new ElementIdentifier(
                         LiteralValue::createCssSelectorValue('.selector')
                     ),
@@ -28,7 +28,7 @@ trait UnhandledIdentifierDataProviderTrait
                 ),
             ],
             'page element reference' => [
-                'identifier' => TestIdentifierFactory::createPageElementReferenceIdentifier(
+                'model' => TestIdentifierFactory::createPageElementReferenceIdentifier(
                     new ObjectValue(
                         ValueTypes::PAGE_ELEMENT_REFERENCE,
                         'page_import_name.elements.element_name',
@@ -38,7 +38,7 @@ trait UnhandledIdentifierDataProviderTrait
                 ),
             ],
             'element parameter' => [
-                'identifier' => new Identifier(
+                'model' => new Identifier(
                     IdentifierTypes::ELEMENT_PARAMETER,
                     new ObjectValue(
                         ValueTypes::ELEMENT_PARAMETER,

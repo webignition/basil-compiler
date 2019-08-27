@@ -12,7 +12,7 @@ trait LiteralXpathExpressionValueDataProviderTrait
     {
         return [
             'default literal string' => [
-                'value' => LiteralValue::createXpathExpressionValue('//h1'),
+                'model' => LiteralValue::createXpathExpressionValue('//h1'),
             ],
         ];
     }
