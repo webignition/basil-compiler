@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Tests\DataProvider;
+namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;

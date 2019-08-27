@@ -11,9 +11,9 @@ use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Identifier\ElementIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\AttributeIdentifierDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\ElementIdentifierDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\UnhandledIdentifierDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Identifier\AttributeIdentifierDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Identifier\ElementIdentifierDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Identifier\UnhandledIdentifierDataProviderTrait;
 
 class ElementIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Tests\DataProvider;
+namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 
