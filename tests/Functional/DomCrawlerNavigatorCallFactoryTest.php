@@ -227,4 +227,87 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider createHasElementCallForTranspiledArgumentsDataProvider
+     */
+    public function testCreateHasElementCallForTranspiledArguments(
+        string $fixture,
+        TranspilationResult $arguments,
+        bool $expectedHasElement
+    ) {
+        $variableIdentifiers = [
+            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
+        ];
+
+        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments(
+            $arguments,
+            $variableIdentifiers
+        );
+
+        $executableCall = $this->executableCallFactory->create(
+            $transpilationResult,
+            [
+                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
+                '$domCrawlerNavigator = Navigator::create($crawler); ',
+            ],
+            new UseStatementCollection([
+                new UseStatement(Navigator::class),
+            ])
+        );
+
+        $this->assertSame($expectedHasElement, eval($executableCall));
+    }
+
+    public function createHasElementCallForTranspiledArgumentsDataProvider(): array
+    {
+        return [
+            'not hasElement: css selector, no parent' => [
+                'fixture' => '/basic.html',
+                'arguments' => new TranspilationResult(
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1)',
+                    new UseStatementCollection([
+                        new UseStatement(LocatorType::class),
+                        new UseStatement(ElementLocator::class)
+                    ])
+                ),
+                'expectedHasElement' => false,
+            ],
+            'not hasElement: css selector, has parent' => [
+                'fixture' => '/basic.html',
+                'arguments' => new TranspilationResult(
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1), ' .
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'.parent\', 1)',
+                    new UseStatementCollection([
+                        new UseStatement(LocatorType::class),
+                        new UseStatement(ElementLocator::class)
+                    ])
+                ),
+                'expectedHasElement' => false,
+            ],
+            'hasElement: css selector, no parent' => [
+                'fixture' => '/basic.html',
+                'arguments' => new TranspilationResult(
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'h1\', 1)',
+                    new UseStatementCollection([
+                        new UseStatement(LocatorType::class),
+                        new UseStatement(ElementLocator::class)
+                    ])
+                ),
+                'expectedHasElement' => true,
+            ],
+            'hasElement: css selector, has parent' => [
+                'fixture' => '/basic.html',
+                'arguments' => new TranspilationResult(
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'input\', 1), ' .
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'form[action="/action2"]\', 1)',
+                    new UseStatementCollection([
+                        new UseStatement(LocatorType::class),
+                        new UseStatement(ElementLocator::class)
+                    ])
+                ),
+                'expectedHasElement' => true,
+            ],
+        ];
+    }
 }
