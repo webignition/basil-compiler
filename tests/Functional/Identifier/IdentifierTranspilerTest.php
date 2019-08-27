@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Tests\Unit\Functional;
+namespace webignition\BasilTranspiler\Tests\Functional\Identifier;
 
 use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
