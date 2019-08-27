@@ -44,7 +44,8 @@
         "phpstan/phpstan": "^0.11.5",
         "webignition/php-basil-test-identifier-factory": ">=0.1,<1",
         "mockery/mockery": "^1.2",
-        "phpstan/phpstan-mockery": "^0.11.3"
+        "phpstan/phpstan-mockery": "^0.11.3",
+        "webignition/php-basil-model-factory": ">=0.15,<1"
 
     }
 }
