@@ -48,6 +48,6 @@ class ElementIdentifierTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        return $this->domCrawlerNavigatorCallFactory->createFindElementCall($model, $variableIdentifiers);
+        return $this->domCrawlerNavigatorCallFactory->createFindElementCallForIdentifier($model, $variableIdentifiers);
     }
 }

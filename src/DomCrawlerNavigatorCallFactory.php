@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 
 class DomCrawlerNavigatorCallFactory
 {
@@ -34,11 +35,26 @@ class DomCrawlerNavigatorCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createFindElementCall(
+    public function createFindElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier,
         array $variableIdentifiers
     ): TranspilationResult {
-        return $this->createElementLocatorCall($elementIdentifier, $variableIdentifiers, 'findElement');
+        $arguments = $this->createElementCallArguments($elementIdentifier);
+
+        return $this->createFindElementCallForTranspiledArguments($arguments, $variableIdentifiers);
+    }
+
+    /**
+     * @param TranspilationResult $arguments
+     * @param array $variableIdentifiers
+     *
+     * @return TranspilationResult
+     */
+    public function createFindElementCallForTranspiledArguments(
+        TranspilationResult $arguments,
+        array $variableIdentifiers
+    ): TranspilationResult {
+        return $this->createElementCall($arguments, 'findElement', $variableIdentifiers);
     }
 
     /**
@@ -53,23 +69,43 @@ class DomCrawlerNavigatorCallFactory
         ElementIdentifierInterface $elementIdentifier,
         array $variableIdentifiers
     ): TranspilationResult {
-        return $this->createElementLocatorCall($elementIdentifier, $variableIdentifiers, 'hasElement');
+        $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
+
+        return $this->createElementCall($hasElementCallArguments, 'hasElement', $variableIdentifiers);
+    }
+
+    /**
+     * @param TranspilationResult $arguments
+     * @param string $methodName
+     * @param array $variableIdentifiers
+     *
+     * @return TranspilationResult
+     */
+    private function createElementCall(
+        TranspilationResult $arguments,
+        string $methodName,
+        array $variableIdentifiers
+    ): TranspilationResult {
+        $domCrawlerNavigator = $this->variableNameResolver->resolve(
+            (string) new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
+            $variableIdentifiers
+        );
+
+        return new TranspilationResult(
+            $domCrawlerNavigator . '->' . $methodName . '(' . (string) $arguments . ')',
+            $arguments->getUseStatements()
+        );
     }
 
     /**
      * @param ElementIdentifierInterface $elementIdentifier
-     * @param array $variableIdentifiers
-     * @param string $methodName
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    private function createElementLocatorCall(
-        ElementIdentifierInterface $elementIdentifier,
-        array $variableIdentifiers,
-        string $methodName
-    ): TranspilationResult {
+    public function createElementCallArguments(ElementIdentifierInterface $elementIdentifier): TranspilationResult
+    {
         $elementTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
         $useStatements = $elementTranspilationResult->getUseStatements();
 
@@ -86,14 +122,6 @@ class DomCrawlerNavigatorCallFactory
             $findElementArguments .= ', ' . (string) $parentTranspilationResult;
         }
 
-        $domCrawlerNavigator = $this->variableNameResolver->resolve(
-            (string) new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
-            $variableIdentifiers
-        );
-
-        return new TranspilationResult(
-            $domCrawlerNavigator . '->' . $methodName . '(' . $findElementArguments . ')',
-            $useStatements
-        );
+        return new TranspilationResult($findElementArguments, $useStatements);
     }
 }

@@ -8,6 +8,7 @@ namespace webignition\BasilTranspiler\Tests\Unit;
 
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
@@ -24,10 +25,27 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
     }
 
-    public function testCreateFindElementCall()
+    public function testCreateFindElementCallForIdentifier()
     {
-        $transpilationResult = $this->factory->createFindElementCall(
+        $transpilationResult = $this->factory->createFindElementCallForIdentifier(
             TestIdentifierFactory::createCssElementIdentifier('.selector'),
+            [
+                VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
+            ]
+        );
+
+        $expectedContentPattern = '/^\$domCrawlerNavigator->findElement\(.*\)$/';
+        $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
+    }
+
+    public function testCreateFindElementCallForTranspiledLocator()
+    {
+        $identifier = TestIdentifierFactory::createCssElementIdentifier('.selector');
+
+        $findElementCallArguments = $this->factory->createElementCallArguments($identifier);
+
+        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments(
+            $findElementCallArguments,
             [
                 VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
             ]
