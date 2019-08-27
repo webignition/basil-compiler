@@ -10,10 +10,13 @@ use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
+use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
 
 class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
@@ -85,6 +88,71 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     1,
                     null,
                     TestIdentifierFactory::createCssElementIdentifier('form[action="/action2"]')
+                ),
+                'assertions' => function (WebDriverElement $element) {
+                    $this->assertSame('input-2', $element->getAttribute('name'));
+                },
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createFindElementCallForTranspiledArgumentsDataProvider
+     */
+    public function testCreateFindElementCallForTranspiledLocator(
+        string $fixture,
+        TranspilationResult $arguments,
+        callable $assertions
+    ) {
+        $variableIdentifiers = [
+            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
+        ];
+
+        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments(
+            $arguments,
+            $variableIdentifiers
+        );
+
+        $executableCall = $this->executableCallFactory->create(
+            $transpilationResult,
+            [
+                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
+                '$domCrawlerNavigator = Navigator::create($crawler); ',
+            ],
+            new UseStatementCollection([
+                new UseStatement(Navigator::class),
+            ])
+        );
+        $element = eval($executableCall);
+
+        $assertions($element);
+    }
+
+    public function createFindElementCallForTranspiledArgumentsDataProvider(): array
+    {
+        return [
+            'css selector, no parent' => [
+                'fixture' => '/basic.html',
+                'arguments' => new TranspilationResult(
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'input\', 1)',
+                    new UseStatementCollection([
+                        new UseStatement(LocatorType::class),
+                        new UseStatement(ElementLocator::class)
+                    ])
+                ),
+                'assertions' => function (WebDriverElement $element) {
+                    $this->assertSame('input-1', $element->getAttribute('name'));
+                },
+            ],
+            'css selector, has parent' => [
+                'fixture' => '/basic.html',
+                'arguments' => new TranspilationResult(
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'input\', 1), ' .
+                    'new ElementLocator(LocatorType::CSS_SELECTOR, \'form[action="/action2"]\', 1)',
+                    new UseStatementCollection([
+                        new UseStatement(LocatorType::class),
+                        new UseStatement(ElementLocator::class)
+                    ])
                 ),
                 'assertions' => function (WebDriverElement $element) {
                     $this->assertSame('input-2', $element->getAttribute('name'));
