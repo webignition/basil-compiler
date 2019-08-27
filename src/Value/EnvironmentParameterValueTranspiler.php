@@ -9,11 +9,10 @@ use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\BasilTranspiler\VariablePlaceholder;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
 {
-    private const MAPPED_VALUE = '{{ ' . VariableNames::ENVIRONMENT_VARIABLE_ARRAY . ' }}[\'%s\']';
-
     public static function createTranspiler(): EnvironmentParameterValueTranspiler
     {
         return new EnvironmentParameterValueTranspiler();
@@ -35,9 +34,12 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
     public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
-            return new TranspilationResult(
-                sprintf(self::MAPPED_VALUE, $model->getObjectProperty())
+            $content = sprintf(
+                (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'%s\']',
+                $model->getObjectProperty()
             );
+
+            return new TranspilationResult($content);
         }
 
         throw new NonTranspilableModelException($model);
