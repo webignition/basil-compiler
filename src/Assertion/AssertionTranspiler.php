@@ -2,6 +2,7 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
+use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\AbstractDelegatingTranspiler;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -9,12 +10,16 @@ class AssertionTranspiler extends AbstractDelegatingTranspiler implements Transp
 {
     public static function createTranspiler(): AssertionTranspiler
     {
-        return new AssertionTranspiler();
+        return new AssertionTranspiler(
+            [
+                ExistsComparisonTranspiler::createTranspiler(),
+            ]
+        );
     }
 
     public function handles(object $model): bool
     {
-        if ($model instanceof AssertionTranspiler) {
+        if ($model instanceof AssertionInterface) {
             return null !== $this->findDelegatedTranspiler($model);
         }
 
