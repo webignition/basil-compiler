@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 
 class DomCrawlerNavigatorCallFactory
 {
@@ -83,11 +84,9 @@ class DomCrawlerNavigatorCallFactory
         string $methodName
     ): TranspilationResult {
         $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
+        $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
-        return new TranspilationResult(
-            (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(' . (string) $arguments . ')',
-            $arguments->getUseStatements()
-        );
+        return $arguments->extend($template, new UseStatementCollection());
     }
 
     /**
@@ -99,22 +98,18 @@ class DomCrawlerNavigatorCallFactory
      */
     public function createElementCallArguments(ElementIdentifierInterface $elementIdentifier): TranspilationResult
     {
-        $elementTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
-        $useStatements = $elementTranspilationResult->getUseStatements();
+        $transpilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
-
-        $findElementArguments = (string) $elementTranspilationResult;
-
         if ($parentIdentifier instanceof ElementIdentifierInterface) {
             $parentTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
-            $useStatements = $useStatements->withAdditionalUseStatements(
+
+            $transpilationResult = $transpilationResult->extend(
+                sprintf('%s, %s', '%s', $parentTranspilationResult->getContent()),
                 $parentTranspilationResult->getUseStatements()
             );
-
-            $findElementArguments .= ', ' . (string) $parentTranspilationResult;
         }
 
-        return new TranspilationResult($findElementArguments, $useStatements);
+        return $transpilationResult;
     }
 }
