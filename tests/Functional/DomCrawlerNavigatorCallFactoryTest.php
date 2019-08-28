@@ -55,7 +55,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $transpilationResult = $this->factory->createFindElementCallForIdentifier($elementIdentifier);
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [
@@ -106,7 +106,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments($arguments);
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [
@@ -169,7 +169,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $transpilationResult = $this->factory->createHasElementCallForIdentifier($elementIdentifier);
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [
@@ -230,7 +230,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments($arguments);
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [

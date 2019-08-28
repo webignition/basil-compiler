@@ -57,7 +57,7 @@ class ValueTranspilerTest extends AbstractTestCase
         $this->assertEquals(new UseStatementCollection(), $transpilationResult->getUseStatements());
         $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [
