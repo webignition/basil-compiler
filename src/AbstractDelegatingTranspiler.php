@@ -6,17 +6,13 @@ use webignition\BasilTranspiler\Model\TranspilationResult;
 
 abstract class AbstractDelegatingTranspiler implements TranspilerInterface
 {
-    private $variableNameResolver;
-
     /**
      * @var TranspilerInterface[]
      */
     private $delegatedTranspilers = [];
 
-    public function __construct(VariableNameResolver $variableNameResolver, array $delegatedTranspilers = [])
+    public function __construct(array $delegatedTranspilers = [])
     {
-        $this->variableNameResolver = $variableNameResolver;
-
         foreach ($delegatedTranspilers as $delegatedTranspiler) {
             if ($delegatedTranspiler instanceof TranspilerInterface) {
                 $this->addDelegatedTranspiler($delegatedTranspiler);
