@@ -6,20 +6,27 @@ class TranspilationResult
 {
     private $content;
     private $useStatements;
+    private $variablePlaceholders;
 
-    public function __construct(string $content, UseStatementCollection $useStatementCollection)
-    {
+    public function __construct(
+        string $content,
+        UseStatementCollection $useStatements,
+        VariablePlaceholderCollection $variablePlaceholders
+    ) {
         $this->content = $content;
-        $this->useStatements = $useStatementCollection;
+        $this->useStatements = $useStatements;
+        $this->variablePlaceholders = $variablePlaceholders;
     }
 
     public function extend(
         string $template,
-        UseStatementCollection $useStatementCollection
+        UseStatementCollection $useStatements,
+        VariablePlaceholderCollection $variablePlaceholders
     ): TranspilationResult {
         return new TranspilationResult(
             sprintf($template, $this->getContent()),
-            $this->getUseStatements()->withAdditionalUseStatements($useStatementCollection)
+            $this->getUseStatements()->withAdditionalUseStatements($useStatements),
+            $this->getVariablePlaceholders()->withAdditionalVariablePlaceholders($variablePlaceholders)
         );
     }
 
@@ -31,6 +38,11 @@ class TranspilationResult
     public function getUseStatements(): UseStatementCollection
     {
         return $this->useStatements;
+    }
+
+    public function getVariablePlaceholders(): VariablePlaceholderCollection
+    {
+        return $this->variablePlaceholders;
     }
 
     public function withContent(string $content): TranspilationResult

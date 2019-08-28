@@ -35,8 +35,8 @@ class VariablePlaceholderCollection implements \Iterator
     ): VariablePlaceholderCollection {
         $new = clone $this;
 
-        foreach ($collection as $useStatement) {
-            $new->add($useStatement);
+        foreach ($collection as $variablePlaceholder) {
+            $new->add($variablePlaceholder);
         }
 
         return $new;
