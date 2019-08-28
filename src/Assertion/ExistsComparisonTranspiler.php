@@ -85,13 +85,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        // examined value types:
-        // ✓ element value
-        // ✓ attribute value
-        // ✓ browser object
-        // ✓ environment
-        // page object
-
         if ($examinedValue instanceof ElementValueInterface) {
             return $this->transpileForElementValue($examinedValue);
         }
