@@ -17,6 +17,11 @@ class UseStatementCollection extends AbstractUniqueCollection implements \Iterat
         return parent::withAdditionalItems($items);
     }
 
+    public function merge(array $collections): UseStatementCollection
+    {
+        return parent::merge($collections);
+    }
+
     protected function canBeAdded($item): bool
     {
         return $item instanceof UseStatement;

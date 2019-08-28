@@ -17,6 +17,11 @@ class VariablePlaceholderCollection extends AbstractUniqueCollection implements 
         return parent::withAdditionalItems($items);
     }
 
+    public function merge(array $collections): VariablePlaceholderCollection
+    {
+        return parent::merge($collections);
+    }
+
     protected function canBeAdded($item): bool
     {
         return $item instanceof VariablePlaceholder;

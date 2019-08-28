@@ -38,6 +38,19 @@ abstract class AbstractUniqueCollection implements \Iterator
         return $new;
     }
 
+    public function merge(array $collections)
+    {
+        $new = clone $this;
+
+        foreach ($collections as $collection) {
+            if ($collection instanceof AbstractUniqueCollection) {
+                $new = $new->withAdditionalItems($collection->getAll());
+            }
+        }
+
+        return $new;
+    }
+
     protected function add($item)
     {
         $hash = md5((string) $item);
