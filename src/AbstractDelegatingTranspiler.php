@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilTranspiler\Model\TranspilationResult;
 
-abstract class AbstractDelegatedTranspiler implements TranspilerInterface
+abstract class AbstractDelegatingTranspiler implements TranspilerInterface
 {
     private $variableNameResolver;
 
@@ -39,10 +39,10 @@ abstract class AbstractDelegatedTranspiler implements TranspilerInterface
      */
     public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
     {
-        $identifierTypeTranspiler = $this->findIdentifierTypeTranspiler($model);
+        $delegatedTranspiler = $this->findDelegatedTranspiler($model);
 
-        if ($identifierTypeTranspiler instanceof TranspilerInterface) {
-            $transpilationResult = $identifierTypeTranspiler->transpile($model, $variableIdentifiers);
+        if ($delegatedTranspiler instanceof TranspilerInterface) {
+            $transpilationResult = $delegatedTranspiler->transpile($model, $variableIdentifiers);
 
             $resolvedContent = $this->variableNameResolver->resolve(
                 $transpilationResult->getContent(),
@@ -55,11 +55,11 @@ abstract class AbstractDelegatedTranspiler implements TranspilerInterface
         throw new NonTranspilableModelException($model);
     }
 
-    protected function findIdentifierTypeTranspiler(object $model): ?TranspilerInterface
+    protected function findDelegatedTranspiler(object $model): ?TranspilerInterface
     {
-        foreach ($this->delegatedTranspilers as $valueTypeTranspiler) {
-            if ($valueTypeTranspiler->handles($model)) {
-                return $valueTypeTranspiler;
+        foreach ($this->delegatedTranspilers as $transpiler) {
+            if ($transpiler->handles($model)) {
+                return $transpiler;
             }
         }
 
