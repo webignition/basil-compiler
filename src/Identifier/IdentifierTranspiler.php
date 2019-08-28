@@ -3,11 +3,11 @@
 namespace webignition\BasilTranspiler\Identifier;
 
 use webignition\BasilModel\Identifier\IdentifierInterface;
-use webignition\BasilTranspiler\AbstractDelegatedTranspiler;
+use webignition\BasilTranspiler\AbstractDelegatingTranspiler;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNameResolver;
 
-class IdentifierTranspiler extends AbstractDelegatedTranspiler implements TranspilerInterface
+class IdentifierTranspiler extends AbstractDelegatingTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): IdentifierTranspiler
     {
@@ -23,7 +23,7 @@ class IdentifierTranspiler extends AbstractDelegatedTranspiler implements Transp
     public function handles(object $model): bool
     {
         if ($model instanceof IdentifierInterface) {
-            return null !== $this->findIdentifierTypeTranspiler($model);
+            return null !== $this->findDelegatedTranspiler($model);
         }
 
         return false;
