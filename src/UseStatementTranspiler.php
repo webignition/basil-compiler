@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 
 class UseStatementTranspiler implements TranspilerInterface
 {
@@ -39,6 +40,6 @@ class UseStatementTranspiler implements TranspilerInterface
             ? sprintf(self::CLASS_NAME_ONLY_TEMPLATE, $model->getClassName())
             : sprintf(self::WITH_ALIAS_TEMPLATE, $model->getClassName(), $model->getAlias());
 
-        return new TranspilationResult($content);
+        return new TranspilationResult($content, new UseStatementCollection());
     }
 }
