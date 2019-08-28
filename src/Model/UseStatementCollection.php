@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class UseStatementCollection extends AbstractCollection implements \Iterator
+class UseStatementCollection extends AbstractUniqueCollection implements \Iterator
 {
     /**
      * @return UseStatement[]
@@ -12,15 +12,14 @@ class UseStatementCollection extends AbstractCollection implements \Iterator
         return parent::getAll();
     }
 
-    public function withAdditionalUseStatements(UseStatementCollection $collection): UseStatementCollection
+    public function withAdditionalItems(array $items): UseStatementCollection
     {
-        $new = clone $this;
+        return parent::withAdditionalItems($items);
+    }
 
-        foreach ($collection as $useStatement) {
-            $new->add($useStatement);
-        }
-
-        return $new;
+    public function merge(array $collections): UseStatementCollection
+    {
+        return parent::merge($collections);
     }
 
     protected function canBeAdded($item): bool

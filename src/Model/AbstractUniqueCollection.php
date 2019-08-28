@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-abstract class AbstractCollection implements \Iterator
+abstract class AbstractUniqueCollection implements \Iterator
 {
     private $items = [];
 
@@ -23,6 +23,32 @@ abstract class AbstractCollection implements \Iterator
     public function getAll(): array
     {
         return array_values($this->items);
+    }
+
+    public function withAdditionalItems(array $items)
+    {
+        $new = clone $this;
+
+        foreach ($items as $item) {
+            if ($this->canBeAdded($item)) {
+                $new->add($item);
+            }
+        }
+
+        return $new;
+    }
+
+    public function merge(array $collections)
+    {
+        $new = clone $this;
+
+        foreach ($collections as $collection) {
+            if ($collection instanceof AbstractUniqueCollection) {
+                $new = $new->withAdditionalItems($collection->getAll());
+            }
+        }
+
+        return $new;
     }
 
     protected function add($item)

@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class VariablePlaceholderCollection extends AbstractCollection implements \Iterator
+class VariablePlaceholderCollection extends AbstractUniqueCollection implements \Iterator
 {
     /**
      * @return VariablePlaceholder[]
@@ -12,16 +12,14 @@ class VariablePlaceholderCollection extends AbstractCollection implements \Itera
         return parent::getAll();
     }
 
-    public function withAdditionalVariablePlaceholders(
-        VariablePlaceholderCollection $collection
-    ): VariablePlaceholderCollection {
-        $new = clone $this;
+    public function withAdditionalItems(array $items): VariablePlaceholderCollection
+    {
+        return parent::withAdditionalItems($items);
+    }
 
-        foreach ($collection as $variablePlaceholder) {
-            $new->add($variablePlaceholder);
-        }
-
-        return $new;
+    public function merge(array $collections): VariablePlaceholderCollection
+    {
+        return parent::merge($collections);
     }
 
     protected function canBeAdded($item): bool
