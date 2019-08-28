@@ -9,26 +9,26 @@ namespace webignition\BasilTranspiler\Tests\Services;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\UseStatementTranspiler;
-use webignition\BasilTranspiler\VariableNameResolver;
+use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
 class ExecutableCallFactory
 {
     private $useStatementTranspiler;
-    private $variableNameResolver;
+    private $variablePlaceholderResolver;
 
     public function __construct(
         UseStatementTranspiler $useStatementTranspiler,
-        VariableNameResolver $variableNameResolver
+        VariablePlaceholderResolver $variablePlaceholderResolver
     ) {
         $this->useStatementTranspiler = $useStatementTranspiler;
-        $this->variableNameResolver = $variableNameResolver;
+        $this->variablePlaceholderResolver = $variablePlaceholderResolver;
     }
 
     public static function createFactory(): ExecutableCallFactory
     {
         return new ExecutableCallFactory(
             UseStatementTranspiler::createTranspiler(),
-            new VariableNameResolver()
+            new VariablePlaceholderResolver()
         );
     }
 
@@ -54,7 +54,7 @@ class ExecutableCallFactory
         }
 
         $transpilationResult = $transpilationResult->withContent(
-            $this->variableNameResolver->resolve($transpilationResult->getContent(), $variableIdentifiers)
+            $this->variablePlaceholderResolver->resolve($transpilationResult->getContent(), $variableIdentifiers)
         );
 
         $executableCall .= 'return ' . (string) $transpilationResult . ';';
