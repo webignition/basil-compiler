@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler;
 
-class VariableNameResolver
+class VariablePlaceholderResolver
 {
     public function resolve(string $content, array $variableIdentifiers): string
     {
