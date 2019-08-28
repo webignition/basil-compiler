@@ -31,25 +31,17 @@ abstract class AbstractDelegatingTranspiler implements TranspilerInterface
 
     /**
      * @param object $model
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
+    public function transpile(object $model): TranspilationResult
     {
         $delegatedTranspiler = $this->findDelegatedTranspiler($model);
 
         if ($delegatedTranspiler instanceof TranspilerInterface) {
-            $transpilationResult = $delegatedTranspiler->transpile($model, $variableIdentifiers);
-
-            $resolvedContent = $this->variableNameResolver->resolve(
-                $transpilationResult->getContent(),
-                $variableIdentifiers
-            );
-
-            return $transpilationResult->withContent($resolvedContent);
+            return $delegatedTranspiler->transpile($model);
         }
 
         throw new NonTranspilableModelException($model);

@@ -21,6 +21,11 @@ use webignition\SymfonyDomCrawlerNavigator\Navigator;
 
 class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 {
+    const DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME = '$domCrawlerNavigator';
+    const VARIABLE_IDENTIFIERS = [
+        VariableNames::DOM_CRAWLER_NAVIGATOR => self::DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME,
+    ];
+
     /**
      * @var DomCrawlerNavigatorCallFactory
      */
@@ -47,17 +52,11 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         ElementIdentifierInterface $elementIdentifier,
         callable $assertions
     ) {
-        $variableIdentifiers = [
-            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-        ];
-
-        $transpilationResult = $this->factory->createFindElementCallForIdentifier(
-            $elementIdentifier,
-            $variableIdentifiers
-        );
+        $transpilationResult = $this->factory->createFindElementCallForIdentifier($elementIdentifier);
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
+            self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
@@ -104,17 +103,11 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         TranspilationResult $arguments,
         callable $assertions
     ) {
-        $variableIdentifiers = [
-            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-        ];
-
-        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments(
-            $arguments,
-            $variableIdentifiers
-        );
+        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments($arguments);
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
+            self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
@@ -169,17 +162,11 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         ElementIdentifierInterface $elementIdentifier,
         bool $expectedHasElement
     ) {
-        $variableIdentifiers = [
-            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-        ];
-
-        $transpilationResult = $this->factory->createHasElementCallForIdentifier(
-            $elementIdentifier,
-            $variableIdentifiers
-        );
+        $transpilationResult = $this->factory->createHasElementCallForIdentifier($elementIdentifier);
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
+            self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
@@ -236,17 +223,11 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         TranspilationResult $arguments,
         bool $expectedHasElement
     ) {
-        $variableIdentifiers = [
-            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-        ];
-
-        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments(
-            $arguments,
-            $variableIdentifiers
-        );
+        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments($arguments);
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
+            self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',

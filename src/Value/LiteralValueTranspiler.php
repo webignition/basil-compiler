@@ -19,7 +19,7 @@ class LiteralValueTranspiler implements TranspilerInterface
         return $model instanceof LiteralValue;
     }
 
-    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
+    public function transpile(object $model): TranspilationResult
     {
         if ($this->handles($model)) {
             return new TranspilationResult((string) $model);

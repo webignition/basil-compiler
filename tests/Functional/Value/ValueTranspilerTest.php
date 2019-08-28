@@ -18,6 +18,11 @@ use webignition\BasilTranspiler\VariableNames;
 
 class ValueTranspilerTest extends AbstractTestCase
 {
+    const PANTHER_CLIENT_VARIABLE_NAME = 'self::$client';
+    const VARIABLE_IDENTIFIERS = [
+        VariableNames::PANTHER_CLIENT => self::PANTHER_CLIENT_VARIABLE_NAME,
+    ];
+
     /**
      * @var ValueTranspiler
      */
@@ -44,14 +49,11 @@ class ValueTranspilerTest extends AbstractTestCase
         ValueInterface $model,
         $expectedExecutedResult
     ) {
-        $variableIdentifiers = [
-            VariableNames::PANTHER_CLIENT => 'self::$client',
-        ];
-
-        $transpilationResult = $this->transpiler->transpile($model, $variableIdentifiers);
+        $transpilationResult = $this->transpiler->transpile($model);
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
+            self::VARIABLE_IDENTIFIERS,
             [
                 'self::$client->request(\'GET\', \'' . $fixture . '\'); ',
             ]

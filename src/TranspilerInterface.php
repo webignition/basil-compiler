@@ -11,11 +11,10 @@ interface TranspilerInterface
 
     /**
      * @param object $model
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult;
+    public function transpile(object $model): TranspilationResult;
 }

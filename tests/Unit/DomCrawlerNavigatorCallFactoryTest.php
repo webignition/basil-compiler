@@ -8,8 +8,8 @@ namespace webignition\BasilTranspiler\Tests\Unit;
 
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\BasilTranspiler\VariablePlaceholder;
 
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -18,23 +18,26 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
      */
     private $factory;
 
+    /**
+     * @var VariablePlaceholder
+     */
+    private $domCrawlerNavigatorVariablePlaceholder;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
+        $this->domCrawlerNavigatorVariablePlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
     }
 
     public function testCreateFindElementCallForIdentifier()
     {
         $transpilationResult = $this->factory->createFindElementCallForIdentifier(
-            TestIdentifierFactory::createCssElementIdentifier('.selector'),
-            [
-                VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-            ]
+            TestIdentifierFactory::createCssElementIdentifier('.selector')
         );
 
-        $expectedContentPattern = '/^\$domCrawlerNavigator->findElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
     }
 
@@ -44,27 +47,19 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $findElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
-        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments(
-            $findElementCallArguments,
-            [
-                VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-            ]
-        );
+        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments($findElementCallArguments);
 
-        $expectedContentPattern = '/^\$domCrawlerNavigator->findElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
     }
 
     public function testCreateHasElementCallForIdentifier()
     {
         $transpilationResult = $this->factory->createHasElementCallForIdentifier(
-            TestIdentifierFactory::createCssElementIdentifier('.selector'),
-            [
-                VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-            ]
+            TestIdentifierFactory::createCssElementIdentifier('.selector')
         );
 
-        $expectedContentPattern = '/^\$domCrawlerNavigator->hasElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
     }
 
@@ -74,14 +69,9 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $hasElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
-        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments(
-            $hasElementCallArguments,
-            [
-                VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-            ]
-        );
+        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments($hasElementCallArguments);
 
-        $expectedContentPattern = '/^\$domCrawlerNavigator->hasElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
     }
 }

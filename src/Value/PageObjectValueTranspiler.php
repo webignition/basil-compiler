@@ -32,7 +32,7 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
         return ObjectNames::PAGE === $model->getObjectName();
     }
 
-    protected function getTranspiledValueMap(array $variableIdentifiers = []): array
+    protected function getTranspiledValueMap(): array
     {
         $pantherClientVariablePlaceholder = new VariablePlaceholder(VariableNames::PANTHER_CLIENT);
 
