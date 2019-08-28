@@ -87,12 +87,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspile(ValueInterface $model, TranspilationResult $expectedTranspilationResult)
     {
-        $variableIdentifiers = [
-            VariableNames::PANTHER_CLIENT => 'self::$client',
-            VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
-        ];
-
-        $this->assertEquals($expectedTranspilationResult, $this->transpiler->transpile($model, $variableIdentifiers));
+        $this->assertEquals($expectedTranspilationResult, $this->transpiler->transpile($model));
     }
 
     public function transpileDataProvider(): array
