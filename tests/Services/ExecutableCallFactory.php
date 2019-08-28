@@ -66,8 +66,22 @@ class ExecutableCallFactory
             $variableIdentifiers
         );
 
-        $executableCall .= 'return ' . $content . ';';
+        $executableCall .= $content;
 
         return $executableCall;
+    }
+
+    public function createWithReturn(
+        TranspilationResult $transpilationResult,
+        array $variableIdentifiers = [],
+        array $setupLines = [],
+        ?UseStatementCollection $additionalUseStatements = null
+    ): string {
+        return 'return ' . $this->create(
+            $transpilationResult,
+            $variableIdentifiers,
+            $setupLines,
+            $additionalUseStatements
+        );
     }
 }
