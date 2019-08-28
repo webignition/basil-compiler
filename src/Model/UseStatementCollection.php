@@ -18,16 +18,12 @@ class UseStatementCollection implements \Iterator
         }
     }
 
-    private function add(UseStatement $useStatement)
+    /**
+     * @return UseStatement[]
+     */
+    public function getAll(): array
     {
-        $hash = $useStatement->getHash();
-
-        if (!array_key_exists($hash, $this->useStatements)) {
-            $indexPosition = count($this->useStatements);
-
-            $this->useStatements[$hash] = $useStatement;
-            $this->iteratorIndex[$indexPosition] = $hash;
-        }
+        return array_values($this->useStatements);
     }
 
     public function withAdditionalUseStatements(UseStatementCollection $collection): UseStatementCollection
@@ -39,6 +35,18 @@ class UseStatementCollection implements \Iterator
         }
 
         return $new;
+    }
+
+    private function add(UseStatement $useStatement)
+    {
+        $hash = $useStatement->getHash();
+
+        if (!array_key_exists($hash, $this->useStatements)) {
+            $indexPosition = count($this->useStatements);
+
+            $this->useStatements[$hash] = $useStatement;
+            $this->iteratorIndex[$indexPosition] = $hash;
+        }
     }
 
     // Iterator methods

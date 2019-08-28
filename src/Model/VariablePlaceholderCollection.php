@@ -18,16 +18,12 @@ class VariablePlaceholderCollection implements \Iterator
         }
     }
 
-    private function add(VariablePlaceholder $variablePlaceholder)
+    /**
+     * @return VariablePlaceholder[]
+     */
+    public function getAll(): array
     {
-        $hash = $variablePlaceholder->getHash();
-
-        if (!array_key_exists($hash, $this->variablePlaceholders)) {
-            $indexPosition = count($this->variablePlaceholders);
-
-            $this->variablePlaceholders[$hash] = $variablePlaceholder;
-            $this->iteratorIndex[$indexPosition] = $hash;
-        }
+        return array_values($this->variablePlaceholders);
     }
 
     public function withAdditionalVariablePlaceholders(
@@ -40,6 +36,18 @@ class VariablePlaceholderCollection implements \Iterator
         }
 
         return $new;
+    }
+
+    private function add(VariablePlaceholder $variablePlaceholder)
+    {
+        $hash = $variablePlaceholder->getHash();
+
+        if (!array_key_exists($hash, $this->variablePlaceholders)) {
+            $indexPosition = count($this->variablePlaceholders);
+
+            $this->variablePlaceholders[$hash] = $variablePlaceholder;
+            $this->iteratorIndex[$indexPosition] = $hash;
+        }
     }
 
     // Iterator methods

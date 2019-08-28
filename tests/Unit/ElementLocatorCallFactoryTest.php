@@ -12,6 +12,7 @@ use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\ElementLocatorCallFactory;
+use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -45,8 +46,18 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         ElementLocator $expectedElementLocator
     ) {
         $transpilationResult = $this->factory->createConstructorCall($elementIdentifier);
-        $executableCall = $this->executableCallFactory->create($transpilationResult);
 
+        $this->assertEquals(
+            [
+                new UseStatement(ElementLocator::class),
+                new UseStatement(LocatorType::class),
+            ],
+            $transpilationResult->getUseStatements()->getAll()
+        );
+
+        $this->assertEquals([], $transpilationResult->getVariablePlaceholders()->getAll());
+
+        $executableCall = $this->executableCallFactory->create($transpilationResult);
         $elementLocator = eval($executableCall);
 
         $this->assertEquals($expectedElementLocator, $elementLocator);
