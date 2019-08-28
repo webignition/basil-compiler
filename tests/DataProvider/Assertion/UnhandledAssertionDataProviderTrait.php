@@ -157,16 +157,6 @@ trait UnhandledAssertionDataProviderTrait
                     '".selector".attribute_name is-not "value"'
                 ),
             ],
-            'not-exists comparison, element identifier examined value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector" not-exists'
-                ),
-            ],
-            'not-exists comparison, attribute identifier examined value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector".attribute_name not-exists'
-                ),
-            ],
             'includes comparison, element identifier examined value, literal string expected value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" includes "value"'
