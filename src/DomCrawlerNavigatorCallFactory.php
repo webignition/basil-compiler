@@ -88,7 +88,9 @@ class DomCrawlerNavigatorCallFactory
         $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
         $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
-        return $arguments->extend($template, new UseStatementCollection(), new VariablePlaceholderCollection());
+        return $arguments->extend($template, new UseStatementCollection(), new VariablePlaceholderCollection([
+            $domCrawlerNavigatorPlaceholder,
+        ]));
     }
 
     /**
