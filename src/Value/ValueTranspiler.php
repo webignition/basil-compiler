@@ -5,14 +5,12 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\AbstractDelegatingTranspiler;
 use webignition\BasilTranspiler\TranspilerInterface;
-use webignition\BasilTranspiler\VariableNameResolver;
 
 class ValueTranspiler extends AbstractDelegatingTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): ValueTranspiler
     {
         return new ValueTranspiler(
-            new VariableNameResolver(),
             [
                 LiteralValueTranspiler::createTranspiler(),
                 BrowserObjectValueTranspiler::createTranspiler(),
