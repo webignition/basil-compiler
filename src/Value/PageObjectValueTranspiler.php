@@ -7,7 +7,7 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {

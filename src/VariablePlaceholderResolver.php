@@ -2,6 +2,8 @@
 
 namespace webignition\BasilTranspiler;
 
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
+
 class VariablePlaceholderResolver
 {
     public function resolve(string $content, array $variableIdentifiers): string

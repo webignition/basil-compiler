@@ -26,7 +26,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProv
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {

@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {

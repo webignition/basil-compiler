@@ -2,6 +2,8 @@
 
 namespace webignition\BasilTranspiler;
 
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
+
 class PlaceholderFactory
 {
     public static function createFactory(): PlaceholderFactory

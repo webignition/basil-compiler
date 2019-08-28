@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class DomCrawlerNavigatorCallFactory
 {

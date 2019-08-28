@@ -10,7 +10,7 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
 {
