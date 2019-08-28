@@ -15,6 +15,7 @@ use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
@@ -96,11 +97,19 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
         return [
             'literal string value: string' => [
                 'value' => LiteralValue::createStringValue('value'),
-                'expectedTranspilationResult' => new TranspilationResult('"value"', new UseStatementCollection()),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    '"value"',
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
+                ),
             ],
             'literal string value: integer' => [
                 'value' => LiteralValue::createStringValue('100'),
-                'expectedTranspilationResult' => new TranspilationResult('"100"', new UseStatementCollection()),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    '"100"',
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
+                ),
             ],
             'environment parameter value' => [
                 'value' => new EnvironmentValue(
@@ -109,7 +118,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
                     (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']',
-                    new UseStatementCollection()
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
                 ),
             ],
             'element identifier, css selector' => [
@@ -118,7 +128,11 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                         LiteralValue::createCssSelectorValue('.selector')
                     )
                 ),
-                'expectedTranspilationResult' => new TranspilationResult('".selector"', new UseStatementCollection()),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    '".selector"',
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
+                ),
             ],
             'element identifier, css selector with non-default position' => [
                 'value' => new ElementValue(
@@ -127,13 +141,21 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                         2
                     )
                 ),
-                'expectedTranspilationResult' => new TranspilationResult('".selector"', new UseStatementCollection()),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    '".selector"',
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
+                ),
             ],
             'element identifier, css selector with name' => [
                 'value' => new ElementValue(
                     TestIdentifierFactory::createCssElementIdentifier('.selector', null, 'element_name')
                 ),
-                'expectedTranspilationResult' => new TranspilationResult('".selector"', new UseStatementCollection()),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    '".selector"',
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
+                ),
             ],
             'element identifier, xpath expression' => [
                 'value' => new ElementValue(
@@ -141,7 +163,11 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                         LiteralValue::createXpathExpressionValue('//h1')
                     )
                 ),
-                'expectedTranspilationResult' => new TranspilationResult('"//h1"', new UseStatementCollection()),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    '"//h1"',
+                    new UseStatementCollection(),
+                    new VariablePlaceholderCollection()
+                ),
             ],
         ];
     }

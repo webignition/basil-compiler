@@ -7,6 +7,7 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
@@ -40,7 +41,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
                 $model->getObjectProperty()
             );
 
-            return new TranspilationResult($content, new UseStatementCollection());
+            return new TranspilationResult($content, new UseStatementCollection(), new VariablePlaceholderCollection());
         }
 
         throw new NonTranspilableModelException($model);

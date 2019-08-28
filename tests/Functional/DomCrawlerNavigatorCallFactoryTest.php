@@ -13,6 +13,7 @@ use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -131,7 +132,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new UseStatementCollection([
                         new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
                 'assertions' => function (WebDriverElement $element) {
                     $this->assertSame('input-1', $element->getAttribute('name'));
@@ -145,7 +147,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new UseStatementCollection([
                         new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
                 'assertions' => function (WebDriverElement $element) {
                     $this->assertSame('input-2', $element->getAttribute('name'));
@@ -250,7 +253,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new UseStatementCollection([
                         new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => false,
             ],
@@ -262,7 +266,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new UseStatementCollection([
                         new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => false,
             ],
@@ -273,7 +278,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new UseStatementCollection([
                         new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => true,
             ],
@@ -285,7 +291,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new UseStatementCollection([
                         new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => true,
             ],

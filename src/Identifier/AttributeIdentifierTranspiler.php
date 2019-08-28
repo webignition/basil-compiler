@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\Identifier;
 use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -68,6 +69,10 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
             $this->singleQuotedStringEscaper->escape($attributeName)
         );
 
-        return $elementIdentifierTranspilationResult->extend($template, new UseStatementCollection());
+        return $elementIdentifierTranspilationResult->extend(
+            $template,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
+        );
     }
 }
