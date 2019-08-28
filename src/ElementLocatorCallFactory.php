@@ -61,11 +61,12 @@ class ElementLocatorCallFactory
             $elementIdentifier->getPosition()
         );
 
-        $transpilationResult = new TranspilationResult($content);
-
-        return $transpilationResult->withAdditionalUseStatements(new UseStatementCollection([
-            new UseStatement(ElementLocator::class),
-            new UseStatement(LocatorType::class),
-        ]));
+        return new TranspilationResult(
+            $content,
+            new UseStatementCollection([
+                new UseStatement(ElementLocator::class),
+                new UseStatement(LocatorType::class),
+            ])
+        );
     }
 }
