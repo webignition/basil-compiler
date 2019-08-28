@@ -65,11 +65,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspile(AssertionInterface $assertion, TranspilationResult $expectedTranspilationResult)
     {
-        $variableIdentifiers = [];
-
         $this->assertEquals(
             $expectedTranspilationResult,
-            $this->transpiler->transpile($assertion, $variableIdentifiers)
+            $this->transpiler->transpile($assertion)
         );
     }
 
