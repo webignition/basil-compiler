@@ -17,9 +17,4 @@ class VariablePlaceholder
     {
         return sprintf(self::TEMPLATE, $this->name);
     }
-
-    public function getHash(): string
-    {
-        return md5($this->name);
-    }
 }
