@@ -86,6 +86,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 
         $phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
         $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
+        $environmentVariablePlaceholder = new VariablePlaceholder('ENVIRONMENT_VARIABLE');
+        $environmentVariableArrayPlaceholder = new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY);
 
         return [
             'exists comparison, element identifier examined value' => [
@@ -121,6 +123,26 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     new VariablePlaceholder('ELEMENT'),
                     new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE),
                     new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
+                ]),
+            ],
+            'exists comparison, environment examined value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.KEY exists'
+                ),
+                'expectedContentPattern' =>
+                    '/^'
+                    . $environmentVariablePlaceholder
+                    .' = '
+                    . $environmentVariableArrayPlaceholder
+                    . preg_quote('[\'KEY\'] ?? null', "/")
+                    . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    .'->assertNotNull\('
+                    . $environmentVariablePlaceholder
+                    .'\)/m',
+                'expectedUseStatements' => new UseStatementCollection(),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE),
                 ]),
             ],
         ];

@@ -87,6 +87,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                 ],
             ],
+            'exists comparison, environment examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 exists'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
         ];
     }
 
@@ -145,6 +155,17 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                ],
+                'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
+            ],
+            'exists comparison, environment examined value, environment variable does not exist' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.FOO exists'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
             ],

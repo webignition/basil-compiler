@@ -24,10 +24,12 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 {
     const ELEMENT_EXISTS_TEMPLATE = '%s->assertTrue(%s)';
     const ATTRIBUTE_EXISTS_TEMPLATE = '%s->assertNotNull(%s->getAttribute(\'%s\'))';
+    const VARIABLE_EXISTS_TEMPLATE = '%s->assertNotNull(%s)';
 
     private $valueTranspiler;
     private $domCrawlerNavigatorCallFactory;
     private $elementLocatorCallFactory;
+    private $phpUnitTestCasePlaceholder;
 
     public function __construct(
         ValueTranspiler $valueTranspiler,
@@ -37,6 +39,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $this->valueTranspiler = $valueTranspiler;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
+
+        $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
@@ -83,7 +87,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         // ✓ element value
         // ✓ attribute value
         // browser object
-        // environment
+        // ✓ environment
         // page object
 
         if ($examinedValue instanceof ElementValueInterface) {
@@ -92,6 +96,10 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
         if ($examinedValue instanceof AttributeValueInterface) {
             return $this->transpileForAttributeValue($examinedValue);
+        }
+
+        if ($examinedValue instanceof EnvironmentValueInterface) {
+            return $this->transpileForEnvironmentValue($examinedValue);
         }
 
         throw new NonTranspilableModelException($model);
@@ -122,11 +130,9 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     private function createElementExistsAssertionCall(TranspilationResult $hasElementCall): TranspilationResult
     {
-        $phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
-
         $template = sprintf(
             self::ELEMENT_EXISTS_TEMPLATE,
-            (string) $phpUnitTestCasePlaceholder,
+            (string) $this->phpUnitTestCasePlaceholder,
             '%s'
         );
 
@@ -134,7 +140,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $template,
             new UseStatementCollection(),
             new VariablePlaceholderCollection([
-                $phpUnitTestCasePlaceholder,
+                $this->phpUnitTestCasePlaceholder,
             ])
         );
     }
@@ -208,27 +214,93 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $assertionStatement
         ];
 
-        $useStatements = new UseStatementCollection();
+        $calls = [
+            $elementLocatorConstructor,
+            $hasElementCall,
+            $findElementCall,
+            $elementExistsAssertionCall,
+        ];
 
-        $useStatements = $useStatements->merge([
-            $elementLocatorConstructor->getUseStatements(),
-            $hasElementCall->getUseStatements(),
-            $findElementCall->getUseStatements(),
-            $elementExistsAssertionCall->getUseStatements(),
-        ]);
+        return $this->createTranspilationResult(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection([
+                $elementLocatorPlaceholder,
+                $elementPlaceholder,
+                $phpunitTesCasePlaceholder,
+            ])
+        );
+    }
 
-        $variablePlaceholders = new VariablePlaceholderCollection([
-            $elementLocatorPlaceholder,
-            $elementPlaceholder,
-            $phpunitTesCasePlaceholder,
-        ]);
+    /**
+     * @param EnvironmentValueInterface $environmentValue
+     *
+     * @return TranspilationResult
+     *
+     * @throws NonTranspilableModelException
+     */
+    private function transpileForEnvironmentValue(EnvironmentValueInterface $environmentValue): TranspilationResult
+    {
+        $variablePlaceholder = new VariablePlaceholder('ENVIRONMENT_VARIABLE');
 
-        $variablePlaceholders = $variablePlaceholders->merge([
-            $elementLocatorConstructor->getVariablePlaceholders(),
-            $hasElementCall->getVariablePlaceholders(),
-            $findElementCall->getVariablePlaceholders(),
-            $elementExistsAssertionCall->getVariablePlaceholders(),
-        ]);
+        $environmentVariableAccessCall = $this->valueTranspiler->transpile($environmentValue);
+        $variableCreationCall = $environmentVariableAccessCall->extend(
+            sprintf(
+                '%s = %s ?? null',
+                (string) $variablePlaceholder,
+                '%s'
+            ),
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
+        );
+
+        $variableCreationStatement = (string) $variableCreationCall;
+
+        $assertionStatement = sprintf(
+            self::VARIABLE_EXISTS_TEMPLATE,
+            (string) $this->phpUnitTestCasePlaceholder,
+            (string) $variablePlaceholder
+        );
+
+        $statements = [
+            $variableCreationStatement,
+            $assertionStatement,
+        ];
+
+        $calls = [
+            $environmentVariableAccessCall,
+            $variableCreationCall,
+        ];
+
+        return $this->createTranspilationResult(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection([
+                $this->phpUnitTestCasePlaceholder,
+            ])
+        );
+    }
+
+    /**
+     * @param string[] $statements
+     * @param TranspilationResult[] $calls
+     * @param UseStatementCollection $useStatements
+     * @param VariablePlaceholderCollection $variablePlaceholders
+     *
+     * @return TranspilationResult
+     */
+    private function createTranspilationResult(
+        array $statements,
+        array $calls,
+        UseStatementCollection $useStatements,
+        VariablePlaceholderCollection $variablePlaceholders
+    ) {
+        foreach ($calls as $call) {
+            $useStatements = $useStatements->merge([$call->getUseStatements()]);
+            $variablePlaceholders = $variablePlaceholders->merge([$call->getVariablePlaceholders()]);
+        }
 
         return new TranspilationResult($statements, $useStatements, $variablePlaceholders);
     }
