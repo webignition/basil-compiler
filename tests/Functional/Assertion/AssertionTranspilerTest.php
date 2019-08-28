@@ -117,6 +117,33 @@ class AssertionTranspilerTest extends AbstractTestCase
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
             ],
+            'not-exists comparison, element identifier examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".selector" not-exists'
+                ),
+                'variableIdentifiers' => [],
+            ],
+            'not-exists comparison, attribute identifier examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '"#a-sibling".invalid not-exists'
+                ),
+                'variableIdentifiers' => [
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
+                ],
+            ],
+            'not-exists comparison, environment examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.INVALID not-exists'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
         ];
     }
 
