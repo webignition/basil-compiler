@@ -41,7 +41,11 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
                 $model->getObjectProperty()
             );
 
-            return new TranspilationResult($content, new UseStatementCollection(), new VariablePlaceholderCollection());
+            return new TranspilationResult(
+                [$content],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            );
         }
 
         throw new NonTranspilableModelException($model);

@@ -63,7 +63,9 @@ class ElementLocatorCallFactory
         );
 
         return new TranspilationResult(
-            $content,
+            [
+                $content,
+            ],
             new UseStatementCollection([
                 new UseStatement(ElementLocator::class),
                 new UseStatement(LocatorType::class),

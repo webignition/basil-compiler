@@ -55,11 +55,18 @@ class ExecutableCallFactory
             $executableCall .= $line . "\n";
         }
 
-        $transpilationResult = $transpilationResult->withContent(
-            $this->variablePlaceholderResolver->resolve($transpilationResult->getContent(), $variableIdentifiers)
+        $lines = $transpilationResult->getLines();
+
+        array_walk($lines, function (string &$line) {
+            $line .= ';';
+        });
+
+        $content = $this->variablePlaceholderResolver->resolve(
+            implode("\n", $lines),
+            $variableIdentifiers
         );
 
-        $executableCall .= 'return ' . (string) $transpilationResult . ';';
+        $executableCall .= 'return ' . $content . ';';
 
         return $executableCall;
     }

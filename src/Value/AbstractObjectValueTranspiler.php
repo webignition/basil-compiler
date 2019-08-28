@@ -30,7 +30,7 @@ abstract class AbstractObjectValueTranspiler implements TranspilerInterface
 
             if (is_string($transpiledValue)) {
                 return new TranspilationResult(
-                    $transpiledValue,
+                    [$transpiledValue],
                     new UseStatementCollection(),
                     $this->getVariablePlaceholders()
                 );

@@ -25,7 +25,7 @@ class LiteralValueTranspiler implements TranspilerInterface
     {
         if ($this->handles($model)) {
             return new TranspilationResult(
-                (string) $model,
+                [(string) $model],
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
             );
