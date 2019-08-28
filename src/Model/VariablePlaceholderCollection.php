@@ -12,16 +12,9 @@ class VariablePlaceholderCollection extends AbstractUniqueCollection implements 
         return parent::getAll();
     }
 
-    public function withAdditionalVariablePlaceholders(
-        VariablePlaceholderCollection $collection
-    ): VariablePlaceholderCollection {
-        $new = clone $this;
-
-        foreach ($collection as $variablePlaceholder) {
-            $new->add($variablePlaceholder);
-        }
-
-        return $new;
+    public function withAdditionalItems(array $items): VariablePlaceholderCollection
+    {
+        return parent::withAdditionalItems($items);
     }
 
     protected function canBeAdded($item): bool

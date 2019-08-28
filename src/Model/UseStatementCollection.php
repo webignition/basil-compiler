@@ -12,15 +12,9 @@ class UseStatementCollection extends AbstractUniqueCollection implements \Iterat
         return parent::getAll();
     }
 
-    public function withAdditionalUseStatements(UseStatementCollection $collection): UseStatementCollection
+    public function withAdditionalItems(array $items): UseStatementCollection
     {
-        $new = clone $this;
-
-        foreach ($collection as $useStatement) {
-            $new->add($useStatement);
-        }
-
-        return $new;
+        return parent::withAdditionalItems($items);
     }
 
     protected function canBeAdded($item): bool

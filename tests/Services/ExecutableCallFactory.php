@@ -41,7 +41,7 @@ class ExecutableCallFactory
         $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
 
         $useStatements = $transpilationResult->getUseStatements();
-        $useStatements = $useStatements->withAdditionalUseStatements($additionalUseStatements);
+        $useStatements = $useStatements->withAdditionalItems($additionalUseStatements->getAll());
 
         $executableCall = '';
 

@@ -25,6 +25,19 @@ abstract class AbstractUniqueCollection implements \Iterator
         return array_values($this->items);
     }
 
+    public function withAdditionalItems(array $items)
+    {
+        $new = clone $this;
+
+        foreach ($items as $item) {
+            if ($this->canBeAdded($item)) {
+                $new->add($item);
+            }
+        }
+
+        return $new;
+    }
+
     protected function add($item)
     {
         $hash = md5((string) $item);

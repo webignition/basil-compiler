@@ -25,8 +25,8 @@ class TranspilationResult
     ): TranspilationResult {
         return new TranspilationResult(
             sprintf($template, $this->getContent()),
-            $this->getUseStatements()->withAdditionalUseStatements($useStatements),
-            $this->getVariablePlaceholders()->withAdditionalVariablePlaceholders($variablePlaceholders)
+            $this->getUseStatements()->withAdditionalItems($useStatements->getAll()),
+            $this->getVariablePlaceholders()->withAdditionalItems($variablePlaceholders->getAll())
         );
     }
 
