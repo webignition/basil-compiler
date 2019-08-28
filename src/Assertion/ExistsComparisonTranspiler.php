@@ -25,13 +25,24 @@ use webignition\BasilTranspiler\VariableNames;
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
     const ELEMENT_EXISTS_TEMPLATE = '%s->assertTrue(%s)';
-    const ATTRIBUTE_EXISTS_TEMPLATE = '%s->assertNotNull(%s->getAttribute(\'%s\'))';
     const VARIABLE_EXISTS_TEMPLATE = '%s->assertNotNull(%s)';
+    const ELEMENT_NOT_EXISTS_TEMPLATE = '%s->assertFalse(%s)';
+    const VARIABLE_NOT_EXISTS_TEMPLATE = '%s->assertNull(%s)';
 
     private $valueTranspiler;
     private $domCrawlerNavigatorCallFactory;
     private $elementLocatorCallFactory;
     private $phpUnitTestCasePlaceholder;
+
+    /**
+     * @var string
+     */
+    private $attributeExistsTemplate = '';
+
+    /**
+     * @var string
+     */
+    private $attributeNotExistsTemplate = '';
 
     public function __construct(
         ValueTranspiler $valueTranspiler,
@@ -43,6 +54,17 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
 
         $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
+        $this->attributeExistsTemplate = sprintf(
+            self::VARIABLE_EXISTS_TEMPLATE,
+            '%s',
+            '%s->getAttribute(\'%s\')'
+        );
+
+        $this->attributeNotExistsTemplate = sprintf(
+            self::VARIABLE_NOT_EXISTS_TEMPLATE,
+            '%s',
+            '%s->getAttribute(\'%s\')'
+        );
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
@@ -60,7 +82,10 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             return false;
         }
 
-        return AssertionComparisons::EXISTS === $model->getComparison();
+        return in_array($model->getComparison(), [
+            AssertionComparisons::EXISTS,
+            AssertionComparisons::NOT_EXISTS,
+        ]);
     }
 
     /**
@@ -76,7 +101,12 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        if (AssertionComparisons::EXISTS !== $model->getComparison()) {
+        $isHandledComparison = in_array($model->getComparison(), [
+            AssertionComparisons::EXISTS,
+            AssertionComparisons::NOT_EXISTS,
+        ]);
+
+        if (false === $isHandledComparison) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -86,18 +116,19 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         if ($examinedValue instanceof ElementValueInterface) {
-            return $this->transpileForElementValue($examinedValue);
+            return $this->transpileForElementValue($examinedValue, (string) $model->getComparison());
         }
 
         if ($examinedValue instanceof AttributeValueInterface) {
-            return $this->transpileForAttributeValue($examinedValue);
+            return $this->transpileForAttributeValue($examinedValue, (string) $model->getComparison());
         }
 
         if ($examinedValue instanceof EnvironmentValueInterface) {
             return $this->transpileForScalarValue(
                 $examinedValue,
                 'ENVIRONMENT_VARIABLE',
-                '%s = %s ?? null'
+                '%s = %s ?? null',
+                (string) $model->getComparison()
             );
         }
 
@@ -106,7 +137,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
                 return $this->transpileForScalarValue(
                     $examinedValue,
                     'BROWSER_VARIABLE',
-                    '%s = %s'
+                    '%s = %s',
+                    (string) $model->getComparison()
                 );
             }
 
@@ -114,7 +146,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
                 return $this->transpileForScalarValue(
                     $examinedValue,
                     'PAGE_VARIABLE',
-                    '%s = %s'
+                    '%s = %s',
+                    (string) $model->getComparison()
                 );
             }
         }
@@ -162,31 +195,58 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         );
     }
 
+    private function createElementExistenceAssertionCall(
+        TranspilationResult $hasElementCall,
+        string $template
+    ): TranspilationResult {
+        return $hasElementCall->extend(
+            sprintf(
+                $template,
+                (string) $this->phpUnitTestCasePlaceholder,
+                '%s'
+            ),
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection([
+                $this->phpUnitTestCasePlaceholder,
+            ])
+        );
+    }
+
     /**
      * @param ElementValueInterface $elementValue
+     * @param string $comparison
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    private function transpileForElementValue(ElementValueInterface $elementValue): TranspilationResult
-    {
+    private function transpileForElementValue(
+        ElementValueInterface $elementValue,
+        string $comparison
+    ): TranspilationResult {
         $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasElementCallForIdentifier(
             $elementValue->getIdentifier()
         );
 
-        return $this->createElementExistsAssertionCall($hasElementCall);
+        $template = AssertionComparisons::EXISTS === $comparison
+            ? self::ELEMENT_EXISTS_TEMPLATE
+            : self::ELEMENT_NOT_EXISTS_TEMPLATE;
+
+        return $this->createElementExistenceAssertionCall($hasElementCall, $template);
     }
 
     /**
      * @param AttributeValueInterface $attributeValue
+     * @param string $comparison
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    private function transpileForAttributeValue(AttributeValueInterface $attributeValue): TranspilationResult
-    {
+    private function transpileForAttributeValue(
+        AttributeValueInterface $attributeValue,
+        string $comparison
+    ): TranspilationResult {
         $attributeIdentifier = $attributeValue->getIdentifier();
         $elementIdentifier = $attributeIdentifier->getElementIdentifier();
 
@@ -217,8 +277,13 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
         $elementExistsStatement = (string) $elementExistsAssertionCall;
         $elementFindStatement = $elementPlaceholder . ' = ' . $findElementCall;
+
+        $assertionStatementTemplate = AssertionComparisons::EXISTS === $comparison
+            ? $this->attributeExistsTemplate
+            : $this->attributeNotExistsTemplate;
+
         $assertionStatement = sprintf(
-            self::ATTRIBUTE_EXISTS_TEMPLATE,
+            $assertionStatementTemplate,
             (string) $phpunitTesCasePlaceholder,
             $elementPlaceholder,
             $attributeIdentifier->getAttributeName()
@@ -262,7 +327,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     private function transpileForScalarValue(
         ValueInterface $value,
         string $examinedVariableName,
-        string $accessCallTemplate
+        string $accessCallTemplate,
+        string $comparison
     ): TranspilationResult {
         $variablePlaceholder = new VariablePlaceholder($examinedVariableName);
 
@@ -279,8 +345,12 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
         $variableCreationStatement = (string) $variableCreationCall;
 
+        $assertionStatementTemplate = AssertionComparisons::EXISTS === $comparison
+            ? self::VARIABLE_EXISTS_TEMPLATE
+            : self::VARIABLE_NOT_EXISTS_TEMPLATE;
+
         $assertionStatement = sprintf(
-            self::VARIABLE_EXISTS_TEMPLATE,
+            $assertionStatementTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
             (string) $variablePlaceholder
         );
