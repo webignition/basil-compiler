@@ -29,7 +29,7 @@ class ElementValueTranspiler implements TranspilerInterface
         return $model instanceof ElementValueInterface;
     }
 
-    public function transpile(object $model, array $variableIdentifiers = []): TranspilationResult
+    public function transpile(object $model): TranspilationResult
     {
         if ($model instanceof ElementValueInterface) {
             $identifier = $model->getIdentifier();

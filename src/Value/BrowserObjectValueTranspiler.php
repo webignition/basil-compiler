@@ -31,7 +31,7 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
         return ObjectNames::BROWSER === $model->getObjectName();
     }
 
-    protected function getTranspiledValueMap(array $variableIdentifiers = []): array
+    protected function getTranspiledValueMap(): array
     {
         return [
             self::PROPERTY_NAME_SIZE =>

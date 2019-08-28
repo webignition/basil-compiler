@@ -22,6 +22,11 @@ use webignition\SymfonyDomCrawlerNavigator\Navigator;
 
 class IdentifierTranspilerTest extends AbstractTestCase
 {
+    const DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME = '$domCrawlerNavigator';
+    const VARIABLE_IDENTIFIERS = [
+        VariableNames::DOM_CRAWLER_NAVIGATOR => self::DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME,
+    ];
+
     /**
      * @var IdentifierTranspiler
      */
@@ -48,14 +53,11 @@ class IdentifierTranspilerTest extends AbstractTestCase
         IdentifierInterface $identifier,
         callable $assertions
     ) {
-        $variableIdentifiers = [
-            VariableNames::DOM_CRAWLER_NAVIGATOR => '$domCrawlerNavigator',
-        ];
-
-        $transpilationResult = $this->transpiler->transpile($identifier, $variableIdentifiers);
+        $transpilationResult = $this->transpiler->transpile($identifier);
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
+            self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',

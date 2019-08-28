@@ -25,6 +25,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProv
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\BasilTranspiler\VariablePlaceholder;
 
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
@@ -110,7 +111,9 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '$env.KEY',
                     'KEY'
                 ),
-                'expectedTranspilationResult' => new TranspilationResult('$_ENV[\'KEY\']'),
+                'expectedTranspilationResult' => new TranspilationResult(
+                    (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'
+                ),
             ],
             'element identifier, css selector' => [
                 'value' => new ElementValue(

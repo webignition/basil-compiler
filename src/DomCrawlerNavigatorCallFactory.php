@@ -8,104 +8,84 @@ use webignition\BasilTranspiler\Model\TranspilationResult;
 class DomCrawlerNavigatorCallFactory
 {
     private $elementLocatorCallFactory;
-    private $variableNameResolver;
 
-    public function __construct(
-        ElementLocatorCallFactory $elementLocatorCallFactory,
-        VariableNameResolver $variableNameResolver
-    ) {
+    public function __construct(ElementLocatorCallFactory $elementLocatorCallFactory)
+    {
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
-        $this->variableNameResolver = $variableNameResolver;
     }
 
     public static function createFactory(): DomCrawlerNavigatorCallFactory
     {
         return new DomCrawlerNavigatorCallFactory(
-            ElementLocatorCallFactory::createFactory(),
-            new VariableNameResolver()
+            ElementLocatorCallFactory::createFactory()
         );
     }
 
     /**
      * @param ElementIdentifierInterface $elementIdentifier
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
     public function createFindElementCallForIdentifier(
-        ElementIdentifierInterface $elementIdentifier,
-        array $variableIdentifiers
+        ElementIdentifierInterface $elementIdentifier
     ): TranspilationResult {
         $arguments = $this->createElementCallArguments($elementIdentifier);
 
-        return $this->createFindElementCallForTranspiledArguments($arguments, $variableIdentifiers);
+        return $this->createFindElementCallForTranspiledArguments($arguments);
     }
 
     /**
      * @param TranspilationResult $arguments
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      */
-    public function createFindElementCallForTranspiledArguments(
-        TranspilationResult $arguments,
-        array $variableIdentifiers
-    ): TranspilationResult {
-        return $this->createElementCall($arguments, 'findElement', $variableIdentifiers);
+    public function createFindElementCallForTranspiledArguments(TranspilationResult $arguments): TranspilationResult
+    {
+        return $this->createElementCall($arguments, 'findElement');
     }
 
     /**
      * @param ElementIdentifierInterface $elementIdentifier
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
     public function createHasElementCallForIdentifier(
-        ElementIdentifierInterface $elementIdentifier,
-        array $variableIdentifiers
+        ElementIdentifierInterface $elementIdentifier
     ): TranspilationResult {
         $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
 
-        return $this->createHasElementCallForTranspiledArguments($hasElementCallArguments, $variableIdentifiers);
+        return $this->createHasElementCallForTranspiledArguments($hasElementCallArguments);
     }
 
     /**
      * @param TranspilationResult $arguments
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      */
-    public function createHasElementCallForTranspiledArguments(
-        TranspilationResult $arguments,
-        array $variableIdentifiers
-    ): TranspilationResult {
-        return $this->createElementCall($arguments, 'hasElement', $variableIdentifiers);
+    public function createHasElementCallForTranspiledArguments(TranspilationResult $arguments): TranspilationResult
+    {
+        return $this->createElementCall($arguments, 'hasElement');
     }
 
 
     /**
      * @param TranspilationResult $arguments
      * @param string $methodName
-     * @param array $variableIdentifiers
      *
      * @return TranspilationResult
      */
     private function createElementCall(
         TranspilationResult $arguments,
-        string $methodName,
-        array $variableIdentifiers
+        string $methodName
     ): TranspilationResult {
-        $domCrawlerNavigator = $this->variableNameResolver->resolve(
-            (string) new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
-            $variableIdentifiers
-        );
+        $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
         return new TranspilationResult(
-            $domCrawlerNavigator . '->' . $methodName . '(' . (string) $arguments . ')',
+            (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(' . (string) $arguments . ')',
             $arguments->getUseStatements()
         );
     }
