@@ -77,8 +77,20 @@ class ExecutableCallFactory
         array $setupLines = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
-        return 'return ' . $this->create(
-            $transpilationResult,
+        $lines = $transpilationResult->getLines();
+        $lastLinePosition = count($lines) - 1;
+        $lastLine = $lines[$lastLinePosition];
+        $lastLine = 'return ' . $lastLine;
+        $lines[$lastLinePosition] = $lastLine;
+
+        $transpilationResultWithReturn = new TranspilationResult(
+            $lines,
+            $transpilationResult->getUseStatements(),
+            $transpilationResult->getVariablePlaceholders()
+        );
+
+        return $this->create(
+            $transpilationResultWithReturn,
             $variableIdentifiers,
             $setupLines,
             $additionalUseStatements
