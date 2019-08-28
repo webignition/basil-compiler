@@ -67,12 +67,6 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
             $this->singleQuotedStringEscaper->escape($attributeName)
         );
 
-        $transpilationResult = new TranspilationResult($content);
-
-        $transpilationResult = $transpilationResult->withAdditionalUseStatements(
-            $elementIdentifierTranspilationResult->getUseStatements()
-        );
-
-        return $transpilationResult;
+        return new TranspilationResult($content, $elementIdentifierTranspilationResult->getUseStatements());
     }
 }

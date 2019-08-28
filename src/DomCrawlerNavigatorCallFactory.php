@@ -84,11 +84,10 @@ class DomCrawlerNavigatorCallFactory
     ): TranspilationResult {
         $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $transpilationResult = new TranspilationResult(
-            (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(' . (string) $arguments . ')'
+        return new TranspilationResult(
+            (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(' . (string) $arguments . ')',
+            $arguments->getUseStatements()
         );
-
-        return $transpilationResult->withAdditionalUseStatements($arguments->getUseStatements());
     }
 
     /**
@@ -116,8 +115,6 @@ class DomCrawlerNavigatorCallFactory
             $findElementArguments .= ', ' . (string) $parentTranspilationResult;
         }
 
-        $transpilationResult = new TranspilationResult($findElementArguments);
-
-        return $transpilationResult->withAdditionalUseStatements($useStatements);
+        return new TranspilationResult($findElementArguments, $useStatements);
     }
 }

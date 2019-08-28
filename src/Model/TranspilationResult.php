@@ -7,10 +7,10 @@ class TranspilationResult
     private $content;
     private $useStatements;
 
-    public function __construct(string $content)
+    public function __construct(string $content, ?UseStatementCollection $useStatementCollection = null)
     {
         $this->content = $content;
-        $this->useStatements = new UseStatementCollection();
+        $this->useStatements = $useStatementCollection ?? new UseStatementCollection();
     }
 
     public function getContent(): string
@@ -27,14 +27,6 @@ class TranspilationResult
     {
         $new = clone $this;
         $new->content = $content;
-
-        return $new;
-    }
-
-    public function withAdditionalUseStatements(UseStatementCollection $useStatementCollection): TranspilationResult
-    {
-        $new = clone $this;
-        $new->useStatements = $new->useStatements->withAdditionalUseStatements($useStatementCollection);
 
         return $new;
     }
