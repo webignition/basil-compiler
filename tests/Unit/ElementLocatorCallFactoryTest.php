@@ -57,7 +57,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals([], $transpilationResult->getVariablePlaceholders()->getAll());
 
-        $executableCall = $this->executableCallFactory->create($transpilationResult);
+        $executableCall = $this->executableCallFactory->createWithReturn($transpilationResult);
         $elementLocator = eval($executableCall);
 
         $this->assertEquals($expectedElementLocator, $elementLocator);

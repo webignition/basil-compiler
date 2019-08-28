@@ -60,7 +60,7 @@ class ValueTranspilerTest extends AbstractTestCase
             $transpilationResult->getVariablePlaceholders()->getAll()
         );
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [

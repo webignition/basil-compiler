@@ -66,8 +66,34 @@ class ExecutableCallFactory
             $variableIdentifiers
         );
 
-        $executableCall .= 'return ' . $content . ';';
+        $executableCall .= $content;
 
         return $executableCall;
+    }
+
+    public function createWithReturn(
+        TranspilationResult $transpilationResult,
+        array $variableIdentifiers = [],
+        array $setupLines = [],
+        ?UseStatementCollection $additionalUseStatements = null
+    ): string {
+        $lines = $transpilationResult->getLines();
+        $lastLinePosition = count($lines) - 1;
+        $lastLine = $lines[$lastLinePosition];
+        $lastLine = 'return ' . $lastLine;
+        $lines[$lastLinePosition] = $lastLine;
+
+        $transpilationResultWithReturn = new TranspilationResult(
+            $lines,
+            $transpilationResult->getUseStatements(),
+            $transpilationResult->getVariablePlaceholders()
+        );
+
+        return $this->create(
+            $transpilationResultWithReturn,
+            $variableIdentifiers,
+            $setupLines,
+            $additionalUseStatements
+        );
     }
 }
