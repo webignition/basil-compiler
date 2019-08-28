@@ -11,6 +11,8 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -47,9 +49,16 @@ class ValueTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         ValueInterface $model,
+        VariablePlaceholderCollection $expectedVariablePlaceholders,
         $expectedExecutedResult
     ) {
         $transpilationResult = $this->transpiler->transpile($model);
+
+        $this->assertEquals([], $transpilationResult->getUseStatements()->getAll());
+        $this->assertEquals(
+            $expectedVariablePlaceholders->getAll(),
+            $transpilationResult->getVariablePlaceholders()->getAll()
+        );
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
@@ -67,32 +76,41 @@ class ValueTranspilerTest extends AbstractTestCase
         return [
             'browser object property: size' => [
                 'fixture' => '/basic.html',
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::BROWSER_OBJECT_PROPERTY,
                     '$browser.size',
                     ObjectNames::BROWSER,
                     'size'
                 ),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                ]),
                 'expectedExecutedResult' => new WebDriverDimension(1200, 1100),
             ],
             'page object property: title' => [
                 'fixture' => '/basic.html',
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::PAGE_OBJECT_PROPERTY,
                     '$page.title',
                     ObjectNames::PAGE,
                     'title'
                 ),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                ]),
                 'expectedExecutedResult' => 'A basic page',
             ],
             'page object property: url' => [
                 'fixture' => '/basic.html',
-                'value' => new ObjectValue(
+                'model' => new ObjectValue(
                     ValueTypes::PAGE_OBJECT_PROPERTY,
                     '$page.url',
                     ObjectNames::PAGE,
                     'url'
                 ),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                ]),
                 'expectedExecutedResult' => 'http://127.0.0.1:9080/basic.html',
             ],
         ];

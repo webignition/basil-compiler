@@ -5,6 +5,8 @@ namespace webignition\BasilTranspiler;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
 class DomCrawlerNavigatorCallFactory
 {
@@ -86,7 +88,9 @@ class DomCrawlerNavigatorCallFactory
         $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
         $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
-        return $arguments->extend($template, new UseStatementCollection());
+        return $arguments->extend($template, new UseStatementCollection(), new VariablePlaceholderCollection([
+            $domCrawlerNavigatorPlaceholder,
+        ]));
     }
 
     /**
@@ -106,7 +110,8 @@ class DomCrawlerNavigatorCallFactory
 
             $transpilationResult = $transpilationResult->extend(
                 sprintf('%s, %s', '%s', $parentTranspilationResult->getContent()),
-                $parentTranspilationResult->getUseStatements()
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
             );
         }
 

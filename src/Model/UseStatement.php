@@ -4,6 +4,8 @@ namespace webignition\BasilTranspiler\Model;
 
 class UseStatement
 {
+    const STRING_TEMPLATE = '%s as %s';
+
     private $className;
     private $alias;
 
@@ -23,11 +25,8 @@ class UseStatement
         return $this->alias;
     }
 
-    public function getHash(): string
+    public function __toString(): string
     {
-        return md5((string) json_encode([
-            'className' => $this->className,
-            'alias' => $this->alias,
-        ]));
+        return sprintf(self::STRING_TEMPLATE, $this->className, $this->alias);
     }
 }

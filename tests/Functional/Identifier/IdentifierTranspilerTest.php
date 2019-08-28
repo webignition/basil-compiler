@@ -15,9 +15,12 @@ use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
+use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
 
 class IdentifierTranspilerTest extends AbstractTestCase
@@ -54,6 +57,21 @@ class IdentifierTranspilerTest extends AbstractTestCase
         callable $assertions
     ) {
         $transpilationResult = $this->transpiler->transpile($identifier);
+
+        $this->assertEquals(
+            [
+                new UseStatement(ElementLocator::class),
+                new UseStatement(LocatorType::class),
+            ],
+            $transpilationResult->getUseStatements()->getAll()
+        );
+
+        $this->assertEquals(
+            [
+                new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
+            ],
+            $transpilationResult->getVariablePlaceholders()->getAll()
+        );
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,

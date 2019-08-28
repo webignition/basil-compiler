@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;
@@ -12,6 +13,7 @@ use webignition\BasilTranspiler\UnknownObjectPropertyException;
 abstract class AbstractObjectValueTranspiler implements TranspilerInterface
 {
     abstract protected function getTranspiledValueMap(): array;
+    abstract protected function getVariablePlaceholders(): VariablePlaceholderCollection;
 
     /**
      * @param object $model
@@ -27,7 +29,11 @@ abstract class AbstractObjectValueTranspiler implements TranspilerInterface
             $transpiledValue = $this->getTranspiledValueMap()[$model->getObjectProperty()] ?? null;
 
             if (is_string($transpiledValue)) {
-                return new TranspilationResult($transpiledValue, new UseStatementCollection());
+                return new TranspilationResult(
+                    $transpiledValue,
+                    new UseStatementCollection(),
+                    $this->getVariablePlaceholders()
+                );
             }
 
             throw new UnknownObjectPropertyException($model);

@@ -8,6 +8,7 @@ use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
@@ -66,7 +67,8 @@ class ElementLocatorCallFactory
             new UseStatementCollection([
                 new UseStatement(ElementLocator::class),
                 new UseStatement(LocatorType::class),
-            ])
+            ]),
+            new VariablePlaceholderCollection()
         );
     }
 }
