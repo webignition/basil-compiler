@@ -13,6 +13,7 @@ use webignition\BasilTranspiler\UnknownObjectPropertyException;
 abstract class AbstractObjectValueTranspiler implements TranspilerInterface
 {
     abstract protected function getTranspiledValueMap(): array;
+    abstract protected function getVariablePlaceholders(): VariablePlaceholderCollection;
 
     /**
      * @param object $model
@@ -31,7 +32,7 @@ abstract class AbstractObjectValueTranspiler implements TranspilerInterface
                 return new TranspilationResult(
                     $transpiledValue,
                     new UseStatementCollection(),
-                    new VariablePlaceholderCollection()
+                    $this->getVariablePlaceholders()
                 );
             }
 

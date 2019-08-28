@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
@@ -12,6 +13,13 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
+
+    private $pantherClientVariablePlaceholder;
+
+    public function __construct()
+    {
+        $this->pantherClientVariablePlaceholder = new VariablePlaceholder(VariableNames::PANTHER_CLIENT);
+    }
 
     public static function createTranspiler(): BrowserObjectValueTranspiler
     {
@@ -35,8 +43,15 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
     {
         return [
             self::PROPERTY_NAME_SIZE =>
-                (string) (new VariablePlaceholder(VariableNames::PANTHER_CLIENT)) .
+                (string) $this->pantherClientVariablePlaceholder .
                 '->getWebDriver()->manage()->window()->getSize()',
         ];
+    }
+
+    protected function getVariablePlaceholders(): VariablePlaceholderCollection
+    {
+        return new VariablePlaceholderCollection([
+            $this->pantherClientVariablePlaceholder,
+        ]);
     }
 }
