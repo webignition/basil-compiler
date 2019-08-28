@@ -53,7 +53,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
+        $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
@@ -68,7 +68,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments($findElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
+        $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
@@ -81,7 +81,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
+        $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
@@ -96,7 +96,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments($hasElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, $transpilationResult->getContent());
+        $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());

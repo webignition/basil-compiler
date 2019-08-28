@@ -41,6 +41,12 @@ class UseStatementTranspiler implements TranspilerInterface
             ? sprintf(self::CLASS_NAME_ONLY_TEMPLATE, $model->getClassName())
             : sprintf(self::WITH_ALIAS_TEMPLATE, $model->getClassName(), $model->getAlias());
 
-        return new TranspilationResult($content, new UseStatementCollection(), new VariablePlaceholderCollection());
+        return new TranspilationResult(
+            [
+                $content
+            ],
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
+        );
     }
 }

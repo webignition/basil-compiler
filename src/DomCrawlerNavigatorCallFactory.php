@@ -109,7 +109,7 @@ class DomCrawlerNavigatorCallFactory
             $parentTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
 
             $transpilationResult = $transpilationResult->extend(
-                sprintf('%s, %s', '%s', $parentTranspilationResult->getContent()),
+                sprintf('%s, %s', '%s', (string) $parentTranspilationResult),
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
             );

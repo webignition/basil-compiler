@@ -98,7 +98,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'literal string value: string' => [
                 'value' => LiteralValue::createStringValue('value'),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    '"value"',
+                    ['"value"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),
@@ -106,7 +106,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'literal string value: integer' => [
                 'value' => LiteralValue::createStringValue('100'),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    '"100"',
+                    ['"100"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),
@@ -117,7 +117,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     'KEY'
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']',
+                    [(string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),
@@ -129,7 +129,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     )
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    '".selector"',
+                    ['".selector"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),
@@ -142,7 +142,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     )
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    '".selector"',
+                    ['".selector"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),
@@ -152,7 +152,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     TestIdentifierFactory::createCssElementIdentifier('.selector', null, 'element_name')
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    '".selector"',
+                    ['".selector"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),
@@ -164,7 +164,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     )
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
-                    '"//h1"',
+                    ['"//h1"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
                 ),

@@ -4,16 +4,16 @@ namespace webignition\BasilTranspiler\Model;
 
 class TranspilationResult
 {
-    private $content;
+    private $lines;
     private $useStatements;
     private $variablePlaceholders;
 
     public function __construct(
-        string $content,
+        array $lines,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
     ) {
-        $this->content = $content;
+        $this->lines = $lines;
         $this->useStatements = $useStatements;
         $this->variablePlaceholders = $variablePlaceholders;
     }
@@ -24,15 +24,18 @@ class TranspilationResult
         VariablePlaceholderCollection $variablePlaceholders
     ): TranspilationResult {
         return new TranspilationResult(
-            sprintf($template, $this->getContent()),
+            explode("\n", sprintf($template, (string) $this)),
             $this->getUseStatements()->merge([$useStatements]),
             $this->getVariablePlaceholders()->merge([$variablePlaceholders])
         );
     }
 
-    public function getContent(): string
+    /**
+     * @return string[]
+     */
+    public function getLines(): array
     {
-        return $this->content;
+        return $this->lines;
     }
 
     public function getUseStatements(): UseStatementCollection
@@ -45,16 +48,8 @@ class TranspilationResult
         return $this->variablePlaceholders;
     }
 
-    public function withContent(string $content): TranspilationResult
-    {
-        $new = clone $this;
-        $new->content = $content;
-
-        return $new;
-    }
-
     public function __toString(): string
     {
-        return $this->content;
+        return implode("\n", $this->lines);
     }
 }
