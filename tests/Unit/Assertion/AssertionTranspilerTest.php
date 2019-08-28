@@ -88,6 +88,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
         $environmentVariablePlaceholder = new VariablePlaceholder('ENVIRONMENT_VARIABLE');
         $environmentVariableArrayPlaceholder = new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY);
+        $pantherClientPlaceholder = new VariablePlaceholder(VariableNames::PANTHER_CLIENT);
+        $browserVariablePlaceholder = new VariablePlaceholder('BROWSER_VARIABLE');
 
         return [
             'exists comparison, element identifier examined value' => [
@@ -105,8 +107,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     new UseStatement(LocatorType::class),
                 ]),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
-                    new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE),
+                    $domCrawlerNavigatorPlaceholder,
+                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'exists comparison, attribute identifier examined value' => [
@@ -121,8 +123,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
                     new VariablePlaceholder('ELEMENT_LOCATOR'),
                     new VariablePlaceholder('ELEMENT'),
-                    new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE),
-                    new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
+                    $phpUnitTestCasePlaceholder,
+                    $domCrawlerNavigatorPlaceholder,
                 ]),
             ],
             'exists comparison, environment examined value' => [
@@ -142,7 +144,28 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     .'\)/m',
                 'expectedUseStatements' => new UseStatementCollection(),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE),
+                    $phpUnitTestCasePlaceholder,
+                ]),
+            ],
+            'exists comparison, browser object value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size exists'
+                ),
+                'expectedContentPattern' =>
+                    '/^'
+                    . $browserVariablePlaceholder
+                    .' = '
+                    . $pantherClientPlaceholder
+                    . '.+'
+                    . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    .'->assertNotNull\('
+                    . $browserVariablePlaceholder
+                    .'\)/m',
+                'expectedUseStatements' => new UseStatementCollection(),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $phpUnitTestCasePlaceholder,
+                    $pantherClientPlaceholder,
                 ]),
             ],
         ];

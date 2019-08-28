@@ -13,6 +13,7 @@ use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
@@ -95,6 +96,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ENVIRONMENT_VARIABLE' => '$environmentVariable',
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'exists comparison, browser object value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size exists'
+                ),
+                'variableIdentifiers' => [
+                    'BROWSER_VARIABLE' => '$browserVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
             ],
         ];

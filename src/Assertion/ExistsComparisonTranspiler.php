@@ -7,7 +7,9 @@ use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModel\Value\AttributeValueInterface;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
+use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
+use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\ElementLocatorCallFactory;
@@ -86,7 +88,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         // examined value types:
         // ✓ element value
         // ✓ attribute value
-        // browser object
+        // ✓ browser object
         // ✓ environment
         // page object
 
@@ -99,7 +101,21 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         if ($examinedValue instanceof EnvironmentValueInterface) {
-            return $this->transpileForEnvironmentValue($examinedValue);
+            return $this->transpileForScalarValue(
+                $examinedValue,
+                'ENVIRONMENT_VARIABLE',
+                '%s = %s ?? null'
+            );
+        }
+
+        if ($examinedValue instanceof ObjectValueInterface) {
+            if (ObjectNames::BROWSER === $examinedValue->getObjectName()) {
+                return $this->transpileForScalarValue(
+                    $examinedValue,
+                    'BROWSER_VARIABLE',
+                    '%s = %s'
+                );
+            }
         }
 
         throw new NonTranspilableModelException($model);
@@ -234,20 +250,25 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     }
 
     /**
-     * @param EnvironmentValueInterface $environmentValue
+     * @param ValueInterface $value
+     * @param string $examinedVariableName
+     * @param string $accessCallTemplate
      *
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
      */
-    private function transpileForEnvironmentValue(EnvironmentValueInterface $environmentValue): TranspilationResult
-    {
-        $variablePlaceholder = new VariablePlaceholder('ENVIRONMENT_VARIABLE');
+    private function transpileForScalarValue(
+        ValueInterface $value,
+        string $examinedVariableName,
+        string $accessCallTemplate
+    ): TranspilationResult {
+        $variablePlaceholder = new VariablePlaceholder($examinedVariableName);
 
-        $environmentVariableAccessCall = $this->valueTranspiler->transpile($environmentValue);
-        $variableCreationCall = $environmentVariableAccessCall->extend(
+        $variableAccessCall = $this->valueTranspiler->transpile($value);
+        $variableCreationCall = $variableAccessCall->extend(
             sprintf(
-                '%s = %s ?? null',
+                $accessCallTemplate,
                 (string) $variablePlaceholder,
                 '%s'
             ),
@@ -269,7 +290,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         ];
 
         $calls = [
-            $environmentVariableAccessCall,
+            $variableAccessCall,
             $variableCreationCall,
         ];
 
