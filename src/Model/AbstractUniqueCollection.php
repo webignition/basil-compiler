@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-abstract class AbstractCollection implements \Iterator
+abstract class AbstractUniqueCollection implements \Iterator
 {
     private $items = [];
 

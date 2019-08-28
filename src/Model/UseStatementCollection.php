@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class UseStatementCollection extends AbstractCollection implements \Iterator
+class UseStatementCollection extends AbstractUniqueCollection implements \Iterator
 {
     /**
      * @return UseStatement[]

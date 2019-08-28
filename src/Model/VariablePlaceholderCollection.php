@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class VariablePlaceholderCollection extends AbstractCollection implements \Iterator
+class VariablePlaceholderCollection extends AbstractUniqueCollection implements \Iterator
 {
     /**
      * @return VariablePlaceholder[]
