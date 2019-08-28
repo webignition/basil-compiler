@@ -116,6 +116,14 @@ class ExistsComparisonTranspiler implements TranspilerInterface
                     '%s = %s'
                 );
             }
+
+            if (ObjectNames::PAGE === $examinedValue->getObjectName()) {
+                return $this->transpileForScalarValue(
+                    $examinedValue,
+                    'PAGE_VARIABLE',
+                    '%s = %s'
+                );
+            }
         }
 
         throw new NonTranspilableModelException($model);

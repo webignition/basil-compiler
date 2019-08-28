@@ -90,6 +90,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $environmentVariableArrayPlaceholder = new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY);
         $pantherClientPlaceholder = new VariablePlaceholder(VariableNames::PANTHER_CLIENT);
         $browserVariablePlaceholder = new VariablePlaceholder('BROWSER_VARIABLE');
+        $pageVariablePlaceholder = new VariablePlaceholder('PAGE_VARIABLE');
 
         return [
             'exists comparison, element identifier examined value' => [
@@ -161,6 +162,27 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $phpUnitTestCasePlaceholder
                     .'->assertNotNull\('
                     . $browserVariablePlaceholder
+                    .'\)/m',
+                'expectedUseStatements' => new UseStatementCollection(),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $phpUnitTestCasePlaceholder,
+                    $pantherClientPlaceholder,
+                ]),
+            ],
+            'exists comparison, page object value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title exists'
+                ),
+                'expectedContentPattern' =>
+                    '/^'
+                    . $pageVariablePlaceholder
+                    .' = '
+                    . $pantherClientPlaceholder
+                    . '.+'
+                    . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    .'->assertNotNull\('
+                    . $pageVariablePlaceholder
                     .'\)/m',
                 'expectedUseStatements' => new UseStatementCollection(),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([

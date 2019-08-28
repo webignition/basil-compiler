@@ -13,7 +13,6 @@ use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
@@ -105,6 +104,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 ),
                 'variableIdentifiers' => [
                     'BROWSER_VARIABLE' => '$browserVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'exists comparison, page object value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title exists'
+                ),
+                'variableIdentifiers' => [
+                    'PAGE_VARIABLE' => '$pageVariable',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
             ],
