@@ -16,6 +16,7 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -24,6 +25,7 @@ use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use ExistsAssertionDataProviderTrait;
+    use NotExistsAssertionDataProviderTrait;
     use UnhandledAssertionDataProviderTrait;
 
     /**
@@ -40,6 +42,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider existsAssertionDataProvider
+     * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)
     {
@@ -91,6 +94,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $pantherClientPlaceholder = new VariablePlaceholder(VariableNames::PANTHER_CLIENT);
         $browserVariablePlaceholder = new VariablePlaceholder('BROWSER_VARIABLE');
         $pageVariablePlaceholder = new VariablePlaceholder('PAGE_VARIABLE');
+        $elementLocatorPlaceholder = new VariablePlaceholder('ELEMENT_LOCATOR');
+        $elementPlaceholder = new VariablePlaceholder('ELEMENT');
 
         return [
             'exists comparison, element identifier examined value' => [
@@ -116,7 +121,15 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name exists'
                 ),
-                'expectedContentPattern' => '//',
+                'expectedContentPattern' => '/^'
+                    . $elementLocatorPlaceholder . '.+' . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    . '->assertTrue\('
+                    . $domCrawlerNavigatorPlaceholder
+                    . '->hasElement\(.*\)' . "\n"
+                    . $elementPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
+                    . $phpUnitTestCasePlaceholder . '->assertNotNull\(.+\)'
+                    .'/',
                 'expectedUseStatements' => new UseStatementCollection([
                     new UseStatement(ElementLocator::class),
                     new UseStatement(LocatorType::class),
@@ -188,6 +201,69 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
                     $phpUnitTestCasePlaceholder,
                     $pantherClientPlaceholder,
+                ]),
+            ],
+            'not-exists comparison, element identifier examined value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".selector" not-exists'
+                ),
+                'expectedContentPattern' =>
+                    '/^'
+                    . $phpUnitTestCasePlaceholder
+                    . '->assertFalse\('
+                    . $domCrawlerNavigatorPlaceholder
+                    . '->hasElement\(.*\)$/',
+                'expectedUseStatements' => new UseStatementCollection([
+                    new UseStatement(ElementLocator::class),
+                    new UseStatement(LocatorType::class),
+                ]),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $domCrawlerNavigatorPlaceholder,
+                    $phpUnitTestCasePlaceholder,
+                ]),
+            ],
+            'not-exists comparison, attribute identifier examined value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".selector".attribute_name not-exists'
+                ),
+                'expectedContentPattern' => '/^'
+                    . $elementLocatorPlaceholder . '.+' . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    . '->assertTrue\('
+                    . $domCrawlerNavigatorPlaceholder
+                    . '->hasElement\(.*\)' . "\n"
+                    . $elementPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
+                    . $phpUnitTestCasePlaceholder . '->assertNull\(.+\)'
+                    .'/',
+                'expectedUseStatements' => new UseStatementCollection([
+                    new UseStatement(ElementLocator::class),
+                    new UseStatement(LocatorType::class),
+                ]),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    new VariablePlaceholder('ELEMENT_LOCATOR'),
+                    new VariablePlaceholder('ELEMENT'),
+                    $phpUnitTestCasePlaceholder,
+                    $domCrawlerNavigatorPlaceholder,
+                ]),
+            ],
+            'not-exists comparison, environment examined value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.KEY not-exists'
+                ),
+                'expectedContentPattern' =>
+                    '/^'
+                    . $environmentVariablePlaceholder
+                    .' = '
+                    . $environmentVariableArrayPlaceholder
+                    . preg_quote('[\'KEY\'] ?? null', "/")
+                    . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    .'->assertNull\('
+                    . $environmentVariablePlaceholder
+                    .'\)/m',
+                'expectedUseStatements' => new UseStatementCollection(),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
         ];
