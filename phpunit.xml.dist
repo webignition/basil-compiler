@@ -12,6 +12,10 @@
     stopOnFailure               = "false"
     bootstrap                   = "vendor/autoload.php" >
 
+    <php>
+        <env name="TEST1" value="test 1 value" />
+    </php>
+
     <testsuites>
         <testsuite name="Default Test Suite">
             <directory>tests/</directory>
