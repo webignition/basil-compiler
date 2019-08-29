@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class VariablePlaceholder
+class VariablePlaceholder implements UniqueItemInterface
 {
     const TEMPLATE = '{{ %s }}';
 

@@ -4,6 +4,9 @@ namespace webignition\BasilTranspiler\Model;
 
 abstract class AbstractUniqueCollection implements \Iterator
 {
+    /**
+     * @var UniqueItemInterface[]
+     */
     private $items = [];
 
     private $iteratorIndex = [];
@@ -12,7 +15,7 @@ abstract class AbstractUniqueCollection implements \Iterator
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            if ($this->canBeAdded($item)) {
+            if ($item instanceof UniqueItemInterface && $this->canBeAdded($item)) {
                 $this->add($item);
             }
         }
@@ -20,9 +23,19 @@ abstract class AbstractUniqueCollection implements \Iterator
 
     abstract protected function canBeAdded($item): bool;
 
+    public function get(string $id)
+    {
+        return $this->items[$id] ?? null;
+    }
+
     public function getAll(): array
     {
         return array_values($this->items);
+    }
+
+    public function has(UniqueItemInterface $item): bool
+    {
+        return array_key_exists($item->getId(), $this->items);
     }
 
     public function withAdditionalItems(array $items)
@@ -51,15 +64,15 @@ abstract class AbstractUniqueCollection implements \Iterator
         return $new;
     }
 
-    protected function add($item)
+    protected function add(UniqueItemInterface $item)
     {
-        $hash = md5((string) $item);
+        $id = $item->getId();
 
-        if (!array_key_exists($hash, $this->items)) {
+        if (!array_key_exists($id, $this->items)) {
             $indexPosition = count($this->items);
 
-            $this->items[$hash] = $item;
-            $this->iteratorIndex[$indexPosition] = $hash;
+            $this->items[$id] = $item;
+            $this->iteratorIndex[$indexPosition] = $id;
         }
     }
 

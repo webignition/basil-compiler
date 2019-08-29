@@ -4,6 +4,11 @@ namespace webignition\BasilTranspiler\Model;
 
 class VariablePlaceholderCollection extends AbstractUniqueCollection implements \Iterator
 {
+    public function get(string $id): ?VariablePlaceholder
+    {
+        return parent::get($id);
+    }
+
     /**
      * @return VariablePlaceholder[]
      */

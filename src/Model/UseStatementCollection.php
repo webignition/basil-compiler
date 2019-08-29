@@ -4,6 +4,11 @@ namespace webignition\BasilTranspiler\Model;
 
 class UseStatementCollection extends AbstractUniqueCollection implements \Iterator
 {
+    public function get(string $id): ?UseStatement
+    {
+        return parent::get($id);
+    }
+
     /**
      * @return UseStatement[]
      */
