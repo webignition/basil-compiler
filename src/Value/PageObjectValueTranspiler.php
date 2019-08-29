@@ -8,18 +8,19 @@ use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_TITLE = 'title';
     const PROPERTY_NAME_URL = 'url';
 
-    private $pantherClientVariablePlaceholder;
+    private $variablePlaceholders;
 
     public function __construct()
     {
-        $this->pantherClientVariablePlaceholder = new VariablePlaceholder(VariableNames::PANTHER_CLIENT);
+        $this->variablePlaceholders = VariablePlaceholderCollection::createCollection([
+            VariableNames::PANTHER_CLIENT,
+        ]);
     }
 
     public static function createTranspiler(): PageObjectValueTranspiler
@@ -42,16 +43,16 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
 
     protected function getTranspiledValueMap(): array
     {
+        $pantherClientPlaceholder = $this->variablePlaceholders->get(VariableNames::PANTHER_CLIENT);
+
         return [
-            self::PROPERTY_NAME_TITLE => (string) $this->pantherClientVariablePlaceholder . '->getTitle()',
-            self::PROPERTY_NAME_URL => (string) $this->pantherClientVariablePlaceholder . '->getCurrentURL()',
+            self::PROPERTY_NAME_TITLE => (string) $pantherClientPlaceholder . '->getTitle()',
+            self::PROPERTY_NAME_URL => (string) $pantherClientPlaceholder . '->getCurrentURL()',
         ];
     }
 
     protected function getVariablePlaceholders(): VariablePlaceholderCollection
     {
-        return new VariablePlaceholderCollection([
-            $this->pantherClientVariablePlaceholder,
-        ]);
+        return $this->variablePlaceholders;
     }
 }

@@ -11,7 +11,7 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
@@ -54,11 +54,8 @@ class ValueTranspilerTest extends AbstractTestCase
     ) {
         $transpilationResult = $this->transpiler->transpile($model);
 
-        $this->assertEquals([], $transpilationResult->getUseStatements()->getAll());
-        $this->assertEquals(
-            $expectedVariablePlaceholders->getAll(),
-            $transpilationResult->getVariablePlaceholders()->getAll()
-        );
+        $this->assertEquals(new UseStatementCollection(), $transpilationResult->getUseStatements());
+        $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
@@ -82,8 +79,8 @@ class ValueTranspilerTest extends AbstractTestCase
                     ObjectNames::BROWSER,
                     'size'
                 ),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => new WebDriverDimension(1200, 1100),
             ],
@@ -95,8 +92,8 @@ class ValueTranspilerTest extends AbstractTestCase
                     ObjectNames::PAGE,
                     'title'
                 ),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => 'A basic page',
             ],
@@ -108,8 +105,8 @@ class ValueTranspilerTest extends AbstractTestCase
                     ObjectNames::PAGE,
                     'url'
                 ),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => 'http://127.0.0.1:9080/basic.html',
             ],

@@ -5,7 +5,6 @@ namespace webignition\BasilTranspiler;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
 class DomCrawlerNavigatorCallFactory
@@ -81,16 +80,16 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return TranspilationResult
      */
-    private function createElementCall(
-        TranspilationResult $arguments,
-        string $methodName
-    ): TranspilationResult {
-        $domCrawlerNavigatorPlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
-        $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
+    private function createElementCall(TranspilationResult $arguments, string $methodName): TranspilationResult
+    {
+        $variablePlaceholders = VariablePlaceholderCollection::createCollection([
+            VariableNames::DOM_CRAWLER_NAVIGATOR,
+        ]);
 
-        return $arguments->extend($template, new UseStatementCollection(), new VariablePlaceholderCollection([
-            $domCrawlerNavigatorPlaceholder,
-        ]));
+        $template =
+            (string) $variablePlaceholders->get(VariableNames::DOM_CRAWLER_NAVIGATOR) . '->' . $methodName . '(%s)';
+
+        return $arguments->extend($template, new UseStatementCollection(), $variablePlaceholders);
     }
 
     /**

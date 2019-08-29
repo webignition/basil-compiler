@@ -7,17 +7,15 @@ class VariablePlaceholder implements UniqueItemInterface
     const TEMPLATE = '{{ %s }}';
 
     private $name = '';
-    private $id = '';
 
-    public function __construct(string $name, string $id = '')
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->id = $id;
     }
 
     public function getId(): string
     {
-        return $this->id;
+        return $this->name;
     }
 
     public function __toString(): string

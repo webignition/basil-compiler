@@ -15,7 +15,7 @@ use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
@@ -58,20 +58,18 @@ class IdentifierTranspilerTest extends AbstractTestCase
     ) {
         $transpilationResult = $this->transpiler->transpile($identifier);
 
-        $this->assertEquals(
-            [
-                new UseStatement(ElementLocator::class),
-                new UseStatement(LocatorType::class),
-            ],
-            $transpilationResult->getUseStatements()->getAll()
-        );
+        $expectedUseStatements = new UseStatementCollection([
+            new UseStatement(ElementLocator::class),
+            new UseStatement(LocatorType::class),
+        ]);
 
-        $this->assertEquals(
-            [
-                new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR),
-            ],
-            $transpilationResult->getVariablePlaceholders()->getAll()
-        );
+        $this->assertEquals($expectedUseStatements, $transpilationResult->getUseStatements());
+
+        $expectedVariablePlaceholders = VariablePlaceholderCollection::createCollection([
+            VariableNames::DOM_CRAWLER_NAVIGATOR,
+        ]);
+
+        $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
 
         $executableCall = $this->executableCallFactory->create(
             $transpilationResult,
