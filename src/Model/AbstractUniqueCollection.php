@@ -1,6 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+/** @noinspection PhpDocSignatureInspection */
+declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Model;
+
+use webignition\BasilTranspiler\UnknownItemException;
 
 abstract class AbstractUniqueCollection implements \Iterator
 {
@@ -15,17 +19,24 @@ abstract class AbstractUniqueCollection implements \Iterator
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            if ($item instanceof UniqueItemInterface && $this->canBeAdded($item)) {
-                $this->add($item);
-            }
+            $this->add($item);
         }
     }
 
-    abstract protected function canBeAdded($item): bool;
+    abstract protected function add($item);
 
+    /**
+     * @throws UnknownItemException
+     */
     public function get(string $id)
     {
-        return $this->items[$id] ?? null;
+        $item = $this->items[$id] ?? null;
+
+        if (null === $item) {
+            throw new UnknownItemException($id);
+        }
+
+        return $item;
     }
 
     public function getAll(): array
@@ -43,9 +54,7 @@ abstract class AbstractUniqueCollection implements \Iterator
         $new = clone $this;
 
         foreach ($items as $item) {
-            if ($this->canBeAdded($item)) {
-                $new->add($item);
-            }
+            $new->add($item);
         }
 
         return $new;
@@ -64,7 +73,7 @@ abstract class AbstractUniqueCollection implements \Iterator
         return $new;
     }
 
-    protected function add(UniqueItemInterface $item)
+    protected function doAdd(UniqueItemInterface $item)
     {
         $id = $item->getId();
 

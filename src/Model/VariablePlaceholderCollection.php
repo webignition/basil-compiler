@@ -2,6 +2,8 @@
 
 namespace webignition\BasilTranspiler\Model;
 
+use webignition\BasilTranspiler\UnknownItemException;
+
 class VariablePlaceholderCollection extends AbstractUniqueCollection implements \Iterator
 {
     public static function createCollection(array $names): VariablePlaceholderCollection
@@ -22,13 +24,21 @@ class VariablePlaceholderCollection extends AbstractUniqueCollection implements 
         $variablePlaceholder = new VariablePlaceholder($name);
 
         if (!$this->has($variablePlaceholder)) {
-            $this->add($variablePlaceholder);
+            $this->doAdd($variablePlaceholder);
         }
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->get($name);
     }
 
-    public function get(string $id): ?VariablePlaceholder
+    /**
+     * @param string $id
+     *
+     * @return VariablePlaceholder
+     *
+     * @throws UnknownItemException
+     */
+    public function get(string $id): VariablePlaceholder
     {
         return parent::get($id);
     }
@@ -51,9 +61,11 @@ class VariablePlaceholderCollection extends AbstractUniqueCollection implements 
         return parent::merge($collections);
     }
 
-    protected function canBeAdded($item): bool
+    protected function add($item)
     {
-        return $item instanceof VariablePlaceholder;
+        if ($item instanceof VariablePlaceholder) {
+            $this->doAdd($item);
+        }
     }
 
     // Iterator methods
