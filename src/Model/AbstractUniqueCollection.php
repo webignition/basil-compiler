@@ -1,9 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+/** @noinspection PhpDocSignatureInspection */
+declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Model;
 
+use webignition\BasilTranspiler\UnknownItemException;
+
 abstract class AbstractUniqueCollection implements \Iterator
 {
+    /**
+     * @var UniqueItemInterface[]
+     */
     private $items = [];
 
     private $iteratorIndex = [];
@@ -12,17 +19,34 @@ abstract class AbstractUniqueCollection implements \Iterator
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            if ($this->canBeAdded($item)) {
-                $this->add($item);
-            }
+            $this->add($item);
         }
     }
 
-    abstract protected function canBeAdded($item): bool;
+    abstract protected function add($item);
+
+    /**
+     * @throws UnknownItemException
+     */
+    public function get(string $id)
+    {
+        $item = $this->items[$id] ?? null;
+
+        if (null === $item) {
+            throw new UnknownItemException($id);
+        }
+
+        return $item;
+    }
 
     public function getAll(): array
     {
         return array_values($this->items);
+    }
+
+    public function has(UniqueItemInterface $item): bool
+    {
+        return array_key_exists($item->getId(), $this->items);
     }
 
     public function withAdditionalItems(array $items)
@@ -30,9 +54,7 @@ abstract class AbstractUniqueCollection implements \Iterator
         $new = clone $this;
 
         foreach ($items as $item) {
-            if ($this->canBeAdded($item)) {
-                $new->add($item);
-            }
+            $new->add($item);
         }
 
         return $new;
@@ -51,15 +73,15 @@ abstract class AbstractUniqueCollection implements \Iterator
         return $new;
     }
 
-    protected function add($item)
+    protected function doAdd(UniqueItemInterface $item)
     {
-        $hash = md5((string) $item);
+        $id = $item->getId();
 
-        if (!array_key_exists($hash, $this->items)) {
+        if (!array_key_exists($id, $this->items)) {
             $indexPosition = count($this->items);
 
-            $this->items[$hash] = $item;
-            $this->iteratorIndex[$indexPosition] = $hash;
+            $this->items[$id] = $item;
+            $this->iteratorIndex[$indexPosition] = $id;
         }
     }
 

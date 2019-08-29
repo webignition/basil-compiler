@@ -9,6 +9,8 @@ namespace webignition\BasilTranspiler\Tests\Unit;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -26,24 +28,33 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
      */
     private $domCrawlerNavigatorVariablePlaceholder;
 
-    private $expectedUseStatements = [];
-    private $expectedPlaceholders = [];
+    /**
+     * @var UseStatementCollection
+     */
+    private $expectedUseStatements;
+
+    /**
+     * @var VariablePlaceholderCollection
+     */
+    private $expectedPlaceholders;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
-        $this->domCrawlerNavigatorVariablePlaceholder = new VariablePlaceholder(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $this->expectedUseStatements = [
+        $this->expectedUseStatements = new UseStatementCollection([
             new UseStatement(ElementLocator::class),
             new UseStatement(LocatorType::class),
-        ];
+        ]);
 
-        $this->expectedPlaceholders = [
-            $this->domCrawlerNavigatorVariablePlaceholder,
-        ];
+        $this->expectedPlaceholders = VariablePlaceholderCollection::createCollection([
+            VariableNames::DOM_CRAWLER_NAVIGATOR
+        ]);
+
+        $this->domCrawlerNavigatorVariablePlaceholder =
+            $this->expectedPlaceholders->get(VariableNames::DOM_CRAWLER_NAVIGATOR);
     }
 
     public function testCreateFindElementCallForIdentifier()
@@ -55,8 +66,8 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
-        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
+        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 
     public function testCreateFindElementCallForTranspiledLocator()
@@ -70,8 +81,8 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
-        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
+        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 
     public function testCreateHasElementCallForIdentifier()
@@ -83,8 +94,8 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
-        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
+        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 
     public function testCreateHasElementCallForTranspiledLocator()
@@ -98,7 +109,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements()->getAll());
-        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders()->getAll());
+        $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 }

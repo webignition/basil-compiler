@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class UseStatement
+class UseStatement implements UniqueItemInterface
 {
     const STRING_TEMPLATE = '%s as %s';
 
@@ -23,6 +23,11 @@ class UseStatement
     public function getAlias(): ?string
     {
         return $this->alias;
+    }
+
+    public function getId(): string
+    {
+        return md5((string) $this);
     }
 
     public function __toString(): string

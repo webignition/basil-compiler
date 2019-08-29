@@ -119,7 +119,9 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedTranspilationResult' => new TranspilationResult(
                     [(string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'],
                     new UseStatementCollection(),
-                    new VariablePlaceholderCollection()
+                    VariablePlaceholderCollection::createCollection([
+                        VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
+                    ])
                 ),
             ],
             'element identifier, css selector' => [
