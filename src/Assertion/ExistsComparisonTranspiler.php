@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
+use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\AttributeValueInterface;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
@@ -18,6 +19,7 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -97,6 +99,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function transpile(object $model): TranspilationResult
     {
@@ -199,6 +202,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     private function transpileForElementValue(
         ElementValueInterface $elementValue,
@@ -222,6 +226,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     private function transpileForAttributeValue(
         AttributeValueInterface $attributeValue,
@@ -230,33 +235,11 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $attributeIdentifier = $attributeValue->getIdentifier();
         $elementIdentifier = $attributeIdentifier->getElementIdentifier();
 
-        $elementLocatorPlaceholder = new VariablePlaceholder('ELEMENT_LOCATOR');
-        $elementPlaceholder = new VariablePlaceholder('ELEMENT');
-        $phpunitTesCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
+        $elementVariableAssignmentCall = $this->createElementVariableAssignmentCall($elementIdentifier);
+        $elementVariableAssignmentCallPlaceholders = $elementVariableAssignmentCall->getVariablePlaceholders();
 
-        $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
-
-        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasElementCallForTranspiledArguments(
-            new TranspilationResult(
-                [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
-                new VariablePlaceholderCollection()
-            )
-        );
-
-        $findElementCall = $this->domCrawlerNavigatorCallFactory->createFindElementCallForTranspiledArguments(
-            new TranspilationResult(
-                [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
-                new VariablePlaceholderCollection()
-            )
-        );
-
-        $elementExistsAssertionCall = $this->createElementExistsAssertionCall($hasElementCall);
-
-        $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
-        $elementExistsStatement = (string) $elementExistsAssertionCall;
-        $elementFindStatement = $elementPlaceholder . ' = ' . $findElementCall;
+        $elementPlaceholder = $elementVariableAssignmentCallPlaceholders->get('ELEMENT');
+        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->get(VariableNames::PHPUNIT_TEST_CASE);
 
         $assertionStatementTemplate = AssertionComparisons::EXISTS === $comparison
             ? $this->attributeExistsTemplate
@@ -269,29 +252,22 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $attributeIdentifier->getAttributeName()
         );
 
-        $statements = [
-            $elementLocatorConstructorStatement,
-            $elementExistsStatement,
-            $elementFindStatement,
-            $assertionStatement
-        ];
+        $statements = array_merge(
+            $elementVariableAssignmentCall->getLines(),
+            [
+                $assertionStatement,
+            ]
+        );
 
         $calls = [
-            $elementLocatorConstructor,
-            $hasElementCall,
-            $findElementCall,
-            $elementExistsAssertionCall,
+            $elementVariableAssignmentCall,
         ];
 
-        return $this->createTranspilationResult(
+        return $this->composeTranspilationResult(
             $statements,
             $calls,
             new UseStatementCollection(),
-            new VariablePlaceholderCollection([
-                $elementLocatorPlaceholder,
-                $elementPlaceholder,
-                $phpunitTesCasePlaceholder,
-            ])
+            new VariablePlaceholderCollection()
         );
     }
 
@@ -299,6 +275,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @param ValueInterface $value
      * @param string $examinedVariableName
      * @param string $accessCallTemplate
+     * @param string $comparison
      *
      * @return TranspilationResult
      *
@@ -345,7 +322,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $variableCreationCall,
         ];
 
-        return $this->createTranspilationResult(
+        return $this->composeTranspilationResult(
             $statements,
             $calls,
             new UseStatementCollection(),
@@ -363,7 +340,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      *
      * @return TranspilationResult
      */
-    private function createTranspilationResult(
+    private function composeTranspilationResult(
         array $statements,
         array $calls,
         UseStatementCollection $useStatements,
@@ -375,5 +352,65 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         return new TranspilationResult($statements, $useStatements, $variablePlaceholders);
+    }
+
+    /**
+     * @param ElementIdentifierInterface $elementIdentifier
+     *
+     * @return TranspilationResult
+     *
+     * @throws NonTranspilableModelException
+     * @throws UnknownItemException
+     */
+    private function createElementVariableAssignmentCall(ElementIdentifierInterface $elementIdentifier)
+    {
+        $variablePlaceholders = new VariablePlaceholderCollection();
+
+        $elementLocatorPlaceholder = $variablePlaceholders->create('ELEMENT_LOCATOR');
+        $elementPlaceholder = $variablePlaceholders->create('ELEMENT');
+
+        $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+
+        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasElementCallForTranspiledArguments(
+            new TranspilationResult(
+                [(string) $elementLocatorPlaceholder],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            )
+        );
+
+        $findElementCall = $this->domCrawlerNavigatorCallFactory->createFindElementCallForTranspiledArguments(
+            new TranspilationResult(
+                [(string) $elementLocatorPlaceholder],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            )
+        );
+
+        $elementExistsAssertionCall = $this->createElementExistsAssertionCall($hasElementCall);
+
+        $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
+        $elementExistsStatement = (string) $elementExistsAssertionCall;
+        $elementFindStatement = $elementPlaceholder . ' = ' . $findElementCall;
+
+        $statements = [
+            $elementLocatorConstructorStatement,
+            $elementExistsStatement,
+            $elementFindStatement,
+        ];
+
+        $calls = [
+            $elementLocatorConstructor,
+            $hasElementCall,
+            $findElementCall,
+            $elementExistsAssertionCall,
+        ];
+
+        return $this->composeTranspilationResult(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
     }
 }

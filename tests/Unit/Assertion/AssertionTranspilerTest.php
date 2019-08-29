@@ -137,8 +137,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
                     new VariablePlaceholder('ELEMENT_LOCATOR'),
                     new VariablePlaceholder('ELEMENT'),
-                    $phpUnitTestCasePlaceholder,
                     $domCrawlerNavigatorPlaceholder,
+                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'exists comparison, environment examined value' => [
@@ -243,8 +243,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
                     new VariablePlaceholder('ELEMENT_LOCATOR'),
                     new VariablePlaceholder('ELEMENT'),
-                    $phpUnitTestCasePlaceholder,
                     $domCrawlerNavigatorPlaceholder,
+                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'not-exists comparison, environment examined value' => [

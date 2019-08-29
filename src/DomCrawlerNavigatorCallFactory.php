@@ -29,6 +29,7 @@ class DomCrawlerNavigatorCallFactory
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function createFindElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -42,6 +43,7 @@ class DomCrawlerNavigatorCallFactory
      * @param TranspilationResult $arguments
      *
      * @return TranspilationResult
+     * @throws UnknownItemException
      */
     public function createFindElementCallForTranspiledArguments(TranspilationResult $arguments): TranspilationResult
     {
@@ -54,6 +56,7 @@ class DomCrawlerNavigatorCallFactory
      * @return TranspilationResult
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function createHasElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -67,6 +70,7 @@ class DomCrawlerNavigatorCallFactory
      * @param TranspilationResult $arguments
      *
      * @return TranspilationResult
+     * @throws UnknownItemException
      */
     public function createHasElementCallForTranspiledArguments(TranspilationResult $arguments): TranspilationResult
     {
@@ -79,6 +83,7 @@ class DomCrawlerNavigatorCallFactory
      * @param string $methodName
      *
      * @return TranspilationResult
+     * @throws UnknownItemException
      */
     private function createElementCall(TranspilationResult $arguments, string $methodName): TranspilationResult
     {
