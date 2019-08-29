@@ -6,11 +6,18 @@ class VariablePlaceholder
 {
     const TEMPLATE = '{{ %s }}';
 
-    private $name;
+    private $name = '';
+    private $id = '';
 
-    public function __construct(string $name)
+    public function __construct(string $name, string $id = '')
     {
         $this->name = $name;
+        $this->id = $id;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function __toString(): string
