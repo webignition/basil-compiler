@@ -4,8 +4,6 @@ namespace webignition\BasilTranspiler\Model;
 
 class UseStatement implements UniqueItemInterface
 {
-    const STRING_TEMPLATE = '%s as %s';
-
     private $className;
     private $alias;
 
@@ -27,11 +25,17 @@ class UseStatement implements UniqueItemInterface
 
     public function getId(): string
     {
-        return md5((string) $this);
+        return (string) $this;
     }
 
     public function __toString(): string
     {
-        return sprintf(self::STRING_TEMPLATE, $this->className, $this->alias);
+        $string = $this->className;
+
+        if (null !== $this->alias) {
+            $string .= ' as ' . $this->alias;
+        }
+
+        return $string;
     }
 }
