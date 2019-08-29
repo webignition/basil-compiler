@@ -10,7 +10,6 @@ use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -32,6 +31,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     private $valueTranspiler;
     private $domCrawlerNavigatorCallFactory;
     private $elementLocatorCallFactory;
+    private $assertableValueExaminer;
     private $phpUnitTestCasePlaceholder;
 
     /**
@@ -47,11 +47,13 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     public function __construct(
         ValueTranspiler $valueTranspiler,
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
-        ElementLocatorCallFactory $elementLocatorCallFactory
+        ElementLocatorCallFactory $elementLocatorCallFactory,
+        AssertableValueExaminer $assertableValueExaminer
     ) {
         $this->valueTranspiler = $valueTranspiler;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
+        $this->assertableValueExaminer = $assertableValueExaminer;
 
         $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
         $this->attributeExistsTemplate = sprintf(
@@ -72,7 +74,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         return new ExistsComparisonTranspiler(
             ValueTranspiler::createTranspiler(),
             DomCrawlerNavigatorCallFactory::createFactory(),
-            ElementLocatorCallFactory::createFactory()
+            ElementLocatorCallFactory::createFactory(),
+            AssertableValueExaminer::create()
         );
     }
 
@@ -111,7 +114,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         $examinedValue = $model->getExaminedValue();
-        if (!$this->isAssertableExaminedValue($examinedValue)) {
+        if (!$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -153,29 +156,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         throw new NonTranspilableModelException($model);
-    }
-
-    private function isAssertableExaminedValue(?object $value = null): bool
-    {
-        if ($value instanceof ElementValueInterface) {
-            return true;
-        }
-
-        if ($value instanceof AttributeValueInterface) {
-            return true;
-        }
-
-        if ($value instanceof EnvironmentValueInterface) {
-            return true;
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            if (in_array($value->getType(), [ValueTypes::BROWSER_OBJECT_PROPERTY, ValueTypes::PAGE_OBJECT_PROPERTY])) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private function createElementExistsAssertionCall(TranspilationResult $hasElementCall): TranspilationResult
