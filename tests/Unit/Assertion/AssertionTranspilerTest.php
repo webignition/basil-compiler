@@ -157,9 +157,10 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $environmentVariablePlaceholder
                     .'\)/m',
                 'expectedUseStatements' => new UseStatementCollection(),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    $phpUnitTestCasePlaceholder,
-                ]),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PHPUNIT_TEST_CASE,
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
+                ])
             ],
             'exists comparison, browser object value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
@@ -262,9 +263,10 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $environmentVariablePlaceholder
                     .'\)/m',
                 'expectedUseStatements' => new UseStatementCollection(),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    $phpUnitTestCasePlaceholder,
-                ]),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PHPUNIT_TEST_CASE,
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
+                ])
             ],
         ];
     }
