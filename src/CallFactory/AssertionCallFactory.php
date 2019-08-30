@@ -3,11 +3,11 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilationResultComposer;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory
@@ -73,37 +73,31 @@ class AssertionCallFactory
     }
 
     public function createValueExistsAssertionCall(
-        TranspilationResultInterface $variableAssignmentCall,
-        VariablePlaceholder $variablePlaceholder
+        VariableAssignmentCall $variableAssignmentCall
     ): TranspilationResultInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            $variablePlaceholder,
             self::VARIABLE_EXISTS_TEMPLATE
         );
     }
 
     public function createValueNotExistsAssertionCall(
-        TranspilationResultInterface $variableAssignmentCall,
-        VariablePlaceholder $variablePlaceholder
+        VariableAssignmentCall $variableAssignmentCall
     ): TranspilationResultInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            $variablePlaceholder,
             self::VARIABLE_NOT_EXISTS_TEMPLATE
         );
     }
 
     /**
-     * @param TranspilationResultInterface $elementVariableAssignmentCall
+     * @param VariableAssignmentCall $elementVariableAssignmentCall
      * @param string $attributeName
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     public function createAttributeExistsAssertionCall(
-        TranspilationResultInterface $elementVariableAssignmentCall,
+        VariableAssignmentCall $elementVariableAssignmentCall,
         string $attributeName
     ): TranspilationResultInterface {
         return $this->createAttributeExistenceAssertionCall(
@@ -114,15 +108,13 @@ class AssertionCallFactory
     }
 
     /**
-     * @param TranspilationResultInterface $elementVariableAssignmentCall
+     * @param VariableAssignmentCall $elementVariableAssignmentCall
      * @param string $attributeName
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     public function createAttributeNotExistsAssertionCall(
-        TranspilationResultInterface $elementVariableAssignmentCall,
+        VariableAssignmentCall $elementVariableAssignmentCall,
         string $attributeName
     ): TranspilationResultInterface {
         return $this->createAttributeExistenceAssertionCall(
@@ -152,8 +144,7 @@ class AssertionCallFactory
     }
 
     private function createValueExistenceAssertionCall(
-        TranspilationResultInterface $variableAssignmentCall,
-        VariablePlaceholder $variablePlaceholder,
+        VariableAssignmentCall $variableAssignmentCall,
         string $assertionTemplate
     ): TranspilationResultInterface {
         $variableCreationStatement = (string) $variableAssignmentCall;
@@ -161,7 +152,7 @@ class AssertionCallFactory
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            (string) $variablePlaceholder
+            (string) $variableAssignmentCall->getElementVariablePlaceholder()
         );
 
         $statements = [
@@ -184,23 +175,23 @@ class AssertionCallFactory
     }
 
     /**
-     * @param TranspilationResultInterface $elementVariableAssignmentCall
+     * @param VariableAssignmentCall $elementVariableAssignmentCall
      * @param string $attributeName
      * @param string $assertionTemplate
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     private function createAttributeExistenceAssertionCall(
-        TranspilationResultInterface $elementVariableAssignmentCall,
+        VariableAssignmentCall $elementVariableAssignmentCall,
         string $attributeName,
         string $assertionTemplate
     ): TranspilationResultInterface {
         $elementVariableAssignmentCallPlaceholders = $elementVariableAssignmentCall->getVariablePlaceholders();
 
-        $elementPlaceholder = $elementVariableAssignmentCallPlaceholders->get('ELEMENT');
-        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->get(VariableNames::PHPUNIT_TEST_CASE);
+        $elementPlaceholder = $elementVariableAssignmentCall->getElementVariablePlaceholder();
+        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->create(
+            VariableNames::PHPUNIT_TEST_CASE
+        );
 
         $assertionStatement = sprintf(
             $assertionTemplate,

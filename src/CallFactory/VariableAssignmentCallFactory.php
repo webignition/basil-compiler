@@ -4,14 +4,13 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class VariableAssignmentCallFactory
@@ -55,10 +54,9 @@ class VariableAssignmentCallFactory
      * @param string $elementLocatorPlaceholderName
      * @param string $elementPlaceholderName
      *
-     * @return TranspilationResultInterface
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function createForElement(
         ElementIdentifierInterface $elementIdentifier,
@@ -107,19 +105,21 @@ class VariableAssignmentCallFactory
             $elementExistsAssertionCall,
         ];
 
-        return $this->transpilationResultComposer->compose(
+        $transpilationResult = $this->transpilationResultComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
+
+        return new VariableAssignmentCall($transpilationResult, $elementPlaceholder);
     }
 
     /**
      * @param ValueInterface $value
      * @param VariablePlaceholder $variablePlaceholder
      *
-     * @return TranspilationResultInterface
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
      */
@@ -130,8 +130,7 @@ class VariableAssignmentCallFactory
         ]);
 
         $variableAccessCall = $this->valueTranspiler->transpile($value);
-
-        return $variableAccessCall->extend(
+        $variableAssignmentCall = $variableAccessCall->extend(
             sprintf(
                 '%s = %s ?? null',
                 (string) $variablePlaceholder,
@@ -140,5 +139,7 @@ class VariableAssignmentCallFactory
             new UseStatementCollection(),
             $variablePlaceholders
         );
+
+        return new VariableAssignmentCall($variableAssignmentCall, $variablePlaceholder);
     }
 }
