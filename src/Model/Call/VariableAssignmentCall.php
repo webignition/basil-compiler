@@ -3,9 +3,11 @@
 namespace webignition\BasilTranspiler\Model\Call;
 
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
-class VariableAssignmentCall
+class VariableAssignmentCall implements TranspilationResultInterface
 {
     private $transpilationResult;
     private $variablePlaceholder;
@@ -26,5 +28,39 @@ class VariableAssignmentCall
     public function getVariablePlaceholder(): VariablePlaceholder
     {
         return $this->variablePlaceholder;
+    }
+
+    public function extend(
+        string $template,
+        UseStatementCollection $useStatements,
+        VariablePlaceholderCollection $variablePlaceholders
+    ): TranspilationResultInterface {
+        $extendedTranspilationResult = $this->transpilationResult->extend(
+            $template,
+            $useStatements,
+            $variablePlaceholders
+        );
+
+        return new VariableAssignmentCall($extendedTranspilationResult, $this->variablePlaceholder);
+    }
+
+    public function getLines(): array
+    {
+        return $this->transpilationResult->getLines();
+    }
+
+    public function getUseStatements(): UseStatementCollection
+    {
+        return $this->transpilationResult->getUseStatements();
+    }
+
+    public function getVariablePlaceholders(): VariablePlaceholderCollection
+    {
+        return $this->transpilationResult->getVariablePlaceholders();
+    }
+
+    public function __toString(): string
+    {
+        return $this->transpilationResult->__toString();
     }
 }

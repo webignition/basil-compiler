@@ -152,7 +152,7 @@ class AssertionCallFactory
         VariableAssignmentCall $variableAssignmentCall,
         string $assertionTemplate
     ): TranspilationResultInterface {
-        $variableCreationStatement = (string) $variableAssignmentCall->getTranspilationResult();
+        $variableCreationStatement = (string) $variableAssignmentCall;
 
         $assertionStatement = sprintf(
             $assertionTemplate,
@@ -166,7 +166,7 @@ class AssertionCallFactory
         ];
 
         $calls = [
-            $variableAssignmentCall->getTranspilationResult(),
+            $variableAssignmentCall,
         ];
 
         return $this->transpilationResultComposer->compose(
