@@ -31,6 +31,7 @@ class DomCrawlerNavigatorCallFactory
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function createFindCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -44,6 +45,7 @@ class DomCrawlerNavigatorCallFactory
      * @param TranspilationResultInterface $arguments
      *
      * @return TranspilationResultInterface
+     * @throws UnknownItemException
      */
     public function createFindCallForTranspiledArguments(
         TranspilationResultInterface $arguments
@@ -57,6 +59,7 @@ class DomCrawlerNavigatorCallFactory
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function createHasCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -70,6 +73,7 @@ class DomCrawlerNavigatorCallFactory
      * @param TranspilationResultInterface $arguments
      *
      * @return TranspilationResultInterface
+     * @throws UnknownItemException
      */
     public function createHasCallForTranspiledArguments(
         TranspilationResultInterface $arguments
@@ -83,6 +87,8 @@ class DomCrawlerNavigatorCallFactory
      * @param string $methodName
      *
      * @return TranspilationResultInterface
+     *
+     * @throws UnknownItemException
      */
     private function createElementCall(
         TranspilationResultInterface $arguments,
