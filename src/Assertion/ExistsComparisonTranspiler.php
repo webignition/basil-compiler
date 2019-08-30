@@ -15,9 +15,7 @@ use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -193,39 +191,16 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $elementIdentifier = $attributeIdentifier->getElementIdentifier();
 
         $elementVariableAssignmentCall = $this->variableAssignmentCallFactory->createForElement($elementIdentifier);
-        $elementVariableAssignmentCallPlaceholders = $elementVariableAssignmentCall->getVariablePlaceholders();
 
-        $elementPlaceholder = $elementVariableAssignmentCallPlaceholders->get('ELEMENT');
-        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->get(VariableNames::PHPUNIT_TEST_CASE);
-
-        $assertionStatementTemplate = AssertionComparisons::EXISTS === $comparison
-            ? $this->attributeExistsTemplate
-            : $this->attributeNotExistsTemplate;
-
-        $assertionStatement = sprintf(
-            $assertionStatementTemplate,
-            (string) $phpunitTesCasePlaceholder,
-            $elementPlaceholder,
-            $attributeIdentifier->getAttributeName()
-        );
-
-        $statements = array_merge(
-            $elementVariableAssignmentCall->getLines(),
-            [
-                $assertionStatement,
-            ]
-        );
-
-        $calls = [
-            $elementVariableAssignmentCall,
-        ];
-
-        return $this->transpilationResultComposer->compose(
-            $statements,
-            $calls,
-            new UseStatementCollection(),
-            new VariablePlaceholderCollection()
-        );
+        return AssertionComparisons::EXISTS === $comparison
+            ? $this->assertionCallFactory->createAttributeExistsAssertionCall(
+                $elementVariableAssignmentCall,
+                $attributeIdentifier->getAttributeName()
+            )
+            : $this->assertionCallFactory->createAttributeNotExistsAssertionCall(
+                $elementVariableAssignmentCall,
+                $attributeIdentifier->getAttributeName()
+            );
     }
 
     /**

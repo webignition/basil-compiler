@@ -7,6 +7,7 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory
@@ -24,10 +25,25 @@ class AssertionCallFactory
     private $transpilationResultComposer;
     private $phpUnitTestCasePlaceholder;
 
+    private $attributeExistsTemplate = '';
+    private $attributeNotExistsTemplate = '';
+
     public function __construct(TranspilationResultComposer $transpilationResultComposer)
     {
         $this->transpilationResultComposer = $transpilationResultComposer;
         $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
+
+        $this->attributeExistsTemplate = sprintf(
+            self::VARIABLE_EXISTS_TEMPLATE,
+            '%s',
+            '%s->getAttribute(\'%s\')'
+        );
+
+        $this->attributeNotExistsTemplate = sprintf(
+            self::VARIABLE_NOT_EXISTS_TEMPLATE,
+            '%s',
+            '%s->getAttribute(\'%s\')'
+        );
     }
 
     public static function createFactory(): AssertionCallFactory
@@ -70,6 +86,44 @@ class AssertionCallFactory
         );
     }
 
+    /**
+     * @param TranspilationResult $elementVariableAssignmentCall
+     * @param string $attributeName
+     *
+     * @return TranspilationResult
+     *
+     * @throws UnknownItemException
+     */
+    public function createAttributeExistsAssertionCall(
+        TranspilationResult $elementVariableAssignmentCall,
+        string $attributeName
+    ): TranspilationResult {
+        return $this->createAttributeExistenceAssertionCall(
+            $elementVariableAssignmentCall,
+            $attributeName,
+            $this->attributeExistsTemplate
+        );
+    }
+
+    /**
+     * @param TranspilationResult $elementVariableAssignmentCall
+     * @param string $attributeName
+     *
+     * @return TranspilationResult
+     *
+     * @throws UnknownItemException
+     */
+    public function createAttributeNotExistsAssertionCall(
+        TranspilationResult $elementVariableAssignmentCall,
+        string $attributeName
+    ): TranspilationResult {
+        return $this->createAttributeExistenceAssertionCall(
+            $elementVariableAssignmentCall,
+            $attributeName,
+            $this->attributeNotExistsTemplate
+        );
+    }
+
     private function createElementExistenceAssertionCall(
         TranspilationResult $domCrawlerHasElementCall,
         string $assertionTemplate
@@ -93,7 +147,7 @@ class AssertionCallFactory
         TranspilationResult $variableAssignmentCall,
         VariablePlaceholder $variablePlaceholder,
         string $assertionTemplate
-    ) {
+    ): TranspilationResult {
         $variableCreationStatement = (string) $variableAssignmentCall;
 
         $assertionStatement = sprintf(
@@ -118,6 +172,61 @@ class AssertionCallFactory
             new VariablePlaceholderCollection([
                 $this->phpUnitTestCasePlaceholder,
             ])
+        );
+    }
+
+    /**
+     * @param TranspilationResult $elementVariableAssignmentCall
+     * @param string $attributeName
+     * @param string $assertionTemplate
+     *
+     * @return TranspilationResult
+     *
+     * @throws UnknownItemException
+     */
+    private function createAttributeExistenceAssertionCall(
+        TranspilationResult $elementVariableAssignmentCall,
+        string $attributeName,
+        string $assertionTemplate
+    ): TranspilationResult {
+        $elementVariableAssignmentCallPlaceholders = $elementVariableAssignmentCall->getVariablePlaceholders();
+
+        $elementPlaceholder = $elementVariableAssignmentCallPlaceholders->get('ELEMENT');
+        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->get(VariableNames::PHPUNIT_TEST_CASE);
+
+        $assertionStatement = sprintf(
+            $assertionTemplate,
+            (string) $phpunitTesCasePlaceholder,
+            $elementPlaceholder,
+            $attributeName
+        );
+
+        $statements = array_merge(
+            $elementVariableAssignmentCall->getLines(),
+            [
+                $assertionStatement,
+            ]
+        );
+
+        $calls = [
+            $elementVariableAssignmentCall,
+        ];
+
+//        $foo = $this->transpilationResultComposer->compose(
+//            $statements,
+//            $calls,
+//            new UseStatementCollection(),
+//            new VariablePlaceholderCollection()
+//        );
+//
+//        var_dump((string) $foo);
+//        exit();
+
+        return $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
         );
     }
 }
