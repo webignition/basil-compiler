@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Functional;
 use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
-use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -28,7 +28,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ];
 
     /**
-     * @var DomCrawlerNavigatorCallFactory
+     * @var \webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory
      */
     private $factory;
 

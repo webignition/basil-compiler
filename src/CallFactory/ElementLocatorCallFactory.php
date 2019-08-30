@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace webignition\BasilTranspiler;
+namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
@@ -9,6 +9,9 @@ use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\PlaceholderFactory;
+use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 

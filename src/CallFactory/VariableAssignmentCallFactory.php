@@ -4,8 +4,6 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
