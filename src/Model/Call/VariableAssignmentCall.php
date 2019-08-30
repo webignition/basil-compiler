@@ -10,14 +10,14 @@ use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 class VariableAssignmentCall implements TranspilationResultInterface
 {
     private $transpilationResult;
-    private $variablePlaceholder;
+    private $elementVariablePlaceholder;
 
     public function __construct(
         TranspilationResultInterface $transpilationResult,
         VariablePlaceholder $variablePlaceholder
     ) {
         $this->transpilationResult = $transpilationResult;
-        $this->variablePlaceholder = $variablePlaceholder;
+        $this->elementVariablePlaceholder = $variablePlaceholder;
     }
 
     public function getTranspilationResult(): TranspilationResultInterface
@@ -25,9 +25,9 @@ class VariableAssignmentCall implements TranspilationResultInterface
         return $this->transpilationResult;
     }
 
-    public function getVariablePlaceholder(): VariablePlaceholder
+    public function getElementVariablePlaceholder(): VariablePlaceholder
     {
-        return $this->variablePlaceholder;
+        return $this->elementVariablePlaceholder;
     }
 
     public function extend(
@@ -41,7 +41,7 @@ class VariableAssignmentCall implements TranspilationResultInterface
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($extendedTranspilationResult, $this->variablePlaceholder);
+        return new VariableAssignmentCall($extendedTranspilationResult, $this->elementVariablePlaceholder);
     }
 
     public function getLines(): array

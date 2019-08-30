@@ -157,7 +157,7 @@ class AssertionCallFactory
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            (string) $variableAssignmentCall->getVariablePlaceholder()
+            (string) $variableAssignmentCall->getElementVariablePlaceholder()
         );
 
         $statements = [
@@ -185,8 +185,6 @@ class AssertionCallFactory
      * @param string $assertionTemplate
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     private function createAttributeExistenceAssertionCall(
         VariableAssignmentCall $elementVariableAssignmentCall,
@@ -195,8 +193,10 @@ class AssertionCallFactory
     ): TranspilationResultInterface {
         $elementVariableAssignmentCallPlaceholders = $elementVariableAssignmentCall->getVariablePlaceholders();
 
-        $elementPlaceholder = $elementVariableAssignmentCallPlaceholders->get('ELEMENT');
-        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->get(VariableNames::PHPUNIT_TEST_CASE);
+        $elementPlaceholder = $elementVariableAssignmentCall->getElementVariablePlaceholder();
+        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->create(
+            VariableNames::PHPUNIT_TEST_CASE
+        );
 
         $assertionStatement = sprintf(
             $assertionTemplate,
