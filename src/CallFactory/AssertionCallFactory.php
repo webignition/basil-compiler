@@ -3,6 +3,7 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -73,23 +74,19 @@ class AssertionCallFactory
     }
 
     public function createValueExistsAssertionCall(
-        TranspilationResultInterface $variableAssignmentCall,
-        VariablePlaceholder $variablePlaceholder
+        VariableAssignmentCall $variableAssignmentCall
     ): TranspilationResultInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            $variablePlaceholder,
             self::VARIABLE_EXISTS_TEMPLATE
         );
     }
 
     public function createValueNotExistsAssertionCall(
-        TranspilationResultInterface $variableAssignmentCall,
-        VariablePlaceholder $variablePlaceholder
+        VariableAssignmentCall $variableAssignmentCall
     ): TranspilationResultInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            $variablePlaceholder,
             self::VARIABLE_NOT_EXISTS_TEMPLATE
         );
     }
@@ -152,16 +149,15 @@ class AssertionCallFactory
     }
 
     private function createValueExistenceAssertionCall(
-        TranspilationResultInterface $variableAssignmentCall,
-        VariablePlaceholder $variablePlaceholder,
+        VariableAssignmentCall $variableAssignmentCall,
         string $assertionTemplate
     ): TranspilationResultInterface {
-        $variableCreationStatement = (string) $variableAssignmentCall;
+        $variableCreationStatement = (string) $variableAssignmentCall->getTranspilationResult();
 
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            (string) $variablePlaceholder
+            (string) $variableAssignmentCall->getVariablePlaceholder()
         );
 
         $statements = [
@@ -170,7 +166,7 @@ class AssertionCallFactory
         ];
 
         $calls = [
-            $variableAssignmentCall,
+            $variableAssignmentCall->getTranspilationResult(),
         ];
 
         return $this->transpilationResultComposer->compose(

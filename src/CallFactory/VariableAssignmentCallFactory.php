@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -119,7 +120,7 @@ class VariableAssignmentCallFactory
      * @param ValueInterface $value
      * @param VariablePlaceholder $variablePlaceholder
      *
-     * @return TranspilationResultInterface
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
      */
@@ -130,8 +131,7 @@ class VariableAssignmentCallFactory
         ]);
 
         $variableAccessCall = $this->valueTranspiler->transpile($value);
-
-        return $variableAccessCall->extend(
+        $variableAssignmentCall = $variableAccessCall->extend(
             sprintf(
                 '%s = %s ?? null',
                 (string) $variablePlaceholder,
@@ -140,5 +140,7 @@ class VariableAssignmentCallFactory
             new UseStatementCollection(),
             $variablePlaceholders
         );
+
+        return new VariableAssignmentCall($variableAssignmentCall, $variablePlaceholder);
     }
 }

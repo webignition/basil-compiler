@@ -221,13 +221,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $variableAssignmentCall = $this->variableAssignmentCallFactory->createForScalar($value, $variablePlaceholder);
 
         return AssertionComparisons::EXISTS === $comparison
-            ? $this->assertionCallFactory->createValueExistsAssertionCall(
-                $variableAssignmentCall,
-                $variablePlaceholder
-            )
-            : $this->assertionCallFactory->createValueNotExistsAssertionCall(
-                $variableAssignmentCall,
-                $variablePlaceholder
-            );
+            ? $this->assertionCallFactory->createValueExistsAssertionCall($variableAssignmentCall)
+            : $this->assertionCallFactory->createValueNotExistsAssertionCall($variableAssignmentCall);
     }
 }
