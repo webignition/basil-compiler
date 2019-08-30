@@ -11,6 +11,7 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -118,7 +119,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateFindCallForTranspiledLocator(
         string $fixture,
-        TranspilationResult $arguments,
+        TranspilationResultInterface $arguments,
         callable $assertions
     ) {
         $transpilationResult = $this->factory->createFindCallForTranspiledArguments($arguments);
@@ -256,7 +257,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateHasCallForTranspiledArguments(
         string $fixture,
-        TranspilationResult $arguments,
+        TranspilationResultInterface $arguments,
         bool $expectedHasElement
     ) {
         $transpilationResult = $this->factory->createHasCallForTranspiledArguments($arguments);
