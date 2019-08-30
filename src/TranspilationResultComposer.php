@@ -3,6 +3,7 @@
 namespace webignition\BasilTranspiler;
 
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
@@ -15,11 +16,11 @@ class TranspilationResultComposer
 
     /**
      * @param string[] $statements
-     * @param TranspilationResult[] $calls
+     * @param TranspilationResultInterface[] $calls
      * @param UseStatementCollection $useStatements
      * @param VariablePlaceholderCollection $variablePlaceholders
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      */
     public function compose(
         array $statements,
