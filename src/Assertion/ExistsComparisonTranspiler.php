@@ -19,7 +19,6 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -109,7 +108,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
@@ -181,7 +179,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     private function transpileForAttributeValue(
         AttributeValueInterface $attributeValue,

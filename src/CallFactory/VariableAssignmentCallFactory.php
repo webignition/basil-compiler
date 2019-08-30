@@ -11,7 +11,6 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class VariableAssignmentCallFactory
@@ -58,7 +57,6 @@ class VariableAssignmentCallFactory
      * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function createForElement(
         ElementIdentifierInterface $elementIdentifier,

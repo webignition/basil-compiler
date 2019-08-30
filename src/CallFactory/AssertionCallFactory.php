@@ -8,7 +8,6 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilationResultComposer;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory
@@ -96,8 +95,6 @@ class AssertionCallFactory
      * @param string $attributeName
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     public function createAttributeExistsAssertionCall(
         VariableAssignmentCall $elementVariableAssignmentCall,
@@ -115,8 +112,6 @@ class AssertionCallFactory
      * @param string $attributeName
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     public function createAttributeNotExistsAssertionCall(
         VariableAssignmentCall $elementVariableAssignmentCall,
