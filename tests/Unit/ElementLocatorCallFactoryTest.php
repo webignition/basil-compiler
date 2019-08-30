@@ -11,7 +11,7 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueTypes;
-use webignition\BasilTranspiler\ElementLocatorCallFactory;
+use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
