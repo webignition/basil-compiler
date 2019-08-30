@@ -11,7 +11,6 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
@@ -40,17 +39,17 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
-            $variablePlaceholders = VariablePlaceholderCollection::createCollection([
-                VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-            ]);
+            $variablePlaceholders = new VariablePlaceholderCollection();
+            $environmentVariableArrayPlaceholder = $variablePlaceholders->create(
+                VariableNames::ENVIRONMENT_VARIABLE_ARRAY
+            );
 
             $content = sprintf(
-                (string) $variablePlaceholders->get(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'%s\']',
+                (string) $environmentVariableArrayPlaceholder . '[\'%s\']',
                 $model->getObjectProperty()
             );
 

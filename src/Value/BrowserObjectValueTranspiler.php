@@ -44,7 +44,7 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
     {
         return [
             self::PROPERTY_NAME_SIZE =>
-                (string) $this->variablePlaceholders->get(VariableNames::PANTHER_CLIENT) .
+                (string) $this->variablePlaceholders->create(VariableNames::PANTHER_CLIENT) .
                 '->getWebDriver()->manage()->window()->getSize()',
         ];
     }

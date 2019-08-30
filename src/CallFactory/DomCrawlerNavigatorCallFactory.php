@@ -9,7 +9,6 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactory
@@ -34,7 +33,6 @@ class DomCrawlerNavigatorCallFactory
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function createFindCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -48,7 +46,6 @@ class DomCrawlerNavigatorCallFactory
      * @param TranspilationResultInterface $arguments
      *
      * @return TranspilationResultInterface
-     * @throws UnknownItemException
      */
     public function createFindCallForTranspiledArguments(
         TranspilationResultInterface $arguments
@@ -73,7 +70,6 @@ class DomCrawlerNavigatorCallFactory
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function createHasCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -87,7 +83,6 @@ class DomCrawlerNavigatorCallFactory
      * @param TranspilationResultInterface $arguments
      *
      * @return TranspilationResultInterface
-     * @throws UnknownItemException
      */
     public function createHasCallForTranspiledArguments(
         TranspilationResultInterface $arguments
@@ -111,19 +106,15 @@ class DomCrawlerNavigatorCallFactory
      * @param string $methodName
      *
      * @return TranspilationResultInterface
-     *
-     * @throws UnknownItemException
      */
     private function createElementCall(
         TranspilationResultInterface $arguments,
         string $methodName
     ): TranspilationResultInterface {
-        $variablePlaceholders = VariablePlaceholderCollection::createCollection([
-            VariableNames::DOM_CRAWLER_NAVIGATOR,
-        ]);
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $domCrawlerNavigatorPlaceholder = $variablePlaceholders->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $template =
-            (string) $variablePlaceholders->get(VariableNames::DOM_CRAWLER_NAVIGATOR) . '->' . $methodName . '(%s)';
+        $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
         return $arguments->extend($template, new UseStatementCollection(), $variablePlaceholders);
     }
