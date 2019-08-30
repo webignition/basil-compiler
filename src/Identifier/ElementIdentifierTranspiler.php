@@ -9,6 +9,7 @@ use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\UnknownItemException;
 
 class ElementIdentifierTranspiler implements TranspilerInterface
 {
@@ -46,6 +47,7 @@ class ElementIdentifierTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
