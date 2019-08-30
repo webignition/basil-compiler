@@ -6,7 +6,6 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -56,7 +55,7 @@ class VariableAssignmentCallFactory
      * @param string $elementLocatorPlaceholderName
      * @param string $elementPlaceholderName
      *
-     * @return TranspilationResultInterface
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
      * @throws UnknownItemException
@@ -108,12 +107,14 @@ class VariableAssignmentCallFactory
             $elementExistsAssertionCall,
         ];
 
-        return $this->transpilationResultComposer->compose(
+        $transpilationResult = $this->transpilationResultComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
+
+        return new VariableAssignmentCall($transpilationResult, $elementPlaceholder);
     }
 
     /**

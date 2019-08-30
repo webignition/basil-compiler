@@ -92,7 +92,7 @@ class AssertionCallFactory
     }
 
     /**
-     * @param TranspilationResultInterface $elementVariableAssignmentCall
+     * @param VariableAssignmentCall $elementVariableAssignmentCall
      * @param string $attributeName
      *
      * @return TranspilationResultInterface
@@ -100,7 +100,7 @@ class AssertionCallFactory
      * @throws UnknownItemException
      */
     public function createAttributeExistsAssertionCall(
-        TranspilationResultInterface $elementVariableAssignmentCall,
+        VariableAssignmentCall $elementVariableAssignmentCall,
         string $attributeName
     ): TranspilationResultInterface {
         return $this->createAttributeExistenceAssertionCall(
@@ -111,7 +111,7 @@ class AssertionCallFactory
     }
 
     /**
-     * @param TranspilationResultInterface $elementVariableAssignmentCall
+     * @param VariableAssignmentCall $elementVariableAssignmentCall
      * @param string $attributeName
      *
      * @return TranspilationResultInterface
@@ -119,7 +119,7 @@ class AssertionCallFactory
      * @throws UnknownItemException
      */
     public function createAttributeNotExistsAssertionCall(
-        TranspilationResultInterface $elementVariableAssignmentCall,
+        VariableAssignmentCall $elementVariableAssignmentCall,
         string $attributeName
     ): TranspilationResultInterface {
         return $this->createAttributeExistenceAssertionCall(
@@ -180,7 +180,7 @@ class AssertionCallFactory
     }
 
     /**
-     * @param TranspilationResultInterface $elementVariableAssignmentCall
+     * @param VariableAssignmentCall $elementVariableAssignmentCall
      * @param string $attributeName
      * @param string $assertionTemplate
      *
@@ -189,7 +189,7 @@ class AssertionCallFactory
      * @throws UnknownItemException
      */
     private function createAttributeExistenceAssertionCall(
-        TranspilationResultInterface $elementVariableAssignmentCall,
+        VariableAssignmentCall $elementVariableAssignmentCall,
         string $attributeName,
         string $assertionTemplate
     ): TranspilationResultInterface {
