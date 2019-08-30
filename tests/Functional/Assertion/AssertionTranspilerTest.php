@@ -10,7 +10,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
-use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
@@ -70,13 +70,13 @@ class AssertionTranspilerTest extends AbstractTestCase
         $assertionFactory = AssertionFactory::createFactory();
 
         return [
-//            'exists comparison, element identifier examined value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '".foo" exists'
-//                ),
-//                'variableIdentifiers' => [],
-//            ],
+            'exists comparison, element identifier examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo" exists'
+                ),
+                'variableIdentifiers' => [],
+            ],
             'exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
                 'assertion' => $assertionFactory->createFromAssertionString(
@@ -87,63 +87,63 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                 ],
             ],
-//            'exists comparison, environment examined value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '$env.TEST1 exists'
-//                ),
-//                'variableIdentifiers' => [
-//                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
-//                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
-//                ],
-//            ],
-//            'exists comparison, browser object value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '$browser.size exists'
-//                ),
-//                'variableIdentifiers' => [
-//                    'BROWSER_VARIABLE' => '$browserVariable',
-//                    VariableNames::PANTHER_CLIENT => 'self::$client',
-//                ],
-//            ],
-//            'exists comparison, page object value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '$page.title exists'
-//                ),
-//                'variableIdentifiers' => [
-//                    'PAGE_VARIABLE' => '$pageVariable',
-//                    VariableNames::PANTHER_CLIENT => 'self::$client',
-//                ],
-//            ],
-//            'not-exists comparison, element identifier examined value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '".selector" not-exists'
-//                ),
-//                'variableIdentifiers' => [],
-//            ],
-//            'not-exists comparison, attribute identifier examined value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '"#a-sibling".invalid not-exists'
-//                ),
-//                'variableIdentifiers' => [
-//                    'ELEMENT_LOCATOR' => '$elementLocator',
-//                    'ELEMENT' => '$element',
-//                ],
-//            ],
-//            'not-exists comparison, environment examined value' => [
-//                'fixture' => '/basic.html',
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '$env.INVALID not-exists'
-//                ),
-//                'variableIdentifiers' => [
-//                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
-//                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
-//                ],
-//            ],
+            'exists comparison, environment examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 exists'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'exists comparison, browser object value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size exists'
+                ),
+                'variableIdentifiers' => [
+                    'BROWSER_VARIABLE' => '$browserVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'exists comparison, page object value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title exists'
+                ),
+                'variableIdentifiers' => [
+                    'PAGE_VARIABLE' => '$pageVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'not-exists comparison, element identifier examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".selector" not-exists'
+                ),
+                'variableIdentifiers' => [],
+            ],
+            'not-exists comparison, attribute identifier examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '"#a-sibling".invalid not-exists'
+                ),
+                'variableIdentifiers' => [
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
+                ],
+            ],
+            'not-exists comparison, environment examined value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.INVALID not-exists'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
         ];
     }
 
@@ -220,7 +220,7 @@ class AssertionTranspilerTest extends AbstractTestCase
     }
 
     private function createExecutableCall(
-        TranspilationResult $transpilationResult,
+        TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers,
         string $fixture
     ): string {
