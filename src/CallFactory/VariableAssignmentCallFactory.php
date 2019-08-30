@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -54,7 +55,7 @@ class VariableAssignmentCallFactory
      * @param string $elementLocatorPlaceholderName
      * @param string $elementPlaceholderName
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      * @throws UnknownItemException
@@ -118,7 +119,7 @@ class VariableAssignmentCallFactory
      * @param ValueInterface $value
      * @param VariablePlaceholder $variablePlaceholder
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */

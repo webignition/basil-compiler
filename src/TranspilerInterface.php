@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 
 interface TranspilerInterface
 {
@@ -12,9 +12,9 @@ interface TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResult;
+    public function transpile(object $model): TranspilationResultInterface;
 }

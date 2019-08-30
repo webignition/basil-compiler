@@ -14,7 +14,7 @@ use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
@@ -106,12 +106,12 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      * @throws UnknownItemException
      */
-    public function transpile(object $model): TranspilationResult
+    public function transpile(object $model): TranspilationResultInterface
     {
         if (!$model instanceof AssertionInterface) {
             throw new NonTranspilableModelException($model);
@@ -178,7 +178,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @param AttributeValueInterface $attributeValue
      * @param string $comparison
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      * @throws UnknownItemException
@@ -186,7 +186,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     private function transpileForAttributeValue(
         AttributeValueInterface $attributeValue,
         string $comparison
-    ): TranspilationResult {
+    ): TranspilationResultInterface {
         $attributeIdentifier = $attributeValue->getIdentifier();
         $elementIdentifier = $attributeIdentifier->getElementIdentifier();
         $attributeName = (string) $attributeIdentifier->getAttributeName();
@@ -209,7 +209,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @param VariablePlaceholder $variablePlaceholder
      * @param string $comparison
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
@@ -217,7 +217,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         ValueInterface $value,
         VariablePlaceholder $variablePlaceholder,
         string $comparison
-    ): TranspilationResult {
+    ): TranspilationResultInterface {
         $variableAssignmentCall = $this->variableAssignmentCallFactory->createForScalar($value, $variablePlaceholder);
 
         return AssertionComparisons::EXISTS === $comparison

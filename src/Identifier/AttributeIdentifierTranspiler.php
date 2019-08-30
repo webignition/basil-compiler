@@ -3,7 +3,7 @@
 namespace webignition\BasilTranspiler\Identifier;
 
 use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
-use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -45,11 +45,11 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResult
+    public function transpile(object $model): TranspilationResultInterface
     {
         if (!$model instanceof AttributeIdentifierInterface) {
             throw new NonTranspilableModelException($model);
