@@ -137,8 +137,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
                     new VariablePlaceholder('ELEMENT_LOCATOR'),
                     new VariablePlaceholder('ELEMENT'),
-                    $phpUnitTestCasePlaceholder,
                     $domCrawlerNavigatorPlaceholder,
+                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'exists comparison, environment examined value' => [
@@ -160,7 +160,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PHPUNIT_TEST_CASE,
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-                ])
+                    'ENVIRONMENT_VARIABLE',
+                ]),
             ],
             'exists comparison, browser object value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
@@ -178,9 +179,10 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $browserVariablePlaceholder
                     .'\)/m',
                 'expectedUseStatements' => new UseStatementCollection(),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    $phpUnitTestCasePlaceholder,
-                    $pantherClientPlaceholder,
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PHPUNIT_TEST_CASE,
+                    VariableNames::PANTHER_CLIENT,
+                    'BROWSER_VARIABLE',
                 ]),
             ],
             'exists comparison, page object value' => [
@@ -199,9 +201,10 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $pageVariablePlaceholder
                     .'\)/m',
                 'expectedUseStatements' => new UseStatementCollection(),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    $phpUnitTestCasePlaceholder,
-                    $pantherClientPlaceholder,
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PHPUNIT_TEST_CASE,
+                    VariableNames::PANTHER_CLIENT,
+                    'PAGE_VARIABLE',
                 ]),
             ],
             'not-exists comparison, element identifier examined value' => [
@@ -243,8 +246,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
                     new VariablePlaceholder('ELEMENT_LOCATOR'),
                     new VariablePlaceholder('ELEMENT'),
-                    $phpUnitTestCasePlaceholder,
                     $domCrawlerNavigatorPlaceholder,
+                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'not-exists comparison, environment examined value' => [
@@ -266,7 +269,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PHPUNIT_TEST_CASE,
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-                ])
+                    'ENVIRONMENT_VARIABLE',
+                ]),
             ],
         ];
     }
