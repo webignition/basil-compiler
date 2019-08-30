@@ -25,7 +25,14 @@ class AssertionCallFactory
     private $transpilationResultComposer;
     private $phpUnitTestCasePlaceholder;
 
+    /**
+     * @var string
+     */
     private $attributeExistsTemplate = '';
+
+    /**
+     * @var string
+     */
     private $attributeNotExistsTemplate = '';
 
     public function __construct(TranspilationResultComposer $transpilationResultComposer)
@@ -211,16 +218,6 @@ class AssertionCallFactory
         $calls = [
             $elementVariableAssignmentCall,
         ];
-
-//        $foo = $this->transpilationResultComposer->compose(
-//            $statements,
-//            $calls,
-//            new UseStatementCollection(),
-//            new VariablePlaceholderCollection()
-//        );
-//
-//        var_dump((string) $foo);
-//        exit();
 
         return $this->transpilationResultComposer->compose(
             $statements,

@@ -189,17 +189,18 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     ): TranspilationResult {
         $attributeIdentifier = $attributeValue->getIdentifier();
         $elementIdentifier = $attributeIdentifier->getElementIdentifier();
+        $attributeName = (string) $attributeIdentifier->getAttributeName();
 
         $elementVariableAssignmentCall = $this->variableAssignmentCallFactory->createForElement($elementIdentifier);
 
         return AssertionComparisons::EXISTS === $comparison
             ? $this->assertionCallFactory->createAttributeExistsAssertionCall(
                 $elementVariableAssignmentCall,
-                $attributeIdentifier->getAttributeName()
+                $attributeName
             )
             : $this->assertionCallFactory->createAttributeNotExistsAssertionCall(
                 $elementVariableAssignmentCall,
-                $attributeIdentifier->getAttributeName()
+                $attributeName
             );
     }
 
