@@ -20,6 +20,7 @@ use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
+use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
 class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 {
@@ -47,14 +48,14 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createFindElementCallForIdentifierDataProvider
+     * @dataProvider createFindCallForIdentifierDataProvider
      */
-    public function testCreateFindElementCallForIdentifier(
+    public function testCreateFindCallForIdentifier(
         string $fixture,
         ElementIdentifierInterface $elementIdentifier,
         callable $assertions
     ) {
-        $transpilationResult = $this->factory->createFindElementCallForIdentifier($elementIdentifier);
+        $transpilationResult = $this->factory->createFindCallForIdentifier($elementIdentifier);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
@@ -67,19 +68,27 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 new UseStatement(Navigator::class),
             ])
         );
+
         $element = eval($executableCall);
 
         $assertions($element);
     }
 
-    public function createFindElementCallForIdentifierDataProvider(): array
+    public function createFindCallForIdentifierDataProvider(): array
     {
         return [
             'css selector, no parent' => [
                 'fixture' => '/basic.html',
-                'elementIdentifier' => TestIdentifierFactory::createCssElementIdentifier('input'),
-                'assertions' => function (WebDriverElement $element) {
-                    $this->assertSame('input-1', $element->getAttribute('name'));
+                'elementIdentifier' => TestIdentifierFactory::createCssElementIdentifier('input[name="input-1"]'),
+                'assertions' => function (WebDriverElementCollectionInterface $collection) {
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->get(0);
+                    $this->assertInstanceOf(WebDriverElement::class, $element);
+
+                    if ($element instanceof WebDriverElement) {
+                        $this->assertSame('input-1', $element->getAttribute('name'));
+                    }
                 },
             ],
             'css selector, has parent' => [
@@ -90,22 +99,29 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     null,
                     TestIdentifierFactory::createCssElementIdentifier('form[action="/action2"]')
                 ),
-                'assertions' => function (WebDriverElement $element) {
-                    $this->assertSame('input-2', $element->getAttribute('name'));
+                'assertions' => function (WebDriverElementCollectionInterface $collection) {
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->get(0);
+                    $this->assertInstanceOf(WebDriverElement::class, $element);
+
+                    if ($element instanceof WebDriverElement) {
+                        $this->assertSame('input-2', $element->getAttribute('name'));
+                    }
                 },
             ],
         ];
     }
 
     /**
-     * @dataProvider createFindElementCallForTranspiledArgumentsDataProvider
+     * @dataProvider createFindCallForTranspiledArgumentsDataProvider
      */
-    public function testCreateFindElementCallForTranspiledLocator(
+    public function testCreateFindCallForTranspiledLocator(
         string $fixture,
         TranspilationResult $arguments,
         callable $assertions
     ) {
-        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments($arguments);
+        $transpilationResult = $this->factory->createFindCallForTranspiledArguments($arguments);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
@@ -123,7 +139,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         $assertions($element);
     }
 
-    public function createFindElementCallForTranspiledArgumentsDataProvider(): array
+    public function createFindCallForTranspiledArgumentsDataProvider(): array
     {
         return [
             'css selector, no parent' => [
@@ -136,8 +152,15 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     ]),
                     new VariablePlaceholderCollection()
                 ),
-                'assertions' => function (WebDriverElement $element) {
-                    $this->assertSame('input-1', $element->getAttribute('name'));
+                'assertions' => function (WebDriverElementCollectionInterface $collection) {
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->get(0);
+                    $this->assertInstanceOf(WebDriverElement::class, $element);
+
+                    if ($element instanceof WebDriverElement) {
+                        $this->assertSame('input-1', $element->getAttribute('name'));
+                    }
                 },
             ],
             'css selector, has parent' => [
@@ -153,22 +176,29 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     ]),
                     new VariablePlaceholderCollection()
                 ),
-                'assertions' => function (WebDriverElement $element) {
-                    $this->assertSame('input-2', $element->getAttribute('name'));
+                'assertions' => function (WebDriverElementCollectionInterface $collection) {
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->get(0);
+                    $this->assertInstanceOf(WebDriverElement::class, $element);
+
+                    if ($element instanceof WebDriverElement) {
+                        $this->assertSame('input-2', $element->getAttribute('name'));
+                    }
                 },
             ],
         ];
     }
 
     /**
-     * @dataProvider createHasElementCallForIdentifierDataProvider
+     * @dataProvider createHasCallForIdentifierDataProvider
      */
-    public function testCreateHasElementCallForIdentifier(
+    public function testCreateHasCallForIdentifier(
         string $fixture,
         ElementIdentifierInterface $elementIdentifier,
         bool $expectedHasElement
     ) {
-        $transpilationResult = $this->factory->createHasElementCallForIdentifier($elementIdentifier);
+        $transpilationResult = $this->factory->createHasCallForIdentifier($elementIdentifier);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
@@ -185,7 +215,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
 
-    public function createHasElementCallForIdentifierDataProvider(): array
+    public function createHasCallForIdentifierDataProvider(): array
     {
         return [
             'not hasElement: css selector, no parent' => [
@@ -222,14 +252,14 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createHasElementCallForTranspiledArgumentsDataProvider
+     * @dataProvider createHasCallForTranspiledArgumentsDataProvider
      */
-    public function testCreateHasElementCallForTranspiledArguments(
+    public function testCreateHasCallForTranspiledArguments(
         string $fixture,
         TranspilationResult $arguments,
         bool $expectedHasElement
     ) {
-        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments($arguments);
+        $transpilationResult = $this->factory->createHasCallForTranspiledArguments($arguments);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
@@ -246,7 +276,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
 
-    public function createHasElementCallForTranspiledArgumentsDataProvider(): array
+    public function createHasCallForTranspiledArgumentsDataProvider(): array
     {
         return [
             'not hasElement: css selector, no parent' => [
