@@ -85,6 +85,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'COLLECTION' => '$collection',
                 ],
             ],
             'exists comparison, environment examined value' => [
@@ -132,6 +133,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'COLLECTION' => '$collection',
                 ],
             ],
             'not-exists comparison, environment examined value' => [
@@ -191,6 +193,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'COLLECTION' => '$collection',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
@@ -202,6 +205,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'COLLECTION' => '$collection',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
             ],

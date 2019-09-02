@@ -17,6 +17,7 @@ class VariableAssignmentCallFactory
 {
     const DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME = 'ELEMENT_LOCATOR';
     const DEFAULT_ELEMENT_PLACEHOLDER_NAME = 'ELEMENT';
+    const DEFAULT_COLLECTION_PLACEHOLDER_NAME = 'COLLECTION';
 
     private $assertionCallFactory;
     private $elementLocatorCallFactory;
@@ -53,6 +54,7 @@ class VariableAssignmentCallFactory
      * @param ElementIdentifierInterface $elementIdentifier
      * @param string $elementLocatorPlaceholderName
      * @param string $elementPlaceholderName
+     * @param string $collectionPlaceholderName
      *
      * @return VariableAssignmentCall
      *
@@ -61,12 +63,14 @@ class VariableAssignmentCallFactory
     public function createForElement(
         ElementIdentifierInterface $elementIdentifier,
         string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
-        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME
+        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME,
+        string $collectionPlaceholderName = self::DEFAULT_COLLECTION_PLACEHOLDER_NAME
     ) {
         $variablePlaceholders = new VariablePlaceholderCollection();
 
         $elementLocatorPlaceholder = $variablePlaceholders->create($elementLocatorPlaceholderName);
         $elementPlaceholder = $variablePlaceholders->create($elementPlaceholderName);
+        $collectionPlaceholder = $variablePlaceholders->create($collectionPlaceholderName);
 
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
@@ -90,11 +94,15 @@ class VariableAssignmentCallFactory
 
         $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
         $elementExistsStatement = (string) $elementExistsAssertionCall;
-        $elementFindStatement = $elementPlaceholder . ' = ' . $findElementCall;
+
+        $collectionFindStatement = $collectionPlaceholder . ' = ' . $findElementCall;
+
+        $elementFindStatement = $elementPlaceholder . ' = ' . $collectionPlaceholder . '->get(0)';
 
         $statements = [
             $elementLocatorConstructorStatement,
             $elementExistsStatement,
+            $collectionFindStatement,
             $elementFindStatement,
         ];
 
