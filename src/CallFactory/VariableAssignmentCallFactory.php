@@ -70,7 +70,7 @@ class VariableAssignmentCallFactory
 
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
-        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasElementCallForTranspiledArguments(
+        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
             new TranspilationResult(
                 [(string) $elementLocatorPlaceholder],
                 new UseStatementCollection(),
@@ -78,7 +78,7 @@ class VariableAssignmentCallFactory
             )
         );
 
-        $findElementCall = $this->domCrawlerNavigatorCallFactory->createFindElementCallForTranspiledArguments(
+        $findElementCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
             new TranspilationResult(
                 [(string) $elementLocatorPlaceholder],
                 new UseStatementCollection(),

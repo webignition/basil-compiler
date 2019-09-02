@@ -47,6 +47,5 @@
         "phpstan/phpstan-mockery": "^0.11.3",
         "symfony/panther": "^0.5.1",
         "webignition/php-basil-model-factory": ">=0.15,<1"
-
     }
 }

@@ -130,7 +130,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         if ($examinedValue instanceof ElementValueInterface) {
-            $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasElementCallForIdentifier(
+            $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier(
                 $examinedValue->getIdentifier()
             );
 
