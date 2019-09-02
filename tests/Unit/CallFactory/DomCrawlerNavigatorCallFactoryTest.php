@@ -57,56 +57,56 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             $this->expectedPlaceholders->get(VariableNames::DOM_CRAWLER_NAVIGATOR);
     }
 
-    public function testCreateFindElementCallForIdentifier()
+    public function testCreateFindCallForIdentifier()
     {
-        $transpilationResult = $this->factory->createFindElementCallForIdentifier(
+        $transpilationResult = $this->factory->createFindCallForIdentifier(
             TestIdentifierFactory::createCssElementIdentifier('.selector')
         );
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 
-    public function testCreateFindElementCallForTranspiledLocator()
+    public function testCreateFindCallForTranspiledLocator()
     {
         $identifier = TestIdentifierFactory::createCssElementIdentifier('.selector');
 
         $findElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
-        $transpilationResult = $this->factory->createFindElementCallForTranspiledArguments($findElementCallArguments);
+        $transpilationResult = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 
-    public function testCreateHasElementCallForIdentifier()
+    public function testCreateHasCallForIdentifier()
     {
-        $transpilationResult = $this->factory->createHasElementCallForIdentifier(
+        $transpilationResult = $this->factory->createHasCallForIdentifier(
             TestIdentifierFactory::createCssElementIdentifier('.selector')
         );
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
         $this->assertEquals($this->expectedPlaceholders, $transpilationResult->getVariablePlaceholders());
     }
 
-    public function testCreateHasElementCallForTranspiledLocator()
+    public function testCreateHasCallForTranspiledLocator()
     {
         $identifier = TestIdentifierFactory::createCssElementIdentifier('.selector');
 
         $hasElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
-        $transpilationResult = $this->factory->createHasElementCallForTranspiledArguments($hasElementCallArguments);
+        $transpilationResult = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());

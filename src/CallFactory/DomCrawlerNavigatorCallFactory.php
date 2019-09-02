@@ -32,12 +32,12 @@ class DomCrawlerNavigatorCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createFindElementCallForIdentifier(
+    public function createFindCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
     ): TranspilationResultInterface {
         $arguments = $this->createElementCallArguments($elementIdentifier);
 
-        return $this->createFindElementCallForTranspiledArguments($arguments);
+        return $this->createFindCallForTranspiledArguments($arguments);
     }
 
     /**
@@ -45,10 +45,10 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return TranspilationResultInterface
      */
-    public function createFindElementCallForTranspiledArguments(
+    public function createFindCallForTranspiledArguments(
         TranspilationResultInterface $arguments
     ): TranspilationResultInterface {
-        return $this->createElementCall($arguments, 'findElement');
+        return $this->createElementCall($arguments, 'find');
     }
 
     /**
@@ -58,12 +58,12 @@ class DomCrawlerNavigatorCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createHasElementCallForIdentifier(
+    public function createHasCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
     ): TranspilationResultInterface {
         $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
 
-        return $this->createHasElementCallForTranspiledArguments($hasElementCallArguments);
+        return $this->createHasCallForTranspiledArguments($hasElementCallArguments);
     }
 
     /**
@@ -71,10 +71,10 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return TranspilationResultInterface
      */
-    public function createHasElementCallForTranspiledArguments(
+    public function createHasCallForTranspiledArguments(
         TranspilationResultInterface $arguments
     ): TranspilationResultInterface {
-        return $this->createElementCall($arguments, 'hasElement');
+        return $this->createElementCall($arguments, 'has');
     }
 
 
