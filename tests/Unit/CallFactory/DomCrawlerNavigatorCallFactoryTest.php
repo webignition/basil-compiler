@@ -4,10 +4,10 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Tests\Unit;
+namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
-use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -19,7 +19,7 @@ use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var DomCrawlerNavigatorCallFactory
+     * @var \webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory
      */
     private $factory;
 
