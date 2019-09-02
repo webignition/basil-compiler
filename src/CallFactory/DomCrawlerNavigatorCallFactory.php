@@ -45,8 +45,9 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return TranspilationResultInterface
      */
-    public function createFindCallForTranspiledArguments(TranspilationResultInterface $arguments): TranspilationResultInterface
-    {
+    public function createFindCallForTranspiledArguments(
+        TranspilationResultInterface $arguments
+    ): TranspilationResultInterface {
         return $this->createElementCall($arguments, 'find');
     }
 
@@ -70,8 +71,9 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return TranspilationResultInterface
      */
-    public function createHasCallForTranspiledArguments(TranspilationResultInterface $arguments): TranspilationResultInterface
-    {
+    public function createHasCallForTranspiledArguments(
+        TranspilationResultInterface $arguments
+    ): TranspilationResultInterface {
         return $this->createElementCall($arguments, 'has');
     }
 

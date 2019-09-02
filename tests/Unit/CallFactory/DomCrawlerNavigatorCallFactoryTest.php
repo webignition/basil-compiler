@@ -63,7 +63,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             TestIdentifierFactory::createCssElementIdentifier('.selector')
         );
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
@@ -78,7 +78,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $transpilationResult = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->findElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
@@ -91,7 +91,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             TestIdentifierFactory::createCssElementIdentifier('.selector')
         );
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
@@ -106,7 +106,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $transpilationResult = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
 
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->hasElement\(.*\)$/';
+        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
 
         $this->assertEquals($this->expectedUseStatements, $transpilationResult->getUseStatements());
