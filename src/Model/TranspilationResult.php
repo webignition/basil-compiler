@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class TranspilationResult
+class TranspilationResult implements TranspilationResultInterface
 {
     private $lines;
     private $useStatements;
@@ -22,7 +22,7 @@ class TranspilationResult
         string $template,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
-    ): TranspilationResult {
+    ): TranspilationResultInterface {
         return new TranspilationResult(
             explode("\n", sprintf($template, (string) $this)),
             $this->getUseStatements()->merge([$useStatements]),

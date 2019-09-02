@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -18,12 +19,12 @@ abstract class AbstractObjectValueTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      * @throws UnknownObjectPropertyException
      */
-    public function transpile(object $model): TranspilationResult
+    public function transpile(object $model): TranspilationResultInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             $transpiledValue = $this->getTranspiledValueMap()[$model->getObjectProperty()] ?? null;

@@ -6,6 +6,7 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -46,11 +47,11 @@ class ElementLocatorCallFactory
     /**
      * @param ElementIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): TranspilationResult
+    public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): TranspilationResultInterface
     {
         $identifierValue = $elementIdentifier->getValue();
 
