@@ -71,7 +71,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
 
         $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
 
-        $executableCall = $this->executableCallFactory->create(
+        $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             self::VARIABLE_IDENTIFIERS,
             [

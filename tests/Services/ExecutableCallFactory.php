@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\UseStatementTranspiler;
@@ -66,8 +67,34 @@ class ExecutableCallFactory
             $variableIdentifiers
         );
 
-        $executableCall .= 'return ' . $content . ';';
+        $executableCall .= $content;
 
         return $executableCall;
+    }
+
+    public function createWithReturn(
+        TranspilationResultInterface $transpilationResult,
+        array $variableIdentifiers = [],
+        array $setupLines = [],
+        ?UseStatementCollection $additionalUseStatements = null
+    ): string {
+        $lines = $transpilationResult->getLines();
+        $lastLinePosition = count($lines) - 1;
+        $lastLine = $lines[$lastLinePosition];
+        $lastLine = 'return ' . $lastLine;
+        $lines[$lastLinePosition] = $lastLine;
+
+        $transpilationResultWithReturn = new TranspilationResult(
+            $lines,
+            $transpilationResult->getUseStatements(),
+            $transpilationResult->getVariablePlaceholders()
+        );
+
+        return $this->create(
+            $transpilationResultWithReturn,
+            $variableIdentifiers,
+            $setupLines,
+            $additionalUseStatements
+        );
     }
 }
