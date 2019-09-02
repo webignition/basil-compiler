@@ -73,7 +73,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
                     '.selector',
-                    1
+                    null
                 ),
             ],
             'css selector, no quotes in selector, position 1' => [
@@ -105,7 +105,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
                     'input[name="email"]',
-                    1
+                    null
                 ),
             ],
             'css selector, single quotes in selector, position default' => [
@@ -115,7 +115,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
                     "input[name='email']",
-                    1
+                    null
                 ),
             ],
             'css selector, escaped single quotes in selector, position default' => [
@@ -125,7 +125,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
                     "input[value='\'quoted\'']",
-                    1
+                    null
                 ),
             ],
         ];

@@ -18,7 +18,8 @@ use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class ElementLocatorCallFactory
 {
-    const TEMPLATE = 'new ElementLocator(%s, \'%s\', %s)';
+    const TEMPLATE = 'new ElementLocator(%s)';
+    const REQUIRED_ARGUMENTS_TEMPLATE = '%s, \'%s\'';
     const DEFAULT_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
 
     private $placeholderFactory;
@@ -59,12 +60,18 @@ class ElementLocatorCallFactory
             throw new NonTranspilableModelException($elementIdentifier);
         }
 
-        $content = sprintf(
-            self::TEMPLATE,
+        $arguments = sprintf(
+            self::REQUIRED_ARGUMENTS_TEMPLATE,
             $this->valueTypeToLocatorTypeMap[$identifierValue->getType()] ?? self::DEFAULT_LOCATOR_TYPE,
-            $this->singleQuotedStringEscaper->escape($identifierValue->getValue()),
-            $elementIdentifier->getPosition()
+            $this->singleQuotedStringEscaper->escape($identifierValue->getValue())
         );
+
+        $position = $elementIdentifier->getPosition();
+        if (null !== $position) {
+            $arguments .= ', ' . $position;
+        }
+
+        $content = sprintf(self::TEMPLATE, $arguments);
 
         return new TranspilationResult(
             [
