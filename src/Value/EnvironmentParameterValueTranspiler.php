@@ -6,6 +6,7 @@ use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -32,7 +33,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
         return ObjectNames::ENVIRONMENT === $model->getObjectName();
     }
 
-    public function transpile(object $model): TranspilationResult
+    public function transpile(object $model): TranspilationResultInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             $variablePlaceholders = VariablePlaceholderCollection::createCollection([

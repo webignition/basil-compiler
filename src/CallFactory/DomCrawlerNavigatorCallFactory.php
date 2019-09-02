@@ -3,8 +3,7 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -29,62 +28,66 @@ class DomCrawlerNavigatorCallFactory
     /**
      * @param ElementIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
     public function createFindElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
-    ): TranspilationResult {
+    ): TranspilationResultInterface {
         $arguments = $this->createElementCallArguments($elementIdentifier);
 
         return $this->createFindElementCallForTranspiledArguments($arguments);
     }
 
     /**
-     * @param TranspilationResult $arguments
+     * @param TranspilationResultInterface $arguments
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      */
-    public function createFindElementCallForTranspiledArguments(TranspilationResult $arguments): TranspilationResult
-    {
+    public function createFindElementCallForTranspiledArguments(
+        TranspilationResultInterface $arguments
+    ): TranspilationResultInterface {
         return $this->createElementCall($arguments, 'findElement');
     }
 
     /**
      * @param ElementIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
     public function createHasElementCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
-    ): TranspilationResult {
+    ): TranspilationResultInterface {
         $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
 
         return $this->createHasElementCallForTranspiledArguments($hasElementCallArguments);
     }
 
     /**
-     * @param TranspilationResult $arguments
+     * @param TranspilationResultInterface $arguments
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      */
-    public function createHasElementCallForTranspiledArguments(TranspilationResult $arguments): TranspilationResult
-    {
+    public function createHasElementCallForTranspiledArguments(
+        TranspilationResultInterface $arguments
+    ): TranspilationResultInterface {
         return $this->createElementCall($arguments, 'hasElement');
     }
 
 
     /**
-     * @param TranspilationResult $arguments
+     * @param TranspilationResultInterface $arguments
      * @param string $methodName
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      */
-    private function createElementCall(TranspilationResult $arguments, string $methodName): TranspilationResult
-    {
+    private function createElementCall(
+        TranspilationResultInterface $arguments,
+        string $methodName
+    ): TranspilationResultInterface {
         $variablePlaceholders = VariablePlaceholderCollection::createCollection([
             VariableNames::DOM_CRAWLER_NAVIGATOR,
         ]);
@@ -98,12 +101,13 @@ class DomCrawlerNavigatorCallFactory
     /**
      * @param ElementIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResult
+     * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function createElementCallArguments(ElementIdentifierInterface $elementIdentifier): TranspilationResult
-    {
+    public function createElementCallArguments(
+        ElementIdentifierInterface $elementIdentifier
+    ): TranspilationResultInterface {
         $transpilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();

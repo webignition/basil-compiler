@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\UseStatementTranspiler;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
@@ -33,7 +33,7 @@ class ExecutableCallFactory
     }
 
     public function create(
-        TranspilationResult $transpilationResult,
+        TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers = [],
         array $setupLines = [],
         ?UseStatementCollection $additionalUseStatements = null

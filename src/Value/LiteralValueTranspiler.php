@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -21,7 +22,7 @@ class LiteralValueTranspiler implements TranspilerInterface
         return $model instanceof LiteralValue;
     }
 
-    public function transpile(object $model): TranspilationResult
+    public function transpile(object $model): TranspilationResultInterface
     {
         if ($this->handles($model)) {
             return new TranspilationResult(
