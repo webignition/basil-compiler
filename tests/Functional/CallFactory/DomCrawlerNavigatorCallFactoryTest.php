@@ -4,16 +4,17 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Tests\Functional;
+namespace webignition\BasilTranspiler\Tests\Functional\CallFactory;
 
 use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
-use webignition\BasilTranspiler\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -28,7 +29,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ];
 
     /**
-     * @var DomCrawlerNavigatorCallFactory
+     * @var \webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory
      */
     private $factory;
 
