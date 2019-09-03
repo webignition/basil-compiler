@@ -96,6 +96,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $pageVariablePlaceholder = new VariablePlaceholder('PAGE_VARIABLE');
         $elementLocatorPlaceholder = new VariablePlaceholder('ELEMENT_LOCATOR');
         $elementPlaceholder = new VariablePlaceholder('ELEMENT');
+        $collectionPlaceholder = new VariablePlaceholder('COLLECTION');
 
         return [
             'exists comparison, element identifier examined value' => [
@@ -107,7 +108,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $phpUnitTestCasePlaceholder
                     . '->assertTrue\('
                     . $domCrawlerNavigatorPlaceholder
-                    . '->hasElement\(.*\)$/',
+                    . '->has\(.*\)$/',
                 'expectedUseStatements' => new UseStatementCollection([
                     new UseStatement(ElementLocator::class),
                     new UseStatement(LocatorType::class),
@@ -126,8 +127,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $phpUnitTestCasePlaceholder
                     . '->assertTrue\('
                     . $domCrawlerNavigatorPlaceholder
-                    . '->hasElement\(.*\)' . "\n"
-                    . $elementPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
+                    . '->has\(.*\)' . "\n"
+                    . $collectionPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
+                    . $elementPlaceholder . ' = ' . $collectionPlaceholder . '->get\(0\)' . "\n"
                     . $phpUnitTestCasePlaceholder . '->assertNotNull\(.+\)'
                     .'/',
                 'expectedUseStatements' => new UseStatementCollection([
@@ -135,8 +137,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     new UseStatement(LocatorType::class),
                 ]),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder('ELEMENT_LOCATOR'),
-                    new VariablePlaceholder('ELEMENT'),
+                    $elementLocatorPlaceholder,
+                    $elementPlaceholder,
+                    $collectionPlaceholder,
                     $domCrawlerNavigatorPlaceholder,
                     $phpUnitTestCasePlaceholder,
                 ]),
@@ -216,7 +219,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $phpUnitTestCasePlaceholder
                     . '->assertFalse\('
                     . $domCrawlerNavigatorPlaceholder
-                    . '->hasElement\(.*\)$/',
+                    . '->has\(.*\)$/',
                 'expectedUseStatements' => new UseStatementCollection([
                     new UseStatement(ElementLocator::class),
                     new UseStatement(LocatorType::class),
@@ -235,8 +238,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     . $phpUnitTestCasePlaceholder
                     . '->assertTrue\('
                     . $domCrawlerNavigatorPlaceholder
-                    . '->hasElement\(.*\)' . "\n"
-                    . $elementPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
+                    . '->has\(.*\)' . "\n"
+                    . $collectionPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
+                    . $elementPlaceholder . ' = ' . $collectionPlaceholder . '->get\(0\)' . "\n"
                     . $phpUnitTestCasePlaceholder . '->assertNull\(.+\)'
                     .'/',
                 'expectedUseStatements' => new UseStatementCollection([
@@ -244,8 +248,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                     new UseStatement(LocatorType::class),
                 ]),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    new VariablePlaceholder('ELEMENT_LOCATOR'),
-                    new VariablePlaceholder('ELEMENT'),
+                    $elementLocatorPlaceholder,
+                    $elementPlaceholder,
+                    $collectionPlaceholder,
                     $domCrawlerNavigatorPlaceholder,
                     $phpUnitTestCasePlaceholder,
                 ]),
