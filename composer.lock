@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d918de9f5d0815e13722bfd4e8a0c04f",
+    "content-hash": "f87ba3adf603973c0fbdf0120d087edf",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -980,16 +980,16 @@
         },
         {
             "name": "webignition/webdriver-element-inspector",
-            "version": "0.1",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/webdriver-element-inspector.git",
-                "reference": "165342e9cdeb65af860410138326dd49dc735f8f"
+                "reference": "a27dfc5c0a87e8e56533c56d449b3b876e809864"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/165342e9cdeb65af860410138326dd49dc735f8f",
-                "reference": "165342e9cdeb65af860410138326dd49dc735f8f",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/a27dfc5c0a87e8e56533c56d449b3b876e809864",
+                "reference": "a27dfc5c0a87e8e56533c56d449b3b876e809864",
                 "shasum": ""
             },
             "require": {
@@ -1028,7 +1028,7 @@
                 "webdriver",
                 "webdriver-element"
             ],
-            "time": "2019-09-02T16:18:16+00:00"
+            "time": "2019-09-03T15:14:41+00:00"
         }
     ],
     "packages-dev": [
