@@ -8,6 +8,8 @@ use webignition\BasilModel\Value\AttributeValueInterface;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
+use webignition\BasilModel\Value\ObjectNames;
+use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
@@ -113,10 +115,21 @@ class IsComparisonTranspiler implements TranspilerInterface
             );
         }
 
-        // ...
-        // create examined value from further value types
-        // element, attribute, env|browser|page object
-        // ...
+        if ($examinedValue instanceof ObjectValueInterface) {
+            if (ObjectNames::BROWSER === $examinedValue->getObjectName()) {
+                $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalar(
+                    $examinedValue,
+                    new VariablePlaceholder('BROWSER_VARIABLE')
+                );
+            }
+
+            if (ObjectNames::PAGE === $examinedValue->getObjectName()) {
+                $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalar(
+                    $examinedValue,
+                    new VariablePlaceholder('PAGE_VARIABLE')
+                );
+            }
+        }
 
         $transpiledExpectedValue = null;
         $expectedValuePlaceholder = new VariablePlaceholder('EXPECTED_VALUE');

@@ -80,7 +80,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".foo" exists'
                 ),
-                'variableIdentifiers' => [],
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                ],
             ],
             'exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
@@ -90,6 +92,8 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'HAS' => '$has',
+                    'ATTRIBUTE' => '$attribute',
                 ],
             ],
             'exists comparison, environment examined value' => [
@@ -110,6 +114,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'BROWSER_VARIABLE' => '$browserVariable',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
                 ],
             ],
             'exists comparison, page object value' => [
@@ -127,7 +132,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" not-exists'
                 ),
-                'variableIdentifiers' => [],
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                ],
             ],
             'not-exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
@@ -137,6 +144,8 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'HAS' => '$has',
+                    'ATTRIBUTE' => '$attribute',
                 ],
             ],
             'not-exists comparison, environment examined value' => [
@@ -200,6 +209,29 @@ class AssertionTranspilerTest extends AbstractTestCase
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                 ],
             ],
+            'is comparison, browser object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size is "1200x1100"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'BROWSER_VARIABLE' => '$browserVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                ],
+            ],
+            'is comparison, page object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title is "A basic page"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'PAGE_VARIABLE' => '$pageVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
         ];
     }
 
@@ -236,7 +268,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" exists'
                 ),
-                'variableIdentifiers' => [],
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
             'exists comparison, attribute identifier examined value, element does not exist' => [
@@ -247,6 +281,8 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'HAS' => '$has',
+                    'ATTRIBUTE' => '$attribute',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
@@ -258,6 +294,8 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'ELEMENT' => '$element',
+                    'HAS' => '$has',
+                    'ATTRIBUTE' => '$attribute',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
             ],
