@@ -17,6 +17,7 @@ use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
+use webignition\WebDriverElementInspector\Inspector;
 
 class AssertionTranspilerTest extends AbstractTestCase
 {
@@ -52,14 +53,18 @@ class AssertionTranspilerTest extends AbstractTestCase
     public function testTranspileForPassingAssertions(
         string $fixture,
         AssertionInterface $assertion,
-        array $variableIdentifiers
+        array $variableIdentifiers,
+        array $additionalSetupLines = [],
+        array $additionalUseStatements = []
     ) {
         $transpilationResult = $this->transpiler->transpile($assertion);
 
         $executableCall = $this->createExecutableCall(
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            $fixture
+            $fixture,
+            $additionalSetupLines,
+            $additionalUseStatements
         );
 
         eval($executableCall);
@@ -144,6 +149,26 @@ class AssertionTranspilerTest extends AbstractTestCase
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                 ],
             ],
+            'is comparison, element identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo" is "Sibling 2"'
+                ),
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
         ];
     }
 
@@ -222,18 +247,26 @@ class AssertionTranspilerTest extends AbstractTestCase
     private function createExecutableCall(
         TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers,
-        string $fixture
+        string $fixture,
+        array $additionalSetupLines = [],
+        array $additionalUseStatements = []
     ): string {
         return $this->executableCallFactory->create(
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            [
-                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ],
-            new UseStatementCollection([
-                new UseStatement(Navigator::class),
-            ])
+            array_merge(
+                [
+                    '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
+                    '$domCrawlerNavigator = Navigator::create($crawler); ',
+                ],
+                $additionalSetupLines
+            ),
+            new UseStatementCollection(array_merge(
+                [
+                    new UseStatement(Navigator::class),
+                ],
+                $additionalUseStatements
+            ))
         );
     }
 }
