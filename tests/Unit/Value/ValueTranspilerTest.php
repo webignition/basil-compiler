@@ -10,10 +10,14 @@ use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
+use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -87,7 +91,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider transpileDataProvider
      */
-    public function testTranspile(ValueInterface $model, TranspilationResult $expectedTranspilationResult)
+    public function testTranspile(ValueInterface $model, TranspilationResultInterface $expectedTranspilationResult)
     {
         $this->assertEquals($expectedTranspilationResult, $this->transpiler->transpile($model));
     }
@@ -169,6 +173,31 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     ['"//h1"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
+                ),
+            ],
+            'browser object value, size' => [
+                'value' => new ObjectValue(
+                    ValueTypes::BROWSER_OBJECT_PROPERTY,
+                    '$browser.size',
+                    ObjectNames::BROWSER,
+                    'size'
+                ),
+                'expectedTranspilationResult' => new VariableAssignmentCall(
+                    new TranspilationResult(
+                        [
+                        '{{ WEBDRIVER_DIMENSION }} = '
+                        . '{{ PANTHER_CLIENT }}->getWebDriver()->manage()->window()->getSize()',
+                        '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
+                        . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
+                        ],
+                        new UseStatementCollection(),
+                        new VariablePlaceholderCollection([
+                            new VariablePlaceholder('WEBDRIVER_DIMENSION'),
+                            new VariablePlaceholder('BROWSER_SIZE'),
+                            new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                        ])
+                    ),
+                    new VariablePlaceholder('BROWSER_SIZE')
                 ),
             ],
         ];
