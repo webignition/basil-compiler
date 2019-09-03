@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "862c3ecb01410d781d3557af43163573",
+    "content-hash": "d918de9f5d0815e13722bfd4e8a0c04f",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -977,6 +977,58 @@
             "description": "A collection of Facebook\\WebDriver\\WebDriverElement",
             "homepage": "https://github.com/webignition/web-driver-element-collection",
             "time": "2019-09-02T15:21:15+00:00"
+        },
+        {
+            "name": "webignition/webdriver-element-inspector",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/webdriver-element-inspector.git",
+                "reference": "165342e9cdeb65af860410138326dd49dc735f8f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/165342e9cdeb65af860410138326dd49dc735f8f",
+                "reference": "165342e9cdeb65af860410138326dd49dc735f8f",
+                "shasum": ""
+            },
+            "require": {
+                "facebook/webdriver": "^1.7.1",
+                "php": ">=7.2",
+                "webignition/web-driver-element-collection": "^0.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/phpstan": "^0.11.15",
+                "phpstan/phpstan-mockery": "^0.11.3",
+                "phpunit/phpunit": "~8.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/panther": "^0.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\WebDriverElementInspector\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Convenience methods for getting information from a Facebook\\WebDriver\\WebDriverElement instance",
+            "homepage": "https://github.com/webignition/webdriver-element-inspector",
+            "keywords": [
+                "inspector",
+                "webdriver",
+                "webdriver-element"
+            ],
+            "time": "2019-09-02T16:18:16+00:00"
         }
     ],
     "packages-dev": [
