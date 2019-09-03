@@ -193,7 +193,10 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         string $comparison
     ): TranspilationResultInterface {
         $attributeAssigmentCall = $this->variableAssignmentCallFactory->createForAttribute(
-            $attributeValue->getIdentifier()
+            $attributeValue->getIdentifier(),
+            VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+            VariableAssignmentCallFactory::createElementPlaceholder(),
+            VariableAssignmentCallFactory::createAttributePlaceholder()
         );
 
         return AssertionComparisons::EXISTS === $comparison

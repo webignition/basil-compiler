@@ -62,25 +62,39 @@ class VariableAssignmentCallFactory
         );
     }
 
+    public static function createElementLocatorPlaceholder(): VariablePlaceholder
+    {
+        return new VariablePlaceholder(self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME);
+    }
+
+    public static function createCollectionPlaceholder(): VariablePlaceholder
+    {
+        return new VariablePlaceholder(self::DEFAULT_COLLECTION_PLACEHOLDER_NAME);
+    }
+
+    public static function createElementPlaceholder(): VariablePlaceholder
+    {
+        return new VariablePlaceholder(self::DEFAULT_ELEMENT_PLACEHOLDER_NAME);
+    }
+
+    public static function createAttributePlaceholder(): VariablePlaceholder
+    {
+        return new VariablePlaceholder(self::DEFAULT_ATTRIBUTE_PLACEHOLDER_NAME);
+    }
+
     /**
      * @param ElementIdentifierInterface $elementIdentifier
-     * @param string $elementLocatorPlaceholderName
-     * @param string $collectionPlaceholderName
-     *
+     * @param VariablePlaceholder $elementLocatorPlaceholder
+     * @param VariablePlaceholder $collectionPlaceholder
      * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
      */
     public function createForElementCollection(
         ElementIdentifierInterface $elementIdentifier,
-        string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
-        string $collectionPlaceholderName = self::DEFAULT_COLLECTION_PLACEHOLDER_NAME
+        VariablePlaceholder $elementLocatorPlaceholder,
+        VariablePlaceholder $collectionPlaceholder
     ) {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-
-        $elementLocatorPlaceholder = $variablePlaceholders->create($elementLocatorPlaceholderName);
-        $returnValuePlaceholder = $variablePlaceholders->create($collectionPlaceholderName);
-
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
             new TranspilationResult(
                 [(string) $elementLocatorPlaceholder],
@@ -100,7 +114,7 @@ class VariableAssignmentCallFactory
         return $this->createForElementOrCollection(
             $elementIdentifier,
             $elementLocatorPlaceholder,
-            $returnValuePlaceholder,
+            $collectionPlaceholder,
             $hasCall,
             $findCall
         );
@@ -108,8 +122,8 @@ class VariableAssignmentCallFactory
 
     /**
      * @param ElementIdentifierInterface $elementIdentifier
-     * @param string $elementLocatorPlaceholderName
-     * @param string $elementPlaceholderName
+     * @param VariablePlaceholder $elementLocatorPlaceholder
+     * @param VariablePlaceholder $elementPlaceholder
      *
      * @return VariableAssignmentCall
      *
@@ -117,14 +131,9 @@ class VariableAssignmentCallFactory
      */
     public function createForElement(
         ElementIdentifierInterface $elementIdentifier,
-        string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
-        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME
+        VariablePlaceholder $elementLocatorPlaceholder,
+        VariablePlaceholder $elementPlaceholder
     ) {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-
-        $elementLocatorPlaceholder = $variablePlaceholders->create($elementLocatorPlaceholderName);
-        $returnValuePlaceholder = $variablePlaceholders->create($elementPlaceholderName);
-
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
             new TranspilationResult(
                 [(string) $elementLocatorPlaceholder],
@@ -144,7 +153,7 @@ class VariableAssignmentCallFactory
         return $this->createForElementOrCollection(
             $elementIdentifier,
             $elementLocatorPlaceholder,
-            $returnValuePlaceholder,
+            $elementPlaceholder,
             $hasCall,
             $findCall
         );
@@ -152,9 +161,9 @@ class VariableAssignmentCallFactory
 
     /**
      * @param AttributeIdentifierInterface $attributeIdentifier
-     * @param string $elementLocatorPlaceholderName
-     * @param string $elementPlaceholderName
-     * @param string $attributePlaceholderName
+     * @param VariablePlaceholder $elementLocatorPlaceholder
+     * @param VariablePlaceholder $elementPlaceholder
+     * @param VariablePlaceholder $attributePlaceholder
      *
      * @return VariableAssignmentCall
      *
@@ -162,18 +171,20 @@ class VariableAssignmentCallFactory
      */
     public function createForAttribute(
         AttributeIdentifierInterface $attributeIdentifier,
-        string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
-        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME,
-        string $attributePlaceholderName = self::DEFAULT_ATTRIBUTE_PLACEHOLDER_NAME
+        VariablePlaceholder $elementLocatorPlaceholder,
+        VariablePlaceholder $elementPlaceholder,
+        VariablePlaceholder $attributePlaceholder
     ): VariableAssignmentCall {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $attributePlaceholder = $variablePlaceholders->create($attributePlaceholderName);
-
         $elementAssignmentCall = $this->createForElement(
             $attributeIdentifier->getElementIdentifier(),
-            $elementLocatorPlaceholderName,
-            $elementPlaceholderName
+            $elementLocatorPlaceholder,
+            $elementPlaceholder
         );
+
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+            $attributePlaceholder,
+        ]);
 
         $elementPlaceholder = $elementAssignmentCall->getElementVariablePlaceholder();
 
@@ -216,7 +227,11 @@ class VariableAssignmentCallFactory
         ElementIdentifierInterface $elementIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
-        $collectionCall = $this->createForElementCollection($elementIdentifier);
+        $collectionCall = $this->createForElementCollection(
+            $elementIdentifier,
+            self::createElementLocatorPlaceholder(),
+            $valuePlaceholder
+        );
         $collectionPlaceholder = $collectionCall->getElementVariablePlaceholder();
 
         $variablePlaceholders = new VariablePlaceholderCollection();
@@ -265,9 +280,9 @@ class VariableAssignmentCallFactory
     ): VariableAssignmentCall {
         $assignmentCall = $this->createForAttribute(
             $attributeIdentifier,
-            self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
-            self::DEFAULT_ELEMENT_PLACEHOLDER_NAME,
-            $valuePlaceholder->getId()
+            self::createElementLocatorPlaceholder(),
+            self::createElementPlaceholder(),
+            $valuePlaceholder
         );
 
         $variablePlaceholders = new VariablePlaceholderCollection();

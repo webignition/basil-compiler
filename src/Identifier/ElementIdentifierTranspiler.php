@@ -55,6 +55,10 @@ class ElementIdentifierTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        return $this->variableAssignmentCallFactory->createForElementCollection($model);
+        return $this->variableAssignmentCallFactory->createForElementCollection(
+            $model,
+            VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+            VariableAssignmentCallFactory::createCollectionPlaceholder()
+        );
     }
 }
