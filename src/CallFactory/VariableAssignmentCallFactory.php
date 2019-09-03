@@ -29,6 +29,7 @@ class VariableAssignmentCallFactory
     private $transpilationResultComposer;
     private $valueTranspiler;
     private $singleQuotedStringEscaper;
+    private $webDriverElementInspectorCallFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
@@ -36,7 +37,8 @@ class VariableAssignmentCallFactory
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         TranspilationResultComposer $transpilationResultComposer,
         ValueTranspiler $valueTranspiler,
-        SingleQuotedStringEscaper $singleQuotedStringEscaper
+        SingleQuotedStringEscaper $singleQuotedStringEscaper,
+        WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
@@ -44,6 +46,7 @@ class VariableAssignmentCallFactory
         $this->transpilationResultComposer = $transpilationResultComposer;
         $this->valueTranspiler = $valueTranspiler;
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
+        $this->webDriverElementInspectorCallFactory = $webDriverElementInspectorCallFactory;
     }
 
     public static function createFactory(): VariableAssignmentCallFactory
@@ -54,7 +57,8 @@ class VariableAssignmentCallFactory
             DomCrawlerNavigatorCallFactory::createFactory(),
             TranspilationResultComposer::create(),
             ValueTranspiler::createTranspiler(),
-            SingleQuotedStringEscaper::create()
+            SingleQuotedStringEscaper::create(),
+            WebDriverElementInspectorCallFactory::createFactory()
         );
     }
 
@@ -198,6 +202,53 @@ class VariableAssignmentCallFactory
         );
 
         return new VariableAssignmentCall($transpilationResult, $attributePlaceholder);
+    }
+
+    /**
+     * @param ElementIdentifierInterface $elementIdentifier
+     * @param VariablePlaceholder $valuePlaceholder
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForElementCollectionValue(
+        ElementIdentifierInterface $elementIdentifier,
+        VariablePlaceholder $valuePlaceholder
+    ): VariableAssignmentCall {
+        $collectionCall = $this->createForElementCollection($elementIdentifier);
+        $collectionPlaceholder = $collectionCall->getElementVariablePlaceholder();
+
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+            $valuePlaceholder,
+            $collectionPlaceholder,
+        ]);
+
+        $assignmentCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($collectionPlaceholder);
+
+        $assignmentStatement = $valuePlaceholder . ' = ' . $assignmentCall;
+
+        $statements = array_merge(
+            $collectionCall->getLines(),
+            [
+                $assignmentStatement,
+            ]
+        );
+
+        $calls = [
+            $collectionCall,
+            $assignmentCall,
+        ];
+
+        $transpilationResult = $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        return new VariableAssignmentCall($transpilationResult, $valuePlaceholder);
     }
 
     /**
