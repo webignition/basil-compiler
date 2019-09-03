@@ -1,4 +1,5 @@
 <?php
+/** @noinspection DuplicatedCode */
 /** @noinspection PhpDocSignatureInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 
@@ -78,8 +79,6 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
     ) {
         $transpilationResult = $this->transpiler->transpile($assertion);
 
-        echo $transpilationResult . "\n\n";
-
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
         $this->assertEquals($expectedUseStatements->getAll(), $transpilationResult->getUseStatements()->getAll());
         $this->assertEquals($expectedPlaceholders->getAll(), $transpilationResult->getVariablePlaceholders()->getAll());
@@ -98,52 +97,54 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $pageVariablePlaceholder = new VariablePlaceholder('PAGE_VARIABLE');
         $elementLocatorPlaceholder = new VariablePlaceholder('ELEMENT_LOCATOR');
         $elementPlaceholder = new VariablePlaceholder('ELEMENT');
-        $collectionPlaceholder = new VariablePlaceholder('COLLECTION');
+        $hasPlaceholder = new VariablePlaceholder('HAS');
+        $attributePlaceholder = new VariablePlaceholder('ATTRIBUTE');
 
         return [
-//            'exists comparison, element identifier examined value' => [
-//                'assertion' => $assertionFactory->createFromAssertionString(
-//                    '".selector" exists'
-//                ),
-//                'expectedContentPattern' =>
-//                    '/^'
-//                    . $phpUnitTestCasePlaceholder
-//                    . '->assertTrue\('
-//                    . $domCrawlerNavigatorPlaceholder
-//                    . '->has\(.*\)$/',
-//                'expectedUseStatements' => new UseStatementCollection([
-//                    new UseStatement(ElementLocator::class),
-//                    new UseStatement(LocatorType::class),
-//                ]),
-//                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-//                    $domCrawlerNavigatorPlaceholder,
-//                    $phpUnitTestCasePlaceholder,
-//                ]),
-//            ],
+            'exists comparison, element identifier examined value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".selector" exists'
+                ),
+                'expectedContentPattern' =>
+                    '/^'
+                    . $hasPlaceholder . ' = '. $domCrawlerNavigatorPlaceholder . '->has\(.*\)' . "\n"
+                    . $phpUnitTestCasePlaceholder
+                    . '->assertTrue\(' . $hasPlaceholder . '\)$/',
+                'expectedUseStatements' => new UseStatementCollection([
+                    new UseStatement(ElementLocator::class),
+                    new UseStatement(LocatorType::class),
+                ]),
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $phpUnitTestCasePlaceholder,
+                    $domCrawlerNavigatorPlaceholder,
+                    $hasPlaceholder,
+                ]),
+            ],
             'exists comparison, attribute identifier examined value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name exists'
                 ),
                 'expectedContentPattern' => '/^'
                     . $elementLocatorPlaceholder . '.+' . "\n"
-                    . $phpUnitTestCasePlaceholder
-                    . '->assertTrue\('
-                    . $domCrawlerNavigatorPlaceholder
-                    . '->has\(.*\)' . "\n"
-                    . $collectionPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
-                    . $elementPlaceholder . ' = ' . $collectionPlaceholder . '->get\(0\)' . "\n"
-                    . $phpUnitTestCasePlaceholder . '->assertNotNull\(.+\)'
-                    .'/',
+                    . $hasPlaceholder . ' = '. $domCrawlerNavigatorPlaceholder . '->hasOne\(.*\)' . "\n"
+                    . $phpUnitTestCasePlaceholder . '->assertTrue\(' . $hasPlaceholder . '\)' . "\n"
+                    . $elementPlaceholder . ' = '
+                    . $domCrawlerNavigatorPlaceholder . '->findOne\(' . $elementLocatorPlaceholder . '\)' . "\n"
+                    . $attributePlaceholder . ' = '
+                    . $elementPlaceholder . '->getAttribute\(\'attribute_name\'\)' . "\n"
+                    . $phpUnitTestCasePlaceholder . '->assertNotNull\(' . $attributePlaceholder . '\)'
+                    .'$/',
                 'expectedUseStatements' => new UseStatementCollection([
                     new UseStatement(ElementLocator::class),
                     new UseStatement(LocatorType::class),
                 ]),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $phpUnitTestCasePlaceholder,
+                    $attributePlaceholder,
                     $elementLocatorPlaceholder,
                     $elementPlaceholder,
-                    $collectionPlaceholder,
+                    $hasPlaceholder,
                     $domCrawlerNavigatorPlaceholder,
-                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'exists comparison, environment examined value' => [
@@ -218,17 +219,17 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedContentPattern' =>
                     '/^'
+                    . $hasPlaceholder . ' = '. $domCrawlerNavigatorPlaceholder . '->has\(.*\)' . "\n"
                     . $phpUnitTestCasePlaceholder
-                    . '->assertFalse\('
-                    . $domCrawlerNavigatorPlaceholder
-                    . '->has\(.*\)$/',
+                    . '->assertFalse\(' . $hasPlaceholder . '\)$/',
                 'expectedUseStatements' => new UseStatementCollection([
                     new UseStatement(ElementLocator::class),
                     new UseStatement(LocatorType::class),
                 ]),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    $domCrawlerNavigatorPlaceholder,
                     $phpUnitTestCasePlaceholder,
+                    $domCrawlerNavigatorPlaceholder,
+                    $hasPlaceholder,
                 ]),
             ],
             'not-exists comparison, attribute identifier examined value' => [
@@ -237,24 +238,25 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedContentPattern' => '/^'
                     . $elementLocatorPlaceholder . '.+' . "\n"
-                    . $phpUnitTestCasePlaceholder
-                    . '->assertTrue\('
-                    . $domCrawlerNavigatorPlaceholder
-                    . '->has\(.*\)' . "\n"
-                    . $collectionPlaceholder . ' = ' . $domCrawlerNavigatorPlaceholder . '.+' . "\n"
-                    . $elementPlaceholder . ' = ' . $collectionPlaceholder . '->get\(0\)' . "\n"
-                    . $phpUnitTestCasePlaceholder . '->assertNull\(.+\)'
-                    .'/',
+                    . $hasPlaceholder . ' = '. $domCrawlerNavigatorPlaceholder . '->hasOne\(.*\)' . "\n"
+                    . $phpUnitTestCasePlaceholder . '->assertTrue\(' . $hasPlaceholder . '\)' . "\n"
+                    . $elementPlaceholder . ' = '
+                    . $domCrawlerNavigatorPlaceholder . '->findOne\(' . $elementLocatorPlaceholder . '\)' . "\n"
+                    . $attributePlaceholder . ' = '
+                    . $elementPlaceholder . '->getAttribute\(\'attribute_name\'\)' . "\n"
+                    . $phpUnitTestCasePlaceholder . '->assertNull\(' . $attributePlaceholder . '\)'
+                    .'$/',
                 'expectedUseStatements' => new UseStatementCollection([
                     new UseStatement(ElementLocator::class),
                     new UseStatement(LocatorType::class),
                 ]),
                 'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+                    $phpUnitTestCasePlaceholder,
+                    $attributePlaceholder,
                     $elementLocatorPlaceholder,
                     $elementPlaceholder,
-                    $collectionPlaceholder,
+                    $hasPlaceholder,
                     $domCrawlerNavigatorPlaceholder,
-                    $phpUnitTestCasePlaceholder,
                 ]),
             ],
             'not-exists comparison, environment examined value' => [
