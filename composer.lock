@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c72b5a2fd4e7ea66512e312fac20107",
+    "content-hash": "fb2c495d4db4ba74f69cd7698138671d",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -888,19 +888,20 @@
         },
         {
             "name": "webignition/symfony-panther-dom-crawler-navigator",
-            "version": "0.7",
+            "version": "0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/symfony-panther-dom-crawler-navigator.git",
-                "reference": "1e36224184a894c485b64e4ad3da03d1bb5e93e8"
+                "reference": "8172cceb3daa85ce0d891c005d70ca37ea8cc718"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/1e36224184a894c485b64e4ad3da03d1bb5e93e8",
-                "reference": "1e36224184a894c485b64e4ad3da03d1bb5e93e8",
+                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/8172cceb3daa85ce0d891c005d70ca37ea8cc718",
+                "reference": "8172cceb3daa85ce0d891c005d70ca37ea8cc718",
                 "shasum": ""
             },
             "require": {
+                "facebook/webdriver": "^1.7.1",
                 "php": ">=7.2",
                 "symfony/panther": "^0.5",
                 "webignition/web-driver-element-collection": ">=0.2,<1"
@@ -930,7 +931,7 @@
             ],
             "description": "Navigate around a symfony panther dom crawler using convenience methods",
             "homepage": "https://github.com/webignition/symfony-panther-dom-crawler-navigatorr",
-            "time": "2019-09-02T14:44:08+00:00"
+            "time": "2019-09-03T09:55:49+00:00"
         },
         {
             "name": "webignition/web-driver-element-collection",

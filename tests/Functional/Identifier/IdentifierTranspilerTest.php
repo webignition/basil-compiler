@@ -22,6 +22,7 @@ use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
+use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
 class IdentifierTranspilerTest extends AbstractTestCase
 {
@@ -54,6 +55,8 @@ class IdentifierTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         IdentifierInterface $identifier,
+        array $variableIdentifiers,
+        VariablePlaceholderCollection $expectedVariablePlaceholders,
         callable $assertions
     ) {
         $transpilationResult = $this->transpiler->transpile($identifier);
@@ -64,25 +67,11 @@ class IdentifierTranspilerTest extends AbstractTestCase
         ]);
 
         $this->assertEquals($expectedUseStatements, $transpilationResult->getUseStatements());
-
-        $expectedVariablePlaceholders = VariablePlaceholderCollection::createCollection([
-            'ELEMENT_LOCATOR',
-            'ELEMENT',
-            'COLLECTION',
-            VariableNames::DOM_CRAWLER_NAVIGATOR,
-            'PHPUNIT_TEST_CASE',
-        ]);
-
         $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
-            array_merge(self::VARIABLE_IDENTIFIERS, [
-                'ELEMENT_LOCATOR' => '$elementLocator',
-                'ELEMENT' => '$element',
-                'COLLECTION' => '$collection',
-                'PHPUNIT_TEST_CASE' => '$this',
-            ]),
+            $variableIdentifiers,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
@@ -101,8 +90,26 @@ class IdentifierTranspilerTest extends AbstractTestCase
             'element identifier (css selector), selector only' => [
                 'fixture' => '/basic.html',
                 'identifier' => TestIdentifierFactory::createCssElementIdentifier('.p-1'),
-                'assertions' => function (WebDriverElement $element) {
-                    $this->assertSame('P1', $element->getText());
+                'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'COLLECTION' => '$collection',
+                    'PHPUNIT_TEST_CASE' => '$this',
+                ]),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    'ELEMENT_LOCATOR',
+                    'COLLECTION',
+                    VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    'PHPUNIT_TEST_CASE',
+                ]),
+                'assertions' => function (WebDriverElementCollectionInterface $collection) {
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->get(0);
+                    $this->assertInstanceOf(WebDriverElement::class, $element);
+
+                    if ($element instanceof WebDriverElement) {
+                        $this->assertSame('P1', $element->getText());
+                    }
                 },
             ],
             'attribute identifier, selector only' => [
@@ -113,6 +120,20 @@ class IdentifierTranspilerTest extends AbstractTestCase
                     ),
                     'id'
                 ),
+                'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
+                    'ATTRIBUTE' => '$attribute',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'COLLECTION' => '$collection',
+                    'PHPUNIT_TEST_CASE' => '$this',
+                ]),
+                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    'ATTRIBUTE',
+                    'ELEMENT_LOCATOR',
+                    'ELEMENT',
+                    VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    'PHPUNIT_TEST_CASE',
+                ]),
                 'assertions' => function ($value) {
                     $this->assertIsString($value);
                     $this->assertSame('a-sibling', $value);
