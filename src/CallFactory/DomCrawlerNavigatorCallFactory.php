@@ -52,6 +52,17 @@ class DomCrawlerNavigatorCallFactory
     }
 
     /**
+     * @param TranspilationResultInterface $arguments
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createFindOneCallForTranspiledArguments(
+        TranspilationResultInterface $arguments
+    ): TranspilationResultInterface {
+        return $this->createElementCall($arguments, 'findOne');
+    }
+
+    /**
      * @param ElementIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
@@ -77,6 +88,16 @@ class DomCrawlerNavigatorCallFactory
         return $this->createElementCall($arguments, 'has');
     }
 
+    /**
+     * @param TranspilationResultInterface $arguments
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createHasOneCallForTranspiledArguments(
+        TranspilationResultInterface $arguments
+    ): TranspilationResultInterface {
+        return $this->createElementCall($arguments, 'hasOne');
+    }
 
     /**
      * @param TranspilationResultInterface $arguments

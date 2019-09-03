@@ -6,6 +6,7 @@ use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -53,8 +54,51 @@ class VariableAssignmentCallFactory
     /**
      * @param ElementIdentifierInterface $elementIdentifier
      * @param string $elementLocatorPlaceholderName
-     * @param string $elementPlaceholderName
      * @param string $collectionPlaceholderName
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForElementCollection(
+        ElementIdentifierInterface $elementIdentifier,
+        string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
+        string $collectionPlaceholderName = self::DEFAULT_COLLECTION_PLACEHOLDER_NAME
+    ) {
+        $variablePlaceholders = new VariablePlaceholderCollection();
+
+        $elementLocatorPlaceholder = $variablePlaceholders->create($elementLocatorPlaceholderName);
+        $returnValuePlaceholder = $variablePlaceholders->create($collectionPlaceholderName);
+
+        $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
+            new TranspilationResult(
+                [(string) $elementLocatorPlaceholder],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            )
+        );
+
+        $findCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
+            new TranspilationResult(
+                [(string) $elementLocatorPlaceholder],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            )
+        );
+
+        return $this->createForElementOrCollection(
+            $elementIdentifier,
+            $elementLocatorPlaceholder,
+            $returnValuePlaceholder,
+            $hasCall,
+            $findCall
+        );
+    }
+
+    /**
+     * @param ElementIdentifierInterface $elementIdentifier
+     * @param string $elementLocatorPlaceholderName
+     * @param string $elementPlaceholderName
      *
      * @return VariableAssignmentCall
      *
@@ -63,53 +107,80 @@ class VariableAssignmentCallFactory
     public function createForElement(
         ElementIdentifierInterface $elementIdentifier,
         string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
-        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME,
-        string $collectionPlaceholderName = self::DEFAULT_COLLECTION_PLACEHOLDER_NAME
+        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME
     ) {
         $variablePlaceholders = new VariablePlaceholderCollection();
 
         $elementLocatorPlaceholder = $variablePlaceholders->create($elementLocatorPlaceholderName);
-        $elementPlaceholder = $variablePlaceholders->create($elementPlaceholderName);
-        $collectionPlaceholder = $variablePlaceholders->create($collectionPlaceholderName);
+        $returnValuePlaceholder = $variablePlaceholders->create($elementPlaceholderName);
+
+        $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
+            new TranspilationResult(
+                [(string) $elementLocatorPlaceholder],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            )
+        );
+
+        $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCallForTranspiledArguments(
+            new TranspilationResult(
+                [(string) $elementLocatorPlaceholder],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection()
+            )
+        );
+
+        return $this->createForElementOrCollection(
+            $elementIdentifier,
+            $elementLocatorPlaceholder,
+            $returnValuePlaceholder,
+            $hasCall,
+            $findCall
+        );
+    }
+
+    /**
+     * @param ElementIdentifierInterface $elementIdentifier
+     * @param VariablePlaceholder $elementLocatorPlaceholder
+     * @param VariablePlaceholder $returnValuePlaceholder
+     * @param TranspilationResultInterface $hasCall
+     * @param TranspilationResultInterface $findCall
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    private function createForElementOrCollection(
+        ElementIdentifierInterface $elementIdentifier,
+        VariablePlaceholder $elementLocatorPlaceholder,
+        VariablePlaceholder $returnValuePlaceholder,
+        TranspilationResultInterface $hasCall,
+        TranspilationResultInterface $findCall
+    ) {
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+            $elementLocatorPlaceholder,
+            $returnValuePlaceholder,
+        ]);
 
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
-        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
-            new TranspilationResult(
-                [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
-                new VariablePlaceholderCollection()
-            )
-        );
-
-        $findElementCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
-            new TranspilationResult(
-                [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
-                new VariablePlaceholderCollection()
-            )
-        );
-
-        $elementExistsAssertionCall = $this->assertionCallFactory->createElementExistsAssertionCall($hasElementCall);
+        $elementExistsAssertionCall = $this->assertionCallFactory->createElementExistsAssertionCall($hasCall);
 
         $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
         $elementExistsStatement = (string) $elementExistsAssertionCall;
-
-        $collectionFindStatement = $collectionPlaceholder . ' = ' . $findElementCall;
-
-        $elementFindStatement = $elementPlaceholder . ' = ' . $collectionPlaceholder . '->get(0)';
+        $findStatement = $returnValuePlaceholder . ' = ' . $findCall;
 
         $statements = [
             $elementLocatorConstructorStatement,
             $elementExistsStatement,
-            $collectionFindStatement,
-            $elementFindStatement,
+            $findStatement,
         ];
 
         $calls = [
             $elementLocatorConstructor,
-            $hasElementCall,
-            $findElementCall,
+            $hasCall,
+            $findCall,
             $elementExistsAssertionCall,
         ];
 
@@ -120,7 +191,7 @@ class VariableAssignmentCallFactory
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $elementPlaceholder);
+        return new VariableAssignmentCall($transpilationResult, $returnValuePlaceholder);
     }
 
     /**

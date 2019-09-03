@@ -3,33 +3,39 @@
 namespace webignition\BasilTranspiler\Identifier;
 
 use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
+use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class AttributeIdentifierTranspiler implements TranspilerInterface
 {
     const TEMPLATE = '%s->getAttribute(\'%s\')';
 
-    private $elementIdentifierTranspiler;
+    private $variableAssignmentCallFactory;
     private $singleQuotedStringEscaper;
+    private $transpilationResultComposer;
 
     public function __construct(
-        ElementIdentifierTranspiler $elementIdentifierTranspiler,
-        SingleQuotedStringEscaper $singleQuotedStringEscaper
+        VariableAssignmentCallFactory $variableAssignmentCallFactory,
+        SingleQuotedStringEscaper $singleQuotedStringEscaper,
+        TranspilationResultComposer $transpilationResultComposer
     ) {
-        $this->elementIdentifierTranspiler = $elementIdentifierTranspiler;
+        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
+        $this->transpilationResultComposer = $transpilationResultComposer;
     }
 
     public static function createTranspiler(): AttributeIdentifierTranspiler
     {
         return new AttributeIdentifierTranspiler(
-            ElementIdentifierTranspiler::createTranspiler(),
-            SingleQuotedStringEscaper::create()
+            VariableAssignmentCallFactory::createFactory(),
+            SingleQuotedStringEscaper::create(),
+            TranspilationResultComposer::create()
         );
     }
 
@@ -60,19 +66,31 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $elementIdentifier = $model->getElementIdentifier();
-        $elementIdentifierTranspilationResult = $this->elementIdentifierTranspiler->transpile($elementIdentifier);
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $attributePlaceholder = $variablePlaceholders->create('ATTRIBUTE');
 
-        $template = sprintf(
+        $elementAssignmentCall = $this->variableAssignmentCallFactory->createForElement($model->getElementIdentifier());
+        $elementPlaceholder = $elementAssignmentCall->getElementVariablePlaceholder();
+
+        $attributeAssignmentStatement = $attributePlaceholder . ' = ' . sprintf(
             self::TEMPLATE,
-            '%s',
-            $this->singleQuotedStringEscaper->escape($attributeName)
+            $elementPlaceholder,
+            $this->singleQuotedStringEscaper->escape((string) $model->getAttributeName())
         );
 
-        return $elementIdentifierTranspilationResult->extend(
-            $template,
+        $statements = array_merge($elementAssignmentCall->getLines(), [
+            $attributeAssignmentStatement,
+        ]);
+
+        $calls = [
+            $elementAssignmentCall,
+        ];
+
+        return $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
             new UseStatementCollection(),
-            new VariablePlaceholderCollection()
+            $variablePlaceholders
         );
     }
 }
