@@ -78,6 +78,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
     ) {
         $transpilationResult = $this->transpiler->transpile($assertion);
 
+        echo $transpilationResult . "\n\n";
+
         $this->assertRegExp($expectedContentPattern, (string) $transpilationResult);
         $this->assertEquals($expectedUseStatements->getAll(), $transpilationResult->getUseStatements()->getAll());
         $this->assertEquals($expectedPlaceholders->getAll(), $transpilationResult->getVariablePlaceholders()->getAll());
@@ -99,25 +101,25 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $collectionPlaceholder = new VariablePlaceholder('COLLECTION');
 
         return [
-            'exists comparison, element identifier examined value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector" exists'
-                ),
-                'expectedContentPattern' =>
-                    '/^'
-                    . $phpUnitTestCasePlaceholder
-                    . '->assertTrue\('
-                    . $domCrawlerNavigatorPlaceholder
-                    . '->has\(.*\)$/',
-                'expectedUseStatements' => new UseStatementCollection([
-                    new UseStatement(ElementLocator::class),
-                    new UseStatement(LocatorType::class),
-                ]),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
-                    $domCrawlerNavigatorPlaceholder,
-                    $phpUnitTestCasePlaceholder,
-                ]),
-            ],
+//            'exists comparison, element identifier examined value' => [
+//                'assertion' => $assertionFactory->createFromAssertionString(
+//                    '".selector" exists'
+//                ),
+//                'expectedContentPattern' =>
+//                    '/^'
+//                    . $phpUnitTestCasePlaceholder
+//                    . '->assertTrue\('
+//                    . $domCrawlerNavigatorPlaceholder
+//                    . '->has\(.*\)$/',
+//                'expectedUseStatements' => new UseStatementCollection([
+//                    new UseStatement(ElementLocator::class),
+//                    new UseStatement(LocatorType::class),
+//                ]),
+//                'expectedVariablePlaceholders' => new VariablePlaceholderCollection([
+//                    $domCrawlerNavigatorPlaceholder,
+//                    $phpUnitTestCasePlaceholder,
+//                ]),
+//            ],
             'exists comparison, attribute identifier examined value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name exists'

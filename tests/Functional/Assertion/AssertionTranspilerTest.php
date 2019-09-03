@@ -75,7 +75,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".foo" exists'
                 ),
-                'variableIdentifiers' => [],
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                ],
             ],
             'exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
@@ -83,9 +85,11 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '"#a-sibling".class exists'
                 ),
                 'variableIdentifiers' => [
-                    'ELEMENT_LOCATOR' => '$elementLocator',
-                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
                     'COLLECTION' => '$collection',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
                 ],
             ],
             'exists comparison, environment examined value' => [
@@ -123,7 +127,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" not-exists'
                 ),
-                'variableIdentifiers' => [],
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                ],
             ],
             'not-exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
@@ -131,9 +137,11 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '"#a-sibling".invalid not-exists'
                 ),
                 'variableIdentifiers' => [
-                    'ELEMENT_LOCATOR' => '$elementLocator',
-                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
                     'COLLECTION' => '$collection',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
                 ],
             ],
             'not-exists comparison, environment examined value' => [
@@ -182,7 +190,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" exists'
                 ),
-                'variableIdentifiers' => [],
+                'variableIdentifiers' => [
+                    'HAS' => '$has',
+                ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
             'exists comparison, attribute identifier examined value, element does not exist' => [
@@ -191,9 +201,11 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".selector".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
-                    'ELEMENT_LOCATOR' => '$elementLocator',
-                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
                     'COLLECTION' => '$collection',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
@@ -203,9 +215,11 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
-                    'ELEMENT_LOCATOR' => '$elementLocator',
-                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
                     'COLLECTION' => '$collection',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
             ],
