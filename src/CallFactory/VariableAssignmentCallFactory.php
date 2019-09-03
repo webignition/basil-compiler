@@ -286,16 +286,30 @@ class VariableAssignmentCallFactory
         ]);
 
         $variableAccessCall = $this->valueTranspiler->transpile($value);
-        $variableAssignmentCall = $variableAccessCall->extend(
-            sprintf(
-                '%s = %s ?? null',
-                (string) $variablePlaceholder,
-                '%s'
-            ),
+        $variableAccessLines = $variableAccessCall->getLines();
+        $variableAccessLastLine = array_pop($variableAccessLines);
+
+        $assignmentStatement = sprintf(
+            '%s = %s ?? null',
+            $variablePlaceholder,
+            $variableAccessLastLine
+        );
+
+        $statements = array_merge($variableAccessLines, [
+            $assignmentStatement,
+        ]);
+
+        $calls = [
+            $variableAccessCall,
+        ];
+
+        $transpilationResult = $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($variableAssignmentCall, $variablePlaceholder);
+        return new VariableAssignmentCall($transpilationResult, $variablePlaceholder);
     }
 }

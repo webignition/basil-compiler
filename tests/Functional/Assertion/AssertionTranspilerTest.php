@@ -110,6 +110,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     'BROWSER_VARIABLE' => '$browserVariable',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
                 ],
             ],
             'exists comparison, page object value' => [

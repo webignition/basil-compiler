@@ -99,6 +99,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
         $elementPlaceholder = new VariablePlaceholder('ELEMENT');
         $hasPlaceholder = new VariablePlaceholder('HAS');
         $attributePlaceholder = new VariablePlaceholder('ATTRIBUTE');
+        $webDriverDimensionPlaceholder = new VariablePlaceholder('WEBDRIVER_DIMENSION');
 
         return [
             'exists comparison, element identifier examined value' => [
@@ -165,8 +166,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedUseStatements' => new UseStatementCollection(),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PHPUNIT_TEST_CASE,
-                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                     'ENVIRONMENT_VARIABLE',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                 ]),
             ],
             'exists comparison, browser object value' => [
@@ -175,20 +176,17 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedContentPattern' =>
                     '/^'
-                    . $browserVariablePlaceholder
-                    .' = '
-                    . $pantherClientPlaceholder
-                    . '.+'
-                    . "\n"
-                    . $phpUnitTestCasePlaceholder
-                    .'->assertNotNull\('
-                    . $browserVariablePlaceholder
-                    .'\)/m',
+                    . $webDriverDimensionPlaceholder . ' = ' . $pantherClientPlaceholder . '.+' . "\n"
+                    . $browserVariablePlaceholder . ' = .+' . "\n"
+                    . $phpUnitTestCasePlaceholder .'->assertNotNull\(' . $browserVariablePlaceholder . '\)'
+                    .'$/m',
                 'expectedUseStatements' => new UseStatementCollection(),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PHPUNIT_TEST_CASE,
-                    VariableNames::PANTHER_CLIENT,
                     'BROWSER_VARIABLE',
+                    'WEBDRIVER_DIMENSION',
+                    'BROWSER_SIZE',
+                    VariableNames::PANTHER_CLIENT,
                 ]),
             ],
             'exists comparison, page object value' => [
@@ -209,8 +207,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedUseStatements' => new UseStatementCollection(),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PHPUNIT_TEST_CASE,
-                    VariableNames::PANTHER_CLIENT,
                     'PAGE_VARIABLE',
+                    VariableNames::PANTHER_CLIENT,
                 ]),
             ],
             'not-exists comparison, element identifier examined value' => [
@@ -277,8 +275,8 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedUseStatements' => new UseStatementCollection(),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PHPUNIT_TEST_CASE,
-                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                     'ENVIRONMENT_VARIABLE',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                 ]),
             ],
         ];
