@@ -5,25 +5,29 @@ namespace webignition\BasilTranspiler\Identifier;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class ElementIdentifierTranspiler implements TranspilerInterface
 {
     private $domCrawlerNavigatorCallFactory;
+    private $variableAssignmentCallFactory;
 
-    public function __construct(DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory)
-    {
+    public function __construct(
+        DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
+        VariableAssignmentCallFactory $variableAssignmentCallFactory
+    ) {
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
+        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
     }
 
     public static function createTranspiler(): ElementIdentifierTranspiler
     {
         return new ElementIdentifierTranspiler(
-            DomCrawlerNavigatorCallFactory::createFactory()
+            DomCrawlerNavigatorCallFactory::createFactory(),
+            VariableAssignmentCallFactory::createFactory()
         );
     }
 
@@ -49,37 +53,6 @@ class ElementIdentifierTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $collectionPlaceholder = new VariablePlaceholder('COLLECTION');
-        $variablePlaceholder = new VariablePlaceholder('ELEMENT');
-
-        $domCrawlerNavigatorFindCall = $this->domCrawlerNavigatorCallFactory->createFindCallForIdentifier($model);
-        $domCrawlerNavigatorFindCallLines = $domCrawlerNavigatorFindCall->getLines();
-
-        $useStatements = $domCrawlerNavigatorFindCall->getUseStatements();
-        $variablePlaceholders = $domCrawlerNavigatorFindCall->getVariablePlaceholders();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
-            $collectionPlaceholder,
-            $variablePlaceholder,
-        ]);
-
-        $collectionAssignmentLine = sprintf(
-            '%s = %s',
-            (string) $collectionPlaceholder,
-            array_pop($domCrawlerNavigatorFindCallLines)
-        );
-
-        $variableAssignmentLine = sprintf(
-            '%s = %s',
-            (string) $variablePlaceholder,
-            $collectionPlaceholder . '->get(0)'
-        );
-
-        $lines = array_merge($domCrawlerNavigatorFindCallLines, [
-            $collectionAssignmentLine,
-            $variableAssignmentLine,
-        ]);
-
-
-        return new TranspilationResult($lines, $useStatements, $variablePlaceholders);
+        return $this->variableAssignmentCallFactory->createForElement($model);
     }
 }

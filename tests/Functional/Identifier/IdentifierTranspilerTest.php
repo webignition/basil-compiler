@@ -66,9 +66,11 @@ class IdentifierTranspilerTest extends AbstractTestCase
         $this->assertEquals($expectedUseStatements, $transpilationResult->getUseStatements());
 
         $expectedVariablePlaceholders = VariablePlaceholderCollection::createCollection([
-            VariableNames::DOM_CRAWLER_NAVIGATOR,
-            'COLLECTION',
+            'ELEMENT_LOCATOR',
             'ELEMENT',
+            'COLLECTION',
+            VariableNames::DOM_CRAWLER_NAVIGATOR,
+            'PHPUNIT_TEST_CASE',
         ]);
 
         $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
@@ -76,8 +78,10 @@ class IdentifierTranspilerTest extends AbstractTestCase
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, [
-                'COLLECTION' => '$collection',
+                'ELEMENT_LOCATOR' => '$elementLocator',
                 'ELEMENT' => '$element',
+                'COLLECTION' => '$collection',
+                'PHPUNIT_TEST_CASE' => '$this',
             ]),
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
