@@ -27,9 +27,6 @@ use webignition\BasilTranspiler\VariableNames;
 
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
-    const VARIABLE_EXISTS_TEMPLATE = '%s->assertNotNull(%s)';
-    const VARIABLE_NOT_EXISTS_TEMPLATE = '%s->assertNull(%s)';
-
     private $assertionCallFactory;
     private $variableAssignmentCallFactory;
     private $valueTranspiler;
@@ -38,16 +35,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     private $assertableValueExaminer;
     private $phpUnitTestCasePlaceholder;
     private $transpilationResultComposer;
-
-    /**
-     * @var string
-     */
-    private $attributeExistsTemplate = '';
-
-    /**
-     * @var string
-     */
-    private $attributeNotExistsTemplate = '';
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
@@ -67,17 +54,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $this->transpilationResultComposer = $transpilationResultComposer;
 
         $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
-        $this->attributeExistsTemplate = sprintf(
-            self::VARIABLE_EXISTS_TEMPLATE,
-            '%s',
-            '%s->getAttribute(\'%s\')'
-        );
-
-        $this->attributeNotExistsTemplate = sprintf(
-            self::VARIABLE_NOT_EXISTS_TEMPLATE,
-            '%s',
-            '%s->getAttribute(\'%s\')'
-        );
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
