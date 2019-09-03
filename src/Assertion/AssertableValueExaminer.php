@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\Assertion;
 use webignition\BasilModel\Value\AttributeValueInterface;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
+use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
 
@@ -36,5 +37,14 @@ class AssertableValueExaminer
         }
 
         return false;
+    }
+
+    public function isAssertableExpectedValue(?object $value = null): bool
+    {
+        if ($value instanceof LiteralValueInterface) {
+            return true;
+        }
+
+        return $this->isAssertableExaminedValue($value);
     }
 }
