@@ -252,6 +252,40 @@ class VariableAssignmentCallFactory
     }
 
     /**
+     * @param AttributeIdentifierInterface $attributeIdentifier
+     * @param VariablePlaceholder $valuePlaceholder
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForAttributeValue(
+        AttributeIdentifierInterface $attributeIdentifier,
+        VariablePlaceholder $valuePlaceholder
+    ): VariableAssignmentCall {
+        $assignmentCall = $this->createForAttribute(
+            $attributeIdentifier,
+            self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
+            self::DEFAULT_ELEMENT_PLACEHOLDER_NAME,
+            $valuePlaceholder->getId()
+        );
+
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+            $valuePlaceholder
+        ]);
+
+        $transpilationResult = $this->transpilationResultComposer->compose(
+            $assignmentCall->getLines(),
+            [$assignmentCall],
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        return new VariableAssignmentCall($transpilationResult, $valuePlaceholder);
+    }
+
+    /**
      * @param ElementIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $returnValuePlaceholder

@@ -17,6 +17,7 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 use webignition\BasilTranspiler\VariableNames;
@@ -26,6 +27,7 @@ use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use ExistsAssertionDataProviderTrait;
+    use IsAssertionDataProviderTrait;
     use NotExistsAssertionDataProviderTrait;
     use UnhandledAssertionDataProviderTrait;
 
@@ -43,6 +45,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider existsAssertionDataProvider
+     * @dataProvider isAssertionDataProvider
      * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)

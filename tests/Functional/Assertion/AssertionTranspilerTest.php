@@ -155,12 +155,32 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" is "Sibling 2"'
                 ),
                 'variableIdentifiers' => [
-                    'HAS' => '$has',
                     'EXPECTED_VALUE' => '$expectedValue',
                     'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
                     'COLLECTION' => '$collection',
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, attribute identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".id is "a-sibling"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
                 ],
                 'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',

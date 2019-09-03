@@ -4,6 +4,8 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
+use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
+use webignition\BasilModel\Value\AttributeValueInterface;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
@@ -92,6 +94,13 @@ class IsComparisonTranspiler implements TranspilerInterface
 
         if ($examinedValue instanceof ElementValueInterface) {
             $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForElementCollectionValue(
+                $examinedValue->getIdentifier(),
+                $examinedValuePlaceholder
+            );
+        }
+
+        if ($examinedValue instanceof AttributeValueInterface) {
+            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForAttributeValue(
                 $examinedValue->getIdentifier(),
                 $examinedValuePlaceholder
             );
