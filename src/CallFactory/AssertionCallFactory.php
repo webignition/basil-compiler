@@ -2,6 +2,7 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
+use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -16,6 +17,7 @@ class AssertionCallFactory
     const ASSERT_FALSE_TEMPLATE = '%s->assertFalse(%s)';
     const ASSERT_NULL_TEMPLATE = '%s->assertNull(%s)';
     const ASSERT_NOT_NULL_TEMPLATE = '%s->assertNotNull(%s)';
+    const ASSERT_EQUALS_TEMPLATE = '%s->assertEquals(%s, %s)';
 
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
@@ -91,6 +93,44 @@ class AssertionCallFactory
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
             self::ASSERT_FALSE_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $expectedValueCall
+     * @param VariableAssignmentCall $actualValueCall
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValuesAreEqualAssertionCall(
+        VariableAssignmentCall $expectedValueCall,
+        VariableAssignmentCall $actualValueCall
+    ): TranspilationResultInterface {
+        $assertionStatement = sprintf(
+            self::ASSERT_EQUALS_TEMPLATE,
+            $this->phpUnitTestCasePlaceholder,
+            $expectedValueCall->getElementVariablePlaceholder(),
+            $actualValueCall->getElementVariablePlaceholder()
+        );
+
+        $statements = array_merge(
+            $expectedValueCall->getLines(),
+            $actualValueCall->getLines(),
+            [
+                $assertionStatement,
+            ]
+        );
+
+        $calls = [
+            $expectedValueCall,
+            $actualValueCall,
+        ];
+
+        return $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
         );
     }
 
