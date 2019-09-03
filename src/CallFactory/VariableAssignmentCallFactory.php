@@ -2,6 +2,7 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
+use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -11,12 +12,14 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class VariableAssignmentCallFactory
 {
     const DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME = 'ELEMENT_LOCATOR';
+    const DEFAULT_ATTRIBUTE_PLACEHOLDER_NAME = 'ATTRIBUTE';
     const DEFAULT_ELEMENT_PLACEHOLDER_NAME = 'ELEMENT';
     const DEFAULT_COLLECTION_PLACEHOLDER_NAME = 'COLLECTION';
 
@@ -25,19 +28,22 @@ class VariableAssignmentCallFactory
     private $domCrawlerNavigatorCallFactory;
     private $transpilationResultComposer;
     private $valueTranspiler;
+    private $singleQuotedStringEscaper;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
         ElementLocatorCallFactory $elementLocatorCallFactory,
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         TranspilationResultComposer $transpilationResultComposer,
-        ValueTranspiler $valueTranspiler
+        ValueTranspiler $valueTranspiler,
+        SingleQuotedStringEscaper $singleQuotedStringEscaper
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->transpilationResultComposer = $transpilationResultComposer;
         $this->valueTranspiler = $valueTranspiler;
+        $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
     }
 
     public static function createFactory(): VariableAssignmentCallFactory
@@ -47,7 +53,8 @@ class VariableAssignmentCallFactory
             ElementLocatorCallFactory::createFactory(),
             DomCrawlerNavigatorCallFactory::createFactory(),
             TranspilationResultComposer::create(),
-            ValueTranspiler::createTranspiler()
+            ValueTranspiler::createTranspiler(),
+            SingleQuotedStringEscaper::create()
         );
     }
 
@@ -137,6 +144,57 @@ class VariableAssignmentCallFactory
             $hasCall,
             $findCall
         );
+    }
+
+    /**
+     * @param AttributeIdentifierInterface $attributeIdentifier
+     * @param string $elementLocatorPlaceholderName
+     * @param string $elementPlaceholderName
+     * @param string $attributePlaceholderName
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForAttribute(
+        AttributeIdentifierInterface $attributeIdentifier,
+        string $elementLocatorPlaceholderName = self::DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME,
+        string $elementPlaceholderName = self::DEFAULT_ELEMENT_PLACEHOLDER_NAME,
+        string $attributePlaceholderName = self::DEFAULT_ATTRIBUTE_PLACEHOLDER_NAME
+    ): VariableAssignmentCall {
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $attributePlaceholder = $variablePlaceholders->create($attributePlaceholderName);
+
+        $elementAssignmentCall = $this->createForElement(
+            $attributeIdentifier->getElementIdentifier(),
+            $elementLocatorPlaceholderName,
+            $elementPlaceholderName
+        );
+
+        $elementPlaceholder = $elementAssignmentCall->getElementVariablePlaceholder();
+
+        $attributeAssignmentStatement = $attributePlaceholder . ' = ' . sprintf(
+            '%s->getAttribute(\'%s\')',
+            $elementPlaceholder,
+            $this->singleQuotedStringEscaper->escape((string) $attributeIdentifier->getAttributeName())
+        );
+
+        $statements = array_merge($elementAssignmentCall->getLines(), [
+            $attributeAssignmentStatement,
+        ]);
+
+        $calls = [
+            $elementAssignmentCall,
+        ];
+
+        $transpilationResult = $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        return new VariableAssignmentCall($transpilationResult, $attributePlaceholder);
     }
 
     /**
