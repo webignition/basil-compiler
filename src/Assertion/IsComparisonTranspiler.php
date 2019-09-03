@@ -4,9 +4,9 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
 use webignition\BasilModel\Value\AttributeValueInterface;
 use webignition\BasilModel\Value\ElementValueInterface;
+use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
@@ -106,9 +106,16 @@ class IsComparisonTranspiler implements TranspilerInterface
             );
         }
 
+        if ($examinedValue instanceof EnvironmentValueInterface) {
+            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalar(
+                $examinedValue,
+                new VariablePlaceholder('ENVIRONMENT_VARIABLE')
+            );
+        }
+
         // ...
         // create examined value from further value types
-        // element, attribute, browser|page object
+        // element, attribute, env|browser|page object
         // ...
 
         $transpiledExpectedValue = null;
@@ -123,7 +130,7 @@ class IsComparisonTranspiler implements TranspilerInterface
 
         // ...
         // create expected value from further value types
-        // element, attribute, browser|page object
+        // element, attribute, env|browser|page object
         // ...
 
         return $this->assertionCallFactory->createValuesAreEqualAssertionCall(

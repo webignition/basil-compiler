@@ -189,6 +189,17 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new UseStatement(Inspector::class),
                 ],
             ],
+            'is comparison, environment examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 is "test 1 value"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
         ];
     }
 
