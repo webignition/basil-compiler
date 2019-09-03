@@ -5,11 +5,17 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\TranspilationResult;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\UnknownObjectPropertyException;
 use webignition\BasilTranspiler\VariableNames;
 
-class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler implements TranspilerInterface
+class BrowserObjectValueTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
 
@@ -49,8 +55,55 @@ class BrowserObjectValueTranspiler extends AbstractObjectValueTranspiler impleme
         ];
     }
 
-    protected function getVariablePlaceholders(): VariablePlaceholderCollection
+    /**
+     * @param object $model
+     *
+     * @return TranspilationResultInterface
+     *
+     * @throws NonTranspilableModelException
+     * @throws UnknownObjectPropertyException
+     */
+    public function transpile(object $model): TranspilationResultInterface
     {
-        return $this->variablePlaceholders;
+        if (!$this->handles($model) || !$model instanceof ObjectValueInterface) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        $property = $model->getObjectProperty();
+        if (self::PROPERTY_NAME_SIZE !== $property) {
+            throw new UnknownObjectPropertyException($model);
+        }
+
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $webDriverDimensionPlaceholder = $variablePlaceholders->create('WEBDRIVER_DIMENSION');
+        $valuePlaceholder = $variablePlaceholders->create('BROWSER_SIZE');
+        $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
+
+        $dimensionAssignmentStatement = sprintf(
+            '%s = %s',
+            $webDriverDimensionPlaceholder,
+            $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()'
+        );
+
+        $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
+        $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';
+
+        $dimensionConcatenationStatement = '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall;
+
+        return new VariableAssignmentCall(
+            new TranspilationResult(
+                [
+                    $dimensionAssignmentStatement,
+                    $dimensionConcatenationStatement,
+                ],
+                new UseStatementCollection(),
+                new VariablePlaceholderCollection([
+                    $webDriverDimensionPlaceholder,
+                    $valuePlaceholder,
+                    $pantherClientPlaceholder,
+                ])
+            ),
+            $valuePlaceholder
+        );
     }
 }

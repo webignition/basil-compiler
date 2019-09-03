@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Value;
 
-use Facebook\WebDriver\WebDriverDimension;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
@@ -50,7 +49,8 @@ class ValueTranspilerTest extends AbstractTestCase
         string $fixture,
         ValueInterface $model,
         VariablePlaceholderCollection $expectedVariablePlaceholders,
-        $expectedExecutedResult
+        $expectedExecutedResult,
+        array $additionalVariableIdentifiers = []
     ) {
         $transpilationResult = $this->transpiler->transpile($model);
 
@@ -59,7 +59,10 @@ class ValueTranspilerTest extends AbstractTestCase
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $transpilationResult,
-            self::VARIABLE_IDENTIFIERS,
+            array_merge(
+                self::VARIABLE_IDENTIFIERS,
+                $additionalVariableIdentifiers
+            ),
             [
                 'self::$client->request(\'GET\', \'' . $fixture . '\'); ',
             ]
@@ -80,9 +83,15 @@ class ValueTranspilerTest extends AbstractTestCase
                     'size'
                 ),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                    'WEBDRIVER_DIMENSION',
+                    'BROWSER_SIZE',
                     VariableNames::PANTHER_CLIENT,
                 ]),
-                'expectedExecutedResult' => new WebDriverDimension(1200, 1100),
+                'expectedExecutedResult' => '1200x1100',
+                'additionalVariableIdentifiers' => [
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                    'BROWSER_SIZE' => '$browser'
+                ],
             ],
             'page object property: title' => [
                 'fixture' => '/basic.html',
