@@ -14,8 +14,11 @@ use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -130,13 +133,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         if ($examinedValue instanceof ElementValueInterface) {
-            $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier(
-                $examinedValue->getIdentifier()
-            );
-
-            return AssertionComparisons::EXISTS === $model->getComparison()
-                ? $this->assertionCallFactory->createElementExistsAssertionCall($hasElementCall)
-                : $this->assertionCallFactory->createElementNotExistsAssertionCall($hasElementCall);
+            return $this->transpileForElementValue($examinedValue, (string) $model->getComparison());
         }
 
         if ($examinedValue instanceof AttributeValueInterface) {
@@ -173,6 +170,41 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     }
 
     /**
+     * @param ElementValueInterface $elementValue
+     * @param string $comparison
+     *
+     * @return TranspilationResultInterface
+     *
+     * @throws NonTranspilableModelException
+     */
+    private function transpileForElementValue(
+        ElementValueInterface $elementValue,
+        string $comparison
+    ): TranspilationResultInterface {
+        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier(
+            $elementValue->getIdentifier()
+        );
+
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $hasVariablePlaceholder = $variablePlaceholders->create('HAS');
+
+        $template = $hasVariablePlaceholder . ' = ' . $hasElementCall;
+
+        $hasVariableAssignmentCall = new VariableAssignmentCall(
+            $hasElementCall->extend(
+                $template,
+                new UseStatementCollection(),
+                $variablePlaceholders
+            ),
+            $hasVariablePlaceholder
+        );
+
+        return AssertionComparisons::EXISTS === $comparison
+            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($hasVariableAssignmentCall)
+            : $this->assertionCallFactory->createValueIsFalseAssertionCall($hasVariableAssignmentCall);
+    }
+
+    /**
      * @param AttributeValueInterface $attributeValue
      * @param string $comparison
      *
@@ -184,21 +216,13 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         AttributeValueInterface $attributeValue,
         string $comparison
     ): TranspilationResultInterface {
-        $attributeIdentifier = $attributeValue->getIdentifier();
-        $elementIdentifier = $attributeIdentifier->getElementIdentifier();
-        $attributeName = (string) $attributeIdentifier->getAttributeName();
-
-        $elementVariableAssignmentCall = $this->variableAssignmentCallFactory->createForElement($elementIdentifier);
+        $attributeAssigmentCall = $this->variableAssignmentCallFactory->createForAttribute(
+            $attributeValue->getIdentifier()
+        );
 
         return AssertionComparisons::EXISTS === $comparison
-            ? $this->assertionCallFactory->createAttributeExistsAssertionCall(
-                $elementVariableAssignmentCall,
-                $attributeName
-            )
-            : $this->assertionCallFactory->createAttributeNotExistsAssertionCall(
-                $elementVariableAssignmentCall,
-                $attributeName
-            );
+            ? $this->assertionCallFactory->createValueExistsAssertionCall($attributeAssigmentCall)
+            : $this->assertionCallFactory->createValueNotExistsAssertionCall($attributeAssigmentCall);
     }
 
     /**

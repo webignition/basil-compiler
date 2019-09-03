@@ -179,9 +179,12 @@ class VariableAssignmentCallFactory
             $this->singleQuotedStringEscaper->escape((string) $attributeIdentifier->getAttributeName())
         );
 
-        $statements = array_merge($elementAssignmentCall->getLines(), [
-            $attributeAssignmentStatement,
-        ]);
+        $statements = array_merge(
+            $elementAssignmentCall->getLines(),
+            [
+                $attributeAssignmentStatement,
+            ]
+        );
 
         $calls = [
             $elementAssignmentCall,
@@ -221,19 +224,35 @@ class VariableAssignmentCallFactory
             $returnValuePlaceholder,
         ]);
 
+        $hasVariablePlaceholder = $variablePlaceholders->create('HAS');
+
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
-        $elementExistsAssertionCall = $this->assertionCallFactory->createElementExistsAssertionCall($hasCall);
+        $hasVariableAssignmentCall = new VariableAssignmentCall(
+            $hasCall->extend(
+                $hasVariablePlaceholder . ' = ' . $hasCall,
+                new UseStatementCollection(),
+                $variablePlaceholders
+            ),
+            $hasVariablePlaceholder
+        );
+
+        $elementExistsAssertionCall = $this->assertionCallFactory->createValueIsTrueAssertionCall(
+            $hasVariableAssignmentCall
+        );
 
         $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
-        $elementExistsStatement = (string) $elementExistsAssertionCall;
         $findStatement = $returnValuePlaceholder . ' = ' . $findCall;
 
-        $statements = [
-            $elementLocatorConstructorStatement,
-            $elementExistsStatement,
-            $findStatement,
-        ];
+        $statements = array_merge(
+            [
+                $elementLocatorConstructorStatement,
+            ],
+            $elementExistsAssertionCall->getLines(),
+            [
+                $findStatement,
+            ]
+        );
 
         $calls = [
             $elementLocatorConstructor,
