@@ -4,6 +4,12 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
+use webignition\BasilModel\Value\AttributeValueInterface;
+use webignition\BasilModel\Value\ElementValueInterface;
+use webignition\BasilModel\Value\EnvironmentValueInterface;
+use webignition\BasilModel\Value\LiteralValueInterface;
+use webignition\BasilModel\Value\ObjectNames;
+use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -525,5 +531,107 @@ class VariableAssignmentCallFactory
         );
 
         return new VariableAssignmentCall($transpilationResult, $variablePlaceholder);
+    }
+
+    /**
+     * @param ValueInterface $value
+     * @param VariablePlaceholder $placeholder
+     *
+     * @return VariableAssignmentCall|null
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createValueVariableAssignmentCall(
+        ValueInterface $value,
+        VariablePlaceholder $placeholder
+    ): ?VariableAssignmentCall {
+        if ($value instanceof LiteralValueInterface) {
+            return $this->createForScalar(
+                $value,
+                $placeholder
+            );
+        }
+
+        if ($value instanceof ElementValueInterface) {
+            return $this->createForElementCollectionValue(
+                $value->getIdentifier(),
+                $placeholder
+            );
+        }
+
+        if ($value instanceof AttributeValueInterface) {
+            return $this->createForAttributeValue(
+                $value->getIdentifier(),
+                $placeholder
+            );
+        }
+
+        if ($value instanceof EnvironmentValueInterface) {
+            return $this->createForScalar(
+                $value,
+                $placeholder
+            );
+        }
+
+        if ($value instanceof ObjectValueInterface) {
+            $objectName = $value->getObjectName();
+
+            if (in_array($objectName, [ObjectNames::BROWSER, ObjectNames::PAGE])) {
+                return $this->createForScalar(
+                    $value,
+                    $placeholder
+                );
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param ValueInterface $value
+     * @param VariablePlaceholder $placeholder
+     *
+     * @return VariableAssignmentCall|null
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createValueExistenceAssignmentCall(
+        ValueInterface $value,
+        VariablePlaceholder $placeholder
+    ): ?VariableAssignmentCall {
+        if ($value instanceof ElementValueInterface) {
+            return $this->createForElementExistence(
+                $value->getIdentifier(),
+                VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+                $placeholder
+            );
+        }
+
+        if ($value instanceof AttributeValueInterface) {
+            return $this->createForAttributeExistence(
+                $value->getIdentifier(),
+                $placeholder
+            );
+        }
+
+        if ($value instanceof EnvironmentValueInterface) {
+            return $this->createForScalarExistence(
+                $value,
+                $placeholder
+            );
+        }
+
+        if ($value instanceof ObjectValueInterface) {
+            $objectName = $value->getObjectName();
+
+            if (in_array($objectName, [ObjectNames::BROWSER, ObjectNames::PAGE])) {
+                return $this->createForScalarExistence(
+                    $value,
+                    $placeholder
+                );
+            }
+        }
+
+        return null;
     }
 }

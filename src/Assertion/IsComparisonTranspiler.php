@@ -4,12 +4,6 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Value\AttributeValueInterface;
-use webignition\BasilModel\Value\ElementValueInterface;
-use webignition\BasilModel\Value\EnvironmentValueInterface;
-use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
@@ -91,100 +85,25 @@ class IsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $transpiledExaminedValue = null;
         $examinedValuePlaceholder = new VariablePlaceholder('EXAMINED_VALUE');
+        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
+            $examinedValue,
+            $examinedValuePlaceholder
+        );
 
-        if ($examinedValue instanceof ElementValueInterface) {
-            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForElementCollectionValue(
-                $examinedValue->getIdentifier(),
-                $examinedValuePlaceholder
-            );
-        }
-
-        if ($examinedValue instanceof AttributeValueInterface) {
-            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForAttributeValue(
-                $examinedValue->getIdentifier(),
-                $examinedValuePlaceholder
-            );
-        }
-
-        if ($examinedValue instanceof EnvironmentValueInterface) {
-            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalar(
-                $examinedValue,
-                new VariablePlaceholder('ENVIRONMENT_VARIABLE')
-            );
-        }
-
-        if ($examinedValue instanceof ObjectValueInterface) {
-            if (ObjectNames::BROWSER === $examinedValue->getObjectName()) {
-                $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalar(
-                    $examinedValue,
-                    new VariablePlaceholder('BROWSER_VARIABLE')
-                );
-            }
-
-            if (ObjectNames::PAGE === $examinedValue->getObjectName()) {
-                $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalar(
-                    $examinedValue,
-                    new VariablePlaceholder('PAGE_VARIABLE')
-                );
-            }
-        }
-
-        $transpiledExpectedValue = null;
         $expectedValuePlaceholder = new VariablePlaceholder('EXPECTED_VALUE');
+        $expectedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
+            $expectedValue,
+            $expectedValuePlaceholder
+        );
 
-        if ($expectedValue instanceof LiteralValueInterface) {
-            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
-                $expectedValue,
-                $expectedValuePlaceholder
-            );
-        }
-
-        if ($expectedValue instanceof ElementValueInterface) {
-            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForElementCollectionValue(
-                $expectedValue->getIdentifier(),
-                $expectedValuePlaceholder
-            );
-        }
-
-        if ($expectedValue instanceof AttributeValueInterface) {
-            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForAttributeValue(
-                $expectedValue->getIdentifier(),
-                $expectedValuePlaceholder
-            );
-        }
-
-        if ($expectedValue instanceof EnvironmentValueInterface) {
-            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
-                $expectedValue,
-                new VariablePlaceholder('ENVIRONMENT_VARIABLE')
-            );
-        }
-
-        if ($expectedValue instanceof ObjectValueInterface) {
-            if (ObjectNames::BROWSER === $expectedValue->getObjectName()) {
-                $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
-                    $expectedValue,
-                    new VariablePlaceholder('BROWSER_VARIABLE')
-                );
-            }
-
-            if (ObjectNames::PAGE === $expectedValue->getObjectName()) {
-                $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
-                    $expectedValue,
-                    new VariablePlaceholder('PAGE_VARIABLE')
-                );
-            }
-        }
-
-        if (null === $transpiledExpectedValue || null === $transpiledExaminedValue) {
+        if (null === $expectedValueAssignmentCall || null === $examinedValueAssignmentCall) {
             throw new NonTranspilableModelException($model);
         }
 
         return $this->assertionCallFactory->createValuesAreEqualAssertionCall(
-            $transpiledExpectedValue,
-            $transpiledExaminedValue
+            $expectedValueAssignmentCall,
+            $examinedValueAssignmentCall
         );
     }
 }

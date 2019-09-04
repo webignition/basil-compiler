@@ -222,7 +222,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
-                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                 ],
             ],
@@ -233,7 +233,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
-                    'BROWSER_VARIABLE' => '$browserVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'WEBDRIVER_DIMENSION' => '$webDriverDimension',
                 ],
@@ -245,7 +245,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
-                    'PAGE_VARIABLE' => '$pageVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
             ],

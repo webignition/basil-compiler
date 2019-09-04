@@ -4,11 +4,6 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Value\AttributeValueInterface;
-use webignition\BasilModel\Value\ElementValueInterface;
-use webignition\BasilModel\Value\EnvironmentValueInterface;
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
@@ -104,48 +99,18 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $transpiledExaminedValue = null;
         $examinedValuePlaceholder = new VariablePlaceholder('EXAMINED_VALUE');
+        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueExistenceAssignmentCall(
+            $examinedValue,
+            $examinedValuePlaceholder
+        );
 
-        if ($examinedValue instanceof ElementValueInterface) {
-            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForElementExistence(
-                $examinedValue->getIdentifier(),
-                VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
-                $examinedValuePlaceholder
-            );
-        }
-
-        if ($examinedValue instanceof AttributeValueInterface) {
-            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForAttributeExistence(
-                $examinedValue->getIdentifier(),
-                $examinedValuePlaceholder
-            );
-        }
-
-        if ($examinedValue instanceof EnvironmentValueInterface) {
-            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalarExistence(
-                $examinedValue,
-                $examinedValuePlaceholder
-            );
-        }
-
-        if ($examinedValue instanceof ObjectValueInterface) {
-            $objectName = $examinedValue->getObjectName();
-
-            if (in_array($objectName, [ObjectNames::BROWSER, ObjectNames::PAGE])) {
-                $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalarExistence(
-                    $examinedValue,
-                    $examinedValuePlaceholder
-                );
-            }
-        }
-
-        if (null === $transpiledExaminedValue) {
+        if (null === $examinedValueAssignmentCall) {
             throw new NonTranspilableModelException($model);
         }
 
         return $model->getComparison() === AssertionComparisons::EXISTS
-            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($transpiledExaminedValue)
-            : $this->assertionCallFactory->createValueIsFalseAssertionCall($transpiledExaminedValue);
+            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($examinedValueAssignmentCall)
+            : $this->assertionCallFactory->createValueIsFalseAssertionCall($examinedValueAssignmentCall);
     }
 }
