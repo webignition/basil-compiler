@@ -6,7 +6,6 @@ use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -16,18 +15,15 @@ class IsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
     private $variableAssignmentCallFactory;
-    private $domCrawlerNavigatorCallFactory;
     private $assertableValueExaminer;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         AssertableValueExaminer $assertableValueExaminer
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->assertableValueExaminer = $assertableValueExaminer;
     }
 
@@ -36,7 +32,6 @@ class IsComparisonTranspiler implements TranspilerInterface
         return new IsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
             VariableAssignmentCallFactory::createFactory(),
-            DomCrawlerNavigatorCallFactory::createFactory(),
             AssertableValueExaminer::create()
         );
     }
