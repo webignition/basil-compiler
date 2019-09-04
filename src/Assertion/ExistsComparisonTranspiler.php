@@ -6,45 +6,25 @@ use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
-use webignition\BasilTranspiler\Value\ValueTranspiler;
-use webignition\BasilTranspiler\VariableNames;
 
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
     private $variableAssignmentCallFactory;
-    private $valueTranspiler;
-    private $domCrawlerNavigatorCallFactory;
-    private $elementLocatorCallFactory;
     private $assertableValueExaminer;
-    private $phpUnitTestCasePlaceholder;
-    private $transpilationResultComposer;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        ValueTranspiler $valueTranspiler,
-        DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
-        ElementLocatorCallFactory $elementLocatorCallFactory,
-        AssertableValueExaminer $assertableValueExaminer,
-        TranspilationResultComposer $transpilationResultComposer
+        AssertableValueExaminer $assertableValueExaminer
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->valueTranspiler = $valueTranspiler;
-        $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
-        $this->elementLocatorCallFactory = $elementLocatorCallFactory;
         $this->assertableValueExaminer = $assertableValueExaminer;
-        $this->transpilationResultComposer = $transpilationResultComposer;
-
-        $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
@@ -52,11 +32,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         return new ExistsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
             VariableAssignmentCallFactory::createFactory(),
-            ValueTranspiler::createTranspiler(),
-            DomCrawlerNavigatorCallFactory::createFactory(),
-            ElementLocatorCallFactory::createFactory(),
-            AssertableValueExaminer::create(),
-            TranspilationResultComposer::create()
+            AssertableValueExaminer::create()
         );
     }
 
