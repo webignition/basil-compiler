@@ -2,7 +2,6 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -19,6 +18,8 @@ class AssertionCallFactory
     const ASSERT_NOT_NULL_TEMPLATE = '%s->assertNotNull(%s)';
     const ASSERT_EQUALS_TEMPLATE = '%s->assertEquals(%s, %s)';
     const ASSERT_NOT_EQUALS_TEMPLATE = '%s->assertNotEquals(%s, %s)';
+    const ASSERT_STRING_CONTAINS_STRING_TEMPLATE = '%s->assertStringContainsString((string) %s, (string) %s)';
+    const ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE = '%s->assertStringNotContainsString((string) %s, (string) %s)';
 
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
@@ -107,7 +108,7 @@ class AssertionCallFactory
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall
     ): TranspilationResultInterface {
-        return $this->createValueEqualityAssertionCall(
+        return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
             $actualValueCall,
             self::ASSERT_EQUALS_TEMPLATE
@@ -124,10 +125,44 @@ class AssertionCallFactory
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall
     ): TranspilationResultInterface {
-        return $this->createValueEqualityAssertionCall(
+        return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
             $actualValueCall,
             self::ASSERT_NOT_EQUALS_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $needle
+     * @param VariableAssignmentCall $haystack
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValueIncludesValueAssertionCall(
+        VariableAssignmentCall $needle,
+        VariableAssignmentCall $haystack
+    ): TranspilationResultInterface {
+        return $this->createValueComparisonAssertionCall(
+            $needle,
+            $haystack,
+            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $needle
+     * @param VariableAssignmentCall $haystack
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValueNotIncludesValueAssertionCall(
+        VariableAssignmentCall $needle,
+        VariableAssignmentCall $haystack
+    ): TranspilationResultInterface {
+        return $this->createValueComparisonAssertionCall(
+            $needle,
+            $haystack,
+            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE
         );
     }
 
@@ -138,7 +173,7 @@ class AssertionCallFactory
      *
      * @return TranspilationResultInterface
      */
-    private function createValueEqualityAssertionCall(
+    private function createValueComparisonAssertionCall(
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall,
         string $assertionTemplate

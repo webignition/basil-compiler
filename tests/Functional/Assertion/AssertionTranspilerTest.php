@@ -59,6 +59,8 @@ class AssertionTranspilerTest extends AbstractTestCase
      * @dataProvider notExistsComparisonPassingAssertionsDataProvider
      * @dataProvider isComparisonPassingAssertionsDataProvider
      * @dataProvider isNotComparisonPassingAssertionsDataProvider
+     * @dataProvider includesComparisonPassingAssertionsDataProvider
+     * @dataProvider excludesComparisonPassingAssertionsDataProvider
      */
     public function testTranspileForPassingAssertions(
         string $fixture,
@@ -556,6 +558,386 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'fixture' => '/basic.html',
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".foo".data-page-foo is-not $page.title'
+                ),
+                'variableIdentifiers' => [
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+        ];
+    }
+
+    public function includesComparisonPassingAssertionsDataProvider(): array
+    {
+        $assertionFactory = AssertionFactory::createFactory();
+
+        return [
+            'includes comparison, element identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo" includes "Sibling"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'includes comparison, attribute identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".id includes "sibling"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'includes comparison, environment examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 includes "environment"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'includes comparison, browser object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size includes "200x11"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                ],
+            ],
+            'includes comparison, page object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title includes "basic"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'includes comparison, element identifier examined value, element identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".foo" includes $elements.foo',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    ),
+                    AssertionComparisons::INCLUDES,
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'includes comparison, element identifier examined value, attribute identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".foo" includes $elements.contains_foo.data-foo',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    ),
+                    AssertionComparisons::INCLUDES,
+                    new AttributeValue(
+                        new AttributeIdentifier(
+                            new ElementIdentifier(
+                                LiteralValue::createCssSelectorValue('.contains-foo')
+                            ),
+                            'data-foo'
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'includes comparison, attribute identifier examined value, environment expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-environment-value includes $env.TEST1'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE_ARRAY' => '$_ENV',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+            'includes comparison, attribute identifier examined value, browser object expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-browser-size includes $browser.size'
+                ),
+                'variableIdentifiers' => [
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+            'includes comparison, attribute identifier examined value, page object expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-page-title includes $page.title'
+                ),
+                'variableIdentifiers' => [
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+        ];
+    }
+
+    public function excludesComparisonPassingAssertionsDataProvider(): array
+    {
+        $assertionFactory = AssertionFactory::createFactory();
+
+        return [
+            'excludes comparison, element identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo" excludes "value"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'excludes comparison, attribute identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".id excludes "value"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'excludes comparison, environment examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 excludes "foo"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'excludes comparison, browser object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size excludes "1x2"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                ],
+            ],
+            'excludes comparison, page object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title excludes "value"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'excludes comparison, element identifier examined value, element identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".p-1" excludes $elements.p2',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.p-1')
+                        )
+                    ),
+                    AssertionComparisons::EXCLUDES,
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.p-2')
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'excludes comparison, element identifier examined value, attribute identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".foo" excludes $elements.contains_foo.data-bar',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    ),
+                    AssertionComparisons::INCLUDES,
+                    new AttributeValue(
+                        new AttributeIdentifier(
+                            new ElementIdentifier(
+                                LiteralValue::createCssSelectorValue('.contains-foo')
+                            ),
+                            'data-bar'
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'excludes comparison, attribute identifier examined value, environment expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-environment-value-excludes excludes $env.TEST1'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE_ARRAY' => '$_ENV',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+            'excludes comparison, attribute identifier examined value, browser object expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-browser-size-excludes excludes $browser.size'
+                ),
+                'variableIdentifiers' => [
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+            'excludes comparison, attribute identifier examined value, page object expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-page-title-excludes excludes $page.title'
                 ),
                 'variableIdentifiers' => [
                     VariableNames::PANTHER_CLIENT => 'self::$client',
