@@ -107,31 +107,10 @@ class AssertionCallFactory
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall
     ): TranspilationResultInterface {
-        $assertionStatement = sprintf(
-            self::ASSERT_EQUALS_TEMPLATE,
-            $this->phpUnitTestCasePlaceholder,
-            $expectedValueCall->getElementVariablePlaceholder(),
-            $actualValueCall->getElementVariablePlaceholder()
-        );
-
-        $statements = array_merge(
-            $expectedValueCall->getLines(),
-            $actualValueCall->getLines(),
-            [
-                $assertionStatement,
-            ]
-        );
-
-        $calls = [
+        return $this->createValueEqualityAssertionCall(
             $expectedValueCall,
             $actualValueCall,
-        ];
-
-        return $this->transpilationResultComposer->compose(
-            $statements,
-            $calls,
-            new UseStatementCollection(),
-            new VariablePlaceholderCollection()
+            self::ASSERT_EQUALS_TEMPLATE
         );
     }
 
@@ -145,8 +124,27 @@ class AssertionCallFactory
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall
     ): TranspilationResultInterface {
+        return $this->createValueEqualityAssertionCall(
+            $expectedValueCall,
+            $actualValueCall,
+            self::ASSERT_NOT_EQUALS_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $expectedValueCall
+     * @param VariableAssignmentCall $actualValueCall
+     * @param string $assertionTemplate
+     *
+     * @return TranspilationResultInterface
+     */
+    private function createValueEqualityAssertionCall(
+        VariableAssignmentCall $expectedValueCall,
+        VariableAssignmentCall $actualValueCall,
+        string $assertionTemplate
+    ): TranspilationResultInterface {
         $assertionStatement = sprintf(
-            self::ASSERT_NOT_EQUALS_TEMPLATE,
+            $assertionTemplate,
             $this->phpUnitTestCasePlaceholder,
             $expectedValueCall->getElementVariablePlaceholder(),
             $actualValueCall->getElementVariablePlaceholder()
