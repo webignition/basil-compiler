@@ -96,9 +96,14 @@ class IsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        return $this->assertionCallFactory->createValuesAreEqualAssertionCall(
-            $expectedValueAssignmentCall,
-            $examinedValueAssignmentCall
-        );
+        return $model->getComparison() === AssertionComparisons::IS
+            ? $this->assertionCallFactory->createValuesAreEqualAssertionCall(
+                $examinedValueAssignmentCall,
+                $expectedValueAssignmentCall
+            )
+            : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall(
+                $examinedValueAssignmentCall,
+                $expectedValueAssignmentCall
+            );
     }
 }

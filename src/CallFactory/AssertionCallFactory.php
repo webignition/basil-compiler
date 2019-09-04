@@ -18,6 +18,7 @@ class AssertionCallFactory
     const ASSERT_NULL_TEMPLATE = '%s->assertNull(%s)';
     const ASSERT_NOT_NULL_TEMPLATE = '%s->assertNotNull(%s)';
     const ASSERT_EQUALS_TEMPLATE = '%s->assertEquals(%s, %s)';
+    const ASSERT_NOT_EQUALS_TEMPLATE = '%s->assertNotEquals(%s, %s)';
 
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
@@ -108,6 +109,44 @@ class AssertionCallFactory
     ): TranspilationResultInterface {
         $assertionStatement = sprintf(
             self::ASSERT_EQUALS_TEMPLATE,
+            $this->phpUnitTestCasePlaceholder,
+            $expectedValueCall->getElementVariablePlaceholder(),
+            $actualValueCall->getElementVariablePlaceholder()
+        );
+
+        $statements = array_merge(
+            $expectedValueCall->getLines(),
+            $actualValueCall->getLines(),
+            [
+                $assertionStatement,
+            ]
+        );
+
+        $calls = [
+            $expectedValueCall,
+            $actualValueCall,
+        ];
+
+        return $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $expectedValueCall
+     * @param VariableAssignmentCall $actualValueCall
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValuesAreNotEqualAssertionCall(
+        VariableAssignmentCall $expectedValueCall,
+        VariableAssignmentCall $actualValueCall
+    ): TranspilationResultInterface {
+        $assertionStatement = sprintf(
+            self::ASSERT_NOT_EQUALS_TEMPLATE,
             $this->phpUnitTestCasePlaceholder,
             $expectedValueCall->getElementVariablePlaceholder(),
             $actualValueCall->getElementVariablePlaceholder()
