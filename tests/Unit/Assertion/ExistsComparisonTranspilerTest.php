@@ -11,12 +11,22 @@ use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\ExistsComparisonTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IncludesAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsNotAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 
 class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
 {
+    use ExcludesAssertionDataProviderTrait;
     use ExistsAssertionDataProviderTrait;
+    use IncludesAssertionDataProviderTrait;
+    use IsAssertionDataProviderTrait;
+    use IsNotAssertionDataProviderTrait;
+    use NotExistsAssertionDataProviderTrait;
     use UnhandledAssertionDataProviderTrait;
 
     /**
@@ -33,6 +43,7 @@ class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider existsAssertionDataProvider
+     * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)
     {
@@ -40,7 +51,10 @@ class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider unhandledAssertionDataProvider
+     * @dataProvider excludesAssertionDataProvider
+     * @dataProvider includesAssertionDataProvider
+     * @dataProvider isAssertionDataProvider
+     * @dataProvider isNotAssertionDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
     {

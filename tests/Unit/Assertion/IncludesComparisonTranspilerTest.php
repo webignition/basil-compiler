@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 use webignition\BasilModel\Assertion\Assertion;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Assertion\IsComparisonTranspiler;
+use webignition\BasilTranspiler\Assertion\IncludesComparisonTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
@@ -19,7 +19,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsNotAssertionDataP
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 
-class IsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
+class IncludesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use ExcludesAssertionDataProviderTrait;
     use ExistsAssertionDataProviderTrait;
@@ -30,7 +30,7 @@ class IsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     use UnhandledAssertionDataProviderTrait;
 
     /**
-     * @var IsComparisonTranspiler
+     * @var IncludesComparisonTranspiler
      */
     private $transpiler;
 
@@ -38,12 +38,12 @@ class IsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = IsComparisonTranspiler::createTranspiler();
+        $this->transpiler = IncludesComparisonTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider isAssertionDataProvider
-     * @dataProvider isNotAssertionDataProvider
+     * @dataProvider excludesAssertionDataProvider
+     * @dataProvider includesAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)
     {
@@ -51,9 +51,9 @@ class IsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider excludesAssertionDataProvider
      * @dataProvider existsAssertionDataProvider
-     * @dataProvider includesAssertionDataProvider
+     * @dataProvider isAssertionDataProvider
+     * @dataProvider isNotAssertionDataProvider
      * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)

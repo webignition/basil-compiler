@@ -11,15 +11,21 @@ use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IncludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsNotAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 
 class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
+    use ExcludesAssertionDataProviderTrait;
     use ExistsAssertionDataProviderTrait;
+    use IncludesAssertionDataProviderTrait;
     use IsAssertionDataProviderTrait;
+    use IsNotAssertionDataProviderTrait;
     use NotExistsAssertionDataProviderTrait;
     use UnhandledAssertionDataProviderTrait;
 
@@ -36,8 +42,11 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider excludesAssertionDataProvider
      * @dataProvider existsAssertionDataProvider
+     * @dataProvider includesAssertionDataProvider
      * @dataProvider isAssertionDataProvider
+     * @dataProvider isNotAssertionDataProvider
      * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)

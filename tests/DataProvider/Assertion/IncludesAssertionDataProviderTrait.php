@@ -7,21 +7,21 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilModelFactory\AssertionFactory;
 
-trait UnhandledAssertionDataProviderTrait
+trait IncludesAssertionDataProviderTrait
 {
-    public function unhandledAssertionDataProvider(): array
+    public function includesAssertionDataProvider(): array
     {
         $assertionFactory = AssertionFactory::createFactory();
 
         return [
-            'matches comparison, element identifier examined value, literal string expected value' => [
+            'includes comparison, element identifier examined value, literal string expected value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector" matches "/^value/"'
+                    '".selector" includes "value"'
                 ),
             ],
-            'matches comparison, attribute identifier examined value, literal string expected value' => [
+            'includes comparison, attribute identifier examined value, literal string expected value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector".attribute_name matches "/^value/"'
+                    '".selector".attribute_name includes "value"'
                 ),
             ],
         ];
