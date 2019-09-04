@@ -89,7 +89,7 @@ abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterfa
         }
 
         return $this->getAssertionCall(
-            $model->getComparison(),
+            (string) $model->getComparison(),
             $examinedValueAssignmentCall,
             $expectedValueAssignmentCall
         );
