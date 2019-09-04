@@ -141,9 +141,46 @@ class IsComparisonTranspiler implements TranspilerInterface
             );
         }
 
+        if ($expectedValue instanceof ElementValueInterface) {
+            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForElementCollectionValue(
+                $expectedValue->getIdentifier(),
+                $expectedValuePlaceholder
+            );
+        }
+
+        if ($expectedValue instanceof AttributeValueInterface) {
+            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForAttributeValue(
+                $expectedValue->getIdentifier(),
+                $expectedValuePlaceholder
+            );
+        }
+
+        if ($expectedValue instanceof EnvironmentValueInterface) {
+            $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
+                $expectedValue,
+                new VariablePlaceholder('ENVIRONMENT_VARIABLE')
+            );
+        }
+
+        if ($expectedValue instanceof ObjectValueInterface) {
+            if (ObjectNames::BROWSER === $expectedValue->getObjectName()) {
+                $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
+                    $expectedValue,
+                    new VariablePlaceholder('BROWSER_VARIABLE')
+                );
+            }
+
+            if (ObjectNames::PAGE === $expectedValue->getObjectName()) {
+                $transpiledExpectedValue = $this->variableAssignmentCallFactory->createForScalar(
+                    $expectedValue,
+                    new VariablePlaceholder('PAGE_VARIABLE')
+                );
+            }
+        }
+
         // ...
         // create expected value from further value types
-        // element, attribute, env|browser|page object
+        // env|browser|page object
         // ...
 
         return $this->assertionCallFactory->createValuesAreEqualAssertionCall(

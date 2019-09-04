@@ -9,11 +9,18 @@
     <main>
         <h1>Main</h1>
         <p>Sibling</p>
-        <p id="a-sibling" class="foo">Sibling 2</p>
+        <p id="a-sibling"
+           class="foo"
+           data-environment-value="environment value"
+           data-browser-size="1200x1100"
+           data-page-title="A basic page">
+            Sibling 2
+        </p>
         <p>Sibling 3</p>
     </main>
     <p class="p-1">P1</p>
     <p class="p-2">P2</p>
+    <p class="contains-foo" data-foo="Sibling 2">foo</p>
     <form action="/action1">
         <input name="input-1" value="test">
     </form>
