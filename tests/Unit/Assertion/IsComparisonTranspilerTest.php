@@ -9,18 +9,20 @@ namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 use webignition\BasilModel\Assertion\Assertion;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Assertion\ExistsComparisonTranspiler;
+use webignition\BasilTranspiler\Assertion\IsComparisonTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 
-class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
+class IsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use ExistsAssertionDataProviderTrait;
+    use IsAssertionDataProviderTrait;
     use UnhandledAssertionDataProviderTrait;
 
     /**
-     * @var ExistsComparisonTranspiler
+     * @var IsComparisonTranspiler
      */
     private $transpiler;
 
@@ -28,11 +30,11 @@ class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = ExistsComparisonTranspiler::createTranspiler();
+        $this->transpiler = IsComparisonTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider existsAssertionDataProvider
+     * @dataProvider isAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)
     {
@@ -40,6 +42,7 @@ class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider existsAssertionDataProvider
      * @dataProvider unhandledAssertionDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
@@ -68,7 +71,7 @@ class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedExceptionMessage' => 'Non-transpilable model "' . \stdClass::class . '"',
             ],
             'wrong comparison type' => [
-                'model' => $assertionFactory->createFromAssertionString('".selector" is "value"'),
+                'model' => $assertionFactory->createFromAssertionString('".selector" matches "value"'),
                 'expectedExceptionMessage' => 'Non-transpilable model "' . Assertion::class . '"',
             ],
         ];

@@ -7,7 +7,14 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Assertion;
 
 use PHPUnit\Framework\ExpectationFailedException;
+use webignition\BasilModel\Assertion\Assertion;
+use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
+use webignition\BasilModel\Identifier\AttributeIdentifier;
+use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Value\AttributeValue;
+use webignition\BasilModel\Value\ElementValue;
+use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -17,6 +24,7 @@ use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
+use webignition\WebDriverElementInspector\Inspector;
 
 class AssertionTranspilerTest extends AbstractTestCase
 {
@@ -52,14 +60,18 @@ class AssertionTranspilerTest extends AbstractTestCase
     public function testTranspileForPassingAssertions(
         string $fixture,
         AssertionInterface $assertion,
-        array $variableIdentifiers
+        array $variableIdentifiers,
+        array $additionalSetupLines = [],
+        array $additionalUseStatements = []
     ) {
         $transpilationResult = $this->transpiler->transpile($assertion);
 
         $executableCall = $this->createExecutableCall(
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            $fixture
+            $fixture,
+            $additionalSetupLines,
+            $additionalUseStatements
         );
 
         eval($executableCall);
@@ -76,7 +88,17 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" exists'
                 ),
                 'variableIdentifiers' => [
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
                     'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
                 ],
             ],
             'exists comparison, attribute identifier examined value' => [
@@ -85,11 +107,10 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '"#a-sibling".class exists'
                 ),
                 'variableIdentifiers' => [
-                    'ATTRIBUTE' => '$attribute',
-                    'COLLECTION' => '$collection',
-                    'ELEMENT' => '$element',
                     'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
                     'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
             ],
             'exists comparison, environment examined value' => [
@@ -98,7 +119,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '$env.TEST1 exists'
                 ),
                 'variableIdentifiers' => [
-                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                 ],
             ],
@@ -108,7 +129,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '$browser.size exists'
                 ),
                 'variableIdentifiers' => [
-                    'BROWSER_VARIABLE' => '$browserVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'WEBDRIVER_DIMENSION' => '$webDriverDimension',
                 ],
@@ -119,7 +140,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '$page.title exists'
                 ),
                 'variableIdentifiers' => [
-                    'PAGE_VARIABLE' => '$pageVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
             ],
@@ -129,7 +150,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".selector" not-exists'
                 ),
                 'variableIdentifiers' => [
-                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
             ],
             'not-exists comparison, attribute identifier examined value' => [
@@ -138,11 +159,10 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '"#a-sibling".invalid not-exists'
                 ),
                 'variableIdentifiers' => [
-                    'ATTRIBUTE' => '$attribute',
-                    'COLLECTION' => '$collection',
-                    'ELEMENT' => '$element',
                     'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
                     'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
             ],
             'not-exists comparison, environment examined value' => [
@@ -151,8 +171,193 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '$env.INVALID not-exists'
                 ),
                 'variableIdentifiers' => [
-                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'is comparison, element identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo" is "Sibling 2"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, attribute identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".id is "a-sibling"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, environment examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 is "environment value"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'is comparison, browser object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size is "1200x1100"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                ],
+            ],
+            'is comparison, page object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title is "A basic page"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'is comparison, element identifier examined value, element identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".foo" is $elements.foo',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    ),
+                    AssertionComparisons::IS,
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, element identifier examined value, attribute identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".foo" is $elements.contains_foo.data-foo',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    ),
+                    AssertionComparisons::IS,
+                    new AttributeValue(
+                        new AttributeIdentifier(
+                            new ElementIdentifier(
+                                LiteralValue::createCssSelectorValue('.contains-foo')
+                            ),
+                            'data-foo'
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, attribute identifier examined value, environment expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-environment-value is $env.TEST1'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    'ENVIRONMENT_VARIABLE_ARRAY' => '$_ENV',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+            'is comparison, attribute identifier examined value, browser object expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-browser-size is $browser.size'
+                ),
+                'variableIdentifiers' => [
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                    'BROWSER_VARIABLE' => '$browserVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+            'is comparison, attribute identifier examined value, page object expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-page-title is $page.title'
+                ),
+                'variableIdentifiers' => [
+                    'PAGE_VARIABLE' => '$pageVariable',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
             ],
         ];
@@ -192,7 +397,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".selector" exists'
                 ),
                 'variableIdentifiers' => [
-                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
@@ -202,11 +407,10 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".selector".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
-                    'ATTRIBUTE' => '$attribute',
-                    'COLLECTION' => '$collection',
-                    'ELEMENT' => '$element',
                     'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
                     'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
@@ -216,13 +420,12 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
-                    'ATTRIBUTE' => '$attribute',
-                    'COLLECTION' => '$collection',
-                    'ELEMENT' => '$element',
                     'ELEMENT_LOCATOR' => '$elementLocator',
+                    'ELEMENT' => '$element',
                     'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
                 ],
-                'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
+                'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
             'exists comparison, environment examined value, environment variable does not exist' => [
                 'fixture' => '/basic.html',
@@ -230,10 +433,10 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '$env.FOO exists'
                 ),
                 'variableIdentifiers' => [
-                    'ENVIRONMENT_VARIABLE' => '$environmentVariable',
+                    'EXAMINED_VALUE' => '$examinedValue',
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                 ],
-                'expectedExpectationFailedExceptionMessage' => 'Failed asserting that null is not null.',
+                'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
         ];
     }
@@ -241,18 +444,26 @@ class AssertionTranspilerTest extends AbstractTestCase
     private function createExecutableCall(
         TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers,
-        string $fixture
+        string $fixture,
+        array $additionalSetupLines = [],
+        array $additionalUseStatements = []
     ): string {
         return $this->executableCallFactory->create(
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            [
-                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ],
-            new UseStatementCollection([
-                new UseStatement(Navigator::class),
-            ])
+            array_merge(
+                [
+                    '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
+                    '$domCrawlerNavigator = Navigator::create($crawler); ',
+                ],
+                $additionalSetupLines
+            ),
+            new UseStatementCollection(array_merge(
+                [
+                    new UseStatement(Navigator::class),
+                ],
+                $additionalUseStatements
+            ))
         );
     }
 }

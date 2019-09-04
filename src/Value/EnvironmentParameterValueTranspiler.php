@@ -11,6 +11,7 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
@@ -39,6 +40,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws UnknownItemException
      */
     public function transpile(object $model): TranspilationResultInterface
     {

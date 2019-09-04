@@ -11,7 +11,7 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class ExistsComparisonTranspiler implements TranspilerInterface
+class IsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
     private $variableAssignmentCallFactory;
@@ -27,9 +27,9 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $this->assertableValueExaminer = $assertableValueExaminer;
     }
 
-    public static function createTranspiler(): ExistsComparisonTranspiler
+    public static function createTranspiler(): IsComparisonTranspiler
     {
-        return new ExistsComparisonTranspiler(
+        return new IsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
             VariableAssignmentCallFactory::createFactory(),
             AssertableValueExaminer::create()
@@ -43,8 +43,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         return in_array($model->getComparison(), [
-            AssertionComparisons::EXISTS,
-            AssertionComparisons::NOT_EXISTS,
+            AssertionComparisons::IS,
+            AssertionComparisons::IS_NOT,
         ]);
     }
 
@@ -62,8 +62,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         $isHandledComparison = in_array($model->getComparison(), [
-            AssertionComparisons::EXISTS,
-            AssertionComparisons::NOT_EXISTS,
+            AssertionComparisons::IS,
+            AssertionComparisons::IS_NOT,
         ]);
 
         if (false === $isHandledComparison) {
@@ -75,18 +75,30 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
+        $expectedValue = $model->getExpectedValue();
+        if (null === $expectedValue || !$this->assertableValueExaminer->isAssertableExpectedValue($expectedValue)) {
+            throw new NonTranspilableModelException($model);
+        }
+
         $examinedValuePlaceholder = new VariablePlaceholder('EXAMINED_VALUE');
-        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueExistenceAssignmentCall(
+        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
             $examinedValue,
             $examinedValuePlaceholder
         );
 
-        if (null === $examinedValueAssignmentCall) {
+        $expectedValuePlaceholder = new VariablePlaceholder('EXPECTED_VALUE');
+        $expectedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
+            $expectedValue,
+            $expectedValuePlaceholder
+        );
+
+        if (null === $expectedValueAssignmentCall || null === $examinedValueAssignmentCall) {
             throw new NonTranspilableModelException($model);
         }
 
-        return $model->getComparison() === AssertionComparisons::EXISTS
-            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($examinedValueAssignmentCall)
-            : $this->assertionCallFactory->createValueIsFalseAssertionCall($examinedValueAssignmentCall);
+        return $this->assertionCallFactory->createValuesAreEqualAssertionCall(
+            $expectedValueAssignmentCall,
+            $examinedValueAssignmentCall
+        );
     }
 }

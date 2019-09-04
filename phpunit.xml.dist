@@ -13,7 +13,7 @@
     bootstrap                   = "vendor/autoload.php" >
 
     <php>
-        <env name="TEST1" value="test 1 value" />
+        <env name="TEST1" value="environment value" />
     </php>
 
     <testsuites>
