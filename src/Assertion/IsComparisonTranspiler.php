@@ -178,10 +178,9 @@ class IsComparisonTranspiler implements TranspilerInterface
             }
         }
 
-        // ...
-        // create expected value from further value types
-        // env|browser|page object
-        // ...
+        if (null === $transpiledExpectedValue || null === $transpiledExaminedValue) {
+            throw new NonTranspilableModelException($model);
+        }
 
         return $this->assertionCallFactory->createValuesAreEqualAssertionCall(
             $transpiledExpectedValue,
