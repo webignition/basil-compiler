@@ -71,12 +71,12 @@ class IsComparisonTranspiler implements TranspilerInterface
         }
 
         $examinedValue = $model->getExaminedValue();
-        if (!$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
+        if (null === $examinedValue || !$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
             throw new NonTranspilableModelException($model);
         }
 
         $expectedValue = $model->getExpectedValue();
-        if (!$this->assertableValueExaminer->isAssertableExpectedValue($expectedValue)) {
+        if (null === $expectedValue || !$this->assertableValueExaminer->isAssertableExpectedValue($expectedValue)) {
             throw new NonTranspilableModelException($model);
         }
 

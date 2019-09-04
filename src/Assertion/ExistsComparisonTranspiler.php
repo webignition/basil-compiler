@@ -71,7 +71,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         $examinedValue = $model->getExaminedValue();
-        if (!$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
+        if (null === $examinedValue || !$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
             throw new NonTranspilableModelException($model);
         }
 
