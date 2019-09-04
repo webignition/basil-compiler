@@ -160,6 +160,40 @@ class VariableAssignmentCallFactory
     }
 
     /**
+     * @param ElementIdentifierInterface $elementIdentifier
+     * @param VariablePlaceholder $elementLocatorPlaceholder
+     * @param VariablePlaceholder $elementPlaceholder
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForElementExistence(
+        ElementIdentifierInterface $elementIdentifier,
+        VariablePlaceholder $elementLocatorPlaceholder,
+        VariablePlaceholder $elementPlaceholder
+    ): VariableAssignmentCall {
+        $variablePlaceholders = new VariablePlaceholderCollection([
+            $elementLocatorPlaceholder,
+            $elementPlaceholder,
+        ]);
+
+        $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier($elementIdentifier);
+
+        $assignmentStatement = $hasCall->extend(
+            sprintf(
+                '%s = %s',
+                $elementPlaceholder,
+                '%s'
+            ),
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        return new VariableAssignmentCall($assignmentStatement, $elementPlaceholder);
+    }
+
+    /**
      * @param AttributeIdentifierInterface $attributeIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $elementPlaceholder
@@ -301,6 +335,46 @@ class VariableAssignmentCallFactory
     }
 
     /**
+     * @param AttributeIdentifierInterface $attributeIdentifier
+     * @param VariablePlaceholder $valuePlaceholder
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForAttributeExistence(
+        AttributeIdentifierInterface $attributeIdentifier,
+        VariablePlaceholder $valuePlaceholder
+    ): VariableAssignmentCall {
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+            $valuePlaceholder
+        ]);
+
+        $assignmentCall = $this->createForAttribute(
+            $attributeIdentifier,
+            self::createElementLocatorPlaceholder(),
+            self::createElementPlaceholder(),
+            $valuePlaceholder
+        );
+
+        $assignmentCall = $assignmentCall->extend(
+            '%s !== null',
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        $transpilationResult = $this->transpilationResultComposer->compose(
+            $assignmentCall->getLines(),
+            [$assignmentCall],
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection()
+        );
+
+        return new VariableAssignmentCall($transpilationResult, $valuePlaceholder);
+    }
+
+    /**
      * @param ElementIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $returnValuePlaceholder
@@ -406,6 +480,46 @@ class VariableAssignmentCallFactory
         $transpilationResult = $this->transpilationResultComposer->compose(
             $statements,
             $calls,
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        return new VariableAssignmentCall($transpilationResult, $variablePlaceholder);
+    }
+
+    /**
+     * @param ValueInterface $value
+     * @param VariablePlaceholder $variablePlaceholder
+     *
+     * @return VariableAssignmentCall
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createForScalarExistence(ValueInterface $value, VariablePlaceholder $variablePlaceholder)
+    {
+        $variablePlaceholders = new VariablePlaceholderCollection([
+            $variablePlaceholder,
+        ]);
+
+        $assignmentCall = $this->createForScalar($value, $variablePlaceholder);
+        $assignmentCall = $assignmentCall->extend(
+            '%s',
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+
+        $comparisonStatement = $variablePlaceholder . ' = ' . $variablePlaceholder . ' !== null';
+
+        $transpilationResult = $this->transpilationResultComposer->compose(
+            array_merge(
+                $assignmentCall->getLines(),
+                [
+                    $comparisonStatement,
+                ]
+            ),
+            [
+                $assignmentCall,
+            ],
             new UseStatementCollection(),
             $variablePlaceholders
         );

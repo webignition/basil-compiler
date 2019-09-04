@@ -9,16 +9,12 @@ use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilModel\Value\ObjectNames;
 use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -108,120 +104,48 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
+        $transpiledExaminedValue = null;
+        $examinedValuePlaceholder = new VariablePlaceholder('EXAMINED_VALUE');
+
         if ($examinedValue instanceof ElementValueInterface) {
-            return $this->transpileForElementValue($examinedValue, (string) $model->getComparison());
+            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForElementExistence(
+                $examinedValue->getIdentifier(),
+                VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+                $examinedValuePlaceholder
+            );
         }
 
         if ($examinedValue instanceof AttributeValueInterface) {
-            return $this->transpileForAttributeValue($examinedValue, (string) $model->getComparison());
+            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForAttributeExistence(
+                $examinedValue->getIdentifier(),
+                $examinedValuePlaceholder
+            );
         }
 
         if ($examinedValue instanceof EnvironmentValueInterface) {
-            return $this->transpileForScalarValue(
+            $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalarExistence(
                 $examinedValue,
-                new VariablePlaceholder('ENVIRONMENT_VARIABLE'),
-                (string) $model->getComparison()
+                $examinedValuePlaceholder
             );
         }
 
         if ($examinedValue instanceof ObjectValueInterface) {
-            if (ObjectNames::BROWSER === $examinedValue->getObjectName()) {
-                return $this->transpileForScalarValue(
-                    $examinedValue,
-                    new VariablePlaceholder('BROWSER_VARIABLE'),
-                    (string) $model->getComparison()
-                );
-            }
+            $objectName = $examinedValue->getObjectName();
 
-            if (ObjectNames::PAGE === $examinedValue->getObjectName()) {
-                return $this->transpileForScalarValue(
+            if (in_array($objectName, [ObjectNames::BROWSER, ObjectNames::PAGE])) {
+                $transpiledExaminedValue = $this->variableAssignmentCallFactory->createForScalarExistence(
                     $examinedValue,
-                    new VariablePlaceholder('PAGE_VARIABLE'),
-                    (string) $model->getComparison()
+                    $examinedValuePlaceholder
                 );
             }
         }
 
-        throw new NonTranspilableModelException($model);
-    }
+        if (null === $transpiledExaminedValue) {
+            throw new NonTranspilableModelException($model);
+        }
 
-    /**
-     * @param ElementValueInterface $elementValue
-     * @param string $comparison
-     *
-     * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
-     */
-    private function transpileForElementValue(
-        ElementValueInterface $elementValue,
-        string $comparison
-    ): TranspilationResultInterface {
-        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier(
-            $elementValue->getIdentifier()
-        );
-
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $hasVariablePlaceholder = $variablePlaceholders->create('HAS');
-
-        $template = $hasVariablePlaceholder . ' = ' . $hasElementCall;
-
-        $hasVariableAssignmentCall = new VariableAssignmentCall(
-            $hasElementCall->extend(
-                $template,
-                new UseStatementCollection(),
-                $variablePlaceholders
-            ),
-            $hasVariablePlaceholder
-        );
-
-        return AssertionComparisons::EXISTS === $comparison
-            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($hasVariableAssignmentCall)
-            : $this->assertionCallFactory->createValueIsFalseAssertionCall($hasVariableAssignmentCall);
-    }
-
-    /**
-     * @param AttributeValueInterface $attributeValue
-     * @param string $comparison
-     *
-     * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
-     */
-    private function transpileForAttributeValue(
-        AttributeValueInterface $attributeValue,
-        string $comparison
-    ): TranspilationResultInterface {
-        $attributeAssigmentCall = $this->variableAssignmentCallFactory->createForAttribute(
-            $attributeValue->getIdentifier(),
-            VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
-            VariableAssignmentCallFactory::createElementPlaceholder(),
-            VariableAssignmentCallFactory::createAttributePlaceholder()
-        );
-
-        return AssertionComparisons::EXISTS === $comparison
-            ? $this->assertionCallFactory->createValueExistsAssertionCall($attributeAssigmentCall)
-            : $this->assertionCallFactory->createValueNotExistsAssertionCall($attributeAssigmentCall);
-    }
-
-    /**
-     * @param ValueInterface $value
-     * @param VariablePlaceholder $variablePlaceholder
-     * @param string $comparison
-     *
-     * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
-     */
-    private function transpileForScalarValue(
-        ValueInterface $value,
-        VariablePlaceholder $variablePlaceholder,
-        string $comparison
-    ): TranspilationResultInterface {
-        $variableAssignmentCall = $this->variableAssignmentCallFactory->createForScalar($value, $variablePlaceholder);
-
-        return AssertionComparisons::EXISTS === $comparison
-            ? $this->assertionCallFactory->createValueExistsAssertionCall($variableAssignmentCall)
-            : $this->assertionCallFactory->createValueNotExistsAssertionCall($variableAssignmentCall);
+        return $model->getComparison() === AssertionComparisons::EXISTS
+            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($transpiledExaminedValue)
+            : $this->assertionCallFactory->createValueIsFalseAssertionCall($transpiledExaminedValue);
     }
 }
