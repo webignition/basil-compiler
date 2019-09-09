@@ -15,6 +15,7 @@ class AssertionTranspiler extends AbstractDelegatingTranspiler implements Transp
                 ExistsComparisonTranspiler::createTranspiler(),
                 IsComparisonTranspiler::createTranspiler(),
                 IncludesComparisonTranspiler::createTranspiler(),
+                MatchesComparisonTranspiler::createTranspiler(),
             ]
         );
     }

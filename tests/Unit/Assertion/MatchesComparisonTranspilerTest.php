@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 use webignition\BasilModel\Assertion\Assertion;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Assertion\IncludesComparisonTranspiler;
+use webignition\BasilTranspiler\Assertion\MatchesComparisonTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
@@ -20,7 +20,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Assertion\MatchesAssertionDat
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 
-class IncludesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
+class MatchesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use ExcludesAssertionDataProviderTrait;
     use ExistsAssertionDataProviderTrait;
@@ -32,7 +32,7 @@ class IncludesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     use UnhandledAssertionDataProviderTrait;
 
     /**
-     * @var IncludesComparisonTranspiler
+     * @var MatchesComparisonTranspiler
      */
     private $transpiler;
 
@@ -40,12 +40,11 @@ class IncludesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = IncludesComparisonTranspiler::createTranspiler();
+        $this->transpiler = MatchesComparisonTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider excludesAssertionDataProvider
-     * @dataProvider includesAssertionDataProvider
+     * @dataProvider matchesAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)
     {
@@ -53,10 +52,11 @@ class IncludesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider excludesAssertionDataProvider
      * @dataProvider existsAssertionDataProvider
+     * @dataProvider includesAssertionDataProvider
      * @dataProvider isAssertionDataProvider
      * @dataProvider isNotAssertionDataProvider
-     * @dataProvider matchesAssertionDataProvider
      * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
@@ -85,7 +85,7 @@ class IncludesComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedExceptionMessage' => 'Non-transpilable model "' . \stdClass::class . '"',
             ],
             'wrong comparison type' => [
-                'model' => $assertionFactory->createFromAssertionString('".selector" matches "value"'),
+                'model' => $assertionFactory->createFromAssertionString('".selector" includes "value"'),
                 'expectedExceptionMessage' => 'Non-transpilable model "' . Assertion::class . '"',
             ],
         ];

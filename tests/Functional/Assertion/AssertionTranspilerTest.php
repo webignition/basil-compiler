@@ -61,6 +61,7 @@ class AssertionTranspilerTest extends AbstractTestCase
      * @dataProvider isNotComparisonPassingAssertionsDataProvider
      * @dataProvider includesComparisonPassingAssertionsDataProvider
      * @dataProvider excludesComparisonPassingAssertionsDataProvider
+     * @dataProvider matchesComparisonPassingAssertionsDataProvider
      */
     public function testTranspileForPassingAssertions(
         string $fixture,
@@ -941,6 +942,167 @@ class AssertionTranspilerTest extends AbstractTestCase
                 ),
                 'variableIdentifiers' => [
                     VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                ],
+            ],
+        ];
+    }
+
+    public function matchesComparisonPassingAssertionsDataProvider(): array
+    {
+        $assertionFactory = AssertionFactory::createFactory();
+
+        return [
+            'matches comparison, element identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo" matches "/^Sibling [0-9]$/"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'matches comparison, attribute identifier examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".id matches "/^[a-z]-sib[a-z]{3}g$/"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'ATTRIBUTE' => '$attribute',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'matches comparison, environment examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$env.TEST1 matches "/^environment/"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
+                ],
+            ],
+            'matches comparison, browser object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$browser.size matches "/[0-9]+x[0-9]+/"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                    'WEBDRIVER_DIMENSION' => '$webDriverDimension',
+                ],
+            ],
+            'matches comparison, page object examined value, scalar expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.title matches "/page$/"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
+                ],
+            ],
+            'matches comparison, element identifier examined value, element identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".p-matches-examined matches $elements.p-matches-expected',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.p-matches-examined')
+                        )
+                    ),
+                    AssertionComparisons::MATCHES,
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.p-matches-expected')
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'matches comparison, element identifier examined value, attribute identifier expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => new Assertion(
+                    '".foo" matches $elements.matches_foo.data-matches',
+                    new ElementValue(
+                        new ElementIdentifier(
+                            LiteralValue::createCssSelectorValue('.foo')
+                        )
+                    ),
+                    AssertionComparisons::MATCHES,
+                    new AttributeValue(
+                        new AttributeIdentifier(
+                            new ElementIdentifier(
+                                LiteralValue::createCssSelectorValue('.foo')
+                            ),
+                            'data-matches'
+                        )
+                    )
+                ),
+                'variableIdentifiers' => [
+                    'ELEMENT' => '$element',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'HAS' => '$has',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalSetupLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'matches comparison, attribute identifier examined value, environment expected value' => [
+                'fixture' => '/basic.html',
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '".foo".data-environment-value matches $env.MATCHES'
+                ),
+                'variableIdentifiers' => [
+                    'ENVIRONMENT_VARIABLE_ARRAY' => '$_ENV',
                     'ELEMENT' => '$element',
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'EXPECTED_VALUE' => '$expectedValue',
