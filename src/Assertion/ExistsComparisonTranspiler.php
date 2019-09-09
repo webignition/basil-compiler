@@ -10,6 +10,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\VariableNames;
 
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
@@ -75,7 +76,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $examinedValuePlaceholder = new VariablePlaceholder('EXAMINED_VALUE');
+        $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueExistenceAssignmentCall(
             $examinedValue,
             $examinedValuePlaceholder
