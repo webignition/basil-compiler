@@ -15,12 +15,12 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
     const PROPERTY_NAME_URL = 'url';
 
     private $variablePlaceholders;
+    private $pantherClientVariablePlaceholder;
 
     public function __construct()
     {
-        $this->variablePlaceholders = VariablePlaceholderCollection::createCollection([
-            VariableNames::PANTHER_CLIENT,
-        ]);
+        $this->variablePlaceholders = new VariablePlaceholderCollection();
+        $this->pantherClientVariablePlaceholder = $this->variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
     }
 
     public static function createTranspiler(): PageObjectValueTranspiler
@@ -43,11 +43,11 @@ class PageObjectValueTranspiler extends AbstractObjectValueTranspiler implements
 
     protected function getTranspiledValueMap(): array
     {
-        $pantherClientPlaceholder = $this->variablePlaceholders->get(VariableNames::PANTHER_CLIENT);
+        $pantherClientPlaceholderAsString = (string) $this->pantherClientVariablePlaceholder;
 
         return [
-            self::PROPERTY_NAME_TITLE => (string) $pantherClientPlaceholder . '->getTitle()',
-            self::PROPERTY_NAME_URL => (string) $pantherClientPlaceholder . '->getCurrentURL()',
+            self::PROPERTY_NAME_TITLE => (string) $pantherClientPlaceholderAsString . '->getTitle()',
+            self::PROPERTY_NAME_URL => (string) $pantherClientPlaceholderAsString . '->getCurrentURL()',
         ];
     }
 

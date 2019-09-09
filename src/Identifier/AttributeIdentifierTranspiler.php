@@ -62,6 +62,11 @@ class AttributeIdentifierTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        return $this->variableAssignmentCallFactory->createForAttribute($model);
+        return $this->variableAssignmentCallFactory->createForAttribute(
+            $model,
+            VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+            VariableAssignmentCallFactory::createElementPlaceholder(),
+            VariableAssignmentCallFactory::createAttributePlaceholder()
+        );
     }
 }

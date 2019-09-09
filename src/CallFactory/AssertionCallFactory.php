@@ -16,9 +16,12 @@ class AssertionCallFactory
     const ASSERT_FALSE_TEMPLATE = '%s->assertFalse(%s)';
     const ASSERT_NULL_TEMPLATE = '%s->assertNull(%s)';
     const ASSERT_NOT_NULL_TEMPLATE = '%s->assertNotNull(%s)';
+    const ASSERT_EQUALS_TEMPLATE = '%s->assertEquals(%s, %s)';
+    const ASSERT_NOT_EQUALS_TEMPLATE = '%s->assertNotEquals(%s, %s)';
+    const ASSERT_STRING_CONTAINS_STRING_TEMPLATE = '%s->assertStringContainsString((string) %s, (string) %s)';
+    const ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE = '%s->assertStringNotContainsString((string) %s, (string) %s)';
+    const ASSERT_MATCHES_TEMPLATE = '%s->assertRegExp(%s, %s)';
 
-    const ELEMENT_EXISTS_TEMPLATE = self::ASSERT_TRUE_TEMPLATE;
-    const ELEMENT_NOT_EXISTS_TEMPLATE = self::ASSERT_FALSE_TEMPLATE;
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
 
@@ -60,155 +63,139 @@ class AssertionCallFactory
         );
     }
 
-    public function createElementExistsAssertionCall(
-        TranspilationResultInterface $domCrawlerHasElementCall
-    ): TranspilationResultInterface {
-        return $this->createElementExistenceAssertionCall($domCrawlerHasElementCall, self::ELEMENT_EXISTS_TEMPLATE);
-    }
-
-    public function createElementNotExistsAssertionCall(
-        TranspilationResultInterface $domCrawlerHasElementCall
-    ): TranspilationResultInterface {
-        return $this->createElementExistenceAssertionCall($domCrawlerHasElementCall, self::ELEMENT_NOT_EXISTS_TEMPLATE);
-    }
-
-    public function createValueExistsAssertionCall(
+    public function createValueIsTrueAssertionCall(
         VariableAssignmentCall $variableAssignmentCall
     ): TranspilationResultInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            self::VARIABLE_EXISTS_TEMPLATE
+            self::ASSERT_TRUE_TEMPLATE
         );
     }
 
-    public function createValueNotExistsAssertionCall(
+    public function createValueIsFalseAssertionCall(
         VariableAssignmentCall $variableAssignmentCall
     ): TranspilationResultInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            self::VARIABLE_NOT_EXISTS_TEMPLATE
+            self::ASSERT_FALSE_TEMPLATE
         );
     }
 
     /**
-     * @param VariableAssignmentCall $elementVariableAssignmentCall
-     * @param string $attributeName
+     * @param VariableAssignmentCall $expectedValueCall
+     * @param VariableAssignmentCall $actualValueCall
      *
      * @return TranspilationResultInterface
      */
-    public function createAttributeExistsAssertionCall(
-        VariableAssignmentCall $elementVariableAssignmentCall,
-        string $attributeName
+    public function createValuesAreEqualAssertionCall(
+        VariableAssignmentCall $expectedValueCall,
+        VariableAssignmentCall $actualValueCall
     ): TranspilationResultInterface {
-        return $this->createAttributeExistenceAssertionCall(
-            $elementVariableAssignmentCall,
-            $attributeName,
-            $this->attributeExistsTemplate
+        return $this->createValueComparisonAssertionCall(
+            $expectedValueCall,
+            $actualValueCall,
+            self::ASSERT_EQUALS_TEMPLATE
         );
     }
 
     /**
-     * @param VariableAssignmentCall $elementVariableAssignmentCall
-     * @param string $attributeName
+     * @param VariableAssignmentCall $expectedValueCall
+     * @param VariableAssignmentCall $actualValueCall
      *
      * @return TranspilationResultInterface
      */
-    public function createAttributeNotExistsAssertionCall(
-        VariableAssignmentCall $elementVariableAssignmentCall,
-        string $attributeName
+    public function createValuesAreNotEqualAssertionCall(
+        VariableAssignmentCall $expectedValueCall,
+        VariableAssignmentCall $actualValueCall
     ): TranspilationResultInterface {
-        return $this->createAttributeExistenceAssertionCall(
-            $elementVariableAssignmentCall,
-            $attributeName,
-            $this->attributeNotExistsTemplate
-        );
-    }
-
-    private function createElementExistenceAssertionCall(
-        TranspilationResultInterface $domCrawlerHasElementCall,
-        string $assertionTemplate
-    ): TranspilationResultInterface {
-        $template = sprintf(
-            $assertionTemplate,
-            (string) $this->phpUnitTestCasePlaceholder,
-            '%s'
-        );
-
-        return $domCrawlerHasElementCall->extend(
-            $template,
-            new UseStatementCollection(),
-            new VariablePlaceholderCollection([
-                $this->phpUnitTestCasePlaceholder,
-            ])
-        );
-    }
-
-    private function createValueExistenceAssertionCall(
-        VariableAssignmentCall $variableAssignmentCall,
-        string $assertionTemplate
-    ): TranspilationResultInterface {
-        $variableCreationStatement = (string) $variableAssignmentCall;
-
-        $assertionStatement = sprintf(
-            $assertionTemplate,
-            (string) $this->phpUnitTestCasePlaceholder,
-            (string) $variableAssignmentCall->getElementVariablePlaceholder()
-        );
-
-        $statements = [
-            $variableCreationStatement,
-            $assertionStatement,
-        ];
-
-        $calls = [
-            $variableAssignmentCall,
-        ];
-
-        return $this->transpilationResultComposer->compose(
-            $statements,
-            $calls,
-            new UseStatementCollection(),
-            new VariablePlaceholderCollection([
-                $this->phpUnitTestCasePlaceholder,
-            ])
+        return $this->createValueComparisonAssertionCall(
+            $expectedValueCall,
+            $actualValueCall,
+            self::ASSERT_NOT_EQUALS_TEMPLATE
         );
     }
 
     /**
-     * @param VariableAssignmentCall $elementVariableAssignmentCall
-     * @param string $attributeName
+     * @param VariableAssignmentCall $needle
+     * @param VariableAssignmentCall $haystack
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValueIncludesValueAssertionCall(
+        VariableAssignmentCall $needle,
+        VariableAssignmentCall $haystack
+    ): TranspilationResultInterface {
+        return $this->createValueComparisonAssertionCall(
+            $needle,
+            $haystack,
+            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $needle
+     * @param VariableAssignmentCall $haystack
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValueNotIncludesValueAssertionCall(
+        VariableAssignmentCall $needle,
+        VariableAssignmentCall $haystack
+    ): TranspilationResultInterface {
+        return $this->createValueComparisonAssertionCall(
+            $needle,
+            $haystack,
+            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $needle
+     * @param VariableAssignmentCall $haystack
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValueMatchesValueAssertionCall(
+        VariableAssignmentCall $needle,
+        VariableAssignmentCall $haystack
+    ): TranspilationResultInterface {
+        return $this->createValueComparisonAssertionCall(
+            $needle,
+            $haystack,
+            self::ASSERT_MATCHES_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $expectedValueCall
+     * @param VariableAssignmentCall $actualValueCall
      * @param string $assertionTemplate
      *
      * @return TranspilationResultInterface
      */
-    private function createAttributeExistenceAssertionCall(
-        VariableAssignmentCall $elementVariableAssignmentCall,
-        string $attributeName,
+    private function createValueComparisonAssertionCall(
+        VariableAssignmentCall $expectedValueCall,
+        VariableAssignmentCall $actualValueCall,
         string $assertionTemplate
     ): TranspilationResultInterface {
-        $elementVariableAssignmentCallPlaceholders = $elementVariableAssignmentCall->getVariablePlaceholders();
-
-        $elementPlaceholder = $elementVariableAssignmentCall->getElementVariablePlaceholder();
-        $phpunitTesCasePlaceholder = $elementVariableAssignmentCallPlaceholders->create(
-            VariableNames::PHPUNIT_TEST_CASE
-        );
-
         $assertionStatement = sprintf(
             $assertionTemplate,
-            (string) $phpunitTesCasePlaceholder,
-            $elementPlaceholder,
-            $attributeName
+            $this->phpUnitTestCasePlaceholder,
+            $expectedValueCall->getElementVariablePlaceholder(),
+            $actualValueCall->getElementVariablePlaceholder()
         );
 
         $statements = array_merge(
-            $elementVariableAssignmentCall->getLines(),
+            $expectedValueCall->getLines(),
+            $actualValueCall->getLines(),
             [
                 $assertionStatement,
             ]
         );
 
         $calls = [
-            $elementVariableAssignmentCall,
+            $expectedValueCall,
+            $actualValueCall,
         ];
 
         return $this->transpilationResultComposer->compose(
@@ -216,6 +203,37 @@ class AssertionCallFactory
             $calls,
             new UseStatementCollection(),
             new VariablePlaceholderCollection()
+        );
+    }
+
+    private function createValueExistenceAssertionCall(
+        VariableAssignmentCall $variableAssignmentCall,
+        string $assertionTemplate
+    ): TranspilationResultInterface {
+        $assertionStatement = sprintf(
+            $assertionTemplate,
+            (string) $this->phpUnitTestCasePlaceholder,
+            (string) $variableAssignmentCall->getElementVariablePlaceholder()
+        );
+
+        $statements = array_merge(
+            $variableAssignmentCall->getLines(),
+            [
+                $assertionStatement,
+            ]
+        );
+
+        $calls = [
+            $variableAssignmentCall,
+        ];
+
+        return $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            new VariablePlaceholderCollection([
+                $this->phpUnitTestCasePlaceholder,
+            ])
         );
     }
 }
