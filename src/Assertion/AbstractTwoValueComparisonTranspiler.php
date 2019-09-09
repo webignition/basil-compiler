@@ -10,6 +10,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\VariableNames;
 
 abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterface
 {
@@ -72,13 +73,13 @@ abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterfa
             throw new NonTranspilableModelException($model);
         }
 
-        $examinedValuePlaceholder = new VariablePlaceholder('EXAMINED_VALUE');
+        $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
             $examinedValue,
             $examinedValuePlaceholder
         );
 
-        $expectedValuePlaceholder = new VariablePlaceholder('EXPECTED_VALUE');
+        $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);
         $expectedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
             $expectedValue,
             $expectedValuePlaceholder
