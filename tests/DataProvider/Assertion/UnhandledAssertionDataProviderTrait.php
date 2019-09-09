@@ -14,15 +14,8 @@ trait UnhandledAssertionDataProviderTrait
         $assertionFactory = AssertionFactory::createFactory();
 
         return [
-            'matches comparison, element identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector" matches "/^value/"'
-                ),
-            ],
-            'matches comparison, attribute identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
-                    '".selector".attribute_name matches "/^value/"'
-                ),
+            'unhandled assertion: non-value object' => [
+                'value' => new \stdClass(),
             ],
         ];
     }

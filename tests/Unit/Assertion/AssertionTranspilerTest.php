@@ -16,6 +16,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionData
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IncludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsNotAssertionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Assertion\MatchesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\UnhandledAssertionDataProviderTrait;
 
@@ -26,6 +27,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
     use IncludesAssertionDataProviderTrait;
     use IsAssertionDataProviderTrait;
     use IsNotAssertionDataProviderTrait;
+    use MatchesAssertionDataProviderTrait;
     use NotExistsAssertionDataProviderTrait;
     use UnhandledAssertionDataProviderTrait;
 
@@ -47,6 +49,7 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider includesAssertionDataProvider
      * @dataProvider isAssertionDataProvider
      * @dataProvider isNotAssertionDataProvider
+     * @dataProvider matchesAssertionDataProvider
      * @dataProvider notExistsAssertionDataProvider
      */
     public function testHandlesDoesHandle(AssertionInterface $model)
@@ -55,21 +58,11 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider handlesDoesNotHandleDataProvider
      * @dataProvider unhandledAssertionDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
     {
         $this->assertFalse($this->transpiler->handles($model));
-    }
-
-    public function handlesDoesNotHandleDataProvider(): array
-    {
-        return [
-            'non-value object' => [
-                'value' => new \stdClass(),
-            ],
-        ];
     }
 
     public function testTranspileNonTranspilableModel()

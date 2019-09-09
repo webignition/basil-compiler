@@ -20,6 +20,7 @@ class AssertionCallFactory
     const ASSERT_NOT_EQUALS_TEMPLATE = '%s->assertNotEquals(%s, %s)';
     const ASSERT_STRING_CONTAINS_STRING_TEMPLATE = '%s->assertStringContainsString((string) %s, (string) %s)';
     const ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE = '%s->assertStringNotContainsString((string) %s, (string) %s)';
+    const ASSERT_MATCHES_TEMPLATE = '%s->assertRegExp(%s, %s)';
 
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
@@ -59,24 +60,6 @@ class AssertionCallFactory
     {
         return new AssertionCallFactory(
             TranspilationResultComposer::create()
-        );
-    }
-
-    public function createValueExistsAssertionCall(
-        VariableAssignmentCall $variableAssignmentCall
-    ): TranspilationResultInterface {
-        return $this->createValueExistenceAssertionCall(
-            $variableAssignmentCall,
-            self::VARIABLE_EXISTS_TEMPLATE
-        );
-    }
-
-    public function createValueNotExistsAssertionCall(
-        VariableAssignmentCall $variableAssignmentCall
-    ): TranspilationResultInterface {
-        return $this->createValueExistenceAssertionCall(
-            $variableAssignmentCall,
-            self::VARIABLE_NOT_EXISTS_TEMPLATE
         );
     }
 
@@ -163,6 +146,23 @@ class AssertionCallFactory
             $needle,
             $haystack,
             self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE
+        );
+    }
+
+    /**
+     * @param VariableAssignmentCall $needle
+     * @param VariableAssignmentCall $haystack
+     *
+     * @return TranspilationResultInterface
+     */
+    public function createValueMatchesValueAssertionCall(
+        VariableAssignmentCall $needle,
+        VariableAssignmentCall $haystack
+    ): TranspilationResultInterface {
+        return $this->createValueComparisonAssertionCall(
+            $needle,
+            $haystack,
+            self::ASSERT_MATCHES_TEMPLATE
         );
     }
 
