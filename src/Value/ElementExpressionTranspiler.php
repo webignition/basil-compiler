@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilModel\Value\LiteralValueInterface;
+use webignition\BasilModel\Value\ElementExpressionInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -10,16 +10,16 @@ use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class LiteralValueTranspiler implements TranspilerInterface
+class ElementExpressionTranspiler implements TranspilerInterface
 {
-    public static function createTranspiler(): LiteralValueTranspiler
+    public static function createTranspiler(): ElementExpressionTranspiler
     {
-        return new LiteralValueTranspiler();
+        return new ElementExpressionTranspiler();
     }
 
     public function handles(object $model): bool
     {
-        return $model instanceof LiteralValueInterface;
+        return $model instanceof ElementExpressionInterface;
     }
 
     public function transpile(object $model): TranspilationResultInterface
