@@ -10,17 +10,17 @@ use webignition\BasilTranspiler\TranspilerInterface;
 
 class ElementValueTranspiler implements TranspilerInterface
 {
-    private $literalValueTranspiler;
+    private $elementExpressionTranspiler;
 
-    public function __construct(LiteralValueTranspiler $literalValueTranspiler)
+    public function __construct(ElementExpressionTranspiler $elementExpressionTranspiler)
     {
-        $this->literalValueTranspiler = $literalValueTranspiler;
+        $this->elementExpressionTranspiler = $elementExpressionTranspiler;
     }
 
     public static function createTranspiler(): ElementValueTranspiler
     {
         return new ElementValueTranspiler(
-            LiteralValueTranspiler::createTranspiler()
+            ElementExpressionTranspiler::createTranspiler()
         );
     }
 
@@ -33,10 +33,10 @@ class ElementValueTranspiler implements TranspilerInterface
     {
         if ($model instanceof ElementValueInterface) {
             $identifier = $model->getIdentifier();
-            $identifierValue = $identifier->getValue();
+            $elementExpression = $identifier->getElementExpression();
 
-            if ($identifierValue instanceof LiteralValueInterface) {
-                return $this->literalValueTranspiler->transpile($identifierValue);
+            if ($elementExpression instanceof LiteralValueInterface) {
+                return $this->elementExpressionTranspiler->transpile($elementExpression);
             }
         }
 

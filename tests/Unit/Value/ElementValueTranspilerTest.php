@@ -6,9 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
@@ -23,13 +21,13 @@ use webignition\BasilTranspiler\Value\ElementValueTranspiler;
 class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserObjectValueDataProviderTrait;
+    use CssSelectorValueDataProviderTrait;
     use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
-    use CssSelectorValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
-    use XpathExpressionValueDataProviderTrait;
     use PageObjectValueDataProviderTrait;
     use UnhandledValueDataProviderTrait;
+    use XpathExpressionValueDataProviderTrait;
 
     /**
      * @var ElementValueTranspiler
@@ -53,12 +51,12 @@ class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserObjectValueDataProvider
-     * @dataProvider environmentParameterValueDataProvider
      * @dataProvider cssSelectorValueDataProvider
+     * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
-     * @dataProvider xpathExpressionValueDataProvider
      * @dataProvider pageObjectValueDataProvider
      * @dataProvider unhandledValueDataProvider
+     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesNotHandle(ValueInterface $model)
     {
@@ -68,9 +66,9 @@ class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
     public function testTranspileNonTranspilableModel()
     {
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
+        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
 
-        $model = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
+        $model = new \stdClass();
 
         $this->transpiler->transpile($model);
     }
