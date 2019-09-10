@@ -6,7 +6,6 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Identifier\IdentifierTypes;
 use webignition\BasilModel\Identifier\ReferenceIdentifier;
 use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilModel\Value\ElementReference;
@@ -36,8 +35,7 @@ trait UnhandledIdentifierDataProviderTrait
                 ),
             ],
             'element parameter' => [
-                'model' => new ReferenceIdentifier(
-                    IdentifierTypes::ELEMENT_PARAMETER,
+                'model' => ReferenceIdentifier::createElementReferenceIdentifier(
                     new ElementReference('$elements.element_name', 'element_name')
                 ),
             ],
