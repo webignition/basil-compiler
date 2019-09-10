@@ -8,12 +8,9 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ObjectValue;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
-use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
@@ -68,7 +65,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         return [
             'css selector, no quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    LiteralValue::createCssSelectorValue('.selector')
+                    new CssSelector('.selector')
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -78,7 +75,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, no quotes in selector, position 1' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    LiteralValue::createCssSelectorValue('.selector'),
+                    new CssSelector('.selector'),
                     1
                 ),
                 'expectedElementLocator' => new ElementLocator(
@@ -89,7 +86,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, no quotes in selector, position 2' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    LiteralValue::createCssSelectorValue('.selector'),
+                    new CssSelector('.selector'),
                     2
                 ),
                 'expectedElementLocator' => new ElementLocator(
@@ -100,7 +97,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, double quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    LiteralValue::createCssSelectorValue('input[name="email"]')
+                    new CssSelector('input[name="email"]')
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -110,7 +107,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, single quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    LiteralValue::createCssSelectorValue("input[name='email']")
+                    new CssSelector("input[name='email']")
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -120,7 +117,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, escaped single quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    LiteralValue::createCssSelectorValue("input[value='\'quoted\'']")
+                    new CssSelector("input[value='\'quoted\'']")
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -129,20 +126,5 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
         ];
-    }
-
-    public function testCreateConstructorCallThrowsNonTranspilableModelException()
-    {
-        $value = new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', '');
-
-        $elementIdentifier = \Mockery::mock(ElementIdentifierInterface::class);
-        $elementIdentifier
-            ->shouldReceive('getValue')
-            ->andReturn($value);
-
-        $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "' . get_class($elementIdentifier) . '"');
-
-        $this->factory->createConstructorCall($elementIdentifier);
     }
 }
