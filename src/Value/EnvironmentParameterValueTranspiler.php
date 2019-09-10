@@ -40,7 +40,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
 
             $content = sprintf(
                 (string) $environmentVariableArrayPlaceholder . '[\'%s\']',
-                $model->getObjectProperty()
+                $model->getProperty()
             );
 
             return new TranspilationResult(

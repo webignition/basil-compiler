@@ -3,7 +3,6 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ElementValueInterface;
-use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -35,9 +34,7 @@ class ElementValueTranspiler implements TranspilerInterface
             $identifier = $model->getIdentifier();
             $elementExpression = $identifier->getElementExpression();
 
-            if ($elementExpression instanceof LiteralValueInterface) {
-                return $this->elementExpressionTranspiler->transpile($elementExpression);
-            }
+            return $this->elementExpressionTranspiler->transpile($elementExpression);
         }
 
         throw new NonTranspilableModelException($model);
