@@ -19,7 +19,7 @@ class PagePropertyTranspiler implements TranspilerInterface
     const PROPERTY_NAME_URL = 'url';
 
     private $variablePlaceholders;
-    private $transpiledValueMap = [];
+    private $transpiledValueMap;
 
     public function __construct()
     {
