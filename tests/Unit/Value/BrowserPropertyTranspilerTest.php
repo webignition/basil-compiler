@@ -9,12 +9,12 @@ namespace webignition\BasilTranspiler\Tests\Unit\Value;
 use webignition\BasilModel\Value\BrowserProperty;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;
@@ -22,12 +22,12 @@ use webignition\BasilTranspiler\Value\BrowserPropertyTranspiler;
 
 class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 {
-    use BrowserObjectValueDataProviderTrait;
+    use BrowserPropertyDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
     use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
-    use PageObjectValueDataProviderTrait;
+    use PagePropertyProviderTrait;
     use UnhandledValueDataProviderTrait;
     use XpathExpressionValueDataProviderTrait;
 
@@ -44,7 +44,7 @@ class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider browserObjectValueDataProvider
+     * @dataProvider browserPropertyDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
@@ -56,7 +56,7 @@ class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
-     * @dataProvider pageObjectValueDataProvider
+     * @dataProvider pagePropertyDataProvider
      * @dataProvider unhandledValueDataProvider
      * @dataProvider xpathExpressionValueDataProvider
      */

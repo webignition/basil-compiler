@@ -6,12 +6,12 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
 use webignition\BasilModel\Value\BrowserProperty;
 
-trait BrowserObjectValueDataProviderTrait
+trait BrowserPropertyDataProviderTrait
 {
-    public function browserObjectValueDataProvider(): array
+    public function browserPropertyDataProvider(): array
     {
         return [
-            'default browser object property' => [
+            'default browser property' => [
                 'model' => new BrowserProperty('$browser.size', 'size'),
             ],
         ];

@@ -6,12 +6,12 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
 use webignition\BasilModel\Value\PageProperty;
 
-trait PageObjectValueDataProviderTrait
+trait PagePropertyProviderTrait
 {
-    public function pageObjectValueDataProvider(): array
+    public function pagePropertyDataProvider(): array
     {
         return [
-            'default page property object' => [
+            'default page property' => [
                 'model' => new PageProperty('$page.url', 'url'),
             ],
         ];

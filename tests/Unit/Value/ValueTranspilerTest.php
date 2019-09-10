@@ -21,13 +21,13 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
@@ -35,13 +35,13 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
-    use BrowserObjectValueDataProviderTrait;
+    use BrowserPropertyDataProviderTrait;
     use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use XpathExpressionValueDataProviderTrait;
-    use PageObjectValueDataProviderTrait;
+    use PagePropertyProviderTrait;
     use UnhandledValueDataProviderTrait;
 
     /**
@@ -57,13 +57,13 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider browserObjectValueDataProvider
+     * @dataProvider browserPropertyDataProvider
      * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider cssSelectorValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider xpathExpressionValueDataProvider
-     * @dataProvider pageObjectValueDataProvider
+     * @dataProvider pagePropertyDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
