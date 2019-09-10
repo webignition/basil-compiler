@@ -6,10 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Value;
 
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Value\PageProperty;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
@@ -74,14 +73,9 @@ class ValueTranspilerTest extends AbstractTestCase
     public function transpileDataProvider(): array
     {
         return [
-            'browser object property: size' => [
+            'browser property: size' => [
                 'fixture' => '/basic.html',
-                'model' => new ObjectValue(
-                    ValueTypes::BROWSER_OBJECT_PROPERTY,
-                    '$browser.size',
-                    ObjectNames::BROWSER,
-                    'size'
-                ),
+                'model' => new BrowserProperty('$browser.size', 'size'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     'WEBDRIVER_DIMENSION',
                     'BROWSER_SIZE',
@@ -93,27 +87,17 @@ class ValueTranspilerTest extends AbstractTestCase
                     'BROWSER_SIZE' => '$browser'
                 ],
             ],
-            'page object property: title' => [
+            'page property: title' => [
                 'fixture' => '/basic.html',
-                'model' => new ObjectValue(
-                    ValueTypes::PAGE_OBJECT_PROPERTY,
-                    '$page.title',
-                    ObjectNames::PAGE,
-                    'title'
-                ),
+                'model' => new PageProperty('$page.title', 'title'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => 'A basic page',
             ],
-            'page object property: url' => [
+            'page property: url' => [
                 'fixture' => '/basic.html',
-                'model' => new ObjectValue(
-                    ValueTypes::PAGE_OBJECT_PROPERTY,
-                    '$page.url',
-                    ObjectNames::PAGE,
-                    'url'
-                ),
+                'model' => new PageProperty('$page.url', 'url'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
