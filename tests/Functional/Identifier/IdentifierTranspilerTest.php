@@ -10,7 +10,7 @@ use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\IdentifierInterface;
-use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
 use webignition\BasilTranspiler\Model\UseStatement;
@@ -89,7 +89,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
         return [
             'element identifier (css selector), selector only' => [
                 'fixture' => '/basic.html',
-                'identifier' => TestIdentifierFactory::createCssElementIdentifier('.p-1'),
+                'identifier' => TestIdentifierFactory::createElementIdentifier(new CssSelector('.p-1')),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'COLLECTION' => '$collection',
@@ -118,7 +118,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
                 'fixture' => '/basic.html',
                 'identifier' => new AttributeIdentifier(
                     new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.foo')
+                        new CssSelector('.foo')
                     ),
                     'id'
                 ),
