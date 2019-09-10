@@ -24,9 +24,9 @@ use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralCssSelectorValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralStringValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralXpathExpressionValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -38,9 +38,9 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     use BrowserObjectValueDataProviderTrait;
     use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
-    use LiteralCssSelectorValueDataProviderTrait;
-    use LiteralStringValueDataProviderTrait;
-    use LiteralXpathExpressionValueDataProviderTrait;
+    use CssSelectorValueDataProviderTrait;
+    use LiteralValueDataProviderTrait;
+    use XpathExpressionValueDataProviderTrait;
     use PageObjectValueDataProviderTrait;
     use UnhandledValueDataProviderTrait;
 
@@ -60,9 +60,9 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider browserObjectValueDataProvider
      * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
-     * @dataProvider literalCssSelectorValueDataProvider
-     * @dataProvider literalStringValueDataProvider
-     * @dataProvider literalXpathExpressionValueDataProvider
+     * @dataProvider cssSelectorValueDataProvider
+     * @dataProvider literalValueDataProvider
+     * @dataProvider xpathExpressionValueDataProvider
      * @dataProvider pageObjectValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)

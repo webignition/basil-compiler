@@ -11,7 +11,7 @@ class UnknownObjectPropertyException extends \Exception
 
     public function __construct(ObjectValueInterface $value)
     {
-        parent::__construct('Unknown object property "' . $value->getObjectProperty() . '"');
+        parent::__construct('Unknown object property "' . $value->getProperty() . '"');
 
         $this->value = $value;
     }
