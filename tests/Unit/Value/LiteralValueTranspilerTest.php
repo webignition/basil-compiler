@@ -6,30 +6,28 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralCssSelectorValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralStringValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralXpathExpressionValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\LiteralValueTranspiler;
 
 class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
-    use BrowserObjectValueDataProviderTrait;
+    use BrowserPropertyDataProviderTrait;
+    use CssSelectorValueDataProviderTrait;
     use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
-    use LiteralCssSelectorValueDataProviderTrait;
-    use LiteralStringValueDataProviderTrait;
-    use LiteralXpathExpressionValueDataProviderTrait;
-    use PageObjectValueDataProviderTrait;
+    use LiteralValueDataProviderTrait;
+    use PagePropertyProviderTrait;
     use UnhandledValueDataProviderTrait;
+    use XpathExpressionValueDataProviderTrait;
 
     /**
      * @var LiteralValueTranspiler
@@ -44,9 +42,7 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider literalCssSelectorValueDataProvider
-     * @dataProvider literalStringValueDataProvider
-     * @dataProvider literalXpathExpressionValueDataProvider
+     * @dataProvider literalValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
@@ -54,11 +50,13 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider browserObjectValueDataProvider
+     * @dataProvider browserPropertyDataProvider
+     * @dataProvider cssSelectorValueDataProvider
      * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
-     * @dataProvider pageObjectValueDataProvider
+     * @dataProvider pagePropertyDataProvider
      * @dataProvider unhandledValueDataProvider
+     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesNotHandle(ValueInterface $model)
     {
@@ -68,9 +66,9 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
     public function testTranspileNonTranspilableModel()
     {
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
+        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
 
-        $model = new ObjectValue(ValueTypes::DATA_PARAMETER, '', '', '');
+        $model = new \stdClass();
 
         $this->transpiler->transpile($model);
     }

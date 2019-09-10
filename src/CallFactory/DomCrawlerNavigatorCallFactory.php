@@ -3,12 +3,9 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
-use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactory
@@ -31,8 +28,6 @@ class DomCrawlerNavigatorCallFactory
      * @param ElementIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
      */
     public function createFindCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -68,8 +63,6 @@ class DomCrawlerNavigatorCallFactory
      * @param ElementIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
      */
     public function createHasCallForIdentifier(
         ElementIdentifierInterface $elementIdentifier
@@ -123,8 +116,6 @@ class DomCrawlerNavigatorCallFactory
      * @param ElementIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
      */
     public function createElementCallArguments(
         ElementIdentifierInterface $elementIdentifier

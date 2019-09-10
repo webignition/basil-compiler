@@ -3,14 +3,12 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
-use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\PlaceholderFactory;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
@@ -20,14 +18,11 @@ class ElementLocatorCallFactory
 {
     const TEMPLATE = 'new ElementLocator(%s)';
     const REQUIRED_ARGUMENTS_TEMPLATE = '%s, \'%s\'';
-    const DEFAULT_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
+    const CSS_SELECTOR_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
+    const XPATH_EXPRESSION_LOCATOR_TYPE = 'LocatorType::XPATH_EXPRESSION';
 
     private $placeholderFactory;
     private $singleQuotedStringEscaper;
-
-    private $valueTypeToLocatorTypeMap = [
-        ValueTypes::XPATH_EXPRESSION => 'LocatorType::XPATH_EXPRESSION',
-    ];
 
     public function __construct(
         PlaceholderFactory $placeholderFactory,
@@ -49,21 +44,19 @@ class ElementLocatorCallFactory
      * @param ElementIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
-     *
-     * @throws NonTranspilableModelException
      */
     public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): TranspilationResultInterface
     {
-        $identifierValue = $elementIdentifier->getValue();
+        $elementExpression = $elementIdentifier->getElementExpression();
 
-        if (!$identifierValue instanceof LiteralValueInterface) {
-            throw new NonTranspilableModelException($elementIdentifier);
-        }
+        $locatorTypeArgument = $elementExpression instanceof CssSelector
+            ? self::CSS_SELECTOR_LOCATOR_TYPE
+            : self::XPATH_EXPRESSION_LOCATOR_TYPE;
 
         $arguments = sprintf(
             self::REQUIRED_ARGUMENTS_TEMPLATE,
-            $this->valueTypeToLocatorTypeMap[$identifierValue->getType()] ?? self::DEFAULT_LOCATOR_TYPE,
-            $this->singleQuotedStringEscaper->escape($identifierValue->getValue())
+            $locatorTypeArgument,
+            $this->singleQuotedStringEscaper->escape($elementExpression->getExpression())
         );
 
         $position = $elementIdentifier->getPosition();

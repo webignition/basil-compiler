@@ -13,8 +13,8 @@ use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\AttributeValue;
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilModel\Value\ElementValue;
-use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -277,13 +277,13 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" is $elements.foo',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::IS,
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     )
                 ),
@@ -308,14 +308,14 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" is $elements.contains_foo.data-foo',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::IS,
                     new AttributeValue(
                         new AttributeIdentifier(
                             new ElementIdentifier(
-                                LiteralValue::createCssSelectorValue('.contains-foo')
+                                new CssSelector('.contains-foo')
                             ),
                             'data-foo'
                         )
@@ -467,13 +467,13 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".p-1" is-not $elements.p2',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.p-1')
+                            new CssSelector('.p-1')
                         )
                     ),
                     AssertionComparisons::IS_NOT,
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.p-2')
+                            new CssSelector('.p-2')
                         )
                     )
                 ),
@@ -498,14 +498,14 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" is-not $elements.contains_foo.data-bar',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::IS_NOT,
                     new AttributeValue(
                         new AttributeIdentifier(
                             new ElementIdentifier(
-                                LiteralValue::createCssSelectorValue('.contains-foo')
+                                new CssSelector('.contains-foo')
                             ),
                             'data-bar'
                         )
@@ -657,13 +657,13 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" includes $elements.foo',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::INCLUDES,
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     )
                 ),
@@ -688,14 +688,14 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" includes $elements.contains_foo.data-foo',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::INCLUDES,
                     new AttributeValue(
                         new AttributeIdentifier(
                             new ElementIdentifier(
-                                LiteralValue::createCssSelectorValue('.contains-foo')
+                                new CssSelector('.contains-foo')
                             ),
                             'data-foo'
                         )
@@ -847,13 +847,13 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".p-1" excludes $elements.p2',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.p-1')
+                            new CssSelector('.p-1')
                         )
                     ),
                     AssertionComparisons::EXCLUDES,
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.p-2')
+                            new CssSelector('.p-2')
                         )
                     )
                 ),
@@ -878,14 +878,14 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" excludes $elements.contains_foo.data-bar',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::INCLUDES,
                     new AttributeValue(
                         new AttributeIdentifier(
                             new ElementIdentifier(
-                                LiteralValue::createCssSelectorValue('.contains-foo')
+                                new CssSelector('.contains-foo')
                             ),
                             'data-bar'
                         )
@@ -1037,13 +1037,13 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".p-matches-examined matches $elements.p-matches-expected',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.p-matches-examined')
+                            new CssSelector('.p-matches-examined')
                         )
                     ),
                     AssertionComparisons::MATCHES,
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.p-matches-expected')
+                            new CssSelector('.p-matches-expected')
                         )
                     )
                 ),
@@ -1068,14 +1068,14 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '".foo" matches $elements.matches_foo.data-matches',
                     new ElementValue(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.foo')
+                            new CssSelector('.foo')
                         )
                     ),
                     AssertionComparisons::MATCHES,
                     new AttributeValue(
                         new AttributeIdentifier(
                             new ElementIdentifier(
-                                LiteralValue::createCssSelectorValue('.foo')
+                                new CssSelector('.foo')
                             ),
                             'data-matches'
                         )

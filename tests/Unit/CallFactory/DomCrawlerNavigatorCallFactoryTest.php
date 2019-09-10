@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
@@ -19,7 +20,7 @@ use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory
+     * @var DomCrawlerNavigatorCallFactory
      */
     private $factory;
 
@@ -60,7 +61,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreateFindCallForIdentifier()
     {
         $transpilationResult = $this->factory->createFindCallForIdentifier(
-            TestIdentifierFactory::createCssElementIdentifier('.selector')
+            TestIdentifierFactory::createElementIdentifier(new CssSelector('.selector'))
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
@@ -72,7 +73,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFindCallForTranspiledLocator()
     {
-        $identifier = TestIdentifierFactory::createCssElementIdentifier('.selector');
+        $identifier = TestIdentifierFactory::createElementIdentifier(new CssSelector('.selector'));
 
         $findElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
@@ -88,7 +89,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreateHasCallForIdentifier()
     {
         $transpilationResult = $this->factory->createHasCallForIdentifier(
-            TestIdentifierFactory::createCssElementIdentifier('.selector')
+            TestIdentifierFactory::createElementIdentifier(new CssSelector('.selector'))
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
@@ -100,7 +101,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateHasCallForTranspiledLocator()
     {
-        $identifier = TestIdentifierFactory::createCssElementIdentifier('.selector');
+        $identifier = TestIdentifierFactory::createElementIdentifier(new CssSelector('.selector'));
 
         $hasElementCallArguments = $this->factory->createElementCallArguments($identifier);
 

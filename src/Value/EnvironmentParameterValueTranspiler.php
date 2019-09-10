@@ -2,16 +2,13 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
-use webignition\BasilTranspiler\UnknownItemException;
 use webignition\BasilTranspiler\VariableNames;
 
 class EnvironmentParameterValueTranspiler implements TranspilerInterface
@@ -23,15 +20,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof ObjectValueInterface) {
-            return false;
-        }
-
-        if (ValueTypes::ENVIRONMENT_PARAMETER !== $model->getType()) {
-            return false;
-        }
-
-        return ObjectNames::ENVIRONMENT === $model->getObjectName();
+        return $model instanceof EnvironmentValueInterface;
     }
 
     /**
@@ -40,11 +29,10 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws UnknownItemException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if ($this->handles($model) && $model instanceof ObjectValueInterface) {
+        if ($this->handles($model) && $model instanceof EnvironmentValueInterface) {
             $variablePlaceholders = new VariablePlaceholderCollection();
             $environmentVariableArrayPlaceholder = $variablePlaceholders->create(
                 VariableNames::ENVIRONMENT_VARIABLE_ARRAY
@@ -52,7 +40,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
 
             $content = sprintf(
                 (string) $environmentVariableArrayPlaceholder . '[\'%s\']',
-                $model->getObjectProperty()
+                $model->getProperty()
             );
 
             return new TranspilationResult(

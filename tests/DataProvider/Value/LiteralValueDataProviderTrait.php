@@ -6,13 +6,13 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
 use webignition\BasilModel\Value\LiteralValue;
 
-trait LiteralXpathExpressionValueDataProviderTrait
+trait LiteralValueDataProviderTrait
 {
-    public function literalXpathExpressionValueDataProvider(): array
+    public function literalValueDataProvider(): array
     {
         return [
             'default literal string' => [
-                'model' => LiteralValue::createXpathExpressionValue('//h1'),
+                'model' => new LiteralValue('model'),
             ],
         ];
     }

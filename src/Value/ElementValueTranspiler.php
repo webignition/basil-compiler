@@ -3,24 +3,23 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ElementValueInterface;
-use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class ElementValueTranspiler implements TranspilerInterface
 {
-    private $literalValueTranspiler;
+    private $elementExpressionTranspiler;
 
-    public function __construct(LiteralValueTranspiler $literalValueTranspiler)
+    public function __construct(ElementExpressionTranspiler $elementExpressionTranspiler)
     {
-        $this->literalValueTranspiler = $literalValueTranspiler;
+        $this->elementExpressionTranspiler = $elementExpressionTranspiler;
     }
 
     public static function createTranspiler(): ElementValueTranspiler
     {
         return new ElementValueTranspiler(
-            LiteralValueTranspiler::createTranspiler()
+            ElementExpressionTranspiler::createTranspiler()
         );
     }
 
@@ -33,11 +32,9 @@ class ElementValueTranspiler implements TranspilerInterface
     {
         if ($model instanceof ElementValueInterface) {
             $identifier = $model->getIdentifier();
-            $identifierValue = $identifier->getValue();
+            $elementExpression = $identifier->getElementExpression();
 
-            if ($identifierValue instanceof LiteralValueInterface) {
-                return $this->literalValueTranspiler->transpile($identifierValue);
-            }
+            return $this->elementExpressionTranspiler->transpile($elementExpression);
         }
 
         throw new NonTranspilableModelException($model);

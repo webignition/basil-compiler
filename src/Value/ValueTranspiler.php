@@ -12,11 +12,12 @@ class ValueTranspiler extends AbstractDelegatingTranspiler implements Transpiler
     {
         return new ValueTranspiler(
             [
-                LiteralValueTranspiler::createTranspiler(),
-                BrowserObjectValueTranspiler::createTranspiler(),
-                PageObjectValueTranspiler::createTranspiler(),
-                EnvironmentParameterValueTranspiler::createTranspiler(),
+                BrowserPropertyTranspiler::createTranspiler(),
+                ElementExpressionTranspiler::createTranspiler(),
                 ElementValueTranspiler::createTranspiler(),
+                EnvironmentParameterValueTranspiler::createTranspiler(),
+                LiteralValueTranspiler::createTranspiler(),
+                PagePropertyTranspiler::createTranspiler(),
             ]
         );
     }

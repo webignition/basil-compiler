@@ -2,9 +2,7 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\BrowserProperty;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -15,7 +13,7 @@ use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;
 use webignition\BasilTranspiler\VariableNames;
 
-class BrowserObjectValueTranspiler implements TranspilerInterface
+class BrowserPropertyTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
 
@@ -28,31 +26,14 @@ class BrowserObjectValueTranspiler implements TranspilerInterface
         ]);
     }
 
-    public static function createTranspiler(): BrowserObjectValueTranspiler
+    public static function createTranspiler(): BrowserPropertyTranspiler
     {
-        return new BrowserObjectValueTranspiler();
+        return new BrowserPropertyTranspiler();
     }
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof ObjectValueInterface) {
-            return false;
-        }
-
-        if (ValueTypes::BROWSER_OBJECT_PROPERTY !== $model->getType()) {
-            return false;
-        }
-
-        return ObjectNames::BROWSER === $model->getObjectName();
-    }
-
-    protected function getTranspiledValueMap(): array
-    {
-        return [
-            self::PROPERTY_NAME_SIZE =>
-                (string) $this->variablePlaceholders->create(VariableNames::PANTHER_CLIENT) .
-                '->getWebDriver()->manage()->window()->getSize()',
-        ];
+        return $model instanceof BrowserProperty;
     }
 
     /**
@@ -65,11 +46,11 @@ class BrowserObjectValueTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$this->handles($model) || !$model instanceof ObjectValueInterface) {
+        if (!$this->handles($model) || !$model instanceof BrowserProperty) {
             throw new NonTranspilableModelException($model);
         }
 
-        $property = $model->getObjectProperty();
+        $property = $model->getProperty();
         if (self::PROPERTY_NAME_SIZE !== $property) {
             throw new UnknownObjectPropertyException($model);
         }

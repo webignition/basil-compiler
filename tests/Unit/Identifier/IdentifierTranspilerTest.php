@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Identifier;
 
 use webignition\BasilModel\Identifier\IdentifierInterface;
-use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Identifier\AttributeIdentifierDataProviderTrait;
@@ -61,10 +60,10 @@ class IdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileNonTranspilableModel()
     {
-        $model = new ObjectValue('foo', '', '', '');
-
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
+        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
+
+        $model = new \stdClass();
 
         $this->transpiler->transpile($model);
     }

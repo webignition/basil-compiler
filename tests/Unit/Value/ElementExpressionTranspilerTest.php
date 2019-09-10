@@ -9,16 +9,16 @@ namespace webignition\BasilTranspiler\Tests\Unit\Value;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
-use webignition\BasilTranspiler\Value\EnvironmentParameterValueTranspiler;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
+use webignition\BasilTranspiler\Value\ElementExpressionTranspiler;
 
-class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCase
+class ElementExpressionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
@@ -30,7 +30,7 @@ class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCas
     use XpathExpressionValueDataProviderTrait;
 
     /**
-     * @var EnvironmentParameterValueTranspiler
+     * @var ElementExpressionTranspiler
      */
     private $transpiler;
 
@@ -38,11 +38,12 @@ class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCas
     {
         parent::setUp();
 
-        $this->transpiler = EnvironmentParameterValueTranspiler::createTranspiler();
+        $this->transpiler = ElementExpressionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider environmentParameterValueDataProvider
+     * @dataProvider cssSelectorValueDataProvider
+     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
@@ -51,12 +52,11 @@ class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCas
 
     /**
      * @dataProvider browserPropertyDataProvider
-     * @dataProvider cssSelectorValueDataProvider
      * @dataProvider elementValueDataProvider
+     * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
      * @dataProvider unhandledValueDataProvider
-     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesNotHandle(ValueInterface $model)
     {

@@ -6,11 +6,12 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Value\AttributeReference;
 use webignition\BasilModel\Value\AttributeValue;
-use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValue;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\DataParameter;
+use webignition\BasilModel\Value\ElementReference;
+use webignition\BasilModel\Value\PageElementReference;
 
 trait UnhandledValueDataProviderTrait
 {
@@ -18,35 +19,29 @@ trait UnhandledValueDataProviderTrait
     {
         return [
             'unhandled value: data parameter object' => [
-                'model' => new ObjectValue(
-                    ValueTypes::DATA_PARAMETER,
-                    '$data.key',
-                    ObjectNames::DATA,
-                    'key'
-                ),
+                'model' => new DataParameter('$data.key', 'key'),
             ],
             'unhandled value: element parameter object' => [
-                'model' => new ObjectValue(ValueTypes::ELEMENT_PARAMETER, '', '', ''),
+                'model' => new ElementReference('', ''),
             ],
             'unhandled value: page element reference' => [
-                'model' => new ObjectValue(ValueTypes::PAGE_ELEMENT_REFERENCE, '', '', ''),
+                'model' => new PageElementReference('', '', ''),
             ],
             'unhandled value: malformed page property object' => [
-                'model' => new ObjectValue(
-                    ValueTypes::PAGE_OBJECT_PROPERTY,
+                'model' => new PageElementReference(
                     '',
                     '',
                     ''
                 ),
             ],
             'unhandled value: attribute parameter' => [
-                'model' => new ObjectValue(ValueTypes::ATTRIBUTE_PARAMETER, '', '', ''),
+                'model' => new AttributeReference('', ''),
             ],
             'unhandled value: attribute identifier' => [
                 'model' => new AttributeValue(
                     new AttributeIdentifier(
                         new ElementIdentifier(
-                            LiteralValue::createCssSelectorValue('.selector')
+                            new CssSelector('.selector')
                         ),
                         'attribute_name'
                     )

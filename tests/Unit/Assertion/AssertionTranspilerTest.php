@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
@@ -67,10 +66,10 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileNonTranspilableModel()
     {
-        $model = new ObjectValue('foo', '', '', '');
-
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
+        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
+
+        $model = new \stdClass();
 
         $this->transpiler->transpile($model);
     }

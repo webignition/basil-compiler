@@ -3,11 +3,11 @@
 namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Value\AttributeValueInterface;
+use webignition\BasilModel\Value\BrowserProperty;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\PageProperty;
 
 class AssertableValueExaminer
 {
@@ -30,10 +30,12 @@ class AssertableValueExaminer
             return true;
         }
 
-        if ($value instanceof ObjectValueInterface) {
-            if (in_array($value->getType(), [ValueTypes::BROWSER_OBJECT_PROPERTY, ValueTypes::PAGE_OBJECT_PROPERTY])) {
-                return true;
-            }
+        if ($value instanceof BrowserProperty) {
+            return true;
+        }
+
+        if ($value instanceof PageProperty) {
+            return true;
         }
 
         return false;

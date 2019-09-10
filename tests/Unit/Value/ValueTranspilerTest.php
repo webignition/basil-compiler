@@ -7,13 +7,13 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
 use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Value\XpathExpression;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -21,13 +21,13 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralCssSelectorValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralStringValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralXpathExpressionValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\PageObjectValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
@@ -35,14 +35,14 @@ use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
-    use BrowserObjectValueDataProviderTrait;
+    use BrowserPropertyDataProviderTrait;
+    use CssSelectorValueDataProviderTrait;
     use ElementValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
-    use LiteralCssSelectorValueDataProviderTrait;
-    use LiteralStringValueDataProviderTrait;
-    use LiteralXpathExpressionValueDataProviderTrait;
-    use PageObjectValueDataProviderTrait;
+    use LiteralValueDataProviderTrait;
+    use PagePropertyProviderTrait;
     use UnhandledValueDataProviderTrait;
+    use XpathExpressionValueDataProviderTrait;
 
     /**
      * @var ValueTranspiler
@@ -57,13 +57,13 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider browserObjectValueDataProvider
+     * @dataProvider browserPropertyDataProvider
+     * @dataProvider cssSelectorValueDataProvider
      * @dataProvider elementValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
-     * @dataProvider literalCssSelectorValueDataProvider
-     * @dataProvider literalStringValueDataProvider
-     * @dataProvider literalXpathExpressionValueDataProvider
-     * @dataProvider pageObjectValueDataProvider
+     * @dataProvider literalValueDataProvider
+     * @dataProvider pagePropertyDataProvider
+     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
@@ -98,9 +98,11 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function transpileDataProvider(): array
     {
+        $cssSelector = new CssSelector('.selector');
+
         return [
             'literal string value: string' => [
-                'value' => LiteralValue::createStringValue('value'),
+                'value' => new LiteralValue('value'),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['"value"'],
                     new UseStatementCollection(),
@@ -108,7 +110,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'literal string value: integer' => [
-                'value' => LiteralValue::createStringValue('100'),
+                'value' => new LiteralValue('100'),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['"100"'],
                     new UseStatementCollection(),
@@ -130,9 +132,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             ],
             'element identifier, css selector' => [
                 'value' => new ElementValue(
-                    new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector')
-                    )
+                    new ElementIdentifier($cssSelector)
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['".selector"'],
@@ -142,10 +142,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             ],
             'element identifier, css selector with non-default position' => [
                 'value' => new ElementValue(
-                    new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector'),
-                        2
-                    )
+                    new ElementIdentifier($cssSelector, 2)
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['".selector"'],
@@ -155,7 +152,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             ],
             'element identifier, css selector with name' => [
                 'value' => new ElementValue(
-                    TestIdentifierFactory::createCssElementIdentifier('.selector', null, 'element_name')
+                    TestIdentifierFactory::createElementIdentifier($cssSelector, null, 'element_name')
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['".selector"'],
@@ -166,7 +163,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'element identifier, xpath expression' => [
                 'value' => new ElementValue(
                     new ElementIdentifier(
-                        LiteralValue::createXpathExpressionValue('//h1')
+                        new XpathExpression('//h1')
                     )
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
@@ -176,12 +173,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'browser object value, size' => [
-                'value' => new ObjectValue(
-                    ValueTypes::BROWSER_OBJECT_PROPERTY,
-                    '$browser.size',
-                    ObjectNames::BROWSER,
-                    'size'
-                ),
+                'value' => new BrowserProperty('$browser.size', 'size'),
                 'expectedTranspilationResult' => new VariableAssignmentCall(
                     new TranspilationResult(
                         [
@@ -205,10 +197,10 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileNonTranspilableModel()
     {
-        $model = new ObjectValue('foo', '', '', '');
-
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "webignition\BasilModel\Value\ObjectValue"');
+        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
+
+        $model = new \stdClass();
 
         $this->transpiler->transpile($model);
     }

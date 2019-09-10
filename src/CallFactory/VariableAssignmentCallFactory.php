@@ -5,11 +5,11 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
 use webignition\BasilModel\Value\AttributeValueInterface;
+use webignition\BasilModel\Value\BrowserProperty;
 use webignition\BasilModel\Value\ElementValueInterface;
 use webignition\BasilModel\Value\EnvironmentValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValueInterface;
+use webignition\BasilModel\Value\PageProperty;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -93,8 +93,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $collectionPlaceholder
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForElementCollection(
         ElementIdentifierInterface $elementIdentifier,
@@ -132,8 +130,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $elementPlaceholder
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForElement(
         ElementIdentifierInterface $elementIdentifier,
@@ -171,8 +167,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $elementPlaceholder
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForElementExistence(
         ElementIdentifierInterface $elementIdentifier,
@@ -206,8 +200,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $attributePlaceholder
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForAttribute(
         AttributeIdentifierInterface $attributeIdentifier,
@@ -260,8 +252,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $valuePlaceholder
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForElementCollectionValue(
         ElementIdentifierInterface $elementIdentifier,
@@ -311,8 +301,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $valuePlaceholder
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForAttributeValue(
         AttributeIdentifierInterface $attributeIdentifier,
@@ -345,8 +333,6 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $valuePlaceholder
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     public function createForAttributeExistence(
         AttributeIdentifierInterface $attributeIdentifier,
@@ -388,8 +374,6 @@ class VariableAssignmentCallFactory
      * @param TranspilationResultInterface $findCall
      *
      * @return VariableAssignmentCall
-     *
-     * @throws NonTranspilableModelException
      */
     private function createForElementOrCollection(
         ElementIdentifierInterface $elementIdentifier,
@@ -545,7 +529,13 @@ class VariableAssignmentCallFactory
         ValueInterface $value,
         VariablePlaceholder $placeholder
     ): ?VariableAssignmentCall {
-        if ($value instanceof LiteralValueInterface) {
+        $isScalarValue =
+            $value instanceof LiteralValueInterface ||
+            $value instanceof EnvironmentValueInterface ||
+            $value instanceof BrowserProperty ||
+            $value instanceof PageProperty;
+
+        if ($isScalarValue) {
             return $this->createForScalar(
                 $value,
                 $placeholder
@@ -566,24 +556,6 @@ class VariableAssignmentCallFactory
             );
         }
 
-        if ($value instanceof EnvironmentValueInterface) {
-            return $this->createForScalar(
-                $value,
-                $placeholder
-            );
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            $objectName = $value->getObjectName();
-
-            if (in_array($objectName, [ObjectNames::BROWSER, ObjectNames::PAGE])) {
-                return $this->createForScalar(
-                    $value,
-                    $placeholder
-                );
-            }
-        }
-
         return null;
     }
 
@@ -599,6 +571,18 @@ class VariableAssignmentCallFactory
         ValueInterface $value,
         VariablePlaceholder $placeholder
     ): ?VariableAssignmentCall {
+        $isScalarValue =
+            $value instanceof EnvironmentValueInterface ||
+            $value instanceof BrowserProperty ||
+            $value instanceof PageProperty;
+
+        if ($isScalarValue) {
+            return $this->createForScalarExistence(
+                $value,
+                $placeholder
+            );
+        }
+
         if ($value instanceof ElementValueInterface) {
             return $this->createForElementExistence(
                 $value->getIdentifier(),
@@ -612,24 +596,6 @@ class VariableAssignmentCallFactory
                 $value->getIdentifier(),
                 $placeholder
             );
-        }
-
-        if ($value instanceof EnvironmentValueInterface) {
-            return $this->createForScalarExistence(
-                $value,
-                $placeholder
-            );
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            $objectName = $value->getObjectName();
-
-            if (in_array($objectName, [ObjectNames::BROWSER, ObjectNames::PAGE])) {
-                return $this->createForScalarExistence(
-                    $value,
-                    $placeholder
-                );
-            }
         }
 
         return null;

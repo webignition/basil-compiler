@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\Identifier;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilTranspiler\Identifier\AttributeIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Identifier\AttributeIdentifierDataProviderTrait;
@@ -72,7 +72,7 @@ class AttributeIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
             'missing attribute name' => [
                 'model' => new AttributeIdentifier(
                     new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector')
+                        new CssSelector('.selector')
                     ),
                     ''
                 ),
