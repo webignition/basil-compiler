@@ -6,7 +6,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\CssSelector;
 
 trait AttributeIdentifierDataProviderTrait
 {
@@ -16,7 +16,7 @@ trait AttributeIdentifierDataProviderTrait
             'attribute identifier' => [
                 'model' => new AttributeIdentifier(
                     new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector')
+                        new CssSelector('.selector')
                     ),
                     'attribute_name'
                 ),

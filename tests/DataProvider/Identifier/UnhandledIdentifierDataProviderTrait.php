@@ -6,12 +6,11 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Identifier\Identifier;
 use webignition\BasilModel\Identifier\IdentifierTypes;
-use webignition\BasilModel\Value\LiteralValue;
-use webignition\BasilModel\Value\ObjectNames;
-use webignition\BasilModel\Value\ObjectValue;
-use webignition\BasilModel\Value\ValueTypes;
+use webignition\BasilModel\Identifier\ReferenceIdentifier;
+use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementReference;
+use webignition\BasilModel\Value\PageElementReference;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 
 trait UnhandledIdentifierDataProviderTrait
@@ -22,15 +21,14 @@ trait UnhandledIdentifierDataProviderTrait
             'invalid attribute identifier: empty attribute name' => [
                 'model' => new AttributeIdentifier(
                     new ElementIdentifier(
-                        LiteralValue::createCssSelectorValue('.selector')
+                        new CssSelector('.selector')
                     ),
                     ''
                 ),
             ],
             'page element reference' => [
                 'model' => TestIdentifierFactory::createPageElementReferenceIdentifier(
-                    new ObjectValue(
-                        ValueTypes::PAGE_ELEMENT_REFERENCE,
+                    new PageElementReference(
                         'page_import_name.elements.element_name',
                         'page_import_name',
                         'element_name'
@@ -38,14 +36,9 @@ trait UnhandledIdentifierDataProviderTrait
                 ),
             ],
             'element parameter' => [
-                'model' => new Identifier(
+                'model' => new ReferenceIdentifier(
                     IdentifierTypes::ELEMENT_PARAMETER,
-                    new ObjectValue(
-                        ValueTypes::ELEMENT_PARAMETER,
-                        '$elements.element_name',
-                        ObjectNames::ELEMENT,
-                        'element_name'
-                    )
+                    new ElementReference('$elements.element_name', 'element_name')
                 ),
             ],
         ];
