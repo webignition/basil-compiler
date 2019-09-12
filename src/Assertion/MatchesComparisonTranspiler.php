@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\MatchesAssertion;
-use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Assertion\AssertionComparison;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
 use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
@@ -13,7 +13,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class MatchesComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
+class MatchesComparisonTranspiler extends AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): MatchesComparisonTranspiler
     {
@@ -25,7 +25,11 @@ class MatchesComparisonTranspiler extends AbstractValueComparisonAssertionTransp
 
     public function handles(object $model): bool
     {
-        return $model instanceof MatchesAssertion;
+        if (!$model instanceof ComparisonAssertionInterface) {
+            return false;
+        }
+
+        return AssertionComparison::MATCHES === $model->getComparison();
     }
 
     /**
@@ -39,7 +43,11 @@ class MatchesComparisonTranspiler extends AbstractValueComparisonAssertionTransp
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof MatchesAssertion) {
+        if (!$model instanceof ComparisonAssertionInterface) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        if (AssertionComparison::MATCHES !== $model->getComparison()) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -47,7 +55,7 @@ class MatchesComparisonTranspiler extends AbstractValueComparisonAssertionTransp
     }
 
     protected function getAssertionCall(
-        ValueComparisonAssertionInterface $assertion,
+        ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface {

@@ -7,12 +7,9 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Assertion;
 
 use PHPUnit\Framework\ExpectationFailedException;
+use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Assertion\ExcludesAssertion;
-use webignition\BasilModel\Assertion\IncludesAssertion;
-use webignition\BasilModel\Assertion\IsAssertion;
-use webignition\BasilModel\Assertion\IsNotAssertion;
-use webignition\BasilModel\Assertion\MatchesAssertion;
+use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\AssertionExaminedValue;
@@ -278,7 +275,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new IsAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" is $elements.foo',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -287,6 +284,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::IS,
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
@@ -312,7 +310,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new IsAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" is $elements.contains_foo.data-foo',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -321,6 +319,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::IS,
                     new AssertionExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
@@ -474,7 +473,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new IsNotAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".p-1" is-not $elements.p2',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -483,6 +482,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::IS_NOT,
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
@@ -508,7 +508,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new IsNotAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" is-not $elements.contains_foo.data-bar',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -517,6 +517,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::IS_NOT,
                     new AssertionExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
@@ -670,7 +671,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new IncludesAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" includes $elements.foo',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -679,6 +680,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::INCLUDES,
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
@@ -704,7 +706,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new IncludesAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" includes $elements.contains_foo.data-foo',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -713,6 +715,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::INCLUDES,
                     new AssertionExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
@@ -866,7 +869,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ExcludesAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".p-1" excludes $elements.p2',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -875,6 +878,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::EXCLUDES,
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
@@ -900,7 +904,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ExcludesAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" excludes $elements.contains_foo.data-bar',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -909,6 +913,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::EXCLUDES,
                     new AssertionExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
@@ -1062,7 +1067,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new MatchesAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".p-matches-examined matches $elements.p-matches-expected',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -1071,6 +1076,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::MATCHES,
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
@@ -1096,7 +1102,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new MatchesAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".foo" matches $elements.matches_foo.data-matches',
                     new AssertionExaminedValue(
                         new ElementValue(
@@ -1105,6 +1111,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                             )
                         )
                     ),
+                    AssertionComparison::MATCHES,
                     new AssertionExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
