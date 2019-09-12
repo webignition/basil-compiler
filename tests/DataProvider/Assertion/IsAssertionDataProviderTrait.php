@@ -5,10 +5,11 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
-use webignition\BasilModel\Assertion\Assertion;
-use webignition\BasilModel\Assertion\AssertionComparisons;
+use webignition\BasilModel\Assertion\IsAssertion;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Value\AssertionExaminedValue;
+use webignition\BasilModel\Value\AssertionExpectedValue;
 use webignition\BasilModel\Value\AttributeReference;
 use webignition\BasilModel\Value\AttributeValue;
 use webignition\BasilModel\Value\BrowserProperty;
@@ -91,51 +92,45 @@ trait IsAssertionDataProviderTrait
                 ),
             ],
             'is comparison, browser object examined value, element identifier expected value' => [
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '',
-                    $browserProperty,
-                    AssertionComparisons::IS,
-                    $elementValue
+                    new AssertionExaminedValue($browserProperty),
+                    new AssertionExpectedValue($elementValue)
                 ),
             ],
             'is comparison, browser object examined value, attribute identifier expected value' => [
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '',
-                    $browserProperty,
-                    AssertionComparisons::IS,
-                    $attributeValue
+                    new AssertionExaminedValue($browserProperty),
+                    new AssertionExpectedValue($attributeValue)
                 ),
             ],
             'is comparison, browser object examined value, environment expected value' => [
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '',
-                    $browserProperty,
-                    AssertionComparisons::IS,
-                    $environmentValue
+                    new AssertionExaminedValue($browserProperty),
+                    new AssertionExpectedValue($environmentValue)
                 ),
             ],
             'is comparison, browser object examined value, page object expected value' => [
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '',
-                    $browserProperty,
-                    AssertionComparisons::IS,
-                    $pageProperty
+                    new AssertionExaminedValue($browserProperty),
+                    new AssertionExpectedValue($pageProperty)
                 ),
             ],
             'is comparison, browser object examined value, element parameter expected value' => [
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '',
-                    $browserProperty,
-                    AssertionComparisons::IS,
-                    $elementParameterValue
+                    new AssertionExaminedValue($browserProperty),
+                    new AssertionExpectedValue($elementParameterValue)
                 ),
             ],
             'is comparison, browser object examined value, attribute parameter expected value' => [
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '',
-                    $browserProperty,
-                    AssertionComparisons::IS,
-                    $attributeParameterValue
+                    new AssertionExaminedValue($browserProperty),
+                    new AssertionExpectedValue($attributeParameterValue)
                 ),
             ],
         ];

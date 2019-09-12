@@ -7,11 +7,16 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Assertion;
 
 use PHPUnit\Framework\ExpectationFailedException;
-use webignition\BasilModel\Assertion\Assertion;
-use webignition\BasilModel\Assertion\AssertionComparisons;
 use webignition\BasilModel\Assertion\AssertionInterface;
+use webignition\BasilModel\Assertion\ExcludesAssertion;
+use webignition\BasilModel\Assertion\IncludesAssertion;
+use webignition\BasilModel\Assertion\IsAssertion;
+use webignition\BasilModel\Assertion\IsNotAssertion;
+use webignition\BasilModel\Assertion\MatchesAssertion;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Value\AssertionExaminedValue;
+use webignition\BasilModel\Value\AssertionExpectedValue;
 use webignition\BasilModel\Value\AttributeValue;
 use webignition\BasilModel\Value\CssSelector;
 use webignition\BasilModel\Value\ElementValue;
@@ -273,17 +278,20 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '".foo" is $elements.foo',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     ),
-                    AssertionComparisons::IS,
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExpectedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     )
                 ),
@@ -304,20 +312,23 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new IsAssertion(
                     '".foo" is $elements.contains_foo.data-foo',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     ),
-                    AssertionComparisons::IS,
-                    new AttributeValue(
-                        new AttributeIdentifier(
-                            new ElementIdentifier(
-                                new CssSelector('.contains-foo')
-                            ),
-                            'data-foo'
+                    new AssertionExpectedValue(
+                        new AttributeValue(
+                            new AttributeIdentifier(
+                                new ElementIdentifier(
+                                    new CssSelector('.contains-foo')
+                                ),
+                                'data-foo'
+                            )
                         )
                     )
                 ),
@@ -463,17 +474,20 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new IsNotAssertion(
                     '".p-1" is-not $elements.p2',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.p-1')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.p-1')
+                            )
                         )
                     ),
-                    AssertionComparisons::IS_NOT,
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.p-2')
+                    new AssertionExpectedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.p-2')
+                            )
                         )
                     )
                 ),
@@ -494,20 +508,23 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new IsNotAssertion(
                     '".foo" is-not $elements.contains_foo.data-bar',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     ),
-                    AssertionComparisons::IS_NOT,
-                    new AttributeValue(
-                        new AttributeIdentifier(
-                            new ElementIdentifier(
-                                new CssSelector('.contains-foo')
-                            ),
-                            'data-bar'
+                    new AssertionExpectedValue(
+                        new AttributeValue(
+                            new AttributeIdentifier(
+                                new ElementIdentifier(
+                                    new CssSelector('.contains-foo')
+                                ),
+                                'data-bar'
+                            )
                         )
                     )
                 ),
@@ -653,17 +670,20 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new IncludesAssertion(
                     '".foo" includes $elements.foo',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     ),
-                    AssertionComparisons::INCLUDES,
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExpectedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     )
                 ),
@@ -684,20 +704,23 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new IncludesAssertion(
                     '".foo" includes $elements.contains_foo.data-foo',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     ),
-                    AssertionComparisons::INCLUDES,
-                    new AttributeValue(
-                        new AttributeIdentifier(
-                            new ElementIdentifier(
-                                new CssSelector('.contains-foo')
-                            ),
-                            'data-foo'
+                    new AssertionExpectedValue(
+                        new AttributeValue(
+                            new AttributeIdentifier(
+                                new ElementIdentifier(
+                                    new CssSelector('.contains-foo')
+                                ),
+                                'data-foo'
+                            )
                         )
                     )
                 ),
@@ -843,17 +866,20 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new ExcludesAssertion(
                     '".p-1" excludes $elements.p2',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.p-1')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.p-1')
+                            )
                         )
                     ),
-                    AssertionComparisons::EXCLUDES,
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.p-2')
+                    new AssertionExpectedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.p-2')
+                            )
                         )
                     )
                 ),
@@ -874,20 +900,23 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new ExcludesAssertion(
                     '".foo" excludes $elements.contains_foo.data-bar',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.foo')
+                            )
                         )
                     ),
-                    AssertionComparisons::INCLUDES,
-                    new AttributeValue(
-                        new AttributeIdentifier(
-                            new ElementIdentifier(
-                                new CssSelector('.contains-foo')
-                            ),
-                            'data-bar'
+                    new AssertionExpectedValue(
+                        new AttributeValue(
+                            new AttributeIdentifier(
+                                new ElementIdentifier(
+                                    new CssSelector('.contains-foo')
+                                ),
+                                'data-bar'
+                            )
                         )
                     )
                 ),
@@ -1033,17 +1062,20 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new MatchesAssertion(
                     '".p-matches-examined matches $elements.p-matches-expected',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.p-matches-examined')
+                    new AssertionExaminedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.p-matches-examined')
+                            )
                         )
                     ),
-                    AssertionComparisons::MATCHES,
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.p-matches-expected')
+                    new AssertionExpectedValue(
+                        new ElementValue(
+                            new ElementIdentifier(
+                                new CssSelector('.p-matches-expected')
+                            )
                         )
                     )
                 ),
@@ -1064,20 +1096,23 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new Assertion(
+                'assertion' => new MatchesAssertion(
                     '".foo" matches $elements.matches_foo.data-matches',
-                    new ElementValue(
-                        new ElementIdentifier(
-                            new CssSelector('.foo')
-                        )
-                    ),
-                    AssertionComparisons::MATCHES,
-                    new AttributeValue(
-                        new AttributeIdentifier(
+                    new AssertionExaminedValue(
+                        new ElementValue(
                             new ElementIdentifier(
                                 new CssSelector('.foo')
-                            ),
-                            'data-matches'
+                            )
+                        )
+                    ),
+                    new AssertionExpectedValue(
+                        new AttributeValue(
+                            new AttributeIdentifier(
+                                new ElementIdentifier(
+                                    new CssSelector('.foo')
+                                ),
+                                'data-matches'
+                            )
                         )
                     )
                 ),
