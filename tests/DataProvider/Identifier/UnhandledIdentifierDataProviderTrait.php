@@ -7,7 +7,8 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\ReferenceIdentifier;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModel\Value\ElementReference;
 use webignition\BasilModel\Value\PageElementReference;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
@@ -20,7 +21,7 @@ trait UnhandledIdentifierDataProviderTrait
             'invalid attribute identifier: empty attribute name' => [
                 'model' => new AttributeIdentifier(
                     new ElementIdentifier(
-                        new CssSelector('.selector')
+                        new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
                     ),
                     ''
                 ),

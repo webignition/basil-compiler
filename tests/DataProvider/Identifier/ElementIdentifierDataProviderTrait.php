@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
-use webignition\BasilModel\Value\CssSelector;
-use webignition\BasilModel\Value\XpathExpression;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 
 trait ElementIdentifierDataProviderTrait
@@ -14,10 +14,14 @@ trait ElementIdentifierDataProviderTrait
     {
         return [
             'css selector element identifier' => [
-                'model' => TestIdentifierFactory::createElementIdentifier(new CssSelector('.selector')),
+                'model' => TestIdentifierFactory::createElementIdentifier(
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
+                ),
             ],
             'xpath expression element identifier' => [
-                'model' => TestIdentifierFactory::createElementIdentifier(new XpathExpression('//h1')),
+                'model' => TestIdentifierFactory::createElementIdentifier(
+                    new ElementExpression('//h1', ElementExpressionType::XPATH_EXPRESSION)
+                ),
             ],
         ];
     }

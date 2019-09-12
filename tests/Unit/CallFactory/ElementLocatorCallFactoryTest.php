@@ -8,7 +8,8 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
@@ -65,7 +66,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         return [
             'css selector, no quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    new CssSelector('.selector')
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -75,7 +76,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, no quotes in selector, position 1' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    new CssSelector('.selector'),
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR),
                     1
                 ),
                 'expectedElementLocator' => new ElementLocator(
@@ -86,7 +87,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, no quotes in selector, position 2' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    new CssSelector('.selector'),
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR),
                     2
                 ),
                 'expectedElementLocator' => new ElementLocator(
@@ -97,7 +98,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, double quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    new CssSelector('input[name="email"]')
+                    new ElementExpression('input[name="email"]', ElementExpressionType::CSS_SELECTOR)
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -107,7 +108,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, single quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    new CssSelector("input[name='email']")
+                    new ElementExpression("input[name='email']", ElementExpressionType::CSS_SELECTOR)
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,
@@ -117,7 +118,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ],
             'css selector, escaped single quotes in selector, position default' => [
                 'elementIdentifier' => new ElementIdentifier(
-                    new CssSelector("input[value='\'quoted\'']")
+                    new ElementExpression("input[value='\'quoted\'']", ElementExpressionType::CSS_SELECTOR)
                 ),
                 'expectedElementLocator' => new ElementLocator(
                     LocatorType::CSS_SELECTOR,

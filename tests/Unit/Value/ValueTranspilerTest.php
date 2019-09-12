@@ -8,12 +8,12 @@ namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\BrowserProperty;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilModel\Value\XpathExpression;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -98,7 +98,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function transpileDataProvider(): array
     {
-        $cssSelector = new CssSelector('.selector');
+        $cssSelector = new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR);
 
         return [
             'literal string value: string' => [
@@ -163,7 +163,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'element identifier, xpath expression' => [
                 'value' => new ElementValue(
                     new ElementIdentifier(
-                        new XpathExpression('//h1')
+                        new ElementExpression('//h1', ElementExpressionType::XPATH_EXPRESSION)
                     )
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(

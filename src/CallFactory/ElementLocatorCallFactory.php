@@ -3,7 +3,7 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
@@ -49,7 +49,7 @@ class ElementLocatorCallFactory
     {
         $elementExpression = $elementIdentifier->getElementExpression();
 
-        $locatorTypeArgument = $elementExpression instanceof CssSelector
+        $locatorTypeArgument = ElementExpressionType::CSS_SELECTOR === $elementExpression->getType()
             ? self::CSS_SELECTOR_LOCATOR_TYPE
             : self::XPATH_EXPRESSION_LOCATOR_TYPE;
 
