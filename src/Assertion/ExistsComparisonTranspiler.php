@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\AssertionComparisons;
-use webignition\BasilModel\Assertion\AssertionInterface;
+use webignition\BasilModel\Assertion\ExistsAssertion;
+use webignition\BasilModel\Assertion\NotExistsAssertion;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -39,14 +39,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof AssertionInterface) {
-            return false;
-        }
-
-        return in_array($model->getComparison(), [
-            AssertionComparisons::EXISTS,
-            AssertionComparisons::NOT_EXISTS,
-        ]);
+        return $model instanceof ExistsAssertion || $model instanceof NotExistsAssertion;
     }
 
     /**
@@ -58,16 +51,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof AssertionInterface) {
-            throw new NonTranspilableModelException($model);
-        }
-
-        $isHandledComparison = in_array($model->getComparison(), [
-            AssertionComparisons::EXISTS,
-            AssertionComparisons::NOT_EXISTS,
-        ]);
-
-        if (false === $isHandledComparison) {
+        if (!($model instanceof ExistsAssertion || $model instanceof NotExistsAssertion)) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -86,7 +70,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        return $model->getComparison() === AssertionComparisons::EXISTS
+        return $model instanceof ExistsAssertion
             ? $this->assertionCallFactory->createValueIsTrueAssertionCall($examinedValueAssignmentCall)
             : $this->assertionCallFactory->createValueIsFalseAssertionCall($examinedValueAssignmentCall);
     }

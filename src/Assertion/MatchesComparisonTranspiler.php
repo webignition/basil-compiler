@@ -2,11 +2,13 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\AssertionComparisons;
+use webignition\BasilModel\Assertion\MatchesAssertion;
+use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class MatchesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler implements TranspilerInterface
@@ -20,15 +22,29 @@ class MatchesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler i
         );
     }
 
-    protected function getHandledComparisons(): array
+    public function handles(object $model): bool
     {
-        return [
-            AssertionComparisons::MATCHES,
-        ];
+        return $model instanceof MatchesAssertion;
+    }
+
+    /**
+     * @param object $model
+     *
+     * @return TranspilationResultInterface
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function transpile(object $model): TranspilationResultInterface
+    {
+        if (!$model instanceof MatchesAssertion) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        return $this->doTranspile($model);
     }
 
     protected function getAssertionCall(
-        string $comparison,
+        ValueComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface {

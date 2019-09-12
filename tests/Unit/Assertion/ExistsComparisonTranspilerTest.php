@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 
-use webignition\BasilModel\Assertion\Assertion;
 use webignition\BasilModel\Assertion\AssertionInterface;
+use webignition\BasilModel\Assertion\IsAssertion;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\ExistsComparisonTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -86,7 +86,7 @@ class ExistsComparisonTranspilerTest extends \PHPUnit\Framework\TestCase
             ],
             'wrong comparison type' => [
                 'model' => $assertionFactory->createFromAssertionString('".selector" is "value"'),
-                'expectedExceptionMessage' => 'Non-transpilable model "' . Assertion::class . '"',
+                'expectedExceptionMessage' => 'Non-transpilable model "' . IsAssertion::class . '"',
             ],
         ];
     }
