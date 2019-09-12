@@ -4,6 +4,8 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\MatchesAssertion;
 use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
+use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -17,8 +19,7 @@ class MatchesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler i
     {
         return new MatchesComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentCallFactory::createFactory(),
-            AssertableValueExaminer::create()
+            VariableAssignmentCallFactory::createFactory()
         );
     }
 
@@ -33,6 +34,8 @@ class MatchesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler i
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws InvalidAssertionExaminedValueException
+     * @throws InvalidAssertionExpectedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {

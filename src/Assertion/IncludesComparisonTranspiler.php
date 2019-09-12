@@ -5,6 +5,8 @@ namespace webignition\BasilTranspiler\Assertion;
 use webignition\BasilModel\Assertion\ExcludesAssertion;
 use webignition\BasilModel\Assertion\IncludesAssertion;
 use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
+use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -18,8 +20,7 @@ class IncludesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler 
     {
         return new IncludesComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentCallFactory::createFactory(),
-            AssertableValueExaminer::create()
+            VariableAssignmentCallFactory::createFactory()
         );
     }
 
@@ -34,6 +35,8 @@ class IncludesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler 
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws InvalidAssertionExaminedValueException
+     * @throws InvalidAssertionExpectedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {

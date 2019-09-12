@@ -3,6 +3,8 @@
 namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
+use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -16,16 +18,13 @@ abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterfa
 {
     protected $assertionCallFactory;
     private $variableAssignmentCallFactory;
-    private $assertableValueExaminer;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        AssertableValueExaminer $assertableValueExaminer
+        VariableAssignmentCallFactory $variableAssignmentCallFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->assertableValueExaminer = $assertableValueExaminer;
     }
 
     abstract protected function getAssertionCall(
@@ -40,18 +39,13 @@ abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterfa
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws InvalidAssertionExaminedValueException
+     * @throws InvalidAssertionExpectedValueException
      */
     protected function doTranspile(ValueComparisonAssertionInterface $assertion): TranspilationResultInterface
     {
-        $examinedValue = $assertion->getExaminedValue();
-        if (null === $examinedValue || !$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
-            throw new NonTranspilableModelException($assertion);
-        }
-
-        $expectedValue = $assertion->getExpectedValue();
-        if (null === $expectedValue || !$this->assertableValueExaminer->isAssertableExpectedValue($expectedValue)) {
-            throw new NonTranspilableModelException($assertion);
-        }
+        $examinedValue = $assertion->getExaminedValue()->getExaminedValue();
+        $expectedValue = $assertion->getExpectedValue()->getExpectedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
@@ -70,7 +64,7 @@ abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterfa
         }
 
         return $this->getAssertionCall(
-            (string) $assertion->getComparison(),
+            $assertion,
             $examinedValueAssignmentCall,
             $expectedValueAssignmentCall
         );

@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilModel\Assertion\ExistsAssertion;
 use webignition\BasilModel\Assertion\NotExistsAssertion;
+use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -16,24 +17,20 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
     private $variableAssignmentCallFactory;
-    private $assertableValueExaminer;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        AssertableValueExaminer $assertableValueExaminer
+        VariableAssignmentCallFactory $variableAssignmentCallFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->assertableValueExaminer = $assertableValueExaminer;
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
     {
         return new ExistsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentCallFactory::createFactory(),
-            AssertableValueExaminer::create()
+            VariableAssignmentCallFactory::createFactory()
         );
     }
 
@@ -48,6 +45,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
+     * @throws InvalidAssertionExaminedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
@@ -55,10 +53,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $examinedValue = $model->getExaminedValue();
-        if (null === $examinedValue || !$this->assertableValueExaminer->isAssertableExaminedValue($examinedValue)) {
-            throw new NonTranspilableModelException($model);
-        }
+        $examinedValue = $model->getExaminedValue()->getExaminedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueExistenceAssignmentCall(
