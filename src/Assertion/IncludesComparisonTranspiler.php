@@ -56,5 +56,4 @@ class IncludesComparisonTranspiler extends AbstractValueComparisonAssertionTrans
             ? $this->assertionCallFactory->createValueIncludesValueAssertionCall($expectedValue, $examinedValue)
             : $this->assertionCallFactory->createValueNotIncludesValueAssertionCall($expectedValue, $examinedValue);
     }
-
 }
