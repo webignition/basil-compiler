@@ -14,7 +14,7 @@ use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
 
-abstract class AbstractTwoValueComparisonTranspiler implements TranspilerInterface
+abstract class AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
 {
     protected $assertionCallFactory;
     private $variableAssignmentCallFactory;

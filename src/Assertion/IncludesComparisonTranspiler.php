@@ -14,7 +14,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class IncludesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler implements TranspilerInterface
+class IncludesComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): IncludesComparisonTranspiler
     {

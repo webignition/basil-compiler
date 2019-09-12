@@ -13,7 +13,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class MatchesComparisonTranspiler extends AbstractTwoValueComparisonTranspiler implements TranspilerInterface
+class MatchesComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): MatchesComparisonTranspiler
     {
