@@ -2,9 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\ExcludesAssertion;
-use webignition\BasilModel\Assertion\IncludesAssertion;
-use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Assertion\AssertionComparison;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
 use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
@@ -14,7 +13,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class IncludesComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
+class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): IncludesComparisonTranspiler
     {
@@ -26,7 +25,11 @@ class IncludesComparisonTranspiler extends AbstractValueComparisonAssertionTrans
 
     public function handles(object $model): bool
     {
-        return $model instanceof IncludesAssertion || $model instanceof ExcludesAssertion;
+        if (!$model instanceof ComparisonAssertionInterface) {
+            return false;
+        }
+
+        return in_array($model->getComparison(), [AssertionComparison::INCLUDES, AssertionComparison::EXCLUDES]);
     }
 
     /**
@@ -40,7 +43,11 @@ class IncludesComparisonTranspiler extends AbstractValueComparisonAssertionTrans
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!($model instanceof IncludesAssertion || $model instanceof ExcludesAssertion)) {
+        if (!$model instanceof ComparisonAssertionInterface) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        if (!in_array($model->getComparison(), [AssertionComparison::INCLUDES, AssertionComparison::EXCLUDES])) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -48,11 +55,11 @@ class IncludesComparisonTranspiler extends AbstractValueComparisonAssertionTrans
     }
 
     protected function getAssertionCall(
-        ValueComparisonAssertionInterface $assertion,
+        ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface {
-        return $assertion instanceof IncludesAssertion
+        return AssertionComparison::INCLUDES === $assertion->getComparison()
             ? $this->assertionCallFactory->createValueIncludesValueAssertionCall($expectedValue, $examinedValue)
             : $this->assertionCallFactory->createValueNotIncludesValueAssertionCall($expectedValue, $examinedValue);
     }

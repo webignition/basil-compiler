@@ -2,9 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\IsAssertion;
-use webignition\BasilModel\Assertion\IsNotAssertion;
-use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Assertion\AssertionComparison;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
 use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
@@ -14,7 +13,7 @@ use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class IsComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
+class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
     public static function createTranspiler(): IsComparisonTranspiler
     {
@@ -26,7 +25,11 @@ class IsComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler 
 
     public function handles(object $model): bool
     {
-        return $model instanceof IsAssertion || $model instanceof IsNotAssertion;
+        if (!$model instanceof ComparisonAssertionInterface) {
+            return false;
+        }
+
+        return in_array($model->getComparison(), [AssertionComparison::IS, AssertionComparison::IS_NOT]);
     }
 
     /**
@@ -40,19 +43,22 @@ class IsComparisonTranspiler extends AbstractValueComparisonAssertionTranspiler 
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!($model instanceof IsAssertion || $model instanceof IsNotAssertion)) {
+        if (!$model instanceof ComparisonAssertionInterface) {
             throw new NonTranspilableModelException($model);
         }
 
+        if (!in_array($model->getComparison(), [AssertionComparison::IS, AssertionComparison::IS_NOT])) {
+            throw new NonTranspilableModelException($model);
+        }
         return $this->doTranspile($model);
     }
 
     protected function getAssertionCall(
-        ValueComparisonAssertionInterface $assertion,
+        ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface {
-        return $assertion instanceof IsAssertion
+        return AssertionComparison::IS === $assertion->getComparison()
             ? $this->assertionCallFactory->createValuesAreEqualAssertionCall($examinedValue, $expectedValue)
             : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall($examinedValue, $expectedValue);
     }

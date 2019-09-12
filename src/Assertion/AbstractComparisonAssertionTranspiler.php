@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\ValueComparisonAssertionInterface;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
 use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
@@ -14,7 +14,7 @@ use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
 
-abstract class AbstractValueComparisonAssertionTranspiler implements TranspilerInterface
+abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
     protected $assertionCallFactory;
     private $variableAssignmentCallFactory;
@@ -28,13 +28,13 @@ abstract class AbstractValueComparisonAssertionTranspiler implements TranspilerI
     }
 
     abstract protected function getAssertionCall(
-        ValueComparisonAssertionInterface $assertion,
+        ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface;
 
     /**
-     * @param ValueComparisonAssertionInterface $assertion
+     * @param ComparisonAssertionInterface $assertion
      *
      * @return TranspilationResultInterface
      *
@@ -42,7 +42,7 @@ abstract class AbstractValueComparisonAssertionTranspiler implements TranspilerI
      * @throws InvalidAssertionExaminedValueException
      * @throws InvalidAssertionExpectedValueException
      */
-    protected function doTranspile(ValueComparisonAssertionInterface $assertion): TranspilationResultInterface
+    protected function doTranspile(ComparisonAssertionInterface $assertion): TranspilationResultInterface
     {
         $examinedValue = $assertion->getExaminedValue()->getExaminedValue();
         $expectedValue = $assertion->getExpectedValue()->getExpectedValue();

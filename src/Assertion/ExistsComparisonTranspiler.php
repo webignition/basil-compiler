@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\ExistsAssertion;
-use webignition\BasilModel\Assertion\NotExistsAssertion;
+use webignition\BasilModel\Assertion\AssertionComparison;
+use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
@@ -36,7 +36,11 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof ExistsAssertion || $model instanceof NotExistsAssertion;
+        if (!$model instanceof ExaminationAssertionInterface) {
+            return false;
+        }
+
+        return in_array($model->getComparison(), [AssertionComparison::EXISTS, AssertionComparison::NOT_EXISTS]);
     }
 
     /**
@@ -49,7 +53,11 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!($model instanceof ExistsAssertion || $model instanceof NotExistsAssertion)) {
+        if (!$model instanceof ExaminationAssertionInterface) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        if (!in_array($model->getComparison(), [AssertionComparison::EXISTS, AssertionComparison::NOT_EXISTS])) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -65,7 +73,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        return $model instanceof ExistsAssertion
+        return AssertionComparison::EXISTS === $model->getComparison()
             ? $this->assertionCallFactory->createValueIsTrueAssertionCall($examinedValueAssignmentCall)
             : $this->assertionCallFactory->createValueIsFalseAssertionCall($examinedValueAssignmentCall);
     }
