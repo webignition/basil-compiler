@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModel\Value\ElementValue;
 
 trait ElementValueDataProviderTrait
@@ -16,7 +17,7 @@ trait ElementValueDataProviderTrait
             'default element value' => [
                 'model' => new ElementValue(
                     new ElementIdentifier(
-                        new CssSelector('.selector')
+                        new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
                     )
                 ),
             ],

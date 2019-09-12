@@ -15,7 +15,8 @@ use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\AssertionExaminedValue;
 use webignition\BasilModel\Value\AssertionExpectedValue;
 use webignition\BasilModel\Value\AttributeValue;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
@@ -280,7 +281,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -288,7 +289,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     )
@@ -315,7 +316,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -324,7 +325,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
-                                    new CssSelector('.contains-foo')
+                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
                                 ),
                                 'data-foo'
                             )
@@ -478,7 +479,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.p-1')
+                                new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -486,7 +487,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.p-2')
+                                new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     )
@@ -513,7 +514,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -522,7 +523,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
-                                    new CssSelector('.contains-foo')
+                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
                                 ),
                                 'data-bar'
                             )
@@ -676,7 +677,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -684,7 +685,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     )
@@ -711,7 +712,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -720,7 +721,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
-                                    new CssSelector('.contains-foo')
+                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
                                 ),
                                 'data-foo'
                             )
@@ -874,7 +875,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.p-1')
+                                new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -882,7 +883,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.p-2')
+                                new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     )
@@ -909,7 +910,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -918,7 +919,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
-                                    new CssSelector('.contains-foo')
+                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
                                 ),
                                 'data-bar'
                             )
@@ -1072,7 +1073,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.p-matches-examined')
+                                new ElementExpression('.p-matches-examined', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -1080,7 +1081,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.p-matches-expected')
+                                new ElementExpression('.p-matches-expected', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     )
@@ -1107,7 +1108,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     new AssertionExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
-                                new CssSelector('.foo')
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
@@ -1116,7 +1117,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
-                                    new CssSelector('.foo')
+                                    new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                                 ),
                                 'data-matches'
                             )

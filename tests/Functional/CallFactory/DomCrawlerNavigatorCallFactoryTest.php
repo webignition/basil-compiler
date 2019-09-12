@@ -8,7 +8,8 @@ namespace webignition\BasilTranspiler\Tests\Functional\CallFactory;
 
 use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilModel\Value\CssSelector;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -82,7 +83,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             'css selector, no parent' => [
                 'fixture' => '/basic.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    new CssSelector('input[name="input-1"]')
+                    new ElementExpression('input[name="input-1"]', ElementExpressionType::CSS_SELECTOR)
                 ),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
@@ -98,10 +99,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             'css selector, has parent' => [
                 'fixture' => '/basic.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    new CssSelector('input'),
+                    new ElementExpression('input', ElementExpressionType::CSS_SELECTOR),
                     1,
                     null,
-                    TestIdentifierFactory::createElementIdentifier(new CssSelector('form[action="/action2"]'))
+                    TestIdentifierFactory::createElementIdentifier(
+                        new ElementExpression('form[action="/action2"]', ElementExpressionType::CSS_SELECTOR)
+                    )
                 ),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
@@ -224,31 +227,39 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'not hasElement: css selector, no parent' => [
                 'fixture' => '/basic.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(new CssSelector('.selector')),
+                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
+                ),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector, has parent' => [
                 'fixture' => '/basic.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    new CssSelector('.selector'),
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR),
                     1,
                     null,
-                    TestIdentifierFactory::createElementIdentifier(new CssSelector('.parent'))
+                    TestIdentifierFactory::createElementIdentifier(
+                        new ElementExpression('.parent', ElementExpressionType::CSS_SELECTOR)
+                    )
                 ),
                 'expectedHasElement' => false,
             ],
             'hasElement: css selector, no parent' => [
                 'fixture' => '/basic.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(new CssSelector('h1')),
+                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
+                    new ElementExpression('h1', ElementExpressionType::CSS_SELECTOR)
+                ),
                 'expectedHasElement' => true,
             ],
             'hasElement: css selector, has parent' => [
                 'fixture' => '/basic.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    new CssSelector('input'),
+                    new ElementExpression('input', ElementExpressionType::CSS_SELECTOR),
                     1,
                     null,
-                    TestIdentifierFactory::createElementIdentifier(new CssSelector('form[action="/action2"]'))
+                    TestIdentifierFactory::createElementIdentifier(
+                        new ElementExpression('form[action="/action2"]', ElementExpressionType::CSS_SELECTOR)
+                    )
                 ),
                 'expectedHasElement' => true,
             ],

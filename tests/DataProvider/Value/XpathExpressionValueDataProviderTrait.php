@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
-use webignition\BasilModel\Value\XpathExpression;
+use webignition\BasilModel\Value\ElementExpression;
+use webignition\BasilModel\Value\ElementExpressionType;
 
 trait XpathExpressionValueDataProviderTrait
 {
@@ -12,7 +13,7 @@ trait XpathExpressionValueDataProviderTrait
     {
         return [
             'default xpath expression' => [
-                'model' => new XpathExpression('//h1'),
+                'model' => new ElementExpression('//h1', ElementExpressionType::XPATH_EXPRESSION),
             ],
         ];
     }
