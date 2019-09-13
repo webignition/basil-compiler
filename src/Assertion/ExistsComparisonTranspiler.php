@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
+use webignition\BasilModel\Assertion\AssertableExaminationAssertionInterface;
 use webignition\BasilModel\Assertion\AssertionComparison;
-use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
-use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
+use webignition\BasilModel\Exception\InvalidAssertableExaminedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -36,7 +36,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof ExaminationAssertionInterface) {
+        if (!$model instanceof AssertableExaminationAssertionInterface) {
             return false;
         }
 
@@ -49,11 +49,11 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws InvalidAssertionExaminedValueException
+     * @throws InvalidAssertableExaminedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof ExaminationAssertionInterface) {
+        if (!$model instanceof AssertableExaminationAssertionInterface) {
             throw new NonTranspilableModelException($model);
         }
 

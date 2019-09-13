@@ -7,13 +7,13 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Assertion;
 
 use PHPUnit\Framework\ExpectationFailedException;
+use webignition\BasilModel\Assertion\AssertableComparisonAssertion;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\AssertionExaminedValue;
-use webignition\BasilModel\Value\AssertionExpectedValue;
+use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
+use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
 use webignition\BasilModel\Value\AttributeValue;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
@@ -93,7 +93,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'exists comparison, element identifier examined value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo" exists'
                 ),
                 'variableIdentifiers' => [
@@ -112,7 +112,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '"#a-sibling".class exists'
                 ),
                 'variableIdentifiers' => [
@@ -124,7 +124,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, environment examined value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 exists'
                 ),
                 'variableIdentifiers' => [
@@ -134,7 +134,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, browser object value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size exists'
                 ),
                 'variableIdentifiers' => [
@@ -145,7 +145,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, page object value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title exists'
                 ),
                 'variableIdentifiers' => [
@@ -163,7 +163,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'not-exists comparison, element identifier examined value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector" not-exists'
                 ),
                 'variableIdentifiers' => [
@@ -172,7 +172,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'not-exists comparison, attribute identifier examined value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '"#a-sibling".invalid not-exists'
                 ),
                 'variableIdentifiers' => [
@@ -184,7 +184,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'not-exists comparison, environment examined value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.INVALID not-exists'
                 ),
                 'variableIdentifiers' => [
@@ -202,7 +202,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'is comparison, element identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo" is "Sibling 2"'
                 ),
                 'variableIdentifiers' => [
@@ -222,7 +222,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".id is "a-sibling"'
                 ),
                 'variableIdentifiers' => [
@@ -242,7 +242,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 is "environment value"'
                 ),
                 'variableIdentifiers' => [
@@ -253,7 +253,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, browser object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size is "1200x1100"'
                 ),
                 'variableIdentifiers' => [
@@ -265,7 +265,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, page object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title is "A basic page"'
                 ),
                 'variableIdentifiers' => [
@@ -276,9 +276,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" is $elements.foo',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -286,7 +286,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -311,9 +311,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" is $elements.contains_foo.data-foo',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -321,7 +321,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
@@ -349,7 +349,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-environment-value is $env.TEST1'
                 ),
                 'variableIdentifiers' => [
@@ -363,7 +363,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, attribute identifier examined value, browser object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-browser-size is $browser.size'
                 ),
                 'variableIdentifiers' => [
@@ -378,7 +378,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is comparison, attribute identifier examined value, page object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-page-title is $page.title'
                 ),
                 'variableIdentifiers' => [
@@ -400,7 +400,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'is-not comparison, element identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo" is-not "value"'
                 ),
                 'variableIdentifiers' => [
@@ -420,7 +420,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".id is-not "value"'
                 ),
                 'variableIdentifiers' => [
@@ -440,7 +440,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 is-not "value"'
                 ),
                 'variableIdentifiers' => [
@@ -451,7 +451,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, browser object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size is-not "1x1"'
                 ),
                 'variableIdentifiers' => [
@@ -463,7 +463,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, page object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title is-not "value"'
                 ),
                 'variableIdentifiers' => [
@@ -474,9 +474,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".p-1" is-not $elements.p2',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
@@ -484,7 +484,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::IS_NOT,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
@@ -509,9 +509,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" is-not $elements.contains_foo.data-bar',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -519,7 +519,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::IS_NOT,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
@@ -547,7 +547,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-environment-value is-not $env.FOO'
                 ),
                 'variableIdentifiers' => [
@@ -561,7 +561,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, attribute identifier examined value, browser object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-foo is-not $browser.size'
                 ),
                 'variableIdentifiers' => [
@@ -576,7 +576,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'is-not comparison, attribute identifier examined value, page object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-page-foo is-not $page.title'
                 ),
                 'variableIdentifiers' => [
@@ -598,7 +598,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'includes comparison, element identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo" includes "Sibling"'
                 ),
                 'variableIdentifiers' => [
@@ -618,7 +618,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".id includes "sibling"'
                 ),
                 'variableIdentifiers' => [
@@ -638,7 +638,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 includes "environment"'
                 ),
                 'variableIdentifiers' => [
@@ -649,7 +649,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, browser object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size includes "200x11"'
                 ),
                 'variableIdentifiers' => [
@@ -661,7 +661,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, page object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title includes "basic"'
                 ),
                 'variableIdentifiers' => [
@@ -672,9 +672,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" includes $elements.foo',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -682,7 +682,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::INCLUDES,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -707,9 +707,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" includes $elements.contains_foo.data-foo',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -717,7 +717,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::INCLUDES,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
@@ -745,7 +745,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-environment-value includes $env.TEST1'
                 ),
                 'variableIdentifiers' => [
@@ -759,7 +759,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, attribute identifier examined value, browser object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-browser-size includes $browser.size'
                 ),
                 'variableIdentifiers' => [
@@ -774,7 +774,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'includes comparison, attribute identifier examined value, page object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-page-title includes $page.title'
                 ),
                 'variableIdentifiers' => [
@@ -796,7 +796,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'excludes comparison, element identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo" excludes "value"'
                 ),
                 'variableIdentifiers' => [
@@ -816,7 +816,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".id excludes "value"'
                 ),
                 'variableIdentifiers' => [
@@ -836,7 +836,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 excludes "foo"'
                 ),
                 'variableIdentifiers' => [
@@ -847,7 +847,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, browser object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size excludes "1x2"'
                 ),
                 'variableIdentifiers' => [
@@ -859,7 +859,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, page object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title excludes "value"'
                 ),
                 'variableIdentifiers' => [
@@ -870,9 +870,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".p-1" excludes $elements.p2',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
@@ -880,7 +880,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::EXCLUDES,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
@@ -905,9 +905,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" excludes $elements.contains_foo.data-bar',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -915,7 +915,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::EXCLUDES,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
@@ -943,7 +943,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-environment-value-excludes excludes $env.TEST1'
                 ),
                 'variableIdentifiers' => [
@@ -957,7 +957,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, attribute identifier examined value, browser object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-browser-size-excludes excludes $browser.size'
                 ),
                 'variableIdentifiers' => [
@@ -972,7 +972,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'excludes comparison, attribute identifier examined value, page object expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-page-title-excludes excludes $page.title'
                 ),
                 'variableIdentifiers' => [
@@ -994,7 +994,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'matches comparison, element identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo" matches "/^Sibling [0-9]$/"'
                 ),
                 'variableIdentifiers' => [
@@ -1014,7 +1014,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".id matches "/^[a-z]-sib[a-z]{3}g$/"'
                 ),
                 'variableIdentifiers' => [
@@ -1034,7 +1034,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 matches "/^environment/"'
                 ),
                 'variableIdentifiers' => [
@@ -1045,7 +1045,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, browser object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size matches "/[0-9]+x[0-9]+/"'
                 ),
                 'variableIdentifiers' => [
@@ -1057,7 +1057,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, page object examined value, scalar expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title matches "/page$/"'
                 ),
                 'variableIdentifiers' => [
@@ -1068,9 +1068,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".p-matches-examined matches $elements.p-matches-expected',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.p-matches-examined', ElementExpressionType::CSS_SELECTOR)
@@ -1078,7 +1078,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::MATCHES,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.p-matches-expected', ElementExpressionType::CSS_SELECTOR)
@@ -1103,9 +1103,9 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '".foo" matches $elements.matches_foo.data-matches',
-                    new AssertionExaminedValue(
+                    new AssertableExaminedValue(
                         new ElementValue(
                             new ElementIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
@@ -1113,7 +1113,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                         )
                     ),
                     AssertionComparison::MATCHES,
-                    new AssertionExpectedValue(
+                    new AssertableExpectedValue(
                         new AttributeValue(
                             new AttributeIdentifier(
                                 new ElementIdentifier(
@@ -1141,7 +1141,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'matches comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".data-environment-value matches $env.MATCHES'
                 ),
                 'variableIdentifiers' => [
@@ -1186,7 +1186,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'exists comparison, element identifier examined value, element does not exist' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector" exists'
                 ),
                 'variableIdentifiers' => [
@@ -1196,7 +1196,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, attribute identifier examined value, element does not exist' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
@@ -1209,7 +1209,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, attribute identifier examined value, attribute does not exist' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".foo".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
@@ -1222,7 +1222,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, environment examined value, environment variable does not exist' => [
                 'fixture' => '/basic.html',
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.FOO exists'
                 ),
                 'variableIdentifiers' => [

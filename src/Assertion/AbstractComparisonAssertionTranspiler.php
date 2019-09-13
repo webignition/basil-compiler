@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
-use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
-use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
+use webignition\BasilModel\Assertion\AssertableComparisonAssertionInterface;
+use webignition\BasilModel\Exception\InvalidAssertableExaminedValueException;
+use webignition\BasilModel\Exception\InvalidAssertableExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -28,21 +28,21 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
     }
 
     abstract protected function getAssertionCall(
-        ComparisonAssertionInterface $assertion,
+        AssertableComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface;
 
     /**
-     * @param ComparisonAssertionInterface $assertion
+     * @param AssertableComparisonAssertionInterface $assertion
      *
      * @return TranspilationResultInterface
      *
+     * @throws InvalidAssertableExaminedValueException
+     * @throws InvalidAssertableExpectedValueException
      * @throws NonTranspilableModelException
-     * @throws InvalidAssertionExaminedValueException
-     * @throws InvalidAssertionExpectedValueException
      */
-    protected function doTranspile(ComparisonAssertionInterface $assertion): TranspilationResultInterface
+    protected function doTranspile(AssertableComparisonAssertionInterface $assertion): TranspilationResultInterface
     {
         $examinedValue = $assertion->getExaminedValue()->getExaminedValue();
         $expectedValue = $assertion->getExpectedValue()->getExpectedValue();

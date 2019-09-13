@@ -2,10 +2,10 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
+use webignition\BasilModel\Assertion\AssertableComparisonAssertionInterface;
 use webignition\BasilModel\Assertion\AssertionComparison;
-use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
-use webignition\BasilModel\Exception\InvalidAssertionExaminedValueException;
-use webignition\BasilModel\Exception\InvalidAssertionExpectedValueException;
+use webignition\BasilModel\Exception\InvalidAssertableExaminedValueException;
+use webignition\BasilModel\Exception\InvalidAssertableExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -25,7 +25,7 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof ComparisonAssertionInterface) {
+        if (!$model instanceof AssertableComparisonAssertionInterface) {
             return false;
         }
 
@@ -38,12 +38,12 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws InvalidAssertionExaminedValueException
-     * @throws InvalidAssertionExpectedValueException
+     * @throws InvalidAssertableExaminedValueException
+     * @throws InvalidAssertableExpectedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof ComparisonAssertionInterface) {
+        if (!$model instanceof AssertableComparisonAssertionInterface) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -55,7 +55,7 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
     }
 
     protected function getAssertionCall(
-        ComparisonAssertionInterface $assertion,
+        AssertableComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface {
