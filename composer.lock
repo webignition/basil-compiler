@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a255ee7da1211975fd06ef6470423412",
+    "content-hash": "dbc8ff7fc9f51c1572bb64b93b61cf19",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -3892,16 +3892,16 @@
         },
         {
             "name": "webignition/php-basil-model-factory",
-            "version": "0.23",
+            "version": "0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-model-factory.git",
-                "reference": "852fd9ad77900de28c241a58f44466914e00c015"
+                "reference": "b4f022c6086632e1c0b05178d8ba382c05d0d13a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-model-factory/zipball/852fd9ad77900de28c241a58f44466914e00c015",
-                "reference": "852fd9ad77900de28c241a58f44466914e00c015",
+                "url": "https://api.github.com/repos/webignition/php-basil-model-factory/zipball/b4f022c6086632e1c0b05178d8ba382c05d0d13a",
+                "reference": "b4f022c6086632e1c0b05178d8ba382c05d0d13a",
                 "shasum": ""
             },
             "require": {
@@ -3910,10 +3910,13 @@
                 "php": ">=7.2",
                 "webignition/php-basil-context-aware-exception": "^0.1.0",
                 "webignition/php-basil-data-structures": "^0.1.0",
-                "webignition/php-basil-models": ">=0.76,<1"
+                "webignition/php-basil-models": ">=0.77,<1"
             },
             "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.11.5",
+                "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
                 "webignition/php-basil-test-identifier-factory": ">=0.3,<1"
@@ -3936,7 +3939,7 @@
             ],
             "description": "Factories to create basil models",
             "homepage": "https://github.com/webignition/php-basil-model-factory",
-            "time": "2019-09-12T20:17:58+00:00"
+            "time": "2019-09-13T09:07:50+00:00"
         },
         {
             "name": "webignition/php-basil-test-identifier-factory",
