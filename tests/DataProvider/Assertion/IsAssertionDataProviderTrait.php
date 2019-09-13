@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
+use webignition\BasilModel\Assertion\AssertableComparisonAssertion;
 use webignition\BasilModel\Assertion\AssertionComparison;
-use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\AssertionExaminedValue;
-use webignition\BasilModel\Value\AssertionExpectedValue;
+use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
+use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
 use webignition\BasilModel\Value\AttributeReference;
 use webignition\BasilModel\Value\AttributeValue;
 use webignition\BasilModel\Value\BrowserProperty;
@@ -54,91 +54,91 @@ trait IsAssertionDataProviderTrait
 
         return [
             'is comparison, element identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector" is "value"'
                 ),
             ],
             'is comparison, attribute identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector".attribute_name is "value"'
                 ),
             ],
             'is comparison, browser object examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size is "value"'
                 ),
             ],
             'is comparison, environment examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.KEY is "value"'
                 ),
             ],
             'is comparison, page object examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title is "value"'
                 ),
             ],
             'is comparison, element parameter examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$elements.element_name is "value"'
                 ),
             ],
             'is comparison, attribute parameter examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$elements.element_name.attribute_name is "value"'
                 ),
             ],
             'is comparison, page element reference examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     'page_import_name.elements.element_name is "value"'
                 ),
             ],
             'is comparison, browser object examined value, element identifier expected value' => [
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '',
-                    new AssertionExaminedValue($browserProperty),
+                    new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue($elementValue)
+                    new AssertableExpectedValue($elementValue)
                 ),
             ],
             'is comparison, browser object examined value, attribute identifier expected value' => [
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '',
-                    new AssertionExaminedValue($browserProperty),
+                    new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue($attributeValue)
+                    new AssertableExpectedValue($attributeValue)
                 ),
             ],
             'is comparison, browser object examined value, environment expected value' => [
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '',
-                    new AssertionExaminedValue($browserProperty),
+                    new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue($environmentValue)
+                    new AssertableExpectedValue($environmentValue)
                 ),
             ],
             'is comparison, browser object examined value, page object expected value' => [
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '',
-                    new AssertionExaminedValue($browserProperty),
+                    new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue($pageProperty)
+                    new AssertableExpectedValue($pageProperty)
                 ),
             ],
             'is comparison, browser object examined value, element parameter expected value' => [
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '',
-                    new AssertionExaminedValue($browserProperty),
+                    new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue($elementParameterValue)
+                    new AssertableExpectedValue($elementParameterValue)
                 ),
             ],
             'is comparison, browser object examined value, attribute parameter expected value' => [
-                'assertion' => new ComparisonAssertion(
+                'assertion' => new AssertableComparisonAssertion(
                     '',
-                    new AssertionExaminedValue($browserProperty),
+                    new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
-                    new AssertionExpectedValue($attributeParameterValue)
+                    new AssertableExpectedValue($attributeParameterValue)
                 ),
             ],
         ];

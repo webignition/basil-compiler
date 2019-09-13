@@ -15,12 +15,12 @@ trait ExistsAssertionDataProviderTrait
 
         return [
             'exists comparison, element identifier examined value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector" exists'
                 ),
             ],
             'exists comparison, attribute identifier examined value' => [
-                'assertion' => $assertionFactory->createFromAssertionString(
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector".attribute_name exists'
                 ),
             ],

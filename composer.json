@@ -34,7 +34,7 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "webignition/php-basil-models": ">=0.76,<1",
+        "webignition/php-basil-models": ">=0.78,<1",
         "webignition/symfony-panther-dom-crawler-navigator": ">=0.8,<1",
         "webignition/webdriver-element-inspector": ">=0.2,<1"
     },
@@ -46,6 +46,6 @@
         "mockery/mockery": "^1.2",
         "phpstan/phpstan-mockery": "^0.11.3",
         "symfony/panther": "^0.5.1",
-        "webignition/php-basil-model-factory": ">=0.23,<1"
+        "webignition/php-basil-model-factory": ">=0.25,<1"
     }
 }
