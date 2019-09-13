@@ -34,7 +34,7 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "webignition/php-basil-models": ">=0.76,<1",
+        "webignition/php-basil-models": ">=0.77,<1",
         "webignition/symfony-panther-dom-crawler-navigator": ">=0.8,<1",
         "webignition/webdriver-element-inspector": ">=0.2,<1"
     },
