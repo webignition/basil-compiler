@@ -11,12 +11,10 @@ use webignition\BasilModel\Identifier\AttributeIdentifier;
 use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
 use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
-use webignition\BasilModel\Value\AttributeReference;
 use webignition\BasilModel\Value\AttributeValue;
 use webignition\BasilModel\Value\BrowserProperty;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
-use webignition\BasilModel\Value\ElementReference;
 use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\PageProperty;
@@ -49,9 +47,6 @@ trait IsAssertionDataProviderTrait
             )
         );
 
-        $elementParameterValue = new ElementReference('', '');
-        $attributeParameterValue = new AttributeReference('', '');
-
         return [
             'is comparison, element identifier examined value, literal string expected value' => [
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
@@ -76,21 +71,6 @@ trait IsAssertionDataProviderTrait
             'is comparison, page object examined value, literal string expected value' => [
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title is "value"'
-                ),
-            ],
-            'is comparison, element parameter examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '$elements.element_name is "value"'
-                ),
-            ],
-            'is comparison, attribute parameter examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '$elements.element_name.attribute_name is "value"'
-                ),
-            ],
-            'is comparison, page element reference examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    'page_import_name.elements.element_name is "value"'
                 ),
             ],
             'is comparison, browser object examined value, element identifier expected value' => [
@@ -123,22 +103,6 @@ trait IsAssertionDataProviderTrait
                     new AssertableExaminedValue($browserProperty),
                     AssertionComparison::IS,
                     new AssertableExpectedValue($pageProperty)
-                ),
-            ],
-            'is comparison, browser object examined value, element parameter expected value' => [
-                'assertion' => new AssertableComparisonAssertion(
-                    '',
-                    new AssertableExaminedValue($browserProperty),
-                    AssertionComparison::IS,
-                    new AssertableExpectedValue($elementParameterValue)
-                ),
-            ],
-            'is comparison, browser object examined value, attribute parameter expected value' => [
-                'assertion' => new AssertableComparisonAssertion(
-                    '',
-                    new AssertableExaminedValue($browserProperty),
-                    AssertionComparison::IS,
-                    new AssertableExpectedValue($attributeParameterValue)
                 ),
             ],
         ];
