@@ -2,14 +2,14 @@
 
 namespace webignition\BasilTranspiler\Identifier;
 
-use webignition\BasilModel\Identifier\ElementIdentifierInterface;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class ElementIdentifierTranspiler implements TranspilerInterface
+class DomIdentifierTranspiler implements TranspilerInterface
 {
     private $domCrawlerNavigatorCallFactory;
     private $variableAssignmentCallFactory;
@@ -22,9 +22,9 @@ class ElementIdentifierTranspiler implements TranspilerInterface
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
     }
 
-    public static function createTranspiler(): ElementIdentifierTranspiler
+    public static function createTranspiler(): DomIdentifierTranspiler
     {
-        return new ElementIdentifierTranspiler(
+        return new DomIdentifierTranspiler(
             DomCrawlerNavigatorCallFactory::createFactory(),
             VariableAssignmentCallFactory::createFactory()
         );
@@ -32,7 +32,7 @@ class ElementIdentifierTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof ElementIdentifierInterface;
+        return $model instanceof DomIdentifierInterface;
     }
 
     /**
@@ -44,14 +44,29 @@ class ElementIdentifierTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof ElementIdentifierInterface) {
+        if (!$model instanceof DomIdentifierInterface) {
             throw new NonTranspilableModelException($model);
         }
 
-        return $this->variableAssignmentCallFactory->createForElementCollection(
+        $attributeName = $model->getAttributeName();
+
+        if (null === $attributeName) {
+            return $this->variableAssignmentCallFactory->createForElementCollection(
+                $model,
+                VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+                VariableAssignmentCallFactory::createCollectionPlaceholder()
+            );
+        }
+
+        if ('' === trim($attributeName)) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        return $this->variableAssignmentCallFactory->createForAttribute(
             $model,
             VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
-            VariableAssignmentCallFactory::createCollectionPlaceholder()
+            VariableAssignmentCallFactory::createElementPlaceholder(),
+            VariableAssignmentCallFactory::createAttributePlaceholder()
         );
     }
 }

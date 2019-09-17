@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilModel\Identifier\ElementIdentifierInterface;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -25,12 +25,12 @@ class DomCrawlerNavigatorCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
      */
     public function createFindCallForIdentifier(
-        ElementIdentifierInterface $elementIdentifier
+        DomIdentifierInterface $elementIdentifier
     ): TranspilationResultInterface {
         $arguments = $this->createElementCallArguments($elementIdentifier);
 
@@ -60,12 +60,12 @@ class DomCrawlerNavigatorCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
      */
     public function createHasCallForIdentifier(
-        ElementIdentifierInterface $elementIdentifier
+        DomIdentifierInterface $elementIdentifier
     ): TranspilationResultInterface {
         $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
 
@@ -113,17 +113,17 @@ class DomCrawlerNavigatorCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
      */
     public function createElementCallArguments(
-        ElementIdentifierInterface $elementIdentifier
+        DomIdentifierInterface $elementIdentifier
     ): TranspilationResultInterface {
         $transpilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
-        if ($parentIdentifier instanceof ElementIdentifierInterface) {
+        if ($parentIdentifier instanceof DomIdentifierInterface) {
             $parentTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
 
             $transpilationResult = $transpilationResult->extend(

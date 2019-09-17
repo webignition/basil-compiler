@@ -12,8 +12,7 @@ class IdentifierTranspiler extends AbstractDelegatingTranspiler implements Trans
     {
         return new IdentifierTranspiler(
             [
-                ElementIdentifierTranspiler::createTranspiler(),
-                AttributeIdentifierTranspiler::createTranspiler(),
+                DomIdentifierTranspiler::createTranspiler(),
             ]
         );
     }

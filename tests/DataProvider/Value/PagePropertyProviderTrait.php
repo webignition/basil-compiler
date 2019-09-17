@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
-use webignition\BasilModel\Value\PageProperty;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 
 trait PagePropertyProviderTrait
 {
@@ -12,7 +13,7 @@ trait PagePropertyProviderTrait
     {
         return [
             'default page property' => [
-                'model' => new PageProperty('$page.url', 'url'),
+                'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
             ],
         ];
     }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
-use webignition\BasilModel\Value\EnvironmentValue;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 
 trait EnvironmentParameterValueDataProviderTrait
 {
@@ -12,7 +13,7 @@ trait EnvironmentParameterValueDataProviderTrait
     {
         return [
             'default page property object' => [
-                'model' => new EnvironmentValue('', ''),
+                'model' => new ObjectValue(ObjectValueType::ENVIRONMENT_PARAMETER, '', ''),
             ],
         ];
     }

@@ -3,7 +3,7 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ObjectValueInterface;
-use webignition\BasilModel\Value\PageProperty;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -40,7 +40,7 @@ class PagePropertyTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof PageProperty;
+        return $model instanceof ObjectValueInterface && ObjectValueType::PAGE_PROPERTY === $model->getType();
     }
 
     /**

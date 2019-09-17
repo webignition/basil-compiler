@@ -10,14 +10,12 @@ use PHPUnit\Framework\ExpectationFailedException;
 use webignition\BasilModel\Assertion\AssertableComparisonAssertion;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\AssertionInterface;
-use webignition\BasilModel\Identifier\AttributeIdentifier;
-use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
 use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
-use webignition\BasilModel\Value\AttributeValue;
+use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
-use webignition\BasilModel\Value\ElementValue;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -279,16 +277,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" is $elements.foo',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::IS,
                     new AssertableExpectedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
@@ -314,21 +312,18 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" is $elements.contains_foo.data-foo',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::IS,
                     new AssertableExpectedValue(
-                        new AttributeValue(
-                            new AttributeIdentifier(
-                                new ElementIdentifier(
-                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
-                                ),
-                                'data-foo'
-                            )
+                        new DomIdentifierValue(
+                            (new DomIdentifier(
+                                new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
+                            ))->withAttributeName('data-foo')
                         )
                     )
                 ),
@@ -477,16 +472,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".p-1" is-not $elements.p2',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::IS_NOT,
                     new AssertableExpectedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
@@ -512,21 +507,18 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" is-not $elements.contains_foo.data-bar',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::IS_NOT,
                     new AssertableExpectedValue(
-                        new AttributeValue(
-                            new AttributeIdentifier(
-                                new ElementIdentifier(
-                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
-                                ),
-                                'data-bar'
-                            )
+                        new DomIdentifierValue(
+                            (new DomIdentifier(
+                                new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
+                            ))->withAttributeName('data-bar')
                         )
                     )
                 ),
@@ -675,16 +667,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" includes $elements.foo',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::INCLUDES,
                     new AssertableExpectedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
@@ -710,21 +702,18 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" includes $elements.contains_foo.data-foo',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::INCLUDES,
                     new AssertableExpectedValue(
-                        new AttributeValue(
-                            new AttributeIdentifier(
-                                new ElementIdentifier(
-                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
-                                ),
-                                'data-foo'
-                            )
+                        new DomIdentifierValue(
+                            (new DomIdentifier(
+                                new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
+                            ))->withAttributeName('data-foo')
                         )
                     )
                 ),
@@ -873,16 +862,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".p-1" excludes $elements.p2',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::EXCLUDES,
                     new AssertableExpectedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
@@ -908,21 +897,18 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" excludes $elements.contains_foo.data-bar',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::EXCLUDES,
                     new AssertableExpectedValue(
-                        new AttributeValue(
-                            new AttributeIdentifier(
-                                new ElementIdentifier(
-                                    new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
-                                ),
-                                'data-bar'
-                            )
+                        new DomIdentifierValue(
+                            (new DomIdentifier(
+                                new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
+                            ))->withAttributeName('data-bar')
                         )
                     )
                 ),
@@ -1071,16 +1057,16 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".p-matches-examined matches $elements.p-matches-expected',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.p-matches-examined', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::MATCHES,
                     new AssertableExpectedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.p-matches-expected', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
@@ -1106,21 +1092,18 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" matches $elements.matches_foo.data-matches',
                     new AssertableExaminedValue(
-                        new ElementValue(
-                            new ElementIdentifier(
+                        new DomIdentifierValue(
+                            new DomIdentifier(
                                 new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
                             )
                         )
                     ),
                     AssertionComparison::MATCHES,
                     new AssertableExpectedValue(
-                        new AttributeValue(
-                            new AttributeIdentifier(
-                                new ElementIdentifier(
-                                    new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                                ),
-                                'data-matches'
-                            )
+                        new DomIdentifierValue(
+                            (new DomIdentifier(
+                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
+                            ))->withAttributeName('data-matches')
                         )
                     )
                 ),

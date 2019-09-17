@@ -14,7 +14,7 @@ class ValueTranspiler extends AbstractDelegatingTranspiler implements Transpiler
             [
                 BrowserPropertyTranspiler::createTranspiler(),
                 ElementExpressionTranspiler::createTranspiler(),
-                ElementValueTranspiler::createTranspiler(),
+                DomIdentifierValueTranspiler::createTranspiler(),
                 EnvironmentParameterValueTranspiler::createTranspiler(),
                 LiteralValueTranspiler::createTranspiler(),
                 PagePropertyTranspiler::createTranspiler(),

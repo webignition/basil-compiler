@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\CallFactory;
 
 use Facebook\WebDriver\WebDriverElement;
-use webignition\BasilModel\Identifier\ElementIdentifierInterface;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
@@ -55,7 +55,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateFindCallForIdentifier(
         string $fixture,
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         callable $assertions
     ) {
         $transpilationResult = $this->factory->createFindCallForIdentifier($elementIdentifier);
@@ -202,7 +202,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateHasCallForIdentifier(
         string $fixture,
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         bool $expectedHasElement
     ) {
         $transpilationResult = $this->factory->createHasCallForIdentifier($elementIdentifier);
