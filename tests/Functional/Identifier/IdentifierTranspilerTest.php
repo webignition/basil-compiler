@@ -7,8 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Identifier;
 
 use Facebook\WebDriver\WebDriverElement;
-use webignition\BasilModel\Identifier\AttributeIdentifier;
-use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\IdentifierInterface;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
@@ -119,12 +118,9 @@ class IdentifierTranspilerTest extends AbstractTestCase
             ],
             'attribute identifier, selector only' => [
                 'fixture' => '/basic.html',
-                'identifier' => new AttributeIdentifier(
-                    new ElementIdentifier(
-                        new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                    ),
-                    'id'
-                ),
+                'identifier' => (new DomIdentifier(
+                    new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
+                ))->withAttributeName('id'),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ATTRIBUTE' => '$attribute',
                     'ELEMENT' => '$element',

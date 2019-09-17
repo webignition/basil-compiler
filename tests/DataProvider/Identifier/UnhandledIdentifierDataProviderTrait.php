@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
-use webignition\BasilModel\Identifier\AttributeIdentifier;
-use webignition\BasilModel\Identifier\ElementIdentifier;
 use webignition\BasilModel\Identifier\ReferenceIdentifier;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
-use webignition\BasilModel\Value\ElementReference;
+use webignition\BasilModel\Value\DomIdentifierReference;
+use webignition\BasilModel\Value\DomIdentifierReferenceType;
 use webignition\BasilModel\Value\PageElementReference;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 
@@ -18,14 +15,6 @@ trait UnhandledIdentifierDataProviderTrait
     public function unhandledIdentifierDataProvider(): array
     {
         return [
-            'invalid attribute identifier: empty attribute name' => [
-                'model' => new AttributeIdentifier(
-                    new ElementIdentifier(
-                        new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
-                    ),
-                    ''
-                ),
-            ],
             'page element reference' => [
                 'model' => TestIdentifierFactory::createPageElementReferenceIdentifier(
                     new PageElementReference(
@@ -35,9 +24,22 @@ trait UnhandledIdentifierDataProviderTrait
                     )
                 ),
             ],
-            'element parameter' => [
+            'attribute reference' => [
                 'model' => ReferenceIdentifier::createElementReferenceIdentifier(
-                    new ElementReference('$elements.element_name', 'element_name')
+                    new DomIdentifierReference(
+                        DomIdentifierReferenceType::ATTRIBUTE,
+                        '$elements.element_name.attribute_name',
+                        'element_name.attribute_name'
+                    )
+                ),
+            ],
+            'element reference' => [
+                'model' => ReferenceIdentifier::createElementReferenceIdentifier(
+                    new DomIdentifierReference(
+                        DomIdentifierReferenceType::ELEMENT,
+                        '$elements.element_name',
+                        'element_name'
+                    )
                 ),
             ],
         ];

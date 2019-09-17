@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilModel\Identifier\ElementIdentifierInterface;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -41,11 +41,11 @@ class ElementLocatorCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      *
      * @return TranspilationResultInterface
      */
-    public function createConstructorCall(ElementIdentifierInterface $elementIdentifier): TranspilationResultInterface
+    public function createConstructorCall(DomIdentifierInterface $elementIdentifier): TranspilationResultInterface
     {
         $elementExpression = $elementIdentifier->getElementExpression();
 

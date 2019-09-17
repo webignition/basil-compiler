@@ -2,14 +2,11 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilModel\Identifier\AttributeIdentifierInterface;
-use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilModel\Value\AttributeValueInterface;
-use webignition\BasilModel\Value\BrowserProperty;
-use webignition\BasilModel\Value\ElementValueInterface;
-use webignition\BasilModel\Value\EnvironmentValueInterface;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
+use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\PageProperty;
+use webignition\BasilModel\Value\ObjectValueInterface;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
@@ -89,13 +86,13 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $collectionPlaceholder
      * @return VariableAssignmentCall
      */
     public function createForElementCollection(
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $collectionPlaceholder
     ) {
@@ -125,14 +122,14 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $elementPlaceholder
      *
      * @return VariableAssignmentCall
      */
     public function createForElement(
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $elementPlaceholder
     ) {
@@ -162,14 +159,14 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $elementPlaceholder
      *
      * @return VariableAssignmentCall
      */
     public function createForElementExistence(
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $elementPlaceholder
     ): VariableAssignmentCall {
@@ -194,7 +191,7 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param AttributeIdentifierInterface $attributeIdentifier
+     * @param DomIdentifierInterface $attributeIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $elementPlaceholder
      * @param VariablePlaceholder $attributePlaceholder
@@ -202,13 +199,13 @@ class VariableAssignmentCallFactory
      * @return VariableAssignmentCall
      */
     public function createForAttribute(
-        AttributeIdentifierInterface $attributeIdentifier,
+        DomIdentifierInterface $attributeIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $elementPlaceholder,
         VariablePlaceholder $attributePlaceholder
     ): VariableAssignmentCall {
         $elementAssignmentCall = $this->createForElement(
-            $attributeIdentifier->getElementIdentifier(),
+            $attributeIdentifier,
             $elementLocatorPlaceholder,
             $elementPlaceholder
         );
@@ -248,13 +245,13 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $valuePlaceholder
      *
      * @return VariableAssignmentCall
      */
     public function createForElementCollectionValue(
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
         $collectionCall = $this->createForElementCollection(
@@ -297,13 +294,13 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param AttributeIdentifierInterface $attributeIdentifier
+     * @param DomIdentifierInterface $attributeIdentifier
      * @param VariablePlaceholder $valuePlaceholder
      *
      * @return VariableAssignmentCall
      */
     public function createForAttributeValue(
-        AttributeIdentifierInterface $attributeIdentifier,
+        DomIdentifierInterface $attributeIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
         $assignmentCall = $this->createForAttribute(
@@ -329,13 +326,13 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param AttributeIdentifierInterface $attributeIdentifier
+     * @param DomIdentifierInterface $attributeIdentifier
      * @param VariablePlaceholder $valuePlaceholder
      *
      * @return VariableAssignmentCall
      */
     public function createForAttributeExistence(
-        AttributeIdentifierInterface $attributeIdentifier,
+        DomIdentifierInterface $attributeIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
         $variablePlaceholders = new VariablePlaceholderCollection();
@@ -367,7 +364,7 @@ class VariableAssignmentCallFactory
     }
 
     /**
-     * @param ElementIdentifierInterface $elementIdentifier
+     * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $returnValuePlaceholder
      * @param TranspilationResultInterface $hasCall
@@ -376,7 +373,7 @@ class VariableAssignmentCallFactory
      * @return VariableAssignmentCall
      */
     private function createForElementOrCollection(
-        ElementIdentifierInterface $elementIdentifier,
+        DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $returnValuePlaceholder,
         TranspilationResultInterface $hasCall,
@@ -531,9 +528,9 @@ class VariableAssignmentCallFactory
     ): ?VariableAssignmentCall {
         $isScalarValue =
             $value instanceof LiteralValueInterface ||
-            $value instanceof EnvironmentValueInterface ||
-            $value instanceof BrowserProperty ||
-            $value instanceof PageProperty;
+            ($value instanceof ObjectValueInterface && ObjectValueType::ENVIRONMENT_PARAMETER === $value->getType()) ||
+            ($value instanceof ObjectValueInterface && ObjectValueType::BROWSER_PROPERTY === $value->getType()) ||
+            ($value instanceof ObjectValueInterface && ObjectValueType::PAGE_PROPERTY === $value->getType());
 
         if ($isScalarValue) {
             return $this->createForScalar(
@@ -542,18 +539,12 @@ class VariableAssignmentCallFactory
             );
         }
 
-        if ($value instanceof ElementValueInterface) {
-            return $this->createForElementCollectionValue(
-                $value->getIdentifier(),
-                $placeholder
-            );
-        }
+        if ($value instanceof DomIdentifierValueInterface) {
+            $identifier = $value->getIdentifier();
 
-        if ($value instanceof AttributeValueInterface) {
-            return $this->createForAttributeValue(
-                $value->getIdentifier(),
-                $placeholder
-            );
+            return null === $identifier->getAttributeName()
+                ? $this->createForElementCollectionValue($identifier, $placeholder)
+                : $this->createForAttributeValue($identifier, $placeholder);
         }
 
         return null;
@@ -572,9 +563,9 @@ class VariableAssignmentCallFactory
         VariablePlaceholder $placeholder
     ): ?VariableAssignmentCall {
         $isScalarValue =
-            $value instanceof EnvironmentValueInterface ||
-            $value instanceof BrowserProperty ||
-            $value instanceof PageProperty;
+            ($value instanceof ObjectValueInterface && ObjectValueType::ENVIRONMENT_PARAMETER === $value->getType()) ||
+            ($value instanceof ObjectValueInterface && ObjectValueType::BROWSER_PROPERTY === $value->getType()) ||
+            ($value instanceof ObjectValueInterface && ObjectValueType::PAGE_PROPERTY === $value->getType());
 
         if ($isScalarValue) {
             return $this->createForScalarExistence(
@@ -583,19 +574,16 @@ class VariableAssignmentCallFactory
             );
         }
 
-        if ($value instanceof ElementValueInterface) {
-            return $this->createForElementExistence(
-                $value->getIdentifier(),
-                VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
-                $placeholder
-            );
-        }
+        if ($value instanceof DomIdentifierValueInterface) {
+            $identifier = $value->getIdentifier();
 
-        if ($value instanceof AttributeValueInterface) {
-            return $this->createForAttributeExistence(
-                $value->getIdentifier(),
-                $placeholder
-            );
+            return null === $identifier->getAttributeName()
+                ? $this->createForElementExistence(
+                    $identifier,
+                    VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
+                    $placeholder
+                )
+                : $this->createForAttributeExistence($identifier, $placeholder);
         }
 
         return null;

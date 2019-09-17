@@ -6,21 +6,21 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Identifier;
 
-use webignition\BasilModel\Identifier\ElementIdentifierInterface;
-use webignition\BasilTranspiler\Identifier\ElementIdentifierTranspiler;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
+use webignition\BasilTranspiler\Identifier\DomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Identifier\AttributeIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Identifier\ElementIdentifierDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Identifier\UnhandledIdentifierDataProviderTrait;
 
-class ElementIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
+class DomIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use AttributeIdentifierDataProviderTrait;
     use ElementIdentifierDataProviderTrait;
     use UnhandledIdentifierDataProviderTrait;
 
     /**
-     * @var ElementIdentifierTranspiler
+     * @var DomIdentifierTranspiler
      */
     private $transpiler;
 
@@ -28,19 +28,19 @@ class ElementIdentifierTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = ElementIdentifierTranspiler::createTranspiler();
+        $this->transpiler = DomIdentifierTranspiler::createTranspiler();
     }
 
     /**
+     * @dataProvider attributeIdentifierDataProvider
      * @dataProvider elementIdentifierDataProvider
      */
-    public function testHandlesDoesHandle(ElementIdentifierInterface $model)
+    public function testHandlesDoesHandle(DomIdentifierInterface $model)
     {
         $this->assertTrue($this->transpiler->handles($model));
     }
 
     /**
-     * @dataProvider attributeIdentifierDataProvider
      * @dataProvider unhandledIdentifierDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)

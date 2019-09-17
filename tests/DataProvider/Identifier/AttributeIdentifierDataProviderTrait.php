@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Identifier;
 
-use webignition\BasilModel\Identifier\AttributeIdentifier;
-use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
 
@@ -15,12 +14,14 @@ trait AttributeIdentifierDataProviderTrait
     {
         return [
             'attribute identifier' => [
-                'model' => new AttributeIdentifier(
-                    new ElementIdentifier(
-                        new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
-                    ),
-                    'attribute_name'
-                ),
+                'model' => (new DomIdentifier(
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
+                ))->withAttributeName('attribute_name'),
+            ],
+            'invalid attribute identifier: empty attribute name' => [
+                'model' => (new DomIdentifier(
+                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
+                ))->withAttributeName(''),
             ],
         ];
     }
