@@ -6,11 +6,12 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Value\PageProperty;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
@@ -23,7 +24,7 @@ use webignition\BasilTranspiler\Value\PagePropertyTranspiler;
 class PagePropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
-    use ElementValueDataProviderTrait;
+    use DomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
@@ -53,7 +54,7 @@ class PagePropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserPropertyDataProvider
-     * @dataProvider elementValueDataProvider
+     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider cssSelectorValueDataProvider
      * @dataProvider literalValueDataProvider
@@ -77,7 +78,7 @@ class PagePropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileThrowsUnknownObjectPropertyException()
     {
-        $model = new PageProperty('$page.foo', 'foo');
+        $model = new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.foo', 'foo');
 
         $this->expectException(UnknownObjectPropertyException::class);
         $this->expectExceptionMessage('Unknown object property "foo"');

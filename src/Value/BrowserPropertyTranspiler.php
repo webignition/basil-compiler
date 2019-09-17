@@ -2,7 +2,8 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Value\ObjectValueInterface;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -33,7 +34,7 @@ class BrowserPropertyTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof BrowserProperty;
+        return $model instanceof ObjectValueInterface && ObjectValueType::BROWSER_PROPERTY === $model->getType();
     }
 
     /**
@@ -46,7 +47,7 @@ class BrowserPropertyTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$this->handles($model) || !$model instanceof BrowserProperty) {
+        if (!$this->handles($model) || !$model instanceof ObjectValueInterface) {
             throw new NonTranspilableModelException($model);
         }
 

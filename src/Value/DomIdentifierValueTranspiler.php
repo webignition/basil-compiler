@@ -2,12 +2,12 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilModel\Value\ElementValueInterface;
+use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class ElementValueTranspiler implements TranspilerInterface
+class DomIdentifierValueTranspiler implements TranspilerInterface
 {
     private $elementExpressionTranspiler;
 
@@ -16,21 +16,21 @@ class ElementValueTranspiler implements TranspilerInterface
         $this->elementExpressionTranspiler = $elementExpressionTranspiler;
     }
 
-    public static function createTranspiler(): ElementValueTranspiler
+    public static function createTranspiler(): DomIdentifierValueTranspiler
     {
-        return new ElementValueTranspiler(
+        return new DomIdentifierValueTranspiler(
             ElementExpressionTranspiler::createTranspiler()
         );
     }
 
     public function handles(object $model): bool
     {
-        return $model instanceof ElementValueInterface;
+        return $model instanceof DomIdentifierValueInterface;
     }
 
     public function transpile(object $model): TranspilationResultInterface
     {
-        if ($model instanceof ElementValueInterface) {
+        if ($model instanceof DomIdentifierValueInterface) {
             $identifier = $model->getIdentifier();
             $elementExpression = $identifier->getElementExpression();
 

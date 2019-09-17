@@ -6,13 +6,13 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Identifier\ElementIdentifier;
-use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Identifier\DomIdentifier;
+use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
-use webignition\BasilModel\Value\ElementValue;
-use webignition\BasilModel\Value\EnvironmentValue;
 use webignition\BasilModel\Value\LiteralValue;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -22,7 +22,7 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
@@ -37,7 +37,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
-    use ElementValueDataProviderTrait;
+    use DomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use PagePropertyProviderTrait;
@@ -59,7 +59,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider browserPropertyDataProvider
      * @dataProvider cssSelectorValueDataProvider
-     * @dataProvider elementValueDataProvider
+     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
@@ -118,7 +118,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'environment parameter value' => [
-                'value' => new EnvironmentValue(
+                'value' => new ObjectValue(
+                    ObjectValueType::ENVIRONMENT_PARAMETER,
                     '$env.KEY',
                     'KEY'
                 ),
@@ -131,8 +132,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'element identifier, css selector' => [
-                'value' => new ElementValue(
-                    new ElementIdentifier($cssSelector)
+                'value' => new DomIdentifierValue(
+                    new DomIdentifier($cssSelector)
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['".selector"'],
@@ -141,8 +142,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'element identifier, css selector with non-default position' => [
-                'value' => new ElementValue(
-                    new ElementIdentifier($cssSelector, 2)
+                'value' => new DomIdentifierValue(
+                    (new DomIdentifier($cssSelector))->withPosition(2)
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
                     ['".selector"'],
@@ -151,7 +152,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'element identifier, css selector with name' => [
-                'value' => new ElementValue(
+                'value' => new DomIdentifierValue(
                     TestIdentifierFactory::createElementIdentifier($cssSelector, null, 'element_name')
                 ),
                 'expectedTranspilationResult' => new TranspilationResult(
@@ -161,8 +162,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'element identifier, xpath expression' => [
-                'value' => new ElementValue(
-                    new ElementIdentifier(
+                'value' => new DomIdentifierValue(
+                    new DomIdentifier(
                         new ElementExpression('//h1', ElementExpressionType::XPATH_EXPRESSION)
                     )
                 ),
@@ -173,7 +174,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
             'browser object value, size' => [
-                'value' => new BrowserProperty('$browser.size', 'size'),
+                'value' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
                 'expectedTranspilationResult' => new VariableAssignmentCall(
                     new TranspilationResult(
                         [

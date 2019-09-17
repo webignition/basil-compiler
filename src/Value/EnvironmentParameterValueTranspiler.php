@@ -2,7 +2,8 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilModel\Value\EnvironmentValueInterface;
+use webignition\BasilModel\Value\ObjectValueInterface;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -20,7 +21,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof EnvironmentValueInterface;
+        return $model instanceof ObjectValueInterface && ObjectValueType::ENVIRONMENT_PARAMETER === $model->getType();
     }
 
     /**
@@ -32,7 +33,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if ($this->handles($model) && $model instanceof EnvironmentValueInterface) {
+        if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             $variablePlaceholders = new VariablePlaceholderCollection();
             $environmentVariableArrayPlaceholder = $variablePlaceholders->create(
                 VariableNames::ENVIRONMENT_VARIABLE_ARRAY

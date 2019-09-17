@@ -9,20 +9,20 @@ namespace webignition\BasilTranspiler\Tests\Unit\Value;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
-use webignition\BasilTranspiler\Value\ElementValueTranspiler;
+use webignition\BasilTranspiler\Value\DomIdentifierValueTranspiler;
 
 class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
-    use ElementValueDataProviderTrait;
+    use DomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use PagePropertyProviderTrait;
@@ -30,7 +30,7 @@ class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
     use XpathExpressionValueDataProviderTrait;
 
     /**
-     * @var ElementValueTranspiler
+     * @var DomIdentifierValueTranspiler
      */
     private $transpiler;
 
@@ -38,11 +38,11 @@ class ElementValueTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = ElementValueTranspiler::createTranspiler();
+        $this->transpiler = DomIdentifierValueTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider elementValueDataProvider
+     * @dataProvider domIdentifierValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {

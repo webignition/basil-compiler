@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Value;
 
-use webignition\BasilModel\Value\BrowserProperty;
-use webignition\BasilModel\Value\PageProperty;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -75,7 +75,7 @@ class ValueTranspilerTest extends AbstractTestCase
         return [
             'browser property: size' => [
                 'fixture' => '/basic.html',
-                'model' => new BrowserProperty('$browser.size', 'size'),
+                'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     'WEBDRIVER_DIMENSION',
                     'BROWSER_SIZE',
@@ -89,7 +89,7 @@ class ValueTranspilerTest extends AbstractTestCase
             ],
             'page property: title' => [
                 'fixture' => '/basic.html',
-                'model' => new PageProperty('$page.title', 'title'),
+                'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
@@ -97,7 +97,7 @@ class ValueTranspilerTest extends AbstractTestCase
             ],
             'page property: url' => [
                 'fixture' => '/basic.html',
-                'model' => new PageProperty('$page.url', 'url'),
+                'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),

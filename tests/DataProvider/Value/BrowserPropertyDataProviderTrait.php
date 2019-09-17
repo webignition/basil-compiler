@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Value;
 
-use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 
 trait BrowserPropertyDataProviderTrait
 {
@@ -12,7 +13,7 @@ trait BrowserPropertyDataProviderTrait
     {
         return [
             'default browser property' => [
-                'model' => new BrowserProperty('$browser.size', 'size'),
+                'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
             ],
         ];
     }

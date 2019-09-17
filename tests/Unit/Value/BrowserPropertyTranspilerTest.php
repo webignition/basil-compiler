@@ -6,12 +6,13 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\ElementValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
@@ -24,7 +25,7 @@ class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
     use CssSelectorValueDataProviderTrait;
-    use ElementValueDataProviderTrait;
+    use DomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use PagePropertyProviderTrait;
@@ -53,7 +54,7 @@ class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider cssSelectorValueDataProvider
-     * @dataProvider elementValueDataProvider
+     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
@@ -77,7 +78,7 @@ class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testTranspileThrowsUnknownObjectPropertyException()
     {
-        $model = new BrowserProperty('$browser.foo', 'foo');
+        $model = new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.foo', 'foo');
 
         $this->expectException(UnknownObjectPropertyException::class);
         $this->expectExceptionMessage('Unknown object property "foo"');
