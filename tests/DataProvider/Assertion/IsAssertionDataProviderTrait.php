@@ -7,17 +7,14 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilModel\Assertion\AssertableComparisonAssertion;
 use webignition\BasilModel\Assertion\AssertionComparison;
-use webignition\BasilModel\Identifier\AttributeIdentifier;
-use webignition\BasilModel\Identifier\ElementIdentifier;
+use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
 use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
-use webignition\BasilModel\Value\AttributeValue;
-use webignition\BasilModel\Value\BrowserProperty;
+use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
-use webignition\BasilModel\Value\ElementValue;
-use webignition\BasilModel\Value\EnvironmentValue;
-use webignition\BasilModel\Value\PageProperty;
+use webignition\BasilModel\Value\ObjectValue;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModelFactory\AssertionFactory;
 
 trait IsAssertionDataProviderTrait
@@ -26,25 +23,22 @@ trait IsAssertionDataProviderTrait
     {
         $assertionFactory = AssertionFactory::createFactory();
 
-        $browserProperty = new BrowserProperty('$browser.size', 'size');
+        $browserProperty = new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size');
 
-        $environmentValue = new EnvironmentValue('$env.KEY', 'KEY');
+        $environmentValue = new ObjectValue(ObjectValueType::ENVIRONMENT_PARAMETER, '$env.KEY', 'KEY');
 
-        $elementValue = new ElementValue(
-            new ElementIdentifier(
+        $elementValue = new DomIdentifierValue(
+            new DomIdentifier(
                 new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
             )
         );
 
-        $pageProperty = new PageProperty('$page.url', 'url');
+        $pageProperty = new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url');
 
-        $attributeValue = new AttributeValue(
-            new AttributeIdentifier(
-                new ElementIdentifier(
-                    new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
-                ),
-                'attribute_name'
-            )
+        $attributeValue = new DomIdentifierValue(
+            (new DomIdentifier(
+                new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
+            ))->withAttributeName('attribute_name')
         );
 
         return [
