@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
 use webignition\BasilModelFactory\Action\ActionFactory;
 
-trait UnhandledActionsDataProvider
+trait UnhandledActionsDataProviderTrait
 {
     public function unhandledActionsDataProvider(): array
     {
@@ -55,21 +55,6 @@ trait UnhandledActionsDataProvider
             'interaction action (submit), element identifier' => [
                 'value' => $actionFactory->createFromActionString(
                     'submit ".selector"'
-                ),
-            ],
-            'no-arguments action (reload)' => [
-                'value' => $actionFactory->createFromActionString(
-                    'reload'
-                ),
-            ],
-            'no-arguments action (back)' => [
-                'value' => $actionFactory->createFromActionString(
-                    'back'
-                ),
-            ],
-            'no-arguments action (forward)' => [
-                'value' => $actionFactory->createFromActionString(
-                    'forward'
                 ),
             ],
         ];

@@ -28,9 +28,9 @@ trait WaitActionFunctionalDataProviderTrait
                 'variableIdentifiers' => [
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [],
                 'additionalPreLines' => [],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [],
                 'expectedDuration' => 10,
             ],
             'wait action, element value' => [
@@ -49,13 +49,13 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
                 'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
-                ],
                 'expectedDuration' => 20,
             ],
             'wait action, attribute value, attribute exists' => [
@@ -75,13 +75,13 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
                 'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
-                ],
                 'expectedDuration' => 30,
             ],
             'wait action, attribute value, attribute does not exist' => [
@@ -101,13 +101,13 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
                 'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
-                ],
                 'expectedDuration' => 0,
             ],
             'wait action, browser property' => [
@@ -118,9 +118,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [],
                 'additionalPreLines' => [],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [],
                 'expectedDuration' => 1200,
             ],
             'wait action, page property' => [
@@ -130,9 +130,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [],
                 'additionalPreLines' => [],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [],
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value exists' => [
@@ -142,9 +142,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [],
                 'additionalPreLines' => [],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [],
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value does not exist' => [
@@ -154,9 +154,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
                 ],
+                'additionalUseStatements' => [],
                 'additionalPreLines' => [],
                 'additionalPostLines' => [],
-                'additionalUseStatements' => [],
                 'expectedDuration' => 0,
             ],
         ];

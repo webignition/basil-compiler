@@ -9,7 +9,10 @@ namespace webignition\BasilTranspiler\Tests\Unit\Action;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\WaitActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProvider;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ReloadActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
@@ -17,7 +20,10 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
-    use UnhandledActionsDataProvider;
+    use UnhandledActionsDataProviderTrait;
+    use BackActionDataProviderTrait;
+    use ForwardActionDataProviderTrait;
+    use ReloadActionDataProviderTrait;
 
     /**
      * @var WaitActionTranspiler
@@ -41,6 +47,9 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider waitForActionDataProvider
+     * @dataProvider backActionDataProvider
+     * @dataProvider forwardActionDataProvider
+     * @dataProvider reloadActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
