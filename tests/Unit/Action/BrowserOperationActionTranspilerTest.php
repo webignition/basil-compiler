@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilTranspiler\Action\WaitForActionTranspiler;
+use webignition\BasilTranspiler\Action\BrowserOperationActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionDataProviderTrait;
@@ -16,7 +16,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataPr
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
-class WaitForActionTranspilerTest extends \PHPUnit\Framework\TestCase
+class BrowserOperationActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
@@ -26,7 +26,7 @@ class WaitForActionTranspilerTest extends \PHPUnit\Framework\TestCase
     use ReloadActionDataProviderTrait;
 
     /**
-     * @var WaitForActionTranspiler
+     * @var BrowserOperationActionTranspiler
      */
     private $transpiler;
 
@@ -34,11 +34,13 @@ class WaitForActionTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = WaitForActionTranspiler::createTranspiler();
+        $this->transpiler = BrowserOperationActionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider waitForActionDataProvider
+     * @dataProvider backActionDataProvider
+     * @dataProvider forwardActionDataProvider
+     * @dataProvider reloadActionDataProvider
      */
     public function testHandlesDoesHandle(ActionInterface $model)
     {
@@ -46,10 +48,8 @@ class WaitForActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider waitForActionDataProvider
      * @dataProvider waitActionDataProvider
-     * @dataProvider backActionDataProvider
-     * @dataProvider forwardActionDataProvider
-     * @dataProvider reloadActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)

@@ -14,6 +14,9 @@ use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionFunctionalDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionFunctionalDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ReloadActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
@@ -23,6 +26,9 @@ class ActionTranspilerTest extends AbstractTestCase
 {
     use WaitActionFunctionalDataProviderTrait;
     use WaitForActionFunctionalDataProviderTrait;
+    use BackActionFunctionalDataProviderTrait;
+    use ForwardActionFunctionalDataProviderTrait;
+    use ReloadActionFunctionalDataProviderTrait;
 
     /**
      * @var ActionTranspiler
@@ -43,8 +49,6 @@ class ActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
-        array $additionalPreLines,
-        array $additionalPostLines,
         array $additionalUseStatements
     ) {
         $transpilationResult = $this->transpiler->transpile($action);
@@ -53,8 +57,8 @@ class ActionTranspilerTest extends AbstractTestCase
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalPreLines,
-            $additionalPostLines,
+            [],
+            [],
             $additionalUseStatements
         );
 
@@ -68,6 +72,9 @@ class ActionTranspilerTest extends AbstractTestCase
         return [
             'wait action' => current($this->waitActionFunctionalDataProvider()),
             'wait-for action' => current($this->waitForActionFunctionalDataProvider()),
+            'back action' => current($this->backActionFunctionalDataProvider()),
+            'forward action' => current($this->forwardActionFunctionalDataProvider()),
+            'reload action' => current($this->reloadActionFunctionalDataProvider()),
         ];
     }
 

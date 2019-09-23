@@ -34,9 +34,9 @@ class WaitActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
+        array $additionalUseStatements,
         array $additionalPreLines,
         array $additionalPostLines,
-        array $additionalUseStatements,
         int $expectedDuration
     ) {
         $transpilationResult = $this->transpiler->transpile($action);

@@ -10,7 +10,10 @@ use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProvider;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ReloadActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
@@ -18,7 +21,10 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
-    use UnhandledActionsDataProvider;
+    use UnhandledActionsDataProviderTrait;
+    use BackActionDataProviderTrait;
+    use ForwardActionDataProviderTrait;
+    use ReloadActionDataProviderTrait;
 
     /**
      * @var ActionTranspiler
@@ -35,6 +41,9 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider waitActionDataProvider
      * @dataProvider waitForActionDataProvider
+     * @dataProvider backActionDataProvider
+     * @dataProvider forwardActionDataProvider
+     * @dataProvider reloadActionDataProvider
      */
     public function testHandlesDoesHandle(ActionInterface $model)
     {
@@ -50,8 +59,11 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @!dataProvider waitActionDataProvider
+     * @dataProvider waitActionDataProvider
      * @dataProvider waitForActionDataProvider
+     * @dataProvider backActionDataProvider
+     * @dataProvider forwardActionDataProvider
+     * @dataProvider reloadActionDataProvider
      */
     public function testTranspileDoesNotFail(ActionInterface $model)
     {
