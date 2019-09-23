@@ -18,8 +18,6 @@ use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
-use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
-use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
@@ -27,27 +25,16 @@ use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
 class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 {
-    const DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME = '$domCrawlerNavigator';
-    const VARIABLE_IDENTIFIERS = [
-        VariableNames::DOM_CRAWLER_NAVIGATOR => self::DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME,
-    ];
-
     /**
      * @var DomCrawlerNavigatorCallFactory
      */
     private $factory;
-
-    /**
-     * @var ExecutableCallFactory
-     */
-    private $executableCallFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
-        $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
     /**
