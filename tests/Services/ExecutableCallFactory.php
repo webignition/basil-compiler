@@ -36,7 +36,8 @@ class ExecutableCallFactory
     public function create(
         TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers = [],
-        array $setupLines = [],
+        array $preLines = [],
+        array $postLines = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
         $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
@@ -52,11 +53,15 @@ class ExecutableCallFactory
             $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
         }
 
-        foreach ($setupLines as $line) {
+        foreach ($preLines as $line) {
             $executableCall .= $line . "\n";
         }
 
         $lines = $transpilationResult->getLines();
+
+        foreach ($postLines as $line) {
+            $executableCall .= $line . "\n";
+        }
 
         array_walk($lines, function (string &$line) {
             $line .= ';';
@@ -75,7 +80,8 @@ class ExecutableCallFactory
     public function createWithReturn(
         TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers = [],
-        array $setupLines = [],
+        array $preLines = [],
+        array $postLines = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
         $lines = $transpilationResult->getLines();
@@ -93,7 +99,8 @@ class ExecutableCallFactory
         return $this->create(
             $transpilationResultWithReturn,
             $variableIdentifiers,
-            $setupLines,
+            $preLines,
+            $postLines,
             $additionalUseStatements
         );
     }

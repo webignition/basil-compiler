@@ -76,6 +76,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
             ],
+            [],
             new UseStatementCollection([
                 new UseStatement(Navigator::class),
             ])

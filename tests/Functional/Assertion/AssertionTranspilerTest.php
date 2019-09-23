@@ -68,7 +68,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         string $fixture,
         AssertionInterface $assertion,
         array $variableIdentifiers,
-        array $additionalSetupLines = [],
+        array $additionalPreLines = [],
         array $additionalUseStatements = []
     ) {
         $transpilationResult = $this->transpiler->transpile($assertion);
@@ -77,7 +77,8 @@ class AssertionTranspilerTest extends AbstractTestCase
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalSetupLines,
+            $additionalPreLines,
+            [],
             $additionalUseStatements
         );
 
@@ -101,7 +102,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -211,7 +212,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -231,7 +232,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -300,7 +301,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -335,7 +336,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -406,7 +407,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -426,7 +427,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -495,7 +496,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -530,7 +531,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -601,7 +602,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -621,7 +622,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -690,7 +691,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -725,7 +726,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -796,7 +797,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -816,7 +817,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -885,7 +886,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -920,7 +921,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -991,7 +992,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -1011,7 +1012,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -1080,7 +1081,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -1115,7 +1116,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalPreLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -1221,7 +1222,8 @@ class AssertionTranspilerTest extends AbstractTestCase
         TranspilationResultInterface $transpilationResult,
         array $variableIdentifiers,
         string $fixture,
-        array $additionalSetupLines = [],
+        array $additionalPreLines = [],
+        array $additionalPostLines = [],
         array $additionalUseStatements = []
     ): string {
         return $this->executableCallFactory->create(
@@ -1232,8 +1234,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                     '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                     '$domCrawlerNavigator = Navigator::create($crawler); ',
                 ],
-                $additionalSetupLines
+                $additionalPreLines
             ),
+            $additionalPostLines,
             new UseStatementCollection(array_merge(
                 [
                     new UseStatement(Navigator::class),
