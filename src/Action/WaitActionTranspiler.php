@@ -3,7 +3,6 @@
 namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\WaitActionInterface;
-use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -17,16 +16,13 @@ class WaitActionTranspiler implements TranspilerInterface
     const DURATION_PLACEHOLDER = 'DURATION';
     const MICROSECONDS_PER_MILLISECOND = 1000;
 
-    private $assertionCallFactory;
     private $variableAssignmentCallFactory;
     private $transpilationResultComposer;
 
     public function __construct(
-        AssertionCallFactory $assertionCallFactory,
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
         TranspilationResultComposer $transpilationResultComposer
     ) {
-        $this->assertionCallFactory = $assertionCallFactory;
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
         $this->transpilationResultComposer = $transpilationResultComposer;
     }
@@ -34,7 +30,6 @@ class WaitActionTranspiler implements TranspilerInterface
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
-            AssertionCallFactory::createFactory(),
             VariableAssignmentCallFactory::createFactory(),
             TranspilationResultComposer::create()
         );
