@@ -13,6 +13,7 @@ class ActionTranspiler extends AbstractDelegatingTranspiler implements Transpile
         return new ActionTranspiler(
             [
                 WaitActionTranspiler::createTranspiler(),
+                WaitForActionTranspiler::createTranspiler(),
             ]
         );
     }

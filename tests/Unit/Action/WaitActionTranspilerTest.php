@@ -11,10 +11,12 @@ use webignition\BasilTranspiler\Action\WaitActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProvider;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
 class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
+    use WaitForActionDataProviderTrait;
     use UnhandledActionsDataProvider;
 
     /**
@@ -38,6 +40,7 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider waitForActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)

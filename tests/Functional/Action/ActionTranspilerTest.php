@@ -55,7 +55,7 @@ class ActionTranspilerTest extends AbstractTestCase
     /**
      * @dataProvider waitActionsDataProvider
      */
-    public function testTranspileForExecutableActions(
+    public function testTranspileForExecutableWaitActions(
         ActionInterface $action,
         int $expectedDuration,
         array $variableIdentifiers,
@@ -205,6 +205,56 @@ class ActionTranspilerTest extends AbstractTestCase
                 'variableIdentifiers' => [
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider waitForActionsDataProvider
+     */
+    public function testTranspileForExecutableWaitForActions(
+        ActionInterface $action,
+        array $variableIdentifiers,
+        array $additionalPreLines = [],
+        array $additionalUseStatements = []
+    ) {
+        $transpilationResult = $this->transpiler->transpile($action);
+
+        $executableCall = $this->createExecutableCall(
+            $transpilationResult,
+            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
+            '/action-wait-for.html',
+            $additionalPreLines,
+            [],
+            $additionalUseStatements
+        );
+
+        $executableCallLines = explode("\n", $executableCall);
+        $waitForLine = array_pop($executableCallLines);
+
+        $executableCallLines = array_merge($executableCallLines, [
+            '$before = microtime(true);',
+            $waitForLine,
+            '$executionDurationInMilliseconds = (microtime(true) - $before) * 1000;',
+            '$this->assertGreaterThan(100, $executionDurationInMilliseconds);',
+        ]);
+
+        $executableCall = implode("\n", $executableCallLines);
+
+        eval($executableCall);
+    }
+
+    public function waitForActionsDataProvider(): array
+    {
+        $actionFactory = ActionFactory::createFactory();
+
+        return [
+            'wait-for action, css selector' => [
+                'action' => $actionFactory->createFromActionString('wait-for "#hello"'),
+                'variableIdentifiers' => [
+                    VariableNames::PANTHER_CRAWLER => '$crawler',
+                    VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
             ],
         ];
