@@ -57,11 +57,6 @@ trait UnhandledActionsDataProvider
                     'submit ".selector"'
                 ),
             ],
-            'interaction action (wait-for), element identifier' => [
-                'value' => $actionFactory->createFromActionString(
-                    'wait-for ".selector"'
-                ),
-            ],
             'no-arguments action (reload)' => [
                 'value' => $actionFactory->createFromActionString(
                     'reload'

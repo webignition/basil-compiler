@@ -7,21 +7,20 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilTranspiler\Action\ActionTranspiler;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Action\WaitForActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProvider;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
-class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
+class WaitForActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
     use UnhandledActionsDataProvider;
 
     /**
-     * @var ActionTranspiler
+     * @var WaitForActionTranspiler
      */
     private $transpiler;
 
@@ -29,11 +28,10 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = ActionTranspiler::createTranspiler();
+        $this->transpiler = WaitForActionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider waitActionDataProvider
      * @dataProvider waitForActionDataProvider
      */
     public function testHandlesDoesHandle(ActionInterface $model)
@@ -42,6 +40,7 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider waitActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
@@ -50,23 +49,23 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @!dataProvider waitActionDataProvider
-     * @dataProvider waitForActionDataProvider
+     * @dataProvider transpileNonTranspilableModelDataProvider
      */
-    public function testTranspileDoesNotFail(ActionInterface $model)
-    {
-        $transpilationResult = $this->transpiler->transpile($model);
-
-        $this->assertInstanceOf(TranspilationResultInterface::class, $transpilationResult);
-    }
-
-    public function testTranspileNonTranspilableModel()
+    public function testTranspileNonTranspilableModel(object $model, string $expectedExceptionMessage)
     {
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
-
-        $model = new \stdClass();
+        $this->expectExceptionMessage($expectedExceptionMessage);
 
         $this->transpiler->transpile($model);
+    }
+
+    public function transpileNonTranspilableModelDataProvider(): array
+    {
+        return [
+            'wrong object type' => [
+                'model' => new \stdClass(),
+                'expectedExceptionMessage' => 'Non-transpilable model "' . \stdClass::class . '"',
+            ],
+        ];
     }
 }
