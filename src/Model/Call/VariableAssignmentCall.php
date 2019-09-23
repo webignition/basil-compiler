@@ -49,6 +49,14 @@ class VariableAssignmentCall implements TranspilationResultInterface
         return $this->transpilationResult->getLines();
     }
 
+    public function withAdditionalLines(array $lines): VariableAssignmentCall
+    {
+        $new = clone $this;
+        $new->transpilationResult = $this->transpilationResult->withAdditionalLines($lines);
+
+        return $new;
+    }
+
     public function getUseStatements(): UseStatementCollection
     {
         return $this->transpilationResult->getUseStatements();

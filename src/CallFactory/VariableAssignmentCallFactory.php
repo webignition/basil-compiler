@@ -5,7 +5,6 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -15,6 +14,7 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -33,6 +33,7 @@ class VariableAssignmentCallFactory
     private $valueTranspiler;
     private $singleQuotedStringEscaper;
     private $webDriverElementInspectorCallFactory;
+    private $objectValueTypeExaminer;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
@@ -41,7 +42,8 @@ class VariableAssignmentCallFactory
         TranspilationResultComposer $transpilationResultComposer,
         ValueTranspiler $valueTranspiler,
         SingleQuotedStringEscaper $singleQuotedStringEscaper,
-        WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory
+        WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory,
+        ObjectValueTypeExaminer $objectValueTypeExaminer
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
@@ -50,6 +52,7 @@ class VariableAssignmentCallFactory
         $this->valueTranspiler = $valueTranspiler;
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
         $this->webDriverElementInspectorCallFactory = $webDriverElementInspectorCallFactory;
+        $this->objectValueTypeExaminer = $objectValueTypeExaminer;
     }
 
     public static function createFactory(): VariableAssignmentCallFactory
@@ -61,7 +64,8 @@ class VariableAssignmentCallFactory
             TranspilationResultComposer::create(),
             ValueTranspiler::createTranspiler(),
             SingleQuotedStringEscaper::create(),
-            WebDriverElementInspectorCallFactory::createFactory()
+            WebDriverElementInspectorCallFactory::createFactory(),
+            ObjectValueTypeExaminer::createExaminer()
         );
     }
 
@@ -435,13 +439,17 @@ class VariableAssignmentCallFactory
     /**
      * @param ValueInterface $value
      * @param VariablePlaceholder $variablePlaceholder
+     * @param string $default
      *
      * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
      */
-    public function createForScalar(ValueInterface $value, VariablePlaceholder $variablePlaceholder)
-    {
+    private function createForScalar(
+        ValueInterface $value,
+        VariablePlaceholder $variablePlaceholder,
+        string $default = 'null'
+    ) {
         $variablePlaceholders = new VariablePlaceholderCollection([
             $variablePlaceholder,
         ]);
@@ -451,7 +459,7 @@ class VariableAssignmentCallFactory
         $variableAccessLastLine = array_pop($variableAccessLines);
 
         $assignmentStatement = sprintf(
-            '%s = %s ?? null',
+            '%s = %s ?? ' . $default,
             $variablePlaceholder,
             $variableAccessLastLine
         );
@@ -522,32 +530,82 @@ class VariableAssignmentCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createValueVariableAssignmentCall(
+    public function createStringValueVariableAssignmentCall(
         ValueInterface $value,
         VariablePlaceholder $placeholder
     ): ?VariableAssignmentCall {
-        $isScalarValue =
-            $value instanceof LiteralValueInterface ||
-            ($value instanceof ObjectValueInterface && ObjectValueType::ENVIRONMENT_PARAMETER === $value->getType()) ||
-            ($value instanceof ObjectValueInterface && ObjectValueType::BROWSER_PROPERTY === $value->getType()) ||
-            ($value instanceof ObjectValueInterface && ObjectValueType::PAGE_PROPERTY === $value->getType());
+        return $this->createValueVariableAssignmentCall($value, $placeholder);
+    }
+
+    /**
+     * @param ValueInterface $value
+     * @param VariablePlaceholder $placeholder
+     *
+     * @return VariableAssignmentCall|null
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function createIntegerValueVariableAssignmentCall(
+        ValueInterface $value,
+        VariablePlaceholder $placeholder
+    ): ?VariableAssignmentCall {
+        return $this->createValueVariableAssignmentCall($value, $placeholder, 'int', '0');
+    }
+
+    /**
+     * @param ValueInterface $value
+     * @param VariablePlaceholder $placeholder
+     * @param string $type
+     * @param string $default
+     *
+     * @return VariableAssignmentCall|null
+     *
+     * @throws NonTranspilableModelException
+     */
+    private function createValueVariableAssignmentCall(
+        ValueInterface $value,
+        VariablePlaceholder $placeholder,
+        string $type = 'string',
+        string $default = 'null'
+    ): ?VariableAssignmentCall {
+        $variableAssignmentCall = null;
+
+        $isOfScalarObjectType = $this->objectValueTypeExaminer->isOfType($value, [
+            ObjectValueType::BROWSER_PROPERTY,
+            ObjectValueType::ENVIRONMENT_PARAMETER,
+            ObjectValueType::PAGE_PROPERTY,
+        ]);
+
+        $isScalarValue = $value instanceof LiteralValueInterface || $isOfScalarObjectType;
 
         if ($isScalarValue) {
-            return $this->createForScalar(
-                $value,
-                $placeholder
-            );
+            $variableAssignmentCall = $this->createForScalar($value, $placeholder, $default);
         }
 
-        if ($value instanceof DomIdentifierValueInterface) {
+        if (null === $variableAssignmentCall && $value instanceof DomIdentifierValueInterface) {
             $identifier = $value->getIdentifier();
 
-            return null === $identifier->getAttributeName()
+            $variableAssignmentCall = null === $identifier->getAttributeName()
                 ? $this->createForElementCollectionValue($identifier, $placeholder)
                 : $this->createForAttributeValue($identifier, $placeholder);
         }
 
-        return null;
+        if ($variableAssignmentCall instanceof VariableAssignmentCall) {
+            $variableAssignmentCallPlaceholder = $variableAssignmentCall->getElementVariablePlaceholder();
+
+            $typeCastLine = sprintf(
+                '%s = (%s) %s',
+                (string) $variableAssignmentCallPlaceholder,
+                $type,
+                (string) $variableAssignmentCallPlaceholder
+            );
+
+            $variableAssignmentCall = $variableAssignmentCall->withAdditionalLines([
+                $typeCastLine,
+            ]);
+        }
+
+        return $variableAssignmentCall;
     }
 
     /**
@@ -562,10 +620,11 @@ class VariableAssignmentCallFactory
         ValueInterface $value,
         VariablePlaceholder $placeholder
     ): ?VariableAssignmentCall {
-        $isScalarValue =
-            ($value instanceof ObjectValueInterface && ObjectValueType::ENVIRONMENT_PARAMETER === $value->getType()) ||
-            ($value instanceof ObjectValueInterface && ObjectValueType::BROWSER_PROPERTY === $value->getType()) ||
-            ($value instanceof ObjectValueInterface && ObjectValueType::PAGE_PROPERTY === $value->getType());
+        $isScalarValue = $this->objectValueTypeExaminer->isOfType($value, [
+            ObjectValueType::BROWSER_PROPERTY,
+            ObjectValueType::ENVIRONMENT_PARAMETER,
+            ObjectValueType::PAGE_PROPERTY,
+        ]);
 
         if ($isScalarValue) {
             return $this->createForScalarExistence(

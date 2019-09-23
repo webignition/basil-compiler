@@ -15,6 +15,7 @@ interface TranspilationResultInterface
      */
     public function getLines(): array;
 
+    public function withAdditionalLines(array $lines);
     public function getUseStatements(): UseStatementCollection;
     public function getVariablePlaceholders(): VariablePlaceholderCollection;
     public function __toString(): string;
