@@ -6,40 +6,27 @@ use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\ElementExpressionType;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
-use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
 
 class WaitForActionTranspiler implements TranspilerInterface
 {
-    private $variableAssignmentCallFactory;
-    private $transpilationResultComposer;
     private $singleQuotedStringEscaper;
 
-    public function __construct(
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilationResultComposer $transpilationResultComposer,
-        SingleQuotedStringEscaper $singleQuotedStringEscaper
-    ) {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilationResultComposer = $transpilationResultComposer;
+    public function __construct(SingleQuotedStringEscaper $singleQuotedStringEscaper)
+    {
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
     }
 
     public static function createTranspiler(): WaitForActionTranspiler
     {
-        return new WaitForActionTranspiler(
-            VariableAssignmentCallFactory::createFactory(),
-            TranspilationResultComposer::create(),
-            SingleQuotedStringEscaper::create()
-        );
+        return new WaitForActionTranspiler(SingleQuotedStringEscaper::create());
     }
 
     public function handles(object $model): bool
