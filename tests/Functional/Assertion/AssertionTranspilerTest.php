@@ -18,41 +18,23 @@ use webignition\BasilModel\Value\ElementExpression;
 use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
-use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\SymfonyDomCrawlerNavigator\Navigator;
 use webignition\WebDriverElementInspector\Inspector;
 
 class AssertionTranspilerTest extends AbstractTestCase
 {
-    const DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME = '$domCrawlerNavigator';
-    const PHPUNIT_TEST_CASE_VARIABLE_NAME = '$this';
-
-    const VARIABLE_IDENTIFIERS = [
-        VariableNames::DOM_CRAWLER_NAVIGATOR => self::DOM_CRAWLER_NAVIGATOR_VARIABLE_NAME,
-        VariableNames::PHPUNIT_TEST_CASE => self::PHPUNIT_TEST_CASE_VARIABLE_NAME,
-    ];
-
     /**
      * @var AssertionTranspiler
      */
     private $transpiler;
-
-    /**
-     * @var ExecutableCallFactory
-     */
-    private $executableCallFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->transpiler = AssertionTranspiler::createTranspiler();
-        $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
     /**
@@ -1216,33 +1198,5 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
         ];
-    }
-
-    private function createExecutableCall(
-        TranspilationResultInterface $transpilationResult,
-        array $variableIdentifiers,
-        string $fixture,
-        array $additionalPreLines = [],
-        array $additionalPostLines = [],
-        array $additionalUseStatements = []
-    ): string {
-        return $this->executableCallFactory->create(
-            $transpilationResult,
-            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            array_merge(
-                [
-                    '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                    '$domCrawlerNavigator = Navigator::create($crawler); ',
-                ],
-                $additionalPreLines
-            ),
-            $additionalPostLines,
-            new UseStatementCollection(array_merge(
-                [
-                    new UseStatement(Navigator::class),
-                ],
-                $additionalUseStatements
-            ))
-        );
     }
 }

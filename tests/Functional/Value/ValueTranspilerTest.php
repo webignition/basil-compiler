@@ -12,33 +12,21 @@ use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
-use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
 
 class ValueTranspilerTest extends AbstractTestCase
 {
-    const PANTHER_CLIENT_VARIABLE_NAME = 'self::$client';
-    const VARIABLE_IDENTIFIERS = [
-        VariableNames::PANTHER_CLIENT => self::PANTHER_CLIENT_VARIABLE_NAME,
-    ];
-
     /**
      * @var ValueTranspiler
      */
     private $transpiler;
-
-    /**
-     * @var ExecutableCallFactory
-     */
-    private $executableCallFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->transpiler = ValueTranspiler::createTranspiler();
-        $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
     /**
