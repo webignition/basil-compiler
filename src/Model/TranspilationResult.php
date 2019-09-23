@@ -48,6 +48,14 @@ class TranspilationResult implements TranspilationResultInterface
         return $this->variablePlaceholders;
     }
 
+    public function withAdditionalLines(array $lines): TranspilationResultInterface
+    {
+        $new = clone $this;
+        $new->lines = array_merge($this->lines, $lines);
+
+        return $new;
+    }
+
     public function __toString(): string
     {
         return implode("\n", $this->lines);

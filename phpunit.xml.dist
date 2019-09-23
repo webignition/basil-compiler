@@ -15,6 +15,7 @@
     <php>
         <env name="TEST1" value="environment value" />
         <env name="MATCHES" value="/^environment/" />
+        <env name="DURATION" value="5" />
     </php>
 
     <testsuites>

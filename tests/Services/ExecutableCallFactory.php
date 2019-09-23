@@ -59,10 +59,6 @@ class ExecutableCallFactory
 
         $lines = $transpilationResult->getLines();
 
-        foreach ($postLines as $line) {
-            $executableCall .= $line . "\n";
-        }
-
         array_walk($lines, function (string &$line) {
             $line .= ';';
         });
@@ -73,6 +69,11 @@ class ExecutableCallFactory
         );
 
         $executableCall .= $content;
+
+        foreach ($postLines as $line) {
+            $executableCall .= "\n";
+            $executableCall .= $line;
+        }
 
         return $executableCall;
     }
