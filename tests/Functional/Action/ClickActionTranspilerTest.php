@@ -7,16 +7,16 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilTranspiler\Action\WaitForActionTranspiler;
-use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionFunctionalDataProviderTrait;
+use webignition\BasilTranspiler\Action\ClickActionTranspiler;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 
-class WaitForActionTranspilerTest extends AbstractTestCase
+class ClickActionTranspilerTest extends AbstractTestCase
 {
-    use WaitForActionFunctionalDataProviderTrait;
+    use ClickActionFunctionalDataProviderTrait;
 
     /**
-     * @var WaitForActionTranspiler
+     * @var ClickActionTranspiler
      */
     private $transpiler;
 
@@ -24,11 +24,11 @@ class WaitForActionTranspilerTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->transpiler = WaitForActionTranspiler::createTranspiler();
+        $this->transpiler = ClickActionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider waitForActionFunctionalDataProvider
+     * @dataProvider clickActionFunctionalDataProvider
      */
     public function testTranspileForExecutableActions(
         ActionInterface $action,
@@ -48,18 +48,6 @@ class WaitForActionTranspilerTest extends AbstractTestCase
             $additionalPostLines,
             $additionalUseStatements
         );
-
-        $executableCallLines = explode("\n", $executableCall);
-        $waitForLine = array_pop($executableCallLines);
-
-        $executableCallLines = array_merge($executableCallLines, [
-            '$before = microtime(true);',
-            $waitForLine,
-            '$executionDurationInMilliseconds = (microtime(true) - $before) * 1000;',
-            '$this->assertGreaterThan(100, $executionDurationInMilliseconds);',
-        ]);
-
-        $executableCall = implode("\n", $executableCallLines);
 
         eval($executableCall);
     }

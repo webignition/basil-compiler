@@ -7,8 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilTranspiler\Action\ActionTranspiler;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Action\ClickActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionDataProviderTrait;
@@ -18,7 +17,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataPr
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
-class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
+class ClickActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
@@ -29,7 +28,7 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     use ClickActionDataProviderTrait;
 
     /**
-     * @var ActionTranspiler
+     * @var ClickActionTranspiler
      */
     private $transpiler;
 
@@ -37,15 +36,10 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = ActionTranspiler::createTranspiler();
+        $this->transpiler = ClickActionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider waitActionDataProvider
-     * @dataProvider waitForActionDataProvider
-     * @dataProvider backActionDataProvider
-     * @dataProvider forwardActionDataProvider
-     * @dataProvider reloadActionDataProvider
      * @dataProvider clickActionDataProvider
      */
     public function testHandlesDoesHandle(ActionInterface $model)
@@ -54,6 +48,11 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider waitActionDataProvider
+     * @dataProvider backActionDataProvider
+     * @dataProvider forwardActionDataProvider
+     * @dataProvider reloadActionDataProvider
+     * @dataProvider waitForActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
@@ -62,27 +61,23 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider waitActionDataProvider
-     * @dataProvider waitForActionDataProvider
-     * @dataProvider backActionDataProvider
-     * @dataProvider forwardActionDataProvider
-     * @dataProvider reloadActionDataProvider
-     * @dataProvider clickActionDataProvider
+     * @dataProvider transpileNonTranspilableModelDataProvider
      */
-    public function testTranspileDoesNotFail(ActionInterface $model)
-    {
-        $transpilationResult = $this->transpiler->transpile($model);
-
-        $this->assertInstanceOf(TranspilationResultInterface::class, $transpilationResult);
-    }
-
-    public function testTranspileNonTranspilableModel()
+    public function testTranspileNonTranspilableModel(object $model, string $expectedExceptionMessage)
     {
         $this->expectException(NonTranspilableModelException::class);
-        $this->expectExceptionMessage('Non-transpilable model "stdClass"');
-
-        $model = new \stdClass();
+        $this->expectExceptionMessage($expectedExceptionMessage);
 
         $this->transpiler->transpile($model);
+    }
+
+    public function transpileNonTranspilableModelDataProvider(): array
+    {
+        return [
+            'wrong object type' => [
+                'model' => new \stdClass(),
+                'expectedExceptionMessage' => 'Non-transpilable model "' . \stdClass::class . '"',
+            ],
+        ];
     }
 }

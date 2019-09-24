@@ -1,0 +1,93 @@
+<?php declare(strict_types=1);
+
+namespace webignition\BasilTranspiler\Action;
+
+use webignition\BasilModel\Action\ActionTypes;
+use webignition\BasilModel\Action\InteractionActionInterface;
+use webignition\BasilModel\Identifier\DomIdentifierInterface;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilerInterface;
+
+class ClickActionTranspiler implements TranspilerInterface
+{
+    private $variableAssignmentCallFactory;
+    private $transpilationResultComposer;
+
+    public function __construct(
+        VariableAssignmentCallFactory $variableAssignmentCallFactory,
+        TranspilationResultComposer $transpilationResultComposer
+    ) {
+        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->transpilationResultComposer = $transpilationResultComposer;
+    }
+
+    public static function createTranspiler(): ClickActionTranspiler
+    {
+        return new ClickActionTranspiler(
+            VariableAssignmentCallFactory::createFactory(),
+            TranspilationResultComposer::create()
+        );
+    }
+
+    public function handles(object $model): bool
+    {
+        return $model instanceof InteractionActionInterface && ActionTypes::CLICK === $model->getType();
+    }
+
+    /**
+     * @param object $model
+     *
+     * @return TranspilationResultInterface
+     *
+     * @throws NonTranspilableModelException
+     */
+    public function transpile(object $model): TranspilationResultInterface
+    {
+        if (!$model instanceof InteractionActionInterface) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        if (ActionTypes::CLICK !== $model->getType()) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        $identifier = $model->getIdentifier();
+
+        if (!$identifier instanceof DomIdentifierInterface) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        if (null !== $identifier->getAttributeName()) {
+            throw new NonTranspilableModelException($model);
+        }
+
+        $variablePlaceholders = new VariablePlaceholderCollection();
+        $elementLocatorPlaceholder = $variablePlaceholders->create('ELEMENT_LOCATOR');
+        $elementPlaceholder = $variablePlaceholders->create('ELEMENT');
+
+        $elementVariableAssignmentCall = $this->variableAssignmentCallFactory->createForElement(
+            $identifier,
+            $elementLocatorPlaceholder,
+            $elementPlaceholder
+        );
+
+        $statements = $elementVariableAssignmentCall->getLines();
+        $statements[] = sprintf('%s->click()', (string) $elementPlaceholder);
+
+        $calls = [
+            $elementVariableAssignmentCall,
+        ];
+
+        return $this->transpilationResultComposer->compose(
+            $statements,
+            $calls,
+            new UseStatementCollection(),
+            $variablePlaceholders
+        );
+    }
+}

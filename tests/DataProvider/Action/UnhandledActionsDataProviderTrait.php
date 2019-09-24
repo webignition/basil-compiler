@@ -47,11 +47,6 @@ trait UnhandledActionsDataProviderTrait
                     'set ".selector" to $env.KEY'
                 ),
             ],
-            'interaction action (click), element identifier' => [
-                'value' => $actionFactory->createFromActionString(
-                    'click ".selector"'
-                ),
-            ],
             'interaction action (submit), element identifier' => [
                 'value' => $actionFactory->createFromActionString(
                     'submit ".selector"'
