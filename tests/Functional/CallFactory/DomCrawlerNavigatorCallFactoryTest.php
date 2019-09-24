@@ -19,7 +19,6 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
-use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
 use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
@@ -141,9 +140,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             'css selector, no parent' => [
                 'fixture' => '/basic.html',
                 'arguments' => new TranspilationResult(
-                    ['new ElementLocator(LocatorType::CSS_SELECTOR, \'input\', 1)'],
+                    ['new ElementLocator(\'input\', 1)'],
                     new UseStatementCollection([
-                        new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
@@ -163,11 +161,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'fixture' => '/basic.html',
                 'arguments' => new TranspilationResult(
                     [
-                        'new ElementLocator(LocatorType::CSS_SELECTOR, \'input\', 1), ' .
-                        'new ElementLocator(LocatorType::CSS_SELECTOR, \'form[action="/action2"]\', 1)'
+                        'new ElementLocator(\'input\', 1), ' .
+                        'new ElementLocator(\'form[action="/action2"]\', 1)'
                     ],
                     new UseStatementCollection([
-                        new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
@@ -288,9 +285,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             'not hasElement: css selector, no parent' => [
                 'fixture' => '/basic.html',
                 'arguments' => new TranspilationResult(
-                    ['new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1)'],
+                    ['new ElementLocator(\'.selector\', 1)'],
                     new UseStatementCollection([
-                        new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
@@ -301,11 +297,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'fixture' => '/basic.html',
                 'arguments' => new TranspilationResult(
                     [
-                        'new ElementLocator(LocatorType::CSS_SELECTOR, \'.selector\', 1), ' .
-                        'new ElementLocator(LocatorType::CSS_SELECTOR, \'.parent\', 1)'
+                        'new ElementLocator(\'.selector\', 1), ' .
+                        'new ElementLocator(\'.parent\', 1)'
                     ],
                     new UseStatementCollection([
-                        new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
@@ -315,9 +310,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             'hasElement: css selector, no parent' => [
                 'fixture' => '/basic.html',
                 'arguments' => new TranspilationResult(
-                    ['new ElementLocator(LocatorType::CSS_SELECTOR, \'h1\', 1)'],
+                    ['new ElementLocator(\'h1\', 1)'],
                     new UseStatementCollection([
-                        new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
@@ -328,11 +322,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'fixture' => '/basic.html',
                 'arguments' => new TranspilationResult(
                     [
-                        'new ElementLocator(LocatorType::CSS_SELECTOR, \'input\', 1), ' .
-                        'new ElementLocator(LocatorType::CSS_SELECTOR, \'form[action="/action2"]\', 1)'
+                        'new ElementLocator(\'input\', 1), ' .
+                        'new ElementLocator(\'form[action="/action2"]\', 1)'
                     ],
                     new UseStatementCollection([
-                        new UseStatement(LocatorType::class),
                         new UseStatement(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()

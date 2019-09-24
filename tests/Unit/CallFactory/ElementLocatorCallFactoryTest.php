@@ -14,7 +14,6 @@ use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
-use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -48,7 +47,6 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             [
                 new UseStatement(ElementLocator::class),
-                new UseStatement(LocatorType::class),
             ],
             $transpilationResult->getUseStatements()->getAll()
         );
@@ -56,6 +54,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $transpilationResult->getVariablePlaceholders()->getAll());
 
         $executableCall = $this->executableCallFactory->createWithReturn($transpilationResult);
+
         $elementLocator = eval($executableCall);
 
         $this->assertEquals($expectedElementLocator, $elementLocator);
@@ -68,57 +67,33 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         return [
             'css selector, no quotes in selector, position default' => [
                 'elementIdentifier' => new DomIdentifier($cssSelectorElementExpression),
-                'expectedElementLocator' => new ElementLocator(
-                    LocatorType::CSS_SELECTOR,
-                    '.selector',
-                    null
-                ),
+                'expectedElementLocator' => new ElementLocator('.selector'),
             ],
             'css selector, no quotes in selector, position 1' => [
                 'elementIdentifier' => (new DomIdentifier($cssSelectorElementExpression))->withPosition(1),
-                'expectedElementLocator' => new ElementLocator(
-                    LocatorType::CSS_SELECTOR,
-                    '.selector',
-                    1
-                ),
+                'expectedElementLocator' => new ElementLocator('.selector', 1),
             ],
             'css selector, no quotes in selector, position 2' => [
                 'elementIdentifier' => (new DomIdentifier($cssSelectorElementExpression))->withPosition(2),
-                'expectedElementLocator' => new ElementLocator(
-                    LocatorType::CSS_SELECTOR,
-                    '.selector',
-                    2
-                ),
+                'expectedElementLocator' => new ElementLocator('.selector', 2),
             ],
             'css selector, double quotes in selector, position default' => [
                 'elementIdentifier' => new DomIdentifier(
                     new ElementExpression('input[name="email"]', ElementExpressionType::CSS_SELECTOR)
                 ),
-                'expectedElementLocator' => new ElementLocator(
-                    LocatorType::CSS_SELECTOR,
-                    'input[name="email"]',
-                    null
-                ),
+                'expectedElementLocator' => new ElementLocator('input[name="email"]'),
             ],
             'css selector, single quotes in selector, position default' => [
                 'elementIdentifier' => new DomIdentifier(
                     new ElementExpression("input[name='email']", ElementExpressionType::CSS_SELECTOR)
                 ),
-                'expectedElementLocator' => new ElementLocator(
-                    LocatorType::CSS_SELECTOR,
-                    "input[name='email']",
-                    null
-                ),
+                'expectedElementLocator' => new ElementLocator("input[name='email']"),
             ],
             'css selector, escaped single quotes in selector, position default' => [
                 'elementIdentifier' => new DomIdentifier(
                     new ElementExpression("input[value='\'quoted\'']", ElementExpressionType::CSS_SELECTOR)
                 ),
-                'expectedElementLocator' => new ElementLocator(
-                    LocatorType::CSS_SELECTOR,
-                    "input[value='\'quoted\'']",
-                    null
-                ),
+                'expectedElementLocator' => new ElementLocator("input[value='\'quoted\'']"),
             ],
         ];
     }

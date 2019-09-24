@@ -16,7 +16,6 @@ use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
-use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -48,7 +47,6 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->expectedUseStatements = new UseStatementCollection([
             new UseStatement(ElementLocator::class),
-            new UseStatement(LocatorType::class),
         ]);
 
         $this->expectedPlaceholders = VariablePlaceholderCollection::createCollection([

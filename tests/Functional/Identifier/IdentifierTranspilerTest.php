@@ -19,7 +19,6 @@ use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
-use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
 use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
@@ -51,7 +50,6 @@ class IdentifierTranspilerTest extends AbstractTestCase
 
         $expectedUseStatements = new UseStatementCollection([
             new UseStatement(ElementLocator::class),
-            new UseStatement(LocatorType::class),
         ]);
 
         $this->assertEquals($expectedUseStatements, $transpilationResult->getUseStatements());
