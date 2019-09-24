@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Click</title>
+</head>
+<body>
+
+<a href="/index.html" id="link-to-index">link to index</a>
+<form id="form" data-submitted="false">
+    <input type="submit" data-clicked="false" data-submitted="false">
+</form>
+
+<script>
+    let submitButton = document.querySelector('input[type="submit"]');
+    submitButton.addEventListener('click', function (event) {
+        let element = event.target;
+        element.setAttribute('data-clicked', 'true');
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    submitButton.addEventListener('submit', function (event) {
+        submitButton.setAttribute('data-submitted', 'true');
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    let form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        form.setAttribute('data-submitted', 'true');
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+</script>
+</body>
+</html>

@@ -7,31 +7,15 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
 use webignition\BasilModelFactory\Action\ActionFactory;
 
-trait ClickActionFunctionalDataProviderTrait
+trait SubmitActionFunctionalDataProviderTrait
 {
-    public function clickActionFunctionalDataProvider(): array
+    public function submitActionFunctionalDataProvider(): array
     {
         $actionFactory = ActionFactory::createFactory();
 
         return [
-            'interaction action (click), link' => [
-                'action' => $actionFactory->createFromActionString('click "#link-to-index"'),
-                'fixture' => '/action-click-submit.html',
-                'variableIdentifiers' => [
-                    'ELEMENT_LOCATOR' => '$elementLocator',
-                    'HAS' => '$has',
-                    'ELEMENT' => '$element',
-                ],
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
-                    '$this->assertEquals("Click", self::$client->getTitle());',
-                ],
-                'additionalPostLines' => [
-                    '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
-                ],
-            ],
-            'interaction action (click), submit button' => [
-                'action' => $actionFactory->createFromActionString('click "#form input[type=\'submit\']"'),
+            'interaction action (submit), form submit button' => [
+                'action' => $actionFactory->createFromActionString('submit "#form input[type=\'submit\']"'),
                 'fixture' => '/action-click-submit.html',
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
@@ -42,10 +26,34 @@ trait ClickActionFunctionalDataProviderTrait
                 'additionalPreLines' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                     '$submitButton = $crawler->filter(\'#form input[type="submit"]\')->getElement(0);',
-                    '$this->assertEquals("false", $submitButton->getAttribute(\'data-clicked\'));',
+                    '$form = $crawler->filter(\'#form\')->getElement(0);',
+                    '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
+                    '$this->assertEquals("false", $form->getAttribute(\'data-submitted\'));',
                 ],
                 'additionalPostLines' => [
-                    '$this->assertEquals("true", $submitButton->getAttribute(\'data-clicked\'));',
+                    '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
+                    '$this->assertEquals("true", $form->getAttribute(\'data-submitted\'));',
+                ],
+            ],
+            'interaction action (submit), form' => [
+                'action' => $actionFactory->createFromActionString('submit "#form"'),
+                'fixture' => '/action-click-submit.html',
+                'variableIdentifiers' => [
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                ],
+                'additionalUseStatements' => [],
+                'additionalPreLines' => [
+                    '$this->assertEquals("Click", self::$client->getTitle());',
+                    '$submitButton = $crawler->filter(\'#form input[type="submit"]\')->getElement(0);',
+                    '$form = $crawler->filter(\'#form\')->getElement(0);',
+                    '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
+                    '$this->assertEquals("false", $form->getAttribute(\'data-submitted\'));',
+                ],
+                'additionalPostLines' => [
+                    '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
+                    '$this->assertEquals("true", $form->getAttribute(\'data-submitted\'));',
                 ],
             ],
         ];
