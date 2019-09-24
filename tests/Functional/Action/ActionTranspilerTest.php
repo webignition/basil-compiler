@@ -8,6 +8,7 @@ namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use webignition\BasilModel\Action\ActionInterface;
+use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
@@ -66,7 +67,9 @@ class ActionTranspilerTest extends AbstractTestCase
             $additionalUseStatements
         );
 
-        $this->expectNotToPerformAssertions();
+        if (!in_array($action->getType(), [ActionTypes::CLICK, ActionTypes::SUBMIT])) {
+            $this->expectNotToPerformAssertions();
+        }
 
         eval($executableCall);
     }
