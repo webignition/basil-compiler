@@ -49,8 +49,6 @@ class SubmitActionTranspilerTest extends AbstractTestCase
             $additionalUseStatements
         );
 
-        echo $executableCall . "\n\n";
-
         eval($executableCall);
     }
 }
