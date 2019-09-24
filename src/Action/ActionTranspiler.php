@@ -15,6 +15,7 @@ class ActionTranspiler extends AbstractDelegatingTranspiler implements Transpile
                 WaitActionTranspiler::createTranspiler(),
                 WaitForActionTranspiler::createTranspiler(),
                 BrowserOperationActionTranspiler::createTranspiler(),
+                ClickActionTranspiler::createTranspiler(),
             ]
         );
     }

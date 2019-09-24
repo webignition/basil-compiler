@@ -10,6 +10,7 @@ use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\WaitActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ReloadActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataProviderTrait;
@@ -24,6 +25,7 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     use BackActionDataProviderTrait;
     use ForwardActionDataProviderTrait;
     use ReloadActionDataProviderTrait;
+    use ClickActionDataProviderTrait;
 
     /**
      * @var WaitActionTranspiler
@@ -50,6 +52,7 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider backActionDataProvider
      * @dataProvider forwardActionDataProvider
      * @dataProvider reloadActionDataProvider
+     * @dataProvider clickActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
