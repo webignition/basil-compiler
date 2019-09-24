@@ -7,11 +7,11 @@ use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\TranspilationResultComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
-class ClickActionTranspiler extends AbstractInteractionActionTranspiler implements TranspilerInterface
+class SubmitActionTranspiler extends AbstractInteractionActionTranspiler implements TranspilerInterface
 {
-    public static function createTranspiler(): ClickActionTranspiler
+    public static function createTranspiler(): SubmitActionTranspiler
     {
-        return new ClickActionTranspiler(
+        return new SubmitActionTranspiler(
             VariableAssignmentCallFactory::createFactory(),
             TranspilationResultComposer::create()
         );
@@ -19,11 +19,11 @@ class ClickActionTranspiler extends AbstractInteractionActionTranspiler implemen
 
     protected function getHandledActionType(): string
     {
-        return ActionTypes::CLICK;
+        return ActionTypes::SUBMIT;
     }
 
     protected function getElementActionMethod(): string
     {
-        return 'click';
+        return 'submit';
     }
 }

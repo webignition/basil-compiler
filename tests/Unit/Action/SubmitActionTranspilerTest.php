@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilTranspiler\Action\WaitActionTranspiler;
+use webignition\BasilTranspiler\Action\SubmitActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionDataProviderTrait;
@@ -18,7 +18,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataPr
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
-class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
+class SubmitActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
@@ -30,7 +30,7 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     use SubmitActionDataProviderTrait;
 
     /**
-     * @var WaitActionTranspiler
+     * @var SubmitActionTranspiler
      */
     private $transpiler;
 
@@ -38,11 +38,11 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = WaitActionTranspiler::createTranspiler();
+        $this->transpiler = SubmitActionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider waitActionDataProvider
+     * @dataProvider submitActionDataProvider
      */
     public function testHandlesDoesHandle(ActionInterface $model)
     {
@@ -50,12 +50,12 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider waitForActionDataProvider
+     * @dataProvider waitActionDataProvider
      * @dataProvider backActionDataProvider
      * @dataProvider forwardActionDataProvider
      * @dataProvider reloadActionDataProvider
      * @dataProvider clickActionDataProvider
-     * @dataProvider submitActionDataProvider
+     * @dataProvider waitForActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
