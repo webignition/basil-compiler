@@ -3,7 +3,6 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
@@ -12,14 +11,10 @@ use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\PlaceholderFactory;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
-use webignition\SymfonyDomCrawlerNavigator\Model\LocatorType;
 
 class ElementLocatorCallFactory
 {
     const TEMPLATE = 'new ElementLocator(%s)';
-    const REQUIRED_ARGUMENTS_TEMPLATE = '%s, \'%s\'';
-    const CSS_SELECTOR_LOCATOR_TYPE = 'LocatorType::CSS_SELECTOR';
-    const XPATH_EXPRESSION_LOCATOR_TYPE = 'LocatorType::XPATH_EXPRESSION';
 
     private $placeholderFactory;
     private $singleQuotedStringEscaper;
@@ -49,15 +44,7 @@ class ElementLocatorCallFactory
     {
         $elementExpression = $elementIdentifier->getElementExpression();
 
-        $locatorTypeArgument = ElementExpressionType::CSS_SELECTOR === $elementExpression->getType()
-            ? self::CSS_SELECTOR_LOCATOR_TYPE
-            : self::XPATH_EXPRESSION_LOCATOR_TYPE;
-
-        $arguments = sprintf(
-            self::REQUIRED_ARGUMENTS_TEMPLATE,
-            $locatorTypeArgument,
-            $this->singleQuotedStringEscaper->escape($elementExpression->getExpression())
-        );
+        $arguments = '\'' . $this->singleQuotedStringEscaper->escape($elementExpression->getExpression()) . '\'';
 
         $position = $elementIdentifier->getPosition();
         if (null !== $position) {
@@ -72,7 +59,6 @@ class ElementLocatorCallFactory
             ],
             new UseStatementCollection([
                 new UseStatement(ElementLocator::class),
-                new UseStatement(LocatorType::class),
             ]),
             new VariablePlaceholderCollection()
         );

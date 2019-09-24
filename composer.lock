@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ead63b4c1f7a381c265708bd6883d29",
+    "content-hash": "9862f9ebe6168a8386ef999a53516d11",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -839,23 +839,23 @@
         },
         {
             "name": "webignition/symfony-panther-dom-crawler-navigator",
-            "version": "0.8",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/symfony-panther-dom-crawler-navigator.git",
-                "reference": "8172cceb3daa85ce0d891c005d70ca37ea8cc718"
+                "reference": "5918f1b5387f9cbc0cff085ea8f557d0836674dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/8172cceb3daa85ce0d891c005d70ca37ea8cc718",
-                "reference": "8172cceb3daa85ce0d891c005d70ca37ea8cc718",
+                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/5918f1b5387f9cbc0cff085ea8f557d0836674dc",
+                "reference": "5918f1b5387f9cbc0cff085ea8f557d0836674dc",
                 "shasum": ""
             },
             "require": {
                 "facebook/webdriver": "^1.7.1",
                 "php": ">=7.2",
                 "symfony/panther": "^0.5",
-                "webignition/web-driver-element-collection": ">=0.2,<1"
+                "webignition/web-driver-element-collection": ">=0.5,<1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.2",
@@ -882,20 +882,20 @@
             ],
             "description": "Navigate around a symfony panther dom crawler using convenience methods",
             "homepage": "https://github.com/webignition/symfony-panther-dom-crawler-navigatorr",
-            "time": "2019-09-03T09:55:49+00:00"
+            "time": "2019-09-24T16:12:06+00:00"
         },
         {
             "name": "webignition/web-driver-element-collection",
-            "version": "0.4",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-driver-element-collection.git",
-                "reference": "cbbbf9ae7d1ea20530fea8d1307c6832390883da"
+                "reference": "54eff4b3ee0ab88da2d77f323b8cd6894a156b47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-driver-element-collection/zipball/cbbbf9ae7d1ea20530fea8d1307c6832390883da",
-                "reference": "cbbbf9ae7d1ea20530fea8d1307c6832390883da",
+                "url": "https://api.github.com/repos/webignition/web-driver-element-collection/zipball/54eff4b3ee0ab88da2d77f323b8cd6894a156b47",
+                "reference": "54eff4b3ee0ab88da2d77f323b8cd6894a156b47",
                 "shasum": ""
             },
             "require": {
@@ -927,26 +927,26 @@
             ],
             "description": "A collection of Facebook\\WebDriver\\WebDriverElement",
             "homepage": "https://github.com/webignition/web-driver-element-collection",
-            "time": "2019-09-02T15:21:15+00:00"
+            "time": "2019-09-24T16:55:46+00:00"
         },
         {
             "name": "webignition/webdriver-element-inspector",
-            "version": "0.2",
+            "version": "0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/webdriver-element-inspector.git",
-                "reference": "a27dfc5c0a87e8e56533c56d449b3b876e809864"
+                "reference": "b17075471e8b28afab77c6de59fc00590ab9f8ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/a27dfc5c0a87e8e56533c56d449b3b876e809864",
-                "reference": "a27dfc5c0a87e8e56533c56d449b3b876e809864",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/b17075471e8b28afab77c6de59fc00590ab9f8ae",
+                "reference": "b17075471e8b28afab77c6de59fc00590ab9f8ae",
                 "shasum": ""
             },
             "require": {
                 "facebook/webdriver": "^1.7.1",
                 "php": ">=7.2",
-                "webignition/web-driver-element-collection": "^0.4.0"
+                "webignition/web-driver-element-collection": ">=0.6,<1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.2",
@@ -954,7 +954,8 @@
                 "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "symfony/panther": "^0.5"
+                "symfony/panther": "^0.5",
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.10,<1"
             },
             "type": "library",
             "autoload": {
@@ -979,7 +980,7 @@
                 "webdriver",
                 "webdriver-element"
             ],
-            "time": "2019-09-03T15:14:41+00:00"
+            "time": "2019-09-24T17:12:37+00:00"
         }
     ],
     "packages-dev": [
