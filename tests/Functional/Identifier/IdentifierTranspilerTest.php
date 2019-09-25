@@ -16,7 +16,7 @@ use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
+use webignition\DomElementLocator\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
 use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
