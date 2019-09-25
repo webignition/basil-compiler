@@ -8,8 +8,6 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
@@ -62,37 +60,31 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function createConstructorCallDataProvider(): array
     {
-        $cssSelectorElementExpression = new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR);
+        $elementLocator = '.selector';
 
         return [
             'css selector, no quotes in selector, position default' => [
-                'elementIdentifier' => new DomIdentifier($cssSelectorElementExpression),
+                'elementIdentifier' => new DomIdentifier($elementLocator),
                 'expectedElementLocator' => new ElementLocator('.selector'),
             ],
             'css selector, no quotes in selector, position 1' => [
-                'elementIdentifier' => (new DomIdentifier($cssSelectorElementExpression))->withPosition(1),
+                'elementIdentifier' => (new DomIdentifier($elementLocator))->withOrdinalPosition(1),
                 'expectedElementLocator' => new ElementLocator('.selector', 1),
             ],
             'css selector, no quotes in selector, position 2' => [
-                'elementIdentifier' => (new DomIdentifier($cssSelectorElementExpression))->withPosition(2),
+                'elementIdentifier' => (new DomIdentifier($elementLocator))->withOrdinalPosition(2),
                 'expectedElementLocator' => new ElementLocator('.selector', 2),
             ],
             'css selector, double quotes in selector, position default' => [
-                'elementIdentifier' => new DomIdentifier(
-                    new ElementExpression('input[name="email"]', ElementExpressionType::CSS_SELECTOR)
-                ),
+                'elementIdentifier' => new DomIdentifier('input[name="email"]'),
                 'expectedElementLocator' => new ElementLocator('input[name="email"]'),
             ],
             'css selector, single quotes in selector, position default' => [
-                'elementIdentifier' => new DomIdentifier(
-                    new ElementExpression("input[name='email']", ElementExpressionType::CSS_SELECTOR)
-                ),
+                'elementIdentifier' => new DomIdentifier("input[name='email']"),
                 'expectedElementLocator' => new ElementLocator("input[name='email']"),
             ],
             'css selector, escaped single quotes in selector, position default' => [
-                'elementIdentifier' => new DomIdentifier(
-                    new ElementExpression("input[value='\'quoted\'']", ElementExpressionType::CSS_SELECTOR)
-                ),
+                'elementIdentifier' => new DomIdentifier("input[value='\'quoted\'']"),
                 'expectedElementLocator' => new ElementLocator("input[value='\'quoted\'']"),
             ],
         ];

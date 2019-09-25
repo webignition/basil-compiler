@@ -5,7 +5,6 @@ namespace webignition\BasilTranspiler\Action;
 use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
@@ -57,9 +56,9 @@ class WaitForActionTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $elementExpression = $identifier->getElementExpression();
+        $elementLocator = $identifier->getLocator();
 
-        if (ElementExpressionType::CSS_SELECTOR !== $elementExpression->getType()) {
+        if ('/' === $elementLocator[0]) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -73,7 +72,7 @@ class WaitForActionTranspiler implements TranspilerInterface
                     '%s = %s->waitFor(\'%s\')',
                     $pantherCrawlerPlaceholder,
                     $pantherClientPlaceholder,
-                    $this->singleQuotedStringEscaper->escape($elementExpression->getExpression())
+                    $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
             ],
             new UseStatementCollection(),

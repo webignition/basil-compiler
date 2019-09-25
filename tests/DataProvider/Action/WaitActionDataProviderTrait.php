@@ -8,8 +8,6 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModelFactory\Action\ActionFactory;
 
 trait WaitActionDataProviderTrait
@@ -25,20 +23,14 @@ trait WaitActionDataProviderTrait
             'wait action, element value' => [
                 'action' => new WaitAction(
                     'wait $elements.element_name',
-                    new DomIdentifierValue(
-                        new DomIdentifier(
-                            new ElementExpression('.duration-selector', ElementExpressionType::CSS_SELECTOR)
-                        )
-                    )
+                    new DomIdentifierValue(new DomIdentifier('.duration-selector'))
                 ),
             ],
             'wait action, attribute value' => [
                 'action' => new WaitAction(
                     'wait $elements.element_name',
                     new DomIdentifierValue(
-                        (new DomIdentifier(
-                            new ElementExpression('.duration-selector', ElementExpressionType::CSS_SELECTOR)
-                        ))->withAttributeName('attribute_name')
+                        (new DomIdentifier('.duration-selector'))->withAttributeName('attribute_name')
                     )
                 ),
             ],

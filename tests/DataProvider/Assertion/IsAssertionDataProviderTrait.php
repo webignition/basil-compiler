@@ -11,8 +11,6 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
 use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
 use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModelFactory\AssertionFactory;
@@ -27,18 +25,12 @@ trait IsAssertionDataProviderTrait
 
         $environmentValue = new ObjectValue(ObjectValueType::ENVIRONMENT_PARAMETER, '$env.KEY', 'KEY');
 
-        $elementValue = new DomIdentifierValue(
-            new DomIdentifier(
-                new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
-            )
-        );
+        $elementValue = new DomIdentifierValue(new DomIdentifier('.selector'));
 
         $pageProperty = new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url');
 
         $attributeValue = new DomIdentifierValue(
-            (new DomIdentifier(
-                new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR)
-            ))->withAttributeName('attribute_name')
+            (new DomIdentifier('.selector'))->withAttributeName('attribute_name')
         );
 
         return [

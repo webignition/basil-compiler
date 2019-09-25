@@ -12,8 +12,6 @@ use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionFunctionalDataProviderTrait;
@@ -115,11 +113,7 @@ class ActionTranspilerTest extends AbstractTestCase
             'wait action, element identifier examined value, element does not exist' => [
                 'action' => new WaitAction(
                     'wait $elements.element_name',
-                    new DomIdentifierValue(
-                        new DomIdentifier(
-                            new ElementExpression('.non-existent', ElementExpressionType::CSS_SELECTOR)
-                        )
-                    )
+                    new DomIdentifierValue(new DomIdentifier('.non-existent'))
                 ),
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
@@ -134,9 +128,7 @@ class ActionTranspilerTest extends AbstractTestCase
                 'action' => new WaitAction(
                     'wait $elements.element_name.attribute_name',
                     new DomIdentifierValue(
-                        (new DomIdentifier(
-                            new ElementExpression('.non-existent', ElementExpressionType::CSS_SELECTOR)
-                        ))->withAttributeName('attribute_name')
+                        (new DomIdentifier('.non-existent'))->withAttributeName('attribute_name')
                     )
                 ),
                 'variableIdentifiers' => [

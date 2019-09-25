@@ -9,8 +9,6 @@ namespace webignition\BasilTranspiler\Tests\Functional\Identifier;
 use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\IdentifierInterface;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Identifier\IdentifierTranspiler;
 use webignition\BasilTranspiler\Model\UseStatement;
@@ -76,9 +74,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
         return [
             'element identifier (css selector), selector only' => [
                 'fixture' => '/basic.html',
-                'identifier' => TestIdentifierFactory::createElementIdentifier(
-                    new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
-                ),
+                'identifier' => TestIdentifierFactory::createElementIdentifier('.p-1'),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'COLLECTION' => '$collection',
@@ -105,9 +101,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
             ],
             'attribute identifier, selector only' => [
                 'fixture' => '/basic.html',
-                'identifier' => (new DomIdentifier(
-                    new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                ))->withAttributeName('id'),
+                'identifier' => (new DomIdentifier('.foo'))->withAttributeName('id'),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ATTRIBUTE' => '$attribute',
                     'ELEMENT' => '$element',
