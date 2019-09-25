@@ -6,15 +6,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
-use webignition\BasilModel\Identifier\DomIdentifier;
-use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResult;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -58,12 +53,9 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserPropertyDataProvider
-     * @dataProvider cssSelectorValueDataProvider
-     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
-     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
@@ -71,7 +63,10 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @dataProvider cssSelectorValueDataProvider
+     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider handlesDoesNotHandleDataProvider
+     * @dataProvider xpathExpressionValueDataProvider
      * @dataProvider unhandledValueDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)
@@ -98,8 +93,6 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function transpileDataProvider(): array
     {
-        $cssSelector = new ElementExpression('.selector', ElementExpressionType::CSS_SELECTOR);
-
         return [
             'literal string value: string' => [
                 'value' => new LiteralValue('value'),
@@ -129,48 +122,6 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     VariablePlaceholderCollection::createCollection([
                         VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                     ])
-                ),
-            ],
-            'element identifier, css selector' => [
-                'value' => new DomIdentifierValue(
-                    new DomIdentifier($cssSelector)
-                ),
-                'expectedTranspilationResult' => new TranspilationResult(
-                    ['".selector"'],
-                    new UseStatementCollection(),
-                    new VariablePlaceholderCollection()
-                ),
-            ],
-            'element identifier, css selector with non-default position' => [
-                'value' => new DomIdentifierValue(
-                    (new DomIdentifier($cssSelector))->withPosition(2)
-                ),
-                'expectedTranspilationResult' => new TranspilationResult(
-                    ['".selector"'],
-                    new UseStatementCollection(),
-                    new VariablePlaceholderCollection()
-                ),
-            ],
-            'element identifier, css selector with name' => [
-                'value' => new DomIdentifierValue(
-                    TestIdentifierFactory::createElementIdentifier($cssSelector, null, 'element_name')
-                ),
-                'expectedTranspilationResult' => new TranspilationResult(
-                    ['".selector"'],
-                    new UseStatementCollection(),
-                    new VariablePlaceholderCollection()
-                ),
-            ],
-            'element identifier, xpath expression' => [
-                'value' => new DomIdentifierValue(
-                    new DomIdentifier(
-                        new ElementExpression('//h1', ElementExpressionType::XPATH_EXPRESSION)
-                    )
-                ),
-                'expectedTranspilationResult' => new TranspilationResult(
-                    ['"//h1"'],
-                    new UseStatementCollection(),
-                    new VariablePlaceholderCollection()
                 ),
             ],
             'browser object value, size' => [
