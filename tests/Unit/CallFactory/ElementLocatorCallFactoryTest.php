@@ -11,7 +11,8 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
-use webignition\SymfonyDomCrawlerNavigator\Model\ElementLocator;
+use webignition\DomElementLocator\ElementLocator;
+use webignition\DomElementLocator\ElementLocatorInterface;
 
 class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,7 +39,7 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateConstructorCall(
         DomIdentifierInterface $elementIdentifier,
-        ElementLocator $expectedElementLocator
+        ElementLocatorInterface $expectedElementLocator
     ) {
         $transpilationResult = $this->factory->createConstructorCall($elementIdentifier);
 
@@ -68,11 +69,11 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 'expectedElementLocator' => new ElementLocator('.selector'),
             ],
             'css selector, no quotes in selector, position 1' => [
-                'elementIdentifier' => (new DomIdentifier($elementLocator))->withOrdinalPosition(1),
+                'elementIdentifier' => new DomIdentifier($elementLocator, 1),
                 'expectedElementLocator' => new ElementLocator('.selector', 1),
             ],
             'css selector, no quotes in selector, position 2' => [
-                'elementIdentifier' => (new DomIdentifier($elementLocator))->withOrdinalPosition(2),
+                'elementIdentifier' => new DomIdentifier($elementLocator, 2),
                 'expectedElementLocator' => new ElementLocator('.selector', 2),
             ],
             'css selector, double quotes in selector, position default' => [
