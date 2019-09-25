@@ -11,8 +11,6 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
 use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
 use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\VariableNames;
@@ -104,19 +102,11 @@ trait IsAssertionFunctionalDataProviderTrait
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" is $elements.foo',
                     new AssertableExaminedValue(
-                        new DomIdentifierValue(
-                            new DomIdentifier(
-                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                            )
-                        )
+                        new DomIdentifierValue(new DomIdentifier('.foo'))
                     ),
                     AssertionComparison::IS,
                     new AssertableExpectedValue(
-                        new DomIdentifierValue(
-                            new DomIdentifier(
-                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                            )
-                        )
+                        new DomIdentifierValue(new DomIdentifier('.foo'))
                     )
                 ),
                 'variableIdentifiers' => [
@@ -139,18 +129,12 @@ trait IsAssertionFunctionalDataProviderTrait
                 'assertion' => new AssertableComparisonAssertion(
                     '".foo" is $elements.contains_foo.data-foo',
                     new AssertableExaminedValue(
-                        new DomIdentifierValue(
-                            new DomIdentifier(
-                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                            )
-                        )
+                        new DomIdentifierValue(new DomIdentifier('.foo'))
                     ),
                     AssertionComparison::IS,
                     new AssertableExpectedValue(
                         new DomIdentifierValue(
-                            (new DomIdentifier(
-                                new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
-                            ))->withAttributeName('data-foo')
+                            (new DomIdentifier('.contains-foo'))->withAttributeName('data-foo')
                         )
                     )
                 ),

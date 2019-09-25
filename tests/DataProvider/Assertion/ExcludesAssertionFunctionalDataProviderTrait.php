@@ -11,8 +11,6 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
 use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
 use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\VariableNames;
@@ -105,17 +103,13 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                     '".p-1" excludes $elements.p2',
                     new AssertableExaminedValue(
                         new DomIdentifierValue(
-                            new DomIdentifier(
-                                new ElementExpression('.p-1', ElementExpressionType::CSS_SELECTOR)
-                            )
+                            new DomIdentifier('.p-1')
                         )
                     ),
                     AssertionComparison::EXCLUDES,
                     new AssertableExpectedValue(
                         new DomIdentifierValue(
-                            new DomIdentifier(
-                                new ElementExpression('.p-2', ElementExpressionType::CSS_SELECTOR)
-                            )
+                            new DomIdentifier('.p-2')
                         )
                     )
                 ),
@@ -140,17 +134,13 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                     '".foo" excludes $elements.contains_foo.data-bar',
                     new AssertableExaminedValue(
                         new DomIdentifierValue(
-                            new DomIdentifier(
-                                new ElementExpression('.foo', ElementExpressionType::CSS_SELECTOR)
-                            )
+                            new DomIdentifier('.foo')
                         )
                     ),
                     AssertionComparison::EXCLUDES,
                     new AssertableExpectedValue(
                         new DomIdentifierValue(
-                            (new DomIdentifier(
-                                new ElementExpression('.contains-foo', ElementExpressionType::CSS_SELECTOR)
-                            ))->withAttributeName('data-bar')
+                            (new DomIdentifier('.contains-foo'))->withAttributeName('data-bar')
                         )
                     )
                 ),

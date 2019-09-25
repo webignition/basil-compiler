@@ -42,11 +42,11 @@ class ElementLocatorCallFactory
      */
     public function createConstructorCall(DomIdentifierInterface $elementIdentifier): TranspilationResultInterface
     {
-        $elementExpression = $elementIdentifier->getElementExpression();
+        $elementLocator = $elementIdentifier->getLocator();
 
-        $arguments = '\'' . $this->singleQuotedStringEscaper->escape($elementExpression->getExpression()) . '\'';
+        $arguments = '\'' . $this->singleQuotedStringEscaper->escape($elementLocator) . '\'';
 
-        $position = $elementIdentifier->getPosition();
+        $position = $elementIdentifier->getOrdinalPosition();
         if (null !== $position) {
             $arguments .= ', ' . $position;
         }

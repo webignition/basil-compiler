@@ -8,8 +8,6 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
-use webignition\BasilModel\Value\ElementExpression;
-use webignition\BasilModel\Value\ElementExpressionType;
 use webignition\BasilModelFactory\Action\ActionFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\VariableNames;
@@ -36,11 +34,7 @@ trait WaitActionFunctionalDataProviderTrait
             'wait action, element value' => [
                 'action' => new WaitAction(
                     'wait $elements.element_name',
-                    new DomIdentifierValue(
-                        new DomIdentifier(
-                            new ElementExpression('[id="element-value"]', ElementExpressionType::CSS_SELECTOR)
-                        )
-                    )
+                    new DomIdentifierValue(new DomIdentifier('[id="element-value"]'))
                 ),
                 'fixture' => '/action-wait.html',
                 'variableIdentifiers' => [
@@ -62,9 +56,7 @@ trait WaitActionFunctionalDataProviderTrait
                 'action' => new WaitAction(
                     'wait $elements.element_name.attribute_name',
                     new DomIdentifierValue(
-                        (new DomIdentifier(
-                            new ElementExpression('[id="attribute-value"]', ElementExpressionType::CSS_SELECTOR)
-                        ))->withAttributeName('data-duration')
+                        (new DomIdentifier('[id="attribute-value"]'))->withAttributeName('data-duration')
                     )
                 ),
                 'fixture' => '/action-wait.html',
@@ -88,9 +80,7 @@ trait WaitActionFunctionalDataProviderTrait
                 'action' => new WaitAction(
                     'wait $elements.element_name.attribute_name',
                     new DomIdentifierValue(
-                        (new DomIdentifier(
-                            new ElementExpression('[id="attribute-value"]', ElementExpressionType::CSS_SELECTOR)
-                        ))->withAttributeName('data-non-existent')
+                        (new DomIdentifier('[id="attribute-value"]'))->withAttributeName('data-non-existent')
                     )
                 ),
                 'fixture' => '/action-wait.html',

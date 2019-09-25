@@ -11,9 +11,7 @@ use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\CssSelectorValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\XpathExpressionValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\EnvironmentParameterValueTranspiler;
@@ -21,13 +19,11 @@ use webignition\BasilTranspiler\Value\EnvironmentParameterValueTranspiler;
 class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
-    use CssSelectorValueDataProviderTrait;
     use DomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use PagePropertyProviderTrait;
     use UnhandledValueDataProviderTrait;
-    use XpathExpressionValueDataProviderTrait;
 
     /**
      * @var EnvironmentParameterValueTranspiler
@@ -51,12 +47,10 @@ class EnvironmentParameterValueTranspilerTest extends \PHPUnit\Framework\TestCas
 
     /**
      * @dataProvider browserPropertyDataProvider
-     * @dataProvider cssSelectorValueDataProvider
      * @dataProvider domIdentifierValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
      * @dataProvider unhandledValueDataProvider
-     * @dataProvider xpathExpressionValueDataProvider
      */
     public function testHandlesDoesNotHandle(ValueInterface $model)
     {
