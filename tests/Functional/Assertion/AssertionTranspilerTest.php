@@ -102,7 +102,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         return [
             'exists comparison, element identifier examined value, element does not exist' => [
                 'fixture' => '/index.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" exists'
                 ),
                 'variableIdentifiers' => [
@@ -112,7 +112,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, attribute identifier examined value, element does not exist' => [
                 'fixture' => '/index.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
@@ -125,7 +125,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, attribute identifier examined value, attribute does not exist' => [
                 'fixture' => '/index.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '"h1".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
@@ -138,7 +138,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             ],
             'exists comparison, environment examined value, environment variable does not exist' => [
                 'fixture' => '/index.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '$env.FOO exists'
                 ),
                 'variableIdentifiers' => [

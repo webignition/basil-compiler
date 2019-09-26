@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\AssertableComparisonAssertionInterface;
-use webignition\BasilModel\Assertion\AssertableExaminationAssertionInterface;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
+use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilTranspiler\AbstractDelegatingTranspiler;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -23,8 +23,7 @@ class AssertionTranspiler extends AbstractDelegatingTranspiler implements Transp
 
     public function handles(object $model): bool
     {
-        if ($model instanceof AssertableExaminationAssertionInterface ||
-            $model instanceof AssertableComparisonAssertionInterface) {
+        if ($model instanceof ExaminationAssertionInterface || $model instanceof ComparisonAssertionInterface) {
             return null !== $this->findDelegatedTranspiler($model);
         }
 

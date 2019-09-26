@@ -15,12 +15,12 @@ trait IncludesAssertionDataProviderTrait
 
         return [
             'includes comparison, element identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" includes "value"'
                 ),
             ],
             'includes comparison, attribute identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name includes "value"'
                 ),
             ],

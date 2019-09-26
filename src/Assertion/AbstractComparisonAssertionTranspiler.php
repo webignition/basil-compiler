@@ -2,9 +2,7 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\AssertableComparisonAssertionInterface;
-use webignition\BasilModel\Exception\InvalidAssertableExaminedValueException;
-use webignition\BasilModel\Exception\InvalidAssertableExpectedValueException;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -28,24 +26,22 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
     }
 
     abstract protected function getAssertionCall(
-        AssertableComparisonAssertionInterface $assertion,
+        ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface;
 
     /**
-     * @param AssertableComparisonAssertionInterface $assertion
+     * @param ComparisonAssertionInterface $assertion
      *
      * @return TranspilationResultInterface
      *
-     * @throws InvalidAssertableExaminedValueException
-     * @throws InvalidAssertableExpectedValueException
      * @throws NonTranspilableModelException
      */
-    protected function doTranspile(AssertableComparisonAssertionInterface $assertion): TranspilationResultInterface
+    protected function doTranspile(ComparisonAssertionInterface $assertion): TranspilationResultInterface
     {
-        $examinedValue = $assertion->getExaminedValue()->getExaminedValue();
-        $expectedValue = $assertion->getExpectedValue()->getExpectedValue();
+        $examinedValue = $assertion->getExaminedValue();
+        $expectedValue = $assertion->getExpectedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createStringValueVariableAssignmentCall(

@@ -15,12 +15,12 @@ trait ExcludesAssertionDataProviderTrait
 
         return [
             'excludes comparison, element identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" excludes "value"'
                 ),
             ],
             'excludes comparison, attribute identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name excludes "value"'
                 ),
             ],
