@@ -101,7 +101,7 @@ class AssertionTranspilerTest extends AbstractTestCase
 
         return [
             'exists comparison, element identifier examined value, element does not exist' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/index.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector" exists'
                 ),
@@ -111,7 +111,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
             'exists comparison, attribute identifier examined value, element does not exist' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/index.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '".selector".attribute_name exists'
                 ),
@@ -124,9 +124,9 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
             'exists comparison, attribute identifier examined value, attribute does not exist' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/index.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".attribute_name exists'
+                    '"h1".attribute_name exists'
                 ),
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
@@ -137,7 +137,7 @@ class AssertionTranspilerTest extends AbstractTestCase
                 'expectedExpectationFailedExceptionMessage' => 'Failed asserting that false is true.',
             ],
             'exists comparison, environment examined value, environment variable does not exist' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/index.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.FOO exists'
                 ),
