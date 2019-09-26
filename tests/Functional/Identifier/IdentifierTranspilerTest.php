@@ -73,8 +73,8 @@ class IdentifierTranspilerTest extends AbstractTestCase
     {
         return [
             'element identifier (css selector), selector only' => [
-                'fixture' => '/basic.html',
-                'identifier' => TestIdentifierFactory::createElementIdentifier('.p-1'),
+                'fixture' => '/index.html',
+                'identifier' => TestIdentifierFactory::createElementIdentifier('h1'),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ELEMENT_LOCATOR' => '$elementLocator',
                     'COLLECTION' => '$collection',
@@ -95,13 +95,13 @@ class IdentifierTranspilerTest extends AbstractTestCase
                     $this->assertInstanceOf(WebDriverElement::class, $element);
 
                     if ($element instanceof WebDriverElement) {
-                        $this->assertSame('P1', $element->getText());
+                        $this->assertSame('Test fixture web server default document', $element->getText());
                     }
                 },
             ],
             'attribute identifier, selector only' => [
-                'fixture' => '/basic.html',
-                'identifier' => (new DomIdentifier('.foo'))->withAttributeName('id'),
+                'fixture' => '/index.html',
+                'identifier' => (new DomIdentifier('#link-to-basic'))->withAttributeName('href'),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ATTRIBUTE' => '$attribute',
                     'ELEMENT' => '$element',
@@ -120,7 +120,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
                 ]),
                 'assertions' => function ($value) {
                     $this->assertIsString($value);
-                    $this->assertSame('a-sibling', $value);
+                    $this->assertSame('http://127.0.0.1:9080/basic.html', $value);
                 },
             ],
         ];
