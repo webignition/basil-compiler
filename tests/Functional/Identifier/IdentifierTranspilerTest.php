@@ -101,7 +101,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
             ],
             'attribute identifier, selector only' => [
                 'fixture' => '/index.html',
-                'identifier' => (new DomIdentifier('#link-to-basic'))->withAttributeName('href'),
+                'identifier' => (new DomIdentifier('#link-to-assertions'))->withAttributeName('href'),
                 'variableIdentifiers' => array_merge(self::VARIABLE_IDENTIFIERS, [
                     'ATTRIBUTE' => '$attribute',
                     'ELEMENT' => '$element',
@@ -120,7 +120,7 @@ class IdentifierTranspilerTest extends AbstractTestCase
                 ]),
                 'assertions' => function ($value) {
                     $this->assertIsString($value);
-                    $this->assertSame('http://127.0.0.1:9080/basic.html', $value);
+                    $this->assertSame('http://127.0.0.1:9080/assertions.html', $value);
                 },
             ],
         ];

@@ -24,8 +24,8 @@ trait BackActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [],
                 'additionalPreLines' => [
                     '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
-                    '$crawler = $crawler->filter(\'#link-to-basic\')->getElement(0)->click();',
-                    '$this->assertEquals("A basic page", self::$client->getTitle());',
+                    '$crawler = $crawler->filter(\'#link-to-assertions\')->getElement(0)->click();',
+                    '$this->assertEquals("Assertions fixture", self::$client->getTitle());',
                 ],
                 'additionalPostLines' => [
                     '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
