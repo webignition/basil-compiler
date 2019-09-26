@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assertions fixture</title>
+</head>
+<body>
+    <p class="selector"
+       data-test-attribute="attribute content"
+       data-is-selector-content=".selector content"
+       data-includes-selector-content="content"
+       data-environment-value="environment value"
+       data-includes-environment-value="environment value extended content"
+       data-browser-size="1200x1100"
+       data-includes-browser-size="1200x1100 extended content"
+       data-page-title="Assertions fixture"
+       data-includes-page-title="Assertions fixture extended content"
+       data-matches-content="/^\.selector [a-z]+$/">
+        .selector content
+    </p>
+    <p class="secondary-selector">
+        .secondary-selector content
+    </p>
+    <p class="selector-content-duplicate">
+        .selector content
+    </p>
+    <p class="matches-examined">examined paragraph content 1</p>
+    <p class="matches-expected">/^examined [a-z]+ content [0-9]$/</p>
+</body>
+</html>

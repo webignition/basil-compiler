@@ -18,9 +18,9 @@ trait ExistsAssertionFunctionalDataProviderTrait
 
         return [
             'exists comparison, element identifier examined value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo" exists'
+                    '".selector" exists'
                 ),
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
@@ -37,9 +37,9 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 ],
             ],
             'exists comparison, attribute identifier examined value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '"#a-sibling".class exists'
+                    '".selector".data-test-attribute exists'
                 ),
                 'variableIdentifiers' => [
                     'ELEMENT_LOCATOR' => '$elementLocator',
@@ -49,7 +49,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 ],
             ],
             'exists comparison, environment examined value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 exists'
                 ),
@@ -59,7 +59,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 ],
             ],
             'exists comparison, browser object value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size exists'
                 ),
@@ -70,7 +70,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 ],
             ],
             'exists comparison, page object value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$page.title exists'
                 ),
