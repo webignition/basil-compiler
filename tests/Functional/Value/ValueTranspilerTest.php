@@ -62,7 +62,7 @@ class ValueTranspilerTest extends AbstractTestCase
     {
         return [
             'browser property: size' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     'WEBDRIVER_DIMENSION',
@@ -76,20 +76,20 @@ class ValueTranspilerTest extends AbstractTestCase
                 ],
             ],
             'page property: title' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
-                'expectedExecutedResult' => 'A basic page',
+                'expectedExecutedResult' => 'Test fixture web server default document',
             ],
             'page property: url' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
-                'expectedExecutedResult' => 'http://127.0.0.1:9080/basic.html',
+                'expectedExecutedResult' => 'http://127.0.0.1:9080/index.html',
             ],
         ];
     }

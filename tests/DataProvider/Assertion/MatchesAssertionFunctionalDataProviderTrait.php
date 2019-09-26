@@ -24,9 +24,9 @@ trait MatchesAssertionFunctionalDataProviderTrait
 
         return [
             'matches comparison, element identifier examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo" matches "/^Sibling [0-9]$/"'
+                    '".selector" matches "/^\.selector [a-z]+$/"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -44,9 +44,9 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, attribute identifier examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".id matches "/^[a-z]-sib[a-z]{3}g$/"'
+                    '".selector".data-test-attribute matches "/^[a-z]+ content$/"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -64,7 +64,7 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, environment examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$env.TEST1 matches "/^environment/"'
                 ),
@@ -75,7 +75,7 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, browser object examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size matches "/[0-9]+x[0-9]+/"'
                 ),
@@ -87,9 +87,9 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, page object examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '$page.title matches "/page$/"'
+                    '$page.title matches "/fixture$/"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -98,15 +98,15 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, element identifier examined value, element identifier expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => new AssertableComparisonAssertion(
-                    '".p-matches-examined matches $elements.p-matches-expected',
+                    '".matches-examined matches $elements.matches-expected',
                     new AssertableExaminedValue(
-                        new DomIdentifierValue(new DomIdentifier('.p-matches-examined'))
+                        new DomIdentifierValue(new DomIdentifier('.matches-examined'))
                     ),
                     AssertionComparison::MATCHES,
                     new AssertableExpectedValue(
-                        new DomIdentifierValue(new DomIdentifier('.p-matches-expected'))
+                        new DomIdentifierValue(new DomIdentifier('.matches-expected'))
                     )
                 ),
                 'variableIdentifiers' => [
@@ -125,16 +125,16 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, element identifier examined value, attribute identifier expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => new AssertableComparisonAssertion(
-                    '".foo" matches $elements.matches_foo.data-matches',
+                    '".selector" matches $elements.element_name.data-matches-content',
                     new AssertableExaminedValue(
-                        new DomIdentifierValue(new DomIdentifier('.foo'))
+                        new DomIdentifierValue(new DomIdentifier('.selector'))
                     ),
                     AssertionComparison::MATCHES,
                     new AssertableExpectedValue(
                         new DomIdentifierValue(
-                            (new DomIdentifier('.foo'))->withAttributeName('data-matches')
+                            (new DomIdentifier('.selector'))->withAttributeName('data-matches-content')
                         )
                     )
                 ),
@@ -154,9 +154,9 @@ trait MatchesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'matches comparison, attribute identifier examined value, environment expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".data-environment-value matches $env.MATCHES'
+                    '".selector".data-environment-value matches $env.MATCHES'
                 ),
                 'variableIdentifiers' => [
                     'ENVIRONMENT_VARIABLE_ARRAY' => '$_ENV',

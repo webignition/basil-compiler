@@ -24,9 +24,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
 
         return [
             'excludes comparison, element identifier examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo" excludes "value"'
+                    '".selector" excludes "not-present value"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -44,9 +44,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, attribute identifier examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".id excludes "value"'
+                    '".selector".data-test-attribute excludes "not-present value"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -64,9 +64,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, environment examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '$env.TEST1 excludes "foo"'
+                    '$env.TEST1 excludes "not-present value"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -75,7 +75,7 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, browser object examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/empty.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
                     '$browser.size excludes "1x2"'
                 ),
@@ -87,9 +87,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, page object examined value, scalar expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '$page.title excludes "value"'
+                    '$page.title excludes "not-present value"'
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -98,18 +98,18 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, element identifier examined value, element identifier expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => new AssertableComparisonAssertion(
-                    '".p-1" excludes $elements.p2',
+                    '".selector" excludes $elements.element_name',
                     new AssertableExaminedValue(
                         new DomIdentifierValue(
-                            new DomIdentifier('.p-1')
+                            new DomIdentifier('.selector')
                         )
                     ),
                     AssertionComparison::EXCLUDES,
                     new AssertableExpectedValue(
                         new DomIdentifierValue(
-                            new DomIdentifier('.p-2')
+                            new DomIdentifier('.secondary-selector')
                         )
                     )
                 ),
@@ -129,18 +129,18 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, element identifier examined value, attribute identifier expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => new AssertableComparisonAssertion(
-                    '".foo" excludes $elements.contains_foo.data-bar',
+                    '".selector" excludes $elements.element_name.data-browser-size',
                     new AssertableExaminedValue(
                         new DomIdentifierValue(
-                            new DomIdentifier('.foo')
+                            new DomIdentifier('.selector')
                         )
                     ),
                     AssertionComparison::EXCLUDES,
                     new AssertableExpectedValue(
                         new DomIdentifierValue(
-                            (new DomIdentifier('.contains-foo'))->withAttributeName('data-bar')
+                            (new DomIdentifier('.selector'))->withAttributeName('data-browser-size')
                         )
                     )
                 ),
@@ -160,9 +160,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, attribute identifier examined value, environment expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".data-environment-value-excludes excludes $env.TEST1'
+                    '".selector".data-test-attribute excludes $env.TEST1'
                 ),
                 'variableIdentifiers' => [
                     'ENVIRONMENT_VARIABLE_ARRAY' => '$_ENV',
@@ -174,9 +174,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, attribute identifier examined value, browser object expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".data-browser-size-excludes excludes $browser.size'
+                    '".selector".data-test-attribute excludes $browser.size'
                 ),
                 'variableIdentifiers' => [
                     'WEBDRIVER_DIMENSION' => '$webDriverDimension',
@@ -189,9 +189,9 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                 ],
             ],
             'excludes comparison, attribute identifier examined value, page object expected value' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/assertions.html',
                 'assertion' => $assertionFactory->createAssertableAssertionFromString(
-                    '".foo".data-page-title-excludes excludes $page.title'
+                    '".selector".data-test-attribute excludes $page.title'
                 ),
                 'variableIdentifiers' => [
                     VariableNames::PANTHER_CLIENT => 'self::$client',

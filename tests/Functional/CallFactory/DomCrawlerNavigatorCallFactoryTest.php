@@ -66,7 +66,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     {
         return [
             'css selector, no parent' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/form.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('input[name="input-1"]'),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
@@ -80,7 +80,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 },
             ],
             'css selector, has parent' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/form.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
                     'input',
                     1,
@@ -132,7 +132,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     {
         return [
             'css selector, no parent' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/form.html',
                 'arguments' => new TranspilationResult(
                     ['new ElementLocator(\'input\', 1)'],
                     new UseStatementCollection([
@@ -152,7 +152,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 },
             ],
             'css selector, has parent' => [
-                'fixture' => '/basic.html',
+                'fixture' => '/form.html',
                 'arguments' => new TranspilationResult(
                     [
                         'new ElementLocator(\'input\', 1), ' .
@@ -206,33 +206,53 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     public function createHasCallForIdentifierDataProvider(): array
     {
         return [
-            'not hasElement: css selector, no parent' => [
-                'fixture' => '/basic.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('.selector'),
+            'not hasElement: css selector only' => [
+                'fixture' => '/index.html',
+                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('.non-existent'),
                 'expectedHasElement' => false,
             ],
-            'not hasElement: css selector, has parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector with parent, neither exist' => [
+                'fixture' => '/index.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    '.selector',
+                    '.non-existent-child',
                     1,
                     null,
-                    TestIdentifierFactory::createElementIdentifier('.parent')
+                    TestIdentifierFactory::createElementIdentifier('.non-existent-parent')
                 ),
                 'expectedHasElement' => false,
             ],
-            'hasElement: css selector, no parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector with parent, parent does not exist' => [
+                'fixture' => '/index.html',
+                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
+                    '.non-existent-child',
+                    1,
+                    null,
+                    TestIdentifierFactory::createElementIdentifier('.non-existent-parent')
+                ),
+                'expectedHasElement' => false,
+            ],
+            'not hasElement: css selector with parent, child does not exist' => [
+                'fixture' => '/form.html',
+                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
+                    '.non-existent-child',
+                    1,
+                    null,
+                    TestIdentifierFactory::createElementIdentifier('form[action="/action1"]')
+                ),
+                'expectedHasElement' => false,
+            ],
+            'hasElement: css selector' => [
+                'fixture' => '/index.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('h1'),
                 'expectedHasElement' => true,
             ],
-            'hasElement: css selector, has parent' => [
-                'fixture' => '/basic.html',
+            'hasElement: css selector with parent' => [
+                'fixture' => '/form.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
                     'input',
                     1,
                     null,
-                    TestIdentifierFactory::createElementIdentifier('form[action="/action2"]')
+                    TestIdentifierFactory::createElementIdentifier('form[action="/action1"]')
                 ),
                 'expectedHasElement' => true,
             ],
@@ -268,10 +288,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     public function createHasCallForTranspiledArgumentsDataProvider(): array
     {
         return [
-            'not hasElement: css selector, no parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector only' => [
+                'fixture' => '/index.html',
                 'arguments' => new TranspilationResult(
-                    ['new ElementLocator(\'.selector\', 1)'],
+                    ['new ElementLocator(\'.non-existent\', 1)'],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
                     ]),
@@ -279,12 +299,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => false,
             ],
-            'not hasElement: css selector, has parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector with parent, parent does not exist' => [
+                'fixture' => '/index.html',
                 'arguments' => new TranspilationResult(
                     [
-                        'new ElementLocator(\'.selector\', 1), ' .
-                        'new ElementLocator(\'.parent\', 1)'
+                        'new ElementLocator(\'.non-existent-child\', 1), ' .
+                        'new ElementLocator(\'.non-existent-parent\', 1)'
                     ],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
@@ -293,8 +313,22 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => false,
             ],
-            'hasElement: css selector, no parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector with parent, child does not exist' => [
+                'fixture' => '/form.html',
+                'arguments' => new TranspilationResult(
+                    [
+                        'new ElementLocator(\'.non-existent-child\', 1), ' .
+                        'new ElementLocator(\'form[action="/action1"]\', 1)'
+                    ],
+                    new UseStatementCollection([
+                        new UseStatement(ElementLocator::class)
+                    ]),
+                    new VariablePlaceholderCollection()
+                ),
+                'expectedHasElement' => false,
+            ],
+            'hasElement: css selector only' => [
+                'fixture' => '/index.html',
                 'arguments' => new TranspilationResult(
                     ['new ElementLocator(\'h1\', 1)'],
                     new UseStatementCollection([
@@ -304,12 +338,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => true,
             ],
-            'hasElement: css selector, has parent' => [
-                'fixture' => '/basic.html',
+            'hasElement: css selector with parent' => [
+                'fixture' => '/form.html',
                 'arguments' => new TranspilationResult(
                     [
                         'new ElementLocator(\'input\', 1), ' .
-                        'new ElementLocator(\'form[action="/action2"]\', 1)'
+                        'new ElementLocator(\'form[action="/action1"]\', 1)'
                     ],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
