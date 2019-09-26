@@ -231,7 +231,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => false,
             ],
-            'not hasElement: css selector with parent, parent does exist, child does not exist' => [
+            'not hasElement: css selector with parent, child does not exist' => [
                 'fixture' => '/form.html',
                 'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
                     '.non-existent-child',
@@ -288,10 +288,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     public function createHasCallForTranspiledArgumentsDataProvider(): array
     {
         return [
-            'not hasElement: css selector, no parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector only' => [
+                'fixture' => '/index.html',
                 'arguments' => new TranspilationResult(
-                    ['new ElementLocator(\'.selector\', 1)'],
+                    ['new ElementLocator(\'.non-existent\', 1)'],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
                     ]),
@@ -299,12 +299,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => false,
             ],
-            'not hasElement: css selector, has parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector with parent, parent does not exist' => [
+                'fixture' => '/index.html',
                 'arguments' => new TranspilationResult(
                     [
-                        'new ElementLocator(\'.selector\', 1), ' .
-                        'new ElementLocator(\'.parent\', 1)'
+                        'new ElementLocator(\'.non-existent-child\', 1), ' .
+                        'new ElementLocator(\'.non-existent-parent\', 1)'
                     ],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
@@ -313,8 +313,22 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => false,
             ],
-            'hasElement: css selector, no parent' => [
-                'fixture' => '/basic.html',
+            'not hasElement: css selector with parent, child does not exist' => [
+                'fixture' => '/form.html',
+                'arguments' => new TranspilationResult(
+                    [
+                        'new ElementLocator(\'.non-existent-child\', 1), ' .
+                        'new ElementLocator(\'form[action="/action1"]\', 1)'
+                    ],
+                    new UseStatementCollection([
+                        new UseStatement(ElementLocator::class)
+                    ]),
+                    new VariablePlaceholderCollection()
+                ),
+                'expectedHasElement' => false,
+            ],
+            'hasElement: css selector only' => [
+                'fixture' => '/index.html',
                 'arguments' => new TranspilationResult(
                     ['new ElementLocator(\'h1\', 1)'],
                     new UseStatementCollection([
@@ -324,12 +338,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 ),
                 'expectedHasElement' => true,
             ],
-            'hasElement: css selector, has parent' => [
-                'fixture' => '/basic.html',
+            'hasElement: css selector with parent' => [
+                'fixture' => '/form.html',
                 'arguments' => new TranspilationResult(
                     [
                         'new ElementLocator(\'input\', 1), ' .
-                        'new ElementLocator(\'form[action="/action2"]\', 1)'
+                        'new ElementLocator(\'form[action="/action1"]\', 1)'
                     ],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
