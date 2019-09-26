@@ -196,6 +196,126 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                 ],
             ],
+            'is comparison, select element identifier examined value, scalar expected value (1)' => [
+                'fixture' => '/form.html',
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                    '".select-none-selected" is "none-selected-1"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalPreLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, select element identifier examined value, scalar expected value (2)' => [
+                'fixture' => '/form.html',
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                    '".select-has-selected" is "has-selected-2"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalPreLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, option collection element identifier examined value, scalar expected value (1)' => [
+                'fixture' => '/form.html',
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                    '".select-none-selected option" is "none-selected-1"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalPreLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, option collection element identifier examined value, scalar expected value (2)' => [
+                'fixture' => '/form.html',
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                    '".select-has-selected option" is "has-selected-2"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalPreLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, radio group element identifier examined value, scalar expected value (1)' => [
+                'fixture' => '/form.html',
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                    '"input[name=radio-not-checked]" is ""'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalPreLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
+            'is comparison, radio group element identifier examined value, scalar expected value (2)' => [
+                'fixture' => '/form.html',
+                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                    '"input[name=radio-checked]" is "checked-2"'
+                ),
+                'variableIdentifiers' => [
+                    'EXPECTED_VALUE' => '$expectedValue',
+                    'ELEMENT_LOCATOR' => '$elementLocator',
+                    'HAS' => '$has',
+                    'COLLECTION' => '$collection',
+                    'EXAMINED_VALUE' => '$examinedValue',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
+                ],
+                'additionalPreLines' => [
+                    '$webDriverElementInspector = Inspector::create();',
+                ],
+                'additionalUseStatements' => [
+                    new UseStatement(Inspector::class),
+                ],
+            ],
         ];
     }
 }

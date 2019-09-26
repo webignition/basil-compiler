@@ -43,13 +43,13 @@ class AssertionTranspilerTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider existsAssertionFunctionalDataProvider
-     * @dataProvider notExistsAssertionFunctionalDataProvider
+     * @!dataProvider existsAssertionFunctionalDataProvider
+     * @!dataProvider notExistsAssertionFunctionalDataProvider
      * @dataProvider isAssertionFunctionalDataProvider
-     * @dataProvider isNotAssertionFunctionalDataProvider
-     * @dataProvider includesAssertionFunctionalDataProvider
-     * @dataProvider excludesAssertionFunctionalDataProvider
-     * @dataProvider matchesAssertionFunctionalDataProvider
+     * @!dataProvider isNotAssertionFunctionalDataProvider
+     * @!dataProvider includesAssertionFunctionalDataProvider
+     * @!dataProvider excludesAssertionFunctionalDataProvider
+     * @!dataProvider matchesAssertionFunctionalDataProvider
      */
     public function testTranspileForPassingAssertions(
         string $fixture,
