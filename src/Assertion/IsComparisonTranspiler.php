@@ -2,10 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\AssertableComparisonAssertionInterface;
 use webignition\BasilModel\Assertion\AssertionComparison;
-use webignition\BasilModel\Exception\InvalidAssertableExaminedValueException;
-use webignition\BasilModel\Exception\InvalidAssertableExpectedValueException;
+use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
@@ -25,7 +23,7 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof AssertableComparisonAssertionInterface) {
+        if (!$model instanceof ComparisonAssertionInterface) {
             return false;
         }
 
@@ -38,12 +36,10 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws InvalidAssertableExaminedValueException
-     * @throws InvalidAssertableExpectedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof AssertableComparisonAssertionInterface) {
+        if (!$model instanceof ComparisonAssertionInterface) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -54,7 +50,7 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
     }
 
     protected function getAssertionCall(
-        AssertableComparisonAssertionInterface $assertion,
+        ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
     ): TranspilationResultInterface {

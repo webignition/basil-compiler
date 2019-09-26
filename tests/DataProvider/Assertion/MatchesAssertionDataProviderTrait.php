@@ -15,12 +15,12 @@ trait MatchesAssertionDataProviderTrait
 
         return [
             'matches comparison, element identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" matches "/^value/"'
                 ),
             ],
             'matches comparison, attribute identifier examined value, literal string expected value' => [
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".attribute_name matches "/^value/"'
                 ),
             ],

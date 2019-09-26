@@ -2,9 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilModel\Assertion\AssertableExaminationAssertionInterface;
 use webignition\BasilModel\Assertion\AssertionComparison;
-use webignition\BasilModel\Exception\InvalidAssertableExaminedValueException;
+use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -36,7 +35,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        if (!$model instanceof AssertableExaminationAssertionInterface) {
+        if (!$model instanceof ExaminationAssertionInterface) {
             return false;
         }
 
@@ -49,11 +48,10 @@ class ExistsComparisonTranspiler implements TranspilerInterface
      * @return TranspilationResultInterface
      *
      * @throws NonTranspilableModelException
-     * @throws InvalidAssertableExaminedValueException
      */
     public function transpile(object $model): TranspilationResultInterface
     {
-        if (!$model instanceof AssertableExaminationAssertionInterface) {
+        if (!$model instanceof ExaminationAssertionInterface) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -61,7 +59,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $examinedValue = $model->getExaminedValue()->getExaminedValue();
+        $examinedValue = $model->getExaminedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueExistenceAssignmentCall(

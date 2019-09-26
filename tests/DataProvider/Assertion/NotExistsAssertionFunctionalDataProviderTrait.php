@@ -17,7 +17,7 @@ trait NotExistsAssertionFunctionalDataProviderTrait
         return [
             'not-exists comparison, element identifier examined value' => [
                 'fixture' => '/empty.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" not-exists'
                 ),
                 'variableIdentifiers' => [
@@ -26,7 +26,7 @@ trait NotExistsAssertionFunctionalDataProviderTrait
             ],
             'not-exists comparison, attribute identifier examined value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".data-non-existent-attribute not-exists'
                 ),
                 'variableIdentifiers' => [
@@ -38,7 +38,7 @@ trait NotExistsAssertionFunctionalDataProviderTrait
             ],
             'not-exists comparison, environment examined value' => [
                 'fixture' => '/empty.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '$env.NON-EXISTENT not-exists'
                 ),
                 'variableIdentifiers' => [

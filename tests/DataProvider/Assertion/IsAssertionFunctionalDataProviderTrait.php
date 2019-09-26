@@ -5,11 +5,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
-use webignition\BasilModel\Assertion\AssertableComparisonAssertion;
 use webignition\BasilModel\Assertion\AssertionComparison;
+use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\DomIdentifier;
-use webignition\BasilModel\Value\Assertion\AssertableExaminedValue;
-use webignition\BasilModel\Value\Assertion\AssertableExpectedValue;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Model\UseStatement;
@@ -25,7 +23,7 @@ trait IsAssertionFunctionalDataProviderTrait
         return [
             'is comparison, element identifier examined value, scalar expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" is ".selector content"'
                 ),
                 'variableIdentifiers' => [
@@ -45,7 +43,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".data-test-attribute is "attribute content"'
                 ),
                 'variableIdentifiers' => [
@@ -65,7 +63,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/empty.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '$env.TEST1 is "environment value"'
                 ),
                 'variableIdentifiers' => [
@@ -76,7 +74,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, browser object examined value, scalar expected value' => [
                 'fixture' => '/empty.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '$browser.size is "1200x1100"'
                 ),
                 'variableIdentifiers' => [
@@ -88,7 +86,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, page object examined value, scalar expected value' => [
                 'fixture' => '/index.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '$page.title is "Test fixture web server default document"'
                 ),
                 'variableIdentifiers' => [
@@ -99,15 +97,11 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, element identifier examined value, element identifier expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => new AssertableComparisonAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".selector" is $elements.element_name',
-                    new AssertableExaminedValue(
-                        new DomIdentifierValue(new DomIdentifier('.selector'))
-                    ),
+                    DomIdentifierValue::create('.selector'),
                     AssertionComparison::IS,
-                    new AssertableExpectedValue(
-                        new DomIdentifierValue(new DomIdentifier('.selector'))
-                    )
+                    DomIdentifierValue::create('.selector')
                 ),
                 'variableIdentifiers' => [
                     'EXPECTED_VALUE' => '$expectedValue',
@@ -126,16 +120,12 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => new AssertableComparisonAssertion(
+                'assertion' => new ComparisonAssertion(
                     '".selector" is $elements.element_name.data-is-selector-content',
-                    new AssertableExaminedValue(
-                        new DomIdentifierValue(new DomIdentifier('.selector'))
-                    ),
+                    DomIdentifierValue::create('.selector'),
                     AssertionComparison::IS,
-                    new AssertableExpectedValue(
-                        new DomIdentifierValue(
-                            (new DomIdentifier('.selector'))->withAttributeName('data-is-selector-content')
-                        )
+                    new DomIdentifierValue(
+                        (new DomIdentifier('.selector'))->withAttributeName('data-is-selector-content')
                     )
                 ),
                 'variableIdentifiers' => [
@@ -155,7 +145,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".data-environment-value is $env.TEST1'
                 ),
                 'variableIdentifiers' => [
@@ -169,7 +159,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, attribute identifier examined value, browser object expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".data-browser-size is $browser.size'
                 ),
                 'variableIdentifiers' => [
@@ -184,7 +174,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, attribute identifier examined value, page object expected value' => [
                 'fixture' => '/assertions.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector".data-page-title is $page.title'
                 ),
                 'variableIdentifiers' => [
@@ -198,7 +188,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, select element identifier examined value, scalar expected value (1)' => [
                 'fixture' => '/form.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".select-none-selected" is "none-selected-1"'
                 ),
                 'variableIdentifiers' => [
@@ -218,7 +208,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, select element identifier examined value, scalar expected value (2)' => [
                 'fixture' => '/form.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".select-has-selected" is "has-selected-2"'
                 ),
                 'variableIdentifiers' => [
@@ -238,7 +228,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, option collection element identifier examined value, scalar expected value (1)' => [
                 'fixture' => '/form.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".select-none-selected option" is "none-selected-1"'
                 ),
                 'variableIdentifiers' => [
@@ -258,7 +248,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, option collection element identifier examined value, scalar expected value (2)' => [
                 'fixture' => '/form.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '".select-has-selected option" is "has-selected-2"'
                 ),
                 'variableIdentifiers' => [
@@ -278,7 +268,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, radio group element identifier examined value, scalar expected value (1)' => [
                 'fixture' => '/form.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '"input[name=radio-not-checked]" is ""'
                 ),
                 'variableIdentifiers' => [
@@ -298,7 +288,7 @@ trait IsAssertionFunctionalDataProviderTrait
             ],
             'is comparison, radio group element identifier examined value, scalar expected value (2)' => [
                 'fixture' => '/form.html',
-                'assertion' => $assertionFactory->createAssertableAssertionFromString(
+                'assertion' => $assertionFactory->createFromAssertionString(
                     '"input[name=radio-checked]" is "checked-2"'
                 ),
                 'variableIdentifiers' => [
