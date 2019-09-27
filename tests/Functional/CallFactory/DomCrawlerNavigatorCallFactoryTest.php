@@ -67,7 +67,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'css selector, no parent' => [
                 'fixture' => '/form.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('input[name="input-with-value"]'),
+                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('input[name=input-with-value]'),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -147,7 +147,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     $this->assertInstanceOf(WebDriverElement::class, $element);
 
                     if ($element instanceof WebDriverElement) {
-                        $this->assertSame('input-with-value', $element->getAttribute('name'));
+                        $this->assertSame('input-without-value', $element->getAttribute('name'));
                     }
                 },
             ],
