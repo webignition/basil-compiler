@@ -56,10 +56,6 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             throw new NonTranspilableModelException($model);
         }
 
-        if (null !== $identifier->getAttributeName()) {
-            throw new NonTranspilableModelException($model);
-        }
-
         $variablePlaceholders = new VariablePlaceholderCollection();
         $elementLocatorPlaceholder = $variablePlaceholders->create('ELEMENT_LOCATOR');
         $elementPlaceholder = $variablePlaceholders->create('ELEMENT');
