@@ -6,6 +6,7 @@ use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -89,15 +90,17 @@ class SetActionTranspiler implements TranspilerInterface
 
         $statements = array_merge(
             $collectionAssignmentCall->getLines(),
-            $valueAssignmentCall->getLines(),
+            null === $valueAssignmentCall ? [] : $valueAssignmentCall->getLines(),
             $mutationCall->getLines()
         );
-
         $calls = [
             $collectionAssignmentCall,
-            $valueAssignmentCall,
             $mutationCall,
         ];
+
+        if ($valueAssignmentCall instanceof VariableAssignmentCall) {
+            $calls[] = $valueAssignmentCall;
+        }
 
         return $this->transpilationResultComposer->compose(
             $statements,
