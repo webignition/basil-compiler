@@ -58,7 +58,7 @@ class WaitActionTranspiler implements TranspilerInterface
 
         $duration = $model->getDuration();
 
-        $durationAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
+        $durationAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
             $duration,
             $durationPlaceholder,
             'int',
