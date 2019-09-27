@@ -62,7 +62,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $examinedValue = $model->getExaminedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
-        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createValueExistenceAssignmentCall(
+        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createForValueExistence(
             $examinedValue,
             $examinedValuePlaceholder
         );

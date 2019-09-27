@@ -168,7 +168,7 @@ class VariableAssignmentCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    public function createValueExistenceAssignmentCall(
+    public function createForValueExistence(
         ValueInterface $value,
         VariablePlaceholder $placeholder
     ): ?VariableAssignmentCall {
