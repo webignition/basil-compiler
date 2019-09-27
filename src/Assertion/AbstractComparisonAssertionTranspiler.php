@@ -44,13 +44,13 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         $expectedValue = $assertion->getExpectedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
-        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createStringValueVariableAssignmentCall(
+        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
             $examinedValue,
             $examinedValuePlaceholder
         );
 
         $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);
-        $expectedValueAssignmentCall = $this->variableAssignmentCallFactory->createStringValueVariableAssignmentCall(
+        $expectedValueAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
             $expectedValue,
             $expectedValuePlaceholder
         );
