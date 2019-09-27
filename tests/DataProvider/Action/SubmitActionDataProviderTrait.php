@@ -15,7 +15,7 @@ trait SubmitActionDataProviderTrait
 
         return [
             'interaction action (submit), element identifier' => [
-                'value' => $actionFactory->createFromActionString(
+                'action' => $actionFactory->createFromActionString(
                     'submit ".selector"'
                 ),
             ],

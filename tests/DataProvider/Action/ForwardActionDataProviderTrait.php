@@ -15,7 +15,7 @@ trait ForwardActionDataProviderTrait
 
         return [
             'no-arguments action (forward)' => [
-                'value' => $actionFactory->createFromActionString(
+                'action' => $actionFactory->createFromActionString(
                     'forward'
                 ),
             ],

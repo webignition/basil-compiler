@@ -17,6 +17,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionFunctionalDa
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ReloadActionFunctionalDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Action\SetActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\SubmitActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionFunctionalDataProviderTrait;
@@ -32,6 +33,7 @@ class ActionTranspilerTest extends AbstractTestCase
     use ReloadActionFunctionalDataProviderTrait;
     use ClickActionFunctionalDataProviderTrait;
     use SubmitActionFunctionalDataProviderTrait;
+    use SetActionFunctionalDataProviderTrait;
 
     /**
      * @var ActionTranspiler
@@ -82,6 +84,7 @@ class ActionTranspilerTest extends AbstractTestCase
             'reload action' => current($this->reloadActionFunctionalDataProvider()),
             'click action' => current($this->clickActionFunctionalDataProvider()),
             'submit action' => current($this->submitActionFunctionalDataProvider()),
+            'set action' => current($this->setActionFunctionalDataProvider()),
         ];
     }
 
