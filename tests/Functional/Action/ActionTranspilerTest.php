@@ -54,7 +54,9 @@ class ActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
-        array $additionalUseStatements
+        array $additionalUseStatements,
+        array $additionalSetupLines,
+        array $additionalTeardownLines
     ) {
         $transpilationResult = $this->transpiler->transpile($action);
 
@@ -62,14 +64,16 @@ class ActionTranspilerTest extends AbstractTestCase
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            [],
-            [],
+            $additionalSetupLines,
+            $additionalTeardownLines,
             $additionalUseStatements
         );
 
-        if (!in_array($action->getType(), [ActionTypes::CLICK, ActionTypes::SUBMIT])) {
-            $this->expectNotToPerformAssertions();
-        }
+//        echo $executableCall . "\n\n";
+
+//        if (!in_array($action->getType(), [ActionTypes::CLICK, ActionTypes::SUBMIT])) {
+//            $this->expectNotToPerformAssertions();
+//        }
 
         eval($executableCall);
     }

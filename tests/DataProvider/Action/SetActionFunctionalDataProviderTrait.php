@@ -9,7 +9,10 @@ use webignition\BasilModel\Action\InputAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
+use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\VariableNames;
+use webignition\WebDriverElementInspector\Inspector;
+use webignition\WebDriverElementMutator\Mutator;
 
 trait SetActionFunctionalDataProviderTrait
 {
@@ -45,12 +48,17 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [],
-                    'additionalPreLines' => [
+                    'additionalUseStatements' => [
+                        new UseStatement(Inspector::class),
+                        new UseStatement(Mutator::class),
+                    ],
+                    'additionalSetupLines' => [
+                        '$inspector = Inspector::create($crawler);',
+                        '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalPostLines' => [
+                    'additionalTeardownLines' => [
                         '$this->assertEquals("textarea content", $input->getAttribute("value"));',
                     ],
                 ],
@@ -65,12 +73,15 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [],
-                    'additionalPreLines' => [
+                    'additionalUseStatements' => [
+                        new UseStatement(Mutator::class),
+                    ],
+                    'additionalSetupLines' => [
+                        '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalPostLines' => [
+                    'additionalTeardownLines' => [
                         '$this->assertEquals("http://127.0.0.1:9080/action1", $input->getAttribute("value"));',
                     ],
                 ],
@@ -80,12 +91,15 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [],
-                    'additionalPreLines' => [
+                    'additionalUseStatements' => [
+                        new UseStatement(Mutator::class),
+                    ],
+                    'additionalSetupLines' => [
+                        '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalPostLines' => [
+                    'additionalTeardownLines' => [
                         '$this->assertEquals("1200x1100", $input->getAttribute("value"));',
                     ],
                 ],
@@ -95,12 +109,15 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [],
-                    'additionalPreLines' => [
+                    'additionalUseStatements' => [
+                        new UseStatement(Mutator::class),
+                    ],
+                    'additionalSetupLines' => [
+                        '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalPostLines' => [
+                    'additionalTeardownLines' => [
                         '$this->assertEquals("http://127.0.0.1:9080/form.html", $input->getAttribute("value"));',
                     ],
                 ],
@@ -110,12 +127,15 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [],
-                    'additionalPreLines' => [
+                    'additionalUseStatements' => [
+                        new UseStatement(Mutator::class),
+                    ],
+                    'additionalSetupLines' => [
+                        '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalPostLines' => [
+                    'additionalTeardownLines' => [
                         '$this->assertEquals("environment value", $input->getAttribute("value"));',
                     ],
                 ],
@@ -134,12 +154,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
             ],
@@ -149,12 +172,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("non-empty value", $input->getAttribute("value"));',
                 ],
             ],
@@ -164,12 +190,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-with-value]\')->getElement(0);',
                     '$this->assertEquals("test", $input->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
             ],
@@ -179,12 +208,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-with-value]\')->getElement(0);',
                     '$this->assertEquals("test", $input->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("new value", $input->getAttribute("value"));',
                 ],
             ],
@@ -202,12 +234,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-empty\')->getElement(0);',
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -217,12 +252,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-empty\')->getElement(0);',
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("non-empty value", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -232,12 +270,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-non-empty\')->getElement(0);',
                     '$this->assertEquals("textarea content", $textarea->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -247,12 +288,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-non-empty\')->getElement(0);',
                     '$this->assertEquals("textarea content", $textarea->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("new value", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -270,12 +314,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -285,12 +332,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -300,12 +350,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -315,12 +368,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -330,12 +386,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -345,12 +404,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
             ],
@@ -368,12 +430,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -383,12 +448,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -398,12 +466,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -413,12 +484,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -428,12 +502,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -443,12 +520,15 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
             ],
@@ -466,14 +546,17 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -485,14 +568,17 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -504,14 +590,17 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -523,14 +612,17 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -542,14 +634,17 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -561,14 +656,17 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalUseStatements' => [
+                    new UseStatement(Mutator::class),
+                ],
+                'additionalSetupLines' => [
+                    '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(2)->isSelected());',

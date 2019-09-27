@@ -22,12 +22,12 @@ trait BackActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CRAWLER => '$crawler',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
                     '$crawler = $crawler->filter(\'#link-to-assertions\')->getElement(0)->click();',
                     '$this->assertEquals("Assertions fixture", self::$client->getTitle());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
                 ],
             ],

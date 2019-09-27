@@ -8,11 +8,8 @@ namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\SetActionTranspiler;
-use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\SetActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
-use webignition\WebDriverElementInspector\Inspector;
-use webignition\WebDriverElementMutator\Mutator;
 
 class SetActionTranspilerTest extends AbstractTestCase
 {
@@ -38,8 +35,8 @@ class SetActionTranspilerTest extends AbstractTestCase
         string $fixture,
         array $variableIdentifiers,
         array $additionalUseStatements,
-        array $additionalPreLines,
-        array $additionalPostLines
+        array $additionalSetupLines,
+        array $additionalTeardownLines
     ) {
         $transpilationResult = $this->transpiler->transpile($action);
 
@@ -47,21 +44,9 @@ class SetActionTranspilerTest extends AbstractTestCase
             $transpilationResult,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            array_merge(
-                [
-                    '$inspector = Inspector::create($crawler);',
-                    '$mutator = Mutator::create();',
-                ],
-                $additionalPreLines
-            ),
-            $additionalPostLines,
-            array_merge(
-                [
-                    new UseStatement(Inspector::class),
-                    new UseStatement(Mutator::class),
-                ],
-                $additionalUseStatements
-            )
+            $additionalSetupLines,
+            $additionalTeardownLines,
+            $additionalUseStatements
         );
 
         eval($executableCall);
