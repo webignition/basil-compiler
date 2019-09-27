@@ -107,36 +107,6 @@ class VariableAssignmentCallFactory
     /**
      * @param ValueInterface $value
      * @param VariablePlaceholder $placeholder
-     *
-     * @return VariableAssignmentCall|null
-     *
-     * @throws NonTranspilableModelException
-     */
-    public function createStringValueVariableAssignmentCall(
-        ValueInterface $value,
-        VariablePlaceholder $placeholder
-    ): ?VariableAssignmentCall {
-        return $this->createValueVariableAssignmentCall($value, $placeholder);
-    }
-
-    /**
-     * @param ValueInterface $value
-     * @param VariablePlaceholder $placeholder
-     *
-     * @return VariableAssignmentCall|null
-     *
-     * @throws NonTranspilableModelException
-     */
-    public function createIntegerValueVariableAssignmentCall(
-        ValueInterface $value,
-        VariablePlaceholder $placeholder
-    ): ?VariableAssignmentCall {
-        return $this->createValueVariableAssignmentCall($value, $placeholder, 'int', '0');
-    }
-
-    /**
-     * @param ValueInterface $value
-     * @param VariablePlaceholder $placeholder
      * @param string $type
      * @param string $default
      *
@@ -144,7 +114,7 @@ class VariableAssignmentCallFactory
      *
      * @throws NonTranspilableModelException
      */
-    private function createValueVariableAssignmentCall(
+    public function createValueVariableAssignmentCall(
         ValueInterface $value,
         VariablePlaceholder $placeholder,
         string $type = 'string',

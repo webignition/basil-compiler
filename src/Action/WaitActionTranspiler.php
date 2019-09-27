@@ -58,9 +58,11 @@ class WaitActionTranspiler implements TranspilerInterface
 
         $duration = $model->getDuration();
 
-        $durationAssignmentCall = $this->variableAssignmentCallFactory->createIntegerValueVariableAssignmentCall(
+        $durationAssignmentCall = $this->variableAssignmentCallFactory->createValueVariableAssignmentCall(
             $duration,
-            $durationPlaceholder
+            $durationPlaceholder,
+            'int',
+            '0'
         );
 
         if (null === $durationAssignmentCall) {
