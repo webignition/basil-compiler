@@ -5,8 +5,12 @@
     <title>Form</title>
 </head>
 <body>
-    <form action="/action1">
-        <input name="input-1" value="test">
+    <form action="/action1" id="form1">
+        <input name="input-without-value">
+        <input name="input-with-value" value="test">
+
+        <textarea class="textarea-empty"></textarea>
+        <textarea class="textarea-non-empty">textarea content</textarea>
 
         <select class="select-none-selected">
             <option value="none-selected-1">One</option>

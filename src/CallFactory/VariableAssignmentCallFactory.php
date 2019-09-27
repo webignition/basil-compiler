@@ -206,7 +206,7 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $collectionPlaceholder
      * @return VariableAssignmentCall
      */
-    private function createForElementCollection(
+    public function createForElementCollection(
         DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $collectionPlaceholder

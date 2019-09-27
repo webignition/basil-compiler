@@ -15,7 +15,7 @@ trait ClickActionDataProviderTrait
 
         return [
             'interaction action (click), element identifier' => [
-                'value' => $actionFactory->createFromActionString(
+                'action' => $actionFactory->createFromActionString(
                     'click ".selector"'
                 ),
             ],

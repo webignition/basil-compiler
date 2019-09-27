@@ -15,7 +15,7 @@ trait WaitForActionDataProviderTrait
 
         return [
             'interaction action (wait-for), element identifier' => [
-                'value' => $actionFactory->createFromActionString(
+                'action' => $actionFactory->createFromActionString(
                     'wait-for ".selector"'
                 ),
             ],

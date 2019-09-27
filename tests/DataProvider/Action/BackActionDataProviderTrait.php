@@ -15,7 +15,7 @@ trait BackActionDataProviderTrait
 
         return [
             'no-arguments action (back)' => [
-                'value' => $actionFactory->createFromActionString(
+                'action' => $actionFactory->createFromActionString(
                     'back'
                 ),
             ],

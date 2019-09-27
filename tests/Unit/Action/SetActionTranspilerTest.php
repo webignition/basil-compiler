@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilTranspiler\Action\SubmitActionTranspiler;
+use webignition\BasilTranspiler\Action\SetActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionDataProviderTrait;
@@ -19,7 +19,7 @@ use webignition\BasilTranspiler\Tests\DataProvider\Action\UnhandledActionsDataPr
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionDataProviderTrait;
 
-class SubmitActionTranspilerTest extends \PHPUnit\Framework\TestCase
+class SetActionTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use WaitActionDataProviderTrait;
     use WaitForActionDataProviderTrait;
@@ -32,7 +32,7 @@ class SubmitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     use SetActionDataProviderTrait;
 
     /**
-     * @var SubmitActionTranspiler
+     * @var SetActionTranspiler
      */
     private $transpiler;
 
@@ -40,11 +40,11 @@ class SubmitActionTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = SubmitActionTranspiler::createTranspiler();
+        $this->transpiler = SetActionTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider submitActionDataProvider
+     * @dataProvider setActionDataProvider
      */
     public function testHandlesDoesHandle(ActionInterface $model)
     {
@@ -58,7 +58,7 @@ class SubmitActionTranspilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider reloadActionDataProvider
      * @dataProvider clickActionDataProvider
      * @dataProvider waitForActionDataProvider
-     * @dataProvider setActionDataProvider
+     * @dataProvider submitActionDataProvider
      * @dataProvider unhandledActionsDataProvider
      */
     public function testHandlesDoesNotHandle(object $model)

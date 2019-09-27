@@ -27,8 +27,10 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [],
-                'additionalPostLines' => [],
+                'additionalSetupLines' => [
+                    '$this->assertTrue(true);'
+                ],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 10,
             ],
             'wait action, element value' => [
@@ -46,10 +48,10 @@ trait WaitActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Inspector::class),
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalPostLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 20,
             ],
             'wait action, attribute value, attribute exists' => [
@@ -70,10 +72,10 @@ trait WaitActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Inspector::class),
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalPostLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 30,
             ],
             'wait action, attribute value, attribute does not exist' => [
@@ -94,10 +96,10 @@ trait WaitActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Inspector::class),
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalPostLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 0,
             ],
             'wait action, browser property' => [
@@ -109,8 +111,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [],
-                'additionalPostLines' => [],
+                'additionalSetupLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 1200,
             ],
             'wait action, page property' => [
@@ -121,8 +123,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [],
-                'additionalPostLines' => [],
+                'additionalSetupLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value exists' => [
@@ -133,8 +135,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [],
-                'additionalPostLines' => [],
+                'additionalSetupLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value does not exist' => [
@@ -145,8 +147,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [],
-                'additionalPostLines' => [],
+                'additionalSetupLines' => [],
+                'additionalTeardownLines' => [],
                 'expectedDuration' => 0,
             ],
         ];

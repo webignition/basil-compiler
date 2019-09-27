@@ -34,7 +34,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -54,7 +54,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -111,7 +111,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -136,7 +136,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -199,7 +199,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -219,7 +219,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -239,7 +239,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -259,7 +259,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -279,7 +279,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -299,7 +299,7 @@ trait IsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [

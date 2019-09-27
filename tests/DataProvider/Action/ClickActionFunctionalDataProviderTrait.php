@@ -23,10 +23,10 @@ trait ClickActionFunctionalDataProviderTrait
                     'ELEMENT' => '$element',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
                 ],
             ],
@@ -39,12 +39,12 @@ trait ClickActionFunctionalDataProviderTrait
                     'ELEMENT' => '$element',
                 ],
                 'additionalUseStatements' => [],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                     '$submitButton = $crawler->filter(\'#form input[type="submit"]\')->getElement(0);',
                     '$this->assertEquals("false", $submitButton->getAttribute(\'data-clicked\'));',
                 ],
-                'additionalPostLines' => [
+                'additionalTeardownLines' => [
                     '$this->assertEquals("true", $submitButton->getAttribute(\'data-clicked\'));',
                 ],
             ],

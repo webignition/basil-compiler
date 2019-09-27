@@ -29,7 +29,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalPreLines' => [
+                'additionalSetupLines' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [

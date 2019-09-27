@@ -15,7 +15,7 @@ trait ReloadActionDataProviderTrait
 
         return [
             'no-arguments action (reload)' => [
-                'value' => $actionFactory->createFromActionString(
+                'action' => $actionFactory->createFromActionString(
                     'reload'
                 ),
             ],
