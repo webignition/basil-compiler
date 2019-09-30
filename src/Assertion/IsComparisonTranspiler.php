@@ -7,7 +7,7 @@ use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -33,11 +33,11 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
     /**
      * @param object $model
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResultInterface
+    public function transpile(object $model): TranspilableSourceInterface
     {
         if (!$model instanceof ComparisonAssertionInterface) {
             throw new NonTranspilableModelException($model);
@@ -53,7 +53,7 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
         ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return AssertionComparison::IS === $assertion->getComparison()
             ? $this->assertionCallFactory->createValuesAreEqualAssertionCall($examinedValue, $expectedValue)
             : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall($examinedValue, $expectedValue);

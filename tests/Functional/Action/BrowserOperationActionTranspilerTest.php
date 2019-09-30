@@ -44,10 +44,10 @@ class BrowserOperationActionTranspilerTest extends AbstractTestCase
         array $additionalPreLines,
         array $additionalPostLines
     ) {
-        $transpilationResult = $this->transpiler->transpile($action);
+        $transpilableSource = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
             $additionalPreLines,

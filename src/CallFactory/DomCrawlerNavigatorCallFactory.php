@@ -3,7 +3,7 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
@@ -27,83 +27,83 @@ class DomCrawlerNavigatorCallFactory
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createFindCallForIdentifier(
         DomIdentifierInterface $elementIdentifier
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         $arguments = $this->createElementCallArguments($elementIdentifier);
 
         return $this->createFindCallForTranspiledArguments($arguments);
     }
 
     /**
-     * @param TranspilationResultInterface $arguments
+     * @param TranspilableSourceInterface $arguments
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createFindCallForTranspiledArguments(
-        TranspilationResultInterface $arguments
-    ): TranspilationResultInterface {
+        TranspilableSourceInterface $arguments
+    ): TranspilableSourceInterface {
         return $this->createElementCall($arguments, 'find');
     }
 
     /**
-     * @param TranspilationResultInterface $arguments
+     * @param TranspilableSourceInterface $arguments
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createFindOneCallForTranspiledArguments(
-        TranspilationResultInterface $arguments
-    ): TranspilationResultInterface {
+        TranspilableSourceInterface $arguments
+    ): TranspilableSourceInterface {
         return $this->createElementCall($arguments, 'findOne');
     }
 
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createHasCallForIdentifier(
         DomIdentifierInterface $elementIdentifier
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
 
         return $this->createHasCallForTranspiledArguments($hasElementCallArguments);
     }
 
     /**
-     * @param TranspilationResultInterface $arguments
+     * @param TranspilableSourceInterface $arguments
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createHasCallForTranspiledArguments(
-        TranspilationResultInterface $arguments
-    ): TranspilationResultInterface {
+        TranspilableSourceInterface $arguments
+    ): TranspilableSourceInterface {
         return $this->createElementCall($arguments, 'has');
     }
 
     /**
-     * @param TranspilationResultInterface $arguments
+     * @param TranspilableSourceInterface $arguments
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createHasOneCallForTranspiledArguments(
-        TranspilationResultInterface $arguments
-    ): TranspilationResultInterface {
+        TranspilableSourceInterface $arguments
+    ): TranspilableSourceInterface {
         return $this->createElementCall($arguments, 'hasOne');
     }
 
     /**
-     * @param TranspilationResultInterface $arguments
+     * @param TranspilableSourceInterface $arguments
      * @param string $methodName
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     private function createElementCall(
-        TranspilationResultInterface $arguments,
+        TranspilableSourceInterface $arguments,
         string $methodName
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         $variablePlaceholders = new VariablePlaceholderCollection();
         $domCrawlerNavigatorPlaceholder = $variablePlaceholders->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
@@ -115,24 +115,24 @@ class DomCrawlerNavigatorCallFactory
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createElementCallArguments(
         DomIdentifierInterface $elementIdentifier
-    ): TranspilationResultInterface {
-        $transpilationResult = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+    ): TranspilableSourceInterface {
+        $transpilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
         if ($parentIdentifier instanceof DomIdentifierInterface) {
-            $parentTranspilationResult = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
+            $parentTranspilableSource = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
 
-            $transpilationResult = $transpilationResult->extend(
-                sprintf('%s, %s', '%s', (string) $parentTranspilationResult),
+            $transpilableSource = $transpilableSource->extend(
+                sprintf('%s, %s', '%s', (string) $parentTranspilableSource),
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
             );
         }
 
-        return $transpilationResult;
+        return $transpilableSource;
     }
 }

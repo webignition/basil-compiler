@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -26,11 +26,11 @@ class UseStatementTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResultInterface
+    public function transpile(object $model): TranspilableSourceInterface
     {
         if (!$model instanceof UseStatement) {
             throw new NonTranspilableModelException($model);
@@ -42,7 +42,7 @@ class UseStatementTranspiler implements TranspilerInterface
             ? sprintf(self::CLASS_NAME_ONLY_TEMPLATE, $model->getClassName())
             : sprintf(self::WITH_ALIAS_TEMPLATE, $model->getClassName(), $model->getAlias());
 
-        return new TranspilationResult(
+        return new TranspilableSource(
             [
                 $content
             ],

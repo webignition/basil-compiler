@@ -8,15 +8,15 @@ use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
-use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class VariableAssignmentCallFactory
@@ -27,7 +27,7 @@ class VariableAssignmentCallFactory
     private $assertionCallFactory;
     private $elementLocatorCallFactory;
     private $domCrawlerNavigatorCallFactory;
-    private $transpilationResultComposer;
+    private $transpilableSourceComposer;
     private $valueTranspiler;
     private $singleQuotedStringEscaper;
     private $webDriverElementInspectorCallFactory;
@@ -37,7 +37,7 @@ class VariableAssignmentCallFactory
         AssertionCallFactory $assertionCallFactory,
         ElementLocatorCallFactory $elementLocatorCallFactory,
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
-        TranspilationResultComposer $transpilationResultComposer,
+        TranspilableSourceComposer $transpilableSourceComposer,
         ValueTranspiler $valueTranspiler,
         SingleQuotedStringEscaper $singleQuotedStringEscaper,
         WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory,
@@ -46,7 +46,7 @@ class VariableAssignmentCallFactory
         $this->assertionCallFactory = $assertionCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
-        $this->transpilationResultComposer = $transpilationResultComposer;
+        $this->transpilableSourceComposer = $transpilableSourceComposer;
         $this->valueTranspiler = $valueTranspiler;
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
         $this->webDriverElementInspectorCallFactory = $webDriverElementInspectorCallFactory;
@@ -59,7 +59,7 @@ class VariableAssignmentCallFactory
             AssertionCallFactory::createFactory(),
             ElementLocatorCallFactory::createFactory(),
             DomCrawlerNavigatorCallFactory::createFactory(),
-            TranspilationResultComposer::create(),
+            TranspilableSourceComposer::create(),
             ValueTranspiler::createTranspiler(),
             SingleQuotedStringEscaper::create(),
             WebDriverElementInspectorCallFactory::createFactory(),
@@ -80,7 +80,7 @@ class VariableAssignmentCallFactory
         VariablePlaceholder $elementPlaceholder
     ) {
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
-            new TranspilationResult(
+            new TranspilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
@@ -88,7 +88,7 @@ class VariableAssignmentCallFactory
         );
 
         $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCallForTranspiledArguments(
-            new TranspilationResult(
+            new TranspilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
@@ -212,7 +212,7 @@ class VariableAssignmentCallFactory
         VariablePlaceholder $collectionPlaceholder
     ) {
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
-            new TranspilationResult(
+            new TranspilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
@@ -220,7 +220,7 @@ class VariableAssignmentCallFactory
         );
 
         $findCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
-            new TranspilationResult(
+            new TranspilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()
@@ -312,14 +312,14 @@ class VariableAssignmentCallFactory
             $elementAssignmentCall,
         ];
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $attributePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $attributePlaceholder);
     }
 
     /**
@@ -361,14 +361,14 @@ class VariableAssignmentCallFactory
             $assignmentCall,
         ];
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $valuePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $valuePlaceholder);
     }
 
     /**
@@ -393,14 +393,14 @@ class VariableAssignmentCallFactory
             $valuePlaceholder
         ]);
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             $assignmentCall->getLines(),
             [$assignmentCall],
             new UseStatementCollection(),
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $valuePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $valuePlaceholder);
     }
 
     /**
@@ -431,14 +431,14 @@ class VariableAssignmentCallFactory
             $variablePlaceholders
         );
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             $assignmentCall->getLines(),
             [$assignmentCall],
             new UseStatementCollection(),
             new VariablePlaceholderCollection()
         );
 
-        return new VariableAssignmentCall($transpilationResult, $valuePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $valuePlaceholder);
     }
 
 
@@ -446,8 +446,8 @@ class VariableAssignmentCallFactory
      * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $returnValuePlaceholder
-     * @param TranspilationResultInterface $hasCall
-     * @param TranspilationResultInterface $findCall
+     * @param TranspilableSourceInterface $hasCall
+     * @param TranspilableSourceInterface $findCall
      *
      * @return VariableAssignmentCall
      */
@@ -455,8 +455,8 @@ class VariableAssignmentCallFactory
         DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $returnValuePlaceholder,
-        TranspilationResultInterface $hasCall,
-        TranspilationResultInterface $findCall
+        TranspilableSourceInterface $hasCall,
+        TranspilableSourceInterface $findCall
     ) {
         $variablePlaceholders = new VariablePlaceholderCollection();
         $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
@@ -501,14 +501,14 @@ class VariableAssignmentCallFactory
             $elementExistsAssertionCall,
         ];
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $returnValuePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $returnValuePlaceholder);
     }
 
     /**
@@ -547,14 +547,14 @@ class VariableAssignmentCallFactory
             $variableAccessCall,
         ];
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $variablePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $variablePlaceholder);
     }
 
 
@@ -581,7 +581,7 @@ class VariableAssignmentCallFactory
 
         $comparisonStatement = $variablePlaceholder . ' = ' . $variablePlaceholder . ' !== null';
 
-        $transpilationResult = $this->transpilationResultComposer->compose(
+        $transpilableSource = $this->transpilableSourceComposer->compose(
             array_merge(
                 $assignmentCall->getLines(),
                 [
@@ -595,7 +595,7 @@ class VariableAssignmentCallFactory
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($transpilationResult, $variablePlaceholder);
+        return new VariableAssignmentCall($transpilableSource, $variablePlaceholder);
     }
 
     private function createElementLocatorPlaceholder(): VariablePlaceholder

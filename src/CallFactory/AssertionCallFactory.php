@@ -2,12 +2,12 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
-use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory
@@ -25,7 +25,7 @@ class AssertionCallFactory
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
 
-    private $transpilationResultComposer;
+    private $transpilableSourceComposer;
     private $phpUnitTestCasePlaceholder;
 
     /**
@@ -38,9 +38,9 @@ class AssertionCallFactory
      */
     private $attributeNotExistsTemplate = '';
 
-    public function __construct(TranspilationResultComposer $transpilationResultComposer)
+    public function __construct(TranspilableSourceComposer $transpilableSourceComposer)
     {
-        $this->transpilationResultComposer = $transpilationResultComposer;
+        $this->transpilableSourceComposer = $transpilableSourceComposer;
         $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
 
         $this->attributeExistsTemplate = sprintf(
@@ -59,13 +59,13 @@ class AssertionCallFactory
     public static function createFactory(): AssertionCallFactory
     {
         return new AssertionCallFactory(
-            TranspilationResultComposer::create()
+            TranspilableSourceComposer::create()
         );
     }
 
     public function createValueIsTrueAssertionCall(
         VariableAssignmentCall $variableAssignmentCall
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
             self::ASSERT_TRUE_TEMPLATE
@@ -74,7 +74,7 @@ class AssertionCallFactory
 
     public function createValueIsFalseAssertionCall(
         VariableAssignmentCall $variableAssignmentCall
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
             self::ASSERT_FALSE_TEMPLATE
@@ -85,12 +85,12 @@ class AssertionCallFactory
      * @param VariableAssignmentCall $expectedValueCall
      * @param VariableAssignmentCall $actualValueCall
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createValuesAreEqualAssertionCall(
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
             $actualValueCall,
@@ -102,12 +102,12 @@ class AssertionCallFactory
      * @param VariableAssignmentCall $expectedValueCall
      * @param VariableAssignmentCall $actualValueCall
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createValuesAreNotEqualAssertionCall(
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
             $actualValueCall,
@@ -119,12 +119,12 @@ class AssertionCallFactory
      * @param VariableAssignmentCall $needle
      * @param VariableAssignmentCall $haystack
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createValueIncludesValueAssertionCall(
         VariableAssignmentCall $needle,
         VariableAssignmentCall $haystack
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
@@ -136,12 +136,12 @@ class AssertionCallFactory
      * @param VariableAssignmentCall $needle
      * @param VariableAssignmentCall $haystack
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createValueNotIncludesValueAssertionCall(
         VariableAssignmentCall $needle,
         VariableAssignmentCall $haystack
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
@@ -153,12 +153,12 @@ class AssertionCallFactory
      * @param VariableAssignmentCall $needle
      * @param VariableAssignmentCall $haystack
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function createValueMatchesValueAssertionCall(
         VariableAssignmentCall $needle,
         VariableAssignmentCall $haystack
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
@@ -171,13 +171,13 @@ class AssertionCallFactory
      * @param VariableAssignmentCall $actualValueCall
      * @param string $assertionTemplate
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     private function createValueComparisonAssertionCall(
         VariableAssignmentCall $expectedValueCall,
         VariableAssignmentCall $actualValueCall,
         string $assertionTemplate
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         $assertionStatement = sprintf(
             $assertionTemplate,
             $this->phpUnitTestCasePlaceholder,
@@ -198,7 +198,7 @@ class AssertionCallFactory
             $actualValueCall,
         ];
 
-        return $this->transpilationResultComposer->compose(
+        return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),
@@ -209,7 +209,7 @@ class AssertionCallFactory
     private function createValueExistenceAssertionCall(
         VariableAssignmentCall $variableAssignmentCall,
         string $assertionTemplate
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
@@ -227,7 +227,7 @@ class AssertionCallFactory
             $variableAssignmentCall,
         ];
 
-        return $this->transpilationResultComposer->compose(
+        return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),

@@ -39,12 +39,12 @@ class WaitActionTranspilerTest extends AbstractTestCase
         array $additionalPostLines,
         int $expectedDuration
     ) {
-        $transpilationResult = $this->transpiler->transpile($action);
+        $transpilableSource = $this->transpiler->transpile($action);
 
         $expectedDurationThreshold = $expectedDuration + 1;
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
             $additionalPreLines,

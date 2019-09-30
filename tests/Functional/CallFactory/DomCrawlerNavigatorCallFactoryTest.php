@@ -10,8 +10,8 @@ use Facebook\WebDriver\WebDriverElement;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -42,10 +42,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         DomIdentifierInterface $elementIdentifier,
         callable $assertions
     ) {
-        $transpilationResult = $this->factory->createFindCallForIdentifier($elementIdentifier);
+        $transpilableSource = $this->factory->createFindCallForIdentifier($elementIdentifier);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
-            $transpilationResult,
+            $transpilableSource,
             self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
@@ -106,13 +106,13 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateFindCallForTranspiledLocator(
         string $fixture,
-        TranspilationResultInterface $arguments,
+        TranspilableSourceInterface $arguments,
         callable $assertions
     ) {
-        $transpilationResult = $this->factory->createFindCallForTranspiledArguments($arguments);
+        $transpilableSource = $this->factory->createFindCallForTranspiledArguments($arguments);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
-            $transpilationResult,
+            $transpilableSource,
             self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
@@ -133,7 +133,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'css selector, no parent' => [
                 'fixture' => '/form.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     ['new ElementLocator(\'input\', 1)'],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
@@ -153,7 +153,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'css selector, has parent' => [
                 'fixture' => '/form.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     [
                         'new ElementLocator(\'input\', 1), ' .
                         'new ElementLocator(\'form[action="/action2"]\', 1)'
@@ -185,10 +185,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         DomIdentifierInterface $elementIdentifier,
         bool $expectedHasElement
     ) {
-        $transpilationResult = $this->factory->createHasCallForIdentifier($elementIdentifier);
+        $transpilableSource = $this->factory->createHasCallForIdentifier($elementIdentifier);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
-            $transpilationResult,
+            $transpilableSource,
             self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
@@ -264,13 +264,13 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateHasCallForTranspiledArguments(
         string $fixture,
-        TranspilationResultInterface $arguments,
+        TranspilableSourceInterface $arguments,
         bool $expectedHasElement
     ) {
-        $transpilationResult = $this->factory->createHasCallForTranspiledArguments($arguments);
+        $transpilableSource = $this->factory->createHasCallForTranspiledArguments($arguments);
 
         $executableCall = $this->executableCallFactory->createWithReturn(
-            $transpilationResult,
+            $transpilableSource,
             self::VARIABLE_IDENTIFIERS,
             [
                 '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
@@ -290,7 +290,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'not hasElement: css selector only' => [
                 'fixture' => '/index.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     ['new ElementLocator(\'.non-existent\', 1)'],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
@@ -301,7 +301,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'not hasElement: css selector with parent, parent does not exist' => [
                 'fixture' => '/index.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     [
                         'new ElementLocator(\'.non-existent-child\', 1), ' .
                         'new ElementLocator(\'.non-existent-parent\', 1)'
@@ -315,7 +315,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'not hasElement: css selector with parent, child does not exist' => [
                 'fixture' => '/form.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     [
                         'new ElementLocator(\'.non-existent-child\', 1), ' .
                         'new ElementLocator(\'form[action="/action1"]\', 1)'
@@ -329,7 +329,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'hasElement: css selector only' => [
                 'fixture' => '/index.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     ['new ElementLocator(\'h1\', 1)'],
                     new UseStatementCollection([
                         new UseStatement(ElementLocator::class)
@@ -340,7 +340,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'hasElement: css selector with parent' => [
                 'fixture' => '/form.html',
-                'arguments' => new TranspilationResult(
+                'arguments' => new TranspilableSource(
                     [
                         'new ElementLocator(\'input\', 1), ' .
                         'new ElementLocator(\'form[action="/action1"]\', 1)'

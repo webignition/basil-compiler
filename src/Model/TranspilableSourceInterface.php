@@ -2,13 +2,13 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-interface TranspilationResultInterface
+interface TranspilableSourceInterface
 {
     public function extend(
         string $template,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
-    ): TranspilationResultInterface;
+    ): TranspilableSourceInterface;
 
     /**
      * @return string[]

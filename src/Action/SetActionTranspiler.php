@@ -7,26 +7,26 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class SetActionTranspiler implements TranspilerInterface
 {
     private $variableAssignmentCallFactory;
-    private $transpilationResultComposer;
+    private $transpilableSourceComposer;
     private $webDriverElementMutatorCallFactory;
 
     public function __construct(
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilationResultComposer $transpilationResultComposer,
+        TranspilableSourceComposer $transpilableSourceComposer,
         WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory
     ) {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilationResultComposer = $transpilationResultComposer;
+        $this->transpilableSourceComposer = $transpilableSourceComposer;
         $this->webDriverElementMutatorCallFactory = $webDriverElementMutatorCallFactory;
     }
 
@@ -34,7 +34,7 @@ class SetActionTranspiler implements TranspilerInterface
     {
         return new SetActionTranspiler(
             VariableAssignmentCallFactory::createFactory(),
-            TranspilationResultComposer::create(),
+            TranspilableSourceComposer::create(),
             WebDriverElementMutatorCallFactory::createFactory()
         );
     }
@@ -47,11 +47,11 @@ class SetActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResultInterface
+    public function transpile(object $model): TranspilableSourceInterface
     {
         if (!$model instanceof InputActionInterface) {
             throw new NonTranspilableModelException($model);
@@ -102,7 +102,7 @@ class SetActionTranspiler implements TranspilerInterface
             $calls[] = $valueAssignmentCall;
         }
 
-        return $this->transpilationResultComposer->compose(
+        return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),

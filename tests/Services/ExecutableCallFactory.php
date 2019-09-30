@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\UseStatementTranspiler;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
@@ -34,7 +34,7 @@ class ExecutableCallFactory
     }
 
     public function create(
-        TranspilationResultInterface $transpilationResult,
+        TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers = [],
         array $setupLines = [],
         array $teardownLines = [],
@@ -42,7 +42,7 @@ class ExecutableCallFactory
     ): string {
         $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
 
-        $useStatements = $transpilationResult->getUseStatements();
+        $useStatements = $transpilableSource->getUseStatements();
         $useStatements = $useStatements->merge([
             $additionalUseStatements,
         ]);
@@ -57,7 +57,7 @@ class ExecutableCallFactory
             $executableCall .= $line . "\n";
         }
 
-        $lines = $transpilationResult->getLines();
+        $lines = $transpilableSource->getLines();
 
         array_walk($lines, function (string &$line) {
             $line .= ';';
@@ -79,26 +79,26 @@ class ExecutableCallFactory
     }
 
     public function createWithReturn(
-        TranspilationResultInterface $transpilationResult,
+        TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers = [],
         array $setupLines = [],
         array $teardownLines = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
-        $lines = $transpilationResult->getLines();
+        $lines = $transpilableSource->getLines();
         $lastLinePosition = count($lines) - 1;
         $lastLine = $lines[$lastLinePosition];
         $lastLine = 'return ' . $lastLine;
         $lines[$lastLinePosition] = $lastLine;
 
-        $transpilationResultWithReturn = new TranspilationResult(
+        $transpilableSourceWithReturn = new TranspilableSource(
             $lines,
-            $transpilationResult->getUseStatements(),
-            $transpilationResult->getVariablePlaceholders()
+            $transpilableSource->getUseStatements(),
+            $transpilableSource->getVariablePlaceholders()
         );
 
         return $this->create(
-            $transpilationResultWithReturn,
+            $transpilableSourceWithReturn,
             $variableIdentifiers,
             $setupLines,
             $teardownLines,
