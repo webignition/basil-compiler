@@ -2,25 +2,25 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
-class TranspilationResultComposer
+class TranspilableSourceComposer
 {
-    public static function create(): TranspilationResultComposer
+    public static function create(): TranspilableSourceComposer
     {
-        return new TranspilationResultComposer();
+        return new TranspilableSourceComposer();
     }
 
     /**
      * @param string[] $statements
-     * @param TranspilationResultInterface[] $calls
+     * @param TranspilableSourceInterface[] $calls
      * @param UseStatementCollection $useStatements
      * @param VariablePlaceholderCollection $variablePlaceholders
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
     public function compose(
         array $statements,
@@ -33,6 +33,6 @@ class TranspilationResultComposer
             $variablePlaceholders = $variablePlaceholders->merge([$call->getVariablePlaceholders()]);
         }
 
-        return new TranspilationResult($statements, $useStatements, $variablePlaceholders);
+        return new TranspilableSource($statements, $useStatements, $variablePlaceholders);
     }
 }

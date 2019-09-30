@@ -10,7 +10,7 @@ use webignition\BasilModel\Exception\InvalidAssertableExpectedValueException;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -36,11 +36,11 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
     /**
      * @param object $model
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResultInterface
+    public function transpile(object $model): TranspilableSourceInterface
     {
         if (!$model instanceof ComparisonAssertionInterface) {
             throw new NonTranspilableModelException($model);
@@ -57,7 +57,7 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
         ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
-    ): TranspilationResultInterface {
+    ): TranspilableSourceInterface {
         return AssertionComparison::INCLUDES === $assertion->getComparison()
             ? $this->assertionCallFactory->createValueIncludesValueAssertionCall($expectedValue, $examinedValue)
             : $this->assertionCallFactory->createValueNotIncludesValueAssertionCall($expectedValue, $examinedValue);

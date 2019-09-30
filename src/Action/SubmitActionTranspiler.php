@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class SubmitActionTranspiler extends AbstractInteractionActionTranspiler implements TranspilerInterface
@@ -13,7 +13,7 @@ class SubmitActionTranspiler extends AbstractInteractionActionTranspiler impleme
     {
         return new SubmitActionTranspiler(
             VariableAssignmentCallFactory::createFactory(),
-            TranspilationResultComposer::create()
+            TranspilableSourceComposer::create()
         );
     }
 

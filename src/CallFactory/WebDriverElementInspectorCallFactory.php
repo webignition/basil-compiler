@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -16,7 +16,7 @@ class WebDriverElementInspectorCallFactory
         return new WebDriverElementInspectorCallFactory();
     }
 
-    public function createGetValueCall(VariablePlaceholder $collectionPlaceholder): TranspilationResultInterface
+    public function createGetValueCall(VariablePlaceholder $collectionPlaceholder): TranspilableSourceInterface
     {
         $variablePlaceholders = new VariablePlaceholderCollection();
         $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
@@ -29,6 +29,6 @@ class WebDriverElementInspectorCallFactory
             $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
         ];
 
-        return new TranspilationResult($statements, new UseStatementCollection(), $variablePlaceholders);
+        return new TranspilableSource($statements, new UseStatementCollection(), $variablePlaceholders);
     }
 }

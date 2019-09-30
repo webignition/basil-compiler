@@ -2,18 +2,18 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class TranspilationResult implements TranspilationResultInterface
+class TranspilableSource implements TranspilableSourceInterface
 {
-    private $lines;
+    private $statements;
     private $useStatements;
     private $variablePlaceholders;
 
     public function __construct(
-        array $lines,
+        array $statements,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
     ) {
-        $this->lines = $lines;
+        $this->statements = $statements;
         $this->useStatements = $useStatements;
         $this->variablePlaceholders = $variablePlaceholders;
     }
@@ -22,8 +22,8 @@ class TranspilationResult implements TranspilationResultInterface
         string $template,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
-    ): TranspilationResultInterface {
-        return new TranspilationResult(
+    ): TranspilableSourceInterface {
+        return new TranspilableSource(
             explode("\n", sprintf($template, (string) $this)),
             $this->getUseStatements()->merge([$useStatements]),
             $this->getVariablePlaceholders()->merge([$variablePlaceholders])
@@ -33,9 +33,9 @@ class TranspilationResult implements TranspilationResultInterface
     /**
      * @return string[]
      */
-    public function getLines(): array
+    public function getStatements(): array
     {
-        return $this->lines;
+        return $this->statements;
     }
 
     public function getUseStatements(): UseStatementCollection
@@ -48,16 +48,16 @@ class TranspilationResult implements TranspilationResultInterface
         return $this->variablePlaceholders;
     }
 
-    public function withAdditionalLines(array $lines): TranspilationResultInterface
+    public function withAdditionalStatements(array $statements): TranspilableSourceInterface
     {
         $new = clone $this;
-        $new->lines = array_merge($this->lines, $lines);
+        $new->statements = array_merge($this->statements, $statements);
 
         return $new;
     }
 
     public function __toString(): string
     {
-        return implode("\n", $this->lines);
+        return implode("\n", $this->statements);
     }
 }

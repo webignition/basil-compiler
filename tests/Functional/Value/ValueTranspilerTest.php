@@ -39,13 +39,13 @@ class ValueTranspilerTest extends AbstractTestCase
         $expectedExecutedResult,
         array $additionalVariableIdentifiers = []
     ) {
-        $transpilationResult = $this->transpiler->transpile($model);
+        $transpilableSource = $this->transpiler->transpile($model);
 
-        $this->assertEquals(new UseStatementCollection(), $transpilationResult->getUseStatements());
-        $this->assertEquals($expectedVariablePlaceholders, $transpilationResult->getVariablePlaceholders());
+        $this->assertEquals(new UseStatementCollection(), $transpilableSource->getUseStatements());
+        $this->assertEquals($expectedVariablePlaceholders, $transpilableSource->getVariablePlaceholders());
 
         $executableCall = $this->executableCallFactory->createWithReturn(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(
                 self::VARIABLE_IDENTIFIERS,
                 $additionalVariableIdentifiers

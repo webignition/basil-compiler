@@ -55,16 +55,16 @@ class AssertionTranspilerTest extends AbstractTestCase
         string $fixture,
         AssertionInterface $assertion,
         array $variableIdentifiers,
-        array $additionalPreLines = [],
+        array $additionalSetupStatements = [],
         array $additionalUseStatements = []
     ) {
-        $transpilationResult = $this->transpiler->transpile($assertion);
+        $transpilableSource = $this->transpiler->transpile($assertion);
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalPreLines,
+            $additionalSetupStatements,
             [],
             $additionalUseStatements
         );
@@ -81,10 +81,10 @@ class AssertionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         string $expectedExpectationFailedExceptionMessage
     ) {
-        $transpilationResult = $this->transpiler->transpile($assertion);
+        $transpilableSource = $this->transpiler->transpile($assertion);
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture
         );

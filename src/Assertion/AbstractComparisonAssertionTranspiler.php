@@ -6,7 +6,7 @@ use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -29,16 +29,16 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         ComparisonAssertionInterface $assertion,
         VariableAssignmentCall $examinedValue,
         VariableAssignmentCall $expectedValue
-    ): TranspilationResultInterface;
+    ): TranspilableSourceInterface;
 
     /**
      * @param ComparisonAssertionInterface $assertion
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    protected function doTranspile(ComparisonAssertionInterface $assertion): TranspilationResultInterface
+    protected function doTranspile(ComparisonAssertionInterface $assertion): TranspilableSourceInterface
     {
         $examinedValue = $assertion->getExaminedValue();
         $expectedValue = $assertion->getExpectedValue();

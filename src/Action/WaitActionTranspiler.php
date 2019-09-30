@@ -4,11 +4,11 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class WaitActionTranspiler implements TranspilerInterface
@@ -17,21 +17,21 @@ class WaitActionTranspiler implements TranspilerInterface
     const MICROSECONDS_PER_MILLISECOND = 1000;
 
     private $variableAssignmentCallFactory;
-    private $transpilationResultComposer;
+    private $transpilableSourceComposer;
 
     public function __construct(
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilationResultComposer $transpilationResultComposer
+        TranspilableSourceComposer $transpilableSourceComposer
     ) {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilationResultComposer = $transpilationResultComposer;
+        $this->transpilableSourceComposer = $transpilableSourceComposer;
     }
 
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
             VariableAssignmentCallFactory::createFactory(),
-            TranspilationResultComposer::create()
+            TranspilableSourceComposer::create()
         );
     }
 
@@ -43,11 +43,11 @@ class WaitActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResultInterface
+    public function transpile(object $model): TranspilableSourceInterface
     {
         if (!$model instanceof WaitActionInterface) {
             throw new NonTranspilableModelException($model);
@@ -75,8 +75,8 @@ class WaitActionTranspiler implements TranspilerInterface
             self::MICROSECONDS_PER_MILLISECOND
         );
 
-        return $this->transpilationResultComposer->compose(
-            array_merge($durationAssignmentCall->getLines(), [
+        return $this->transpilableSourceComposer->compose(
+            array_merge($durationAssignmentCall->getStatements(), [
                 $waitStatement
             ]),
             [

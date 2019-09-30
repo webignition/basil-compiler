@@ -52,13 +52,13 @@ trait SetActionFunctionalDataProviderTrait
                         new UseStatement(Inspector::class),
                         new UseStatement(Mutator::class),
                     ],
-                    'additionalSetupLines' => [
+                    'additionalSetupStatements' => [
                         '$inspector = Inspector::create($crawler);',
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalTeardownLines' => [
+                    'additionalTeardownStatements' => [
                         '$this->assertEquals("textarea content", $input->getAttribute("value"));',
                     ],
                 ],
@@ -76,12 +76,12 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalUseStatements' => [
                         new UseStatement(Mutator::class),
                     ],
-                    'additionalSetupLines' => [
+                    'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalTeardownLines' => [
+                    'additionalTeardownStatements' => [
                         '$this->assertEquals("http://127.0.0.1:9080/action1", $input->getAttribute("value"));',
                     ],
                 ],
@@ -94,12 +94,12 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalUseStatements' => [
                         new UseStatement(Mutator::class),
                     ],
-                    'additionalSetupLines' => [
+                    'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalTeardownLines' => [
+                    'additionalTeardownStatements' => [
                         '$this->assertEquals("1200x1100", $input->getAttribute("value"));',
                     ],
                 ],
@@ -112,12 +112,12 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalUseStatements' => [
                         new UseStatement(Mutator::class),
                     ],
-                    'additionalSetupLines' => [
+                    'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalTeardownLines' => [
+                    'additionalTeardownStatements' => [
                         '$this->assertEquals("http://127.0.0.1:9080/form.html", $input->getAttribute("value"));',
                     ],
                 ],
@@ -130,12 +130,12 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalUseStatements' => [
                         new UseStatement(Mutator::class),
                     ],
-                    'additionalSetupLines' => [
+                    'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                         '$this->assertEquals("", $input->getAttribute("value"));',
                     ],
-                    'additionalTeardownLines' => [
+                    'additionalTeardownStatements' => [
                         '$this->assertEquals("environment value", $input->getAttribute("value"));',
                     ],
                 ],
@@ -157,12 +157,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
             ],
@@ -175,12 +175,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("non-empty value", $input->getAttribute("value"));',
                 ],
             ],
@@ -193,12 +193,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-with-value]\')->getElement(0);',
                     '$this->assertEquals("test", $input->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
             ],
@@ -211,12 +211,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-with-value]\')->getElement(0);',
                     '$this->assertEquals("test", $input->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("new value", $input->getAttribute("value"));',
                 ],
             ],
@@ -237,12 +237,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-empty\')->getElement(0);',
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -255,12 +255,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-empty\')->getElement(0);',
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("non-empty value", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -273,12 +273,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-non-empty\')->getElement(0);',
                     '$this->assertEquals("textarea content", $textarea->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -291,12 +291,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-non-empty\')->getElement(0);',
                     '$this->assertEquals("textarea content", $textarea->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("new value", $textarea->getAttribute("value"));',
                 ],
             ],
@@ -317,12 +317,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -335,12 +335,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -353,12 +353,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -371,12 +371,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -389,12 +389,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -407,12 +407,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
             ],
@@ -433,12 +433,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -451,12 +451,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
             ],
@@ -469,12 +469,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -487,12 +487,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -505,12 +505,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
             ],
@@ -523,12 +523,12 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
             ],
@@ -549,14 +549,14 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -571,14 +571,14 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -593,14 +593,14 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -615,14 +615,14 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -637,14 +637,14 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
@@ -659,14 +659,14 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Mutator::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertFalse($radioGroup->getElement(0)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(2)->isSelected());',

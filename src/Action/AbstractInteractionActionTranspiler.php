@@ -5,24 +5,24 @@ namespace webignition\BasilTranspiler\Action;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilationResultComposer;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 abstract class AbstractInteractionActionTranspiler implements TranspilerInterface
 {
     private $variableAssignmentCallFactory;
-    private $transpilationResultComposer;
+    private $transpilableSourceComposer;
 
     public function __construct(
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilationResultComposer $transpilationResultComposer
+        TranspilableSourceComposer $transpilableSourceComposer
     ) {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilationResultComposer = $transpilationResultComposer;
+        $this->transpilableSourceComposer = $transpilableSourceComposer;
     }
 
     abstract protected function getHandledActionType(): string;
@@ -36,11 +36,11 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
     /**
      * @param object $model
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilationResultInterface
+    public function transpile(object $model): TranspilableSourceInterface
     {
         if (!$model instanceof InteractionActionInterface) {
             throw new NonTranspilableModelException($model);
@@ -66,7 +66,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $elementPlaceholder
         );
 
-        $statements = $elementVariableAssignmentCall->getLines();
+        $statements = $elementVariableAssignmentCall->getStatements();
         $statements[] = sprintf(
             '%s->%s()',
             (string) $elementPlaceholder,
@@ -77,7 +77,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $elementVariableAssignmentCall,
         ];
 
-        return $this->transpilationResultComposer->compose(
+        return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
             new UseStatementCollection(),

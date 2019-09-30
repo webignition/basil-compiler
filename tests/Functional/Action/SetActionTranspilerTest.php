@@ -35,17 +35,17 @@ class SetActionTranspilerTest extends AbstractTestCase
         string $fixture,
         array $variableIdentifiers,
         array $additionalUseStatements,
-        array $additionalSetupLines,
-        array $additionalTeardownLines
+        array $additionalSetupStatements,
+        array $additionalTeardownStatements
     ) {
-        $transpilationResult = $this->transpiler->transpile($action);
+        $transpilableSource = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalSetupLines,
-            $additionalTeardownLines,
+            $additionalSetupStatements,
+            $additionalTeardownStatements,
             $additionalUseStatements
         );
 

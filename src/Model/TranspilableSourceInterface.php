@@ -2,20 +2,20 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-interface TranspilationResultInterface
+interface TranspilableSourceInterface
 {
     public function extend(
         string $template,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
-    ): TranspilationResultInterface;
+    ): TranspilableSourceInterface;
 
     /**
      * @return string[]
      */
-    public function getLines(): array;
+    public function getStatements(): array;
 
-    public function withAdditionalLines(array $lines);
+    public function withAdditionalStatements(array $statements);
     public function getUseStatements(): UseStatementCollection;
     public function getVariablePlaceholders(): VariablePlaceholderCollection;
     public function __toString(): string;

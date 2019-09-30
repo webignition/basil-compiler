@@ -34,7 +34,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -54,7 +54,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                     'ELEMENT' => '$element',
                     'ATTRIBUTE' => '$attribute',
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -111,7 +111,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
@@ -136,7 +136,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                     'EXAMINED_VALUE' => '$examinedValue',
                     'WEBDRIVER_ELEMENT_INSPECTOR' => '$webDriverElementInspector',
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [

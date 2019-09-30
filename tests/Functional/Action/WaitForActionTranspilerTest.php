@@ -35,31 +35,31 @@ class WaitForActionTranspilerTest extends AbstractTestCase
         string $fixture,
         array $variableIdentifiers,
         array $additionalUseStatements,
-        array $additionalPreLines,
-        array $additionalPostLines
+        array $additionalSetupStatements,
+        array $additionalTeardownStatements
     ) {
-        $transpilationResult = $this->transpiler->transpile($action);
+        $transpilableSource = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalPreLines,
-            $additionalPostLines,
+            $additionalSetupStatements,
+            $additionalTeardownStatements,
             $additionalUseStatements
         );
 
-        $executableCallLines = explode("\n", $executableCall);
-        $waitForLine = array_pop($executableCallLines);
+        $executableCallStatements = explode("\n", $executableCall);
+        $waitForStatement = array_pop($executableCallStatements);
 
-        $executableCallLines = array_merge($executableCallLines, [
+        $executableCallStatements = array_merge($executableCallStatements, [
             '$before = microtime(true);',
-            $waitForLine,
+            $waitForStatement,
             '$executionDurationInMilliseconds = (microtime(true) - $before) * 1000;',
             '$this->assertGreaterThan(100, $executionDurationInMilliseconds);',
         ]);
 
-        $executableCall = implode("\n", $executableCallLines);
+        $executableCall = implode("\n", $executableCallStatements);
 
         eval($executableCall);
     }

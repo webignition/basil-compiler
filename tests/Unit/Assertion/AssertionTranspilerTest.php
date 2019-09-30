@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;
@@ -76,9 +76,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspileDoesNotFail(AssertionInterface $model)
     {
-        $transpilationResult = $this->transpiler->transpile($model);
+        $transpilableSource = $this->transpiler->transpile($model);
 
-        $this->assertInstanceOf(TranspilationResultInterface::class, $transpilationResult);
+        $this->assertInstanceOf(TranspilableSourceInterface::class, $transpilableSource);
     }
 
     public function testTranspileNonTranspilableModel()

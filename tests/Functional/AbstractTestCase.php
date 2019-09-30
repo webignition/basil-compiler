@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\Tests\Functional;
 use Facebook\WebDriver\WebDriverDimension;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
@@ -50,24 +50,24 @@ abstract class AbstractTestCase extends PantherTestCase
     }
 
     protected function createExecutableCall(
-        TranspilationResultInterface $transpilationResult,
+        TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers,
         string $fixture,
-        array $additionalSetupLines = [],
-        array $additionalTeardownLines = [],
+        array $additionalSetupStatements = [],
+        array $additionalTeardownStatements = [],
         array $additionalUseStatements = []
     ): string {
         return $this->executableCallFactory->create(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             array_merge(
                 [
                     '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                     '$domCrawlerNavigator = Navigator::create($crawler); ',
                 ],
-                $additionalSetupLines
+                $additionalSetupStatements
             ),
-            $additionalTeardownLines,
+            $additionalTeardownStatements,
             new UseStatementCollection(array_merge(
                 [
                     new UseStatement(Navigator::class),

@@ -8,7 +8,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionDataProviderTrait;
@@ -78,9 +78,9 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspileDoesNotFail(ActionInterface $model)
     {
-        $transpilationResult = $this->transpiler->transpile($model);
+        $transpilableSource = $this->transpiler->transpile($model);
 
-        $this->assertInstanceOf(TranspilationResultInterface::class, $transpilationResult);
+        $this->assertInstanceOf(TranspilableSourceInterface::class, $transpilableSource);
     }
 
     public function testTranspileNonTranspilableModel()

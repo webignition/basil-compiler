@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\UseStatementTranspiler;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
@@ -34,15 +34,15 @@ class ExecutableCallFactory
     }
 
     public function create(
-        TranspilationResultInterface $transpilationResult,
+        TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers = [],
-        array $setupLines = [],
-        array $teardownLines = [],
+        array $setupStatements = [],
+        array $teardownStatements = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
         $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
 
-        $useStatements = $transpilationResult->getUseStatements();
+        $useStatements = $transpilableSource->getUseStatements();
         $useStatements = $useStatements->merge([
             $additionalUseStatements,
         ]);
@@ -53,55 +53,55 @@ class ExecutableCallFactory
             $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
         }
 
-        foreach ($setupLines as $line) {
-            $executableCall .= $line . "\n";
+        foreach ($setupStatements as $statement) {
+            $executableCall .= $statement . "\n";
         }
 
-        $lines = $transpilationResult->getLines();
+        $statements = $transpilableSource->getStatements();
 
-        array_walk($lines, function (string &$line) {
-            $line .= ';';
+        array_walk($statements, function (string &$statement) {
+            $statement .= ';';
         });
 
         $content = $this->variablePlaceholderResolver->resolve(
-            implode("\n", $lines),
+            implode("\n", $statements),
             $variableIdentifiers
         );
 
         $executableCall .= $content;
 
-        foreach ($teardownLines as $line) {
+        foreach ($teardownStatements as $statement) {
             $executableCall .= "\n";
-            $executableCall .= $line;
+            $executableCall .= $statement;
         }
 
         return $executableCall;
     }
 
     public function createWithReturn(
-        TranspilationResultInterface $transpilationResult,
+        TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers = [],
-        array $setupLines = [],
-        array $teardownLines = [],
+        array $setupStatements = [],
+        array $teardownStatements = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
-        $lines = $transpilationResult->getLines();
-        $lastLinePosition = count($lines) - 1;
-        $lastLine = $lines[$lastLinePosition];
-        $lastLine = 'return ' . $lastLine;
-        $lines[$lastLinePosition] = $lastLine;
+        $statements = $transpilableSource->getStatements();
+        $lastStatementPosition = count($statements) - 1;
+        $lastStatement = $statements[$lastStatementPosition];
+        $lastStatement = 'return ' . $lastStatement;
+        $statements[$lastStatementPosition] = $lastStatement;
 
-        $transpilationResultWithReturn = new TranspilationResult(
-            $lines,
-            $transpilationResult->getUseStatements(),
-            $transpilationResult->getVariablePlaceholders()
+        $transpilableSourceWithReturn = new TranspilableSource(
+            $statements,
+            $transpilableSource->getUseStatements(),
+            $transpilableSource->getVariablePlaceholders()
         );
 
         return $this->create(
-            $transpilationResultWithReturn,
+            $transpilableSourceWithReturn,
             $variableIdentifiers,
-            $setupLines,
-            $teardownLines,
+            $setupStatements,
+            $teardownStatements,
             $additionalUseStatements
         );
     }

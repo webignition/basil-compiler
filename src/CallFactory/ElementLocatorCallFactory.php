@@ -3,8 +3,8 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\Model\TranspilationResult;
-use webignition\BasilTranspiler\Model\TranspilationResultInterface;
+use webignition\BasilTranspiler\Model\TranspilableSource;
+use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatement;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -38,9 +38,9 @@ class ElementLocatorCallFactory
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return TranspilationResultInterface
+     * @return TranspilableSourceInterface
      */
-    public function createConstructorCall(DomIdentifierInterface $elementIdentifier): TranspilationResultInterface
+    public function createConstructorCall(DomIdentifierInterface $elementIdentifier): TranspilableSourceInterface
     {
         $elementLocator = $elementIdentifier->getLocator();
 
@@ -53,7 +53,7 @@ class ElementLocatorCallFactory
 
         $content = sprintf(self::TEMPLATE, $arguments);
 
-        return new TranspilationResult(
+        return new TranspilableSource(
             [
                 $content,
             ],

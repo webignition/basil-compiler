@@ -22,12 +22,12 @@ trait ReloadActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CRAWLER => '$crawler',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$this->assertCount(0, $crawler->filter("#hello"));',
                     'usleep(100000);',
                     '$this->assertCount(1, $crawler->filter("#hello"));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertCount(0, $crawler->filter("#hello"));',
                     'usleep(100000);',
                     '$this->assertCount(1, $crawler->filter("#hello"));',

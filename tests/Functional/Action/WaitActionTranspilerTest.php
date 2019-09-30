@@ -35,35 +35,35 @@ class WaitActionTranspilerTest extends AbstractTestCase
         string $fixture,
         array $variableIdentifiers,
         array $additionalUseStatements,
-        array $additionalPreLines,
-        array $additionalPostLines,
+        array $additionalSetupStatements,
+        array $additionalTeardownStatements,
         int $expectedDuration
     ) {
-        $transpilationResult = $this->transpiler->transpile($action);
+        $transpilableSource = $this->transpiler->transpile($action);
 
         $expectedDurationThreshold = $expectedDuration + 1;
 
         $executableCall = $this->createExecutableCall(
-            $transpilationResult,
+            $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalPreLines,
-            $additionalPostLines,
+            $additionalSetupStatements,
+            $additionalTeardownStatements,
             $additionalUseStatements
         );
 
-        $executableCallLines = explode("\n", $executableCall);
-        $sleepLine = array_pop($executableCallLines);
+        $executableCallStatements = explode("\n", $executableCall);
+        $sleepStatement = array_pop($executableCallStatements);
 
-        $executableCallLines = array_merge($executableCallLines, [
+        $executableCallStatements = array_merge($executableCallStatements, [
             '$before = microtime(true);',
-            $sleepLine,
+            $sleepStatement,
             '$executionDurationInMilliseconds = (microtime(true) - $before) * 1000;',
             '$this->assertGreaterThan(' . $expectedDuration . ', $executionDurationInMilliseconds);',
             '$this->assertLessThan(' . $expectedDurationThreshold . ', $executionDurationInMilliseconds);',
         ]);
 
-        $executableCall = implode("\n", $executableCallLines);
+        $executableCall = implode("\n", $executableCallStatements);
 
         eval($executableCall);
     }
