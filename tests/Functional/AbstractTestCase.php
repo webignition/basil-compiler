@@ -2,6 +2,7 @@
 
 namespace webignition\BasilTranspiler\Tests\Functional;
 
+use Facebook\WebDriver\WebDriverDimension;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use webignition\BasilTranspiler\Model\TranspilationResultInterface;
@@ -43,6 +44,8 @@ abstract class AbstractTestCase extends PantherTestCase
         );
 
         self::$client = self::createPantherClient();
+        self::$client->getWebDriver()->manage()->window()->setSize(new WebDriverDimension(1200, 1100));
+
         $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
