@@ -53,8 +53,8 @@ abstract class AbstractTestCase extends PantherTestCase
         TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers,
         string $fixture,
-        array $additionalSetupLines = [],
-        array $additionalTeardownLines = [],
+        array $additionalSetupStatements = [],
+        array $additionalTeardownStatements = [],
         array $additionalUseStatements = []
     ): string {
         return $this->executableCallFactory->create(
@@ -65,9 +65,9 @@ abstract class AbstractTestCase extends PantherTestCase
                     '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
                     '$domCrawlerNavigator = Navigator::create($crawler); ',
                 ],
-                $additionalSetupLines
+                $additionalSetupStatements
             ),
-            $additionalTeardownLines,
+            $additionalTeardownStatements,
             new UseStatementCollection(array_merge(
                 [
                     new UseStatement(Navigator::class),

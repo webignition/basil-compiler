@@ -66,7 +66,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $elementPlaceholder
         );
 
-        $statements = $elementVariableAssignmentCall->getLines();
+        $statements = $elementVariableAssignmentCall->getStatements();
         $statements[] = sprintf(
             '%s->%s()',
             (string) $elementPlaceholder,

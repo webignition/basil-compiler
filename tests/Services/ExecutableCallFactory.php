@@ -36,8 +36,8 @@ class ExecutableCallFactory
     public function create(
         TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers = [],
-        array $setupLines = [],
-        array $teardownLines = [],
+        array $setupStatements = [],
+        array $teardownStatements = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
         $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
@@ -53,26 +53,26 @@ class ExecutableCallFactory
             $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
         }
 
-        foreach ($setupLines as $line) {
-            $executableCall .= $line . "\n";
+        foreach ($setupStatements as $statement) {
+            $executableCall .= $statement . "\n";
         }
 
-        $lines = $transpilableSource->getLines();
+        $statements = $transpilableSource->getStatements();
 
-        array_walk($lines, function (string &$line) {
-            $line .= ';';
+        array_walk($statements, function (string &$statement) {
+            $statement .= ';';
         });
 
         $content = $this->variablePlaceholderResolver->resolve(
-            implode("\n", $lines),
+            implode("\n", $statements),
             $variableIdentifiers
         );
 
         $executableCall .= $content;
 
-        foreach ($teardownLines as $line) {
+        foreach ($teardownStatements as $statement) {
             $executableCall .= "\n";
-            $executableCall .= $line;
+            $executableCall .= $statement;
         }
 
         return $executableCall;
@@ -81,18 +81,18 @@ class ExecutableCallFactory
     public function createWithReturn(
         TranspilableSourceInterface $transpilableSource,
         array $variableIdentifiers = [],
-        array $setupLines = [],
-        array $teardownLines = [],
+        array $setupStatements = [],
+        array $teardownStatements = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
-        $lines = $transpilableSource->getLines();
-        $lastLinePosition = count($lines) - 1;
-        $lastLine = $lines[$lastLinePosition];
-        $lastLine = 'return ' . $lastLine;
-        $lines[$lastLinePosition] = $lastLine;
+        $statements = $transpilableSource->getStatements();
+        $lastStatementPosition = count($statements) - 1;
+        $lastStatement = $statements[$lastStatementPosition];
+        $lastStatement = 'return ' . $lastStatement;
+        $statements[$lastStatementPosition] = $lastStatement;
 
         $transpilableSourceWithReturn = new TranspilableSource(
-            $lines,
+            $statements,
             $transpilableSource->getUseStatements(),
             $transpilableSource->getVariablePlaceholders()
         );
@@ -100,8 +100,8 @@ class ExecutableCallFactory
         return $this->create(
             $transpilableSourceWithReturn,
             $variableIdentifiers,
-            $setupLines,
-            $teardownLines,
+            $setupStatements,
+            $teardownStatements,
             $additionalUseStatements
         );
     }

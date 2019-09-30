@@ -55,7 +55,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         string $fixture,
         AssertionInterface $assertion,
         array $variableIdentifiers,
-        array $additionalPreLines = [],
+        array $additionalSetupStatements = [],
         array $additionalUseStatements = []
     ) {
         $transpilableSource = $this->transpiler->transpile($assertion);
@@ -64,7 +64,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalPreLines,
+            $additionalSetupStatements,
             [],
             $additionalUseStatements
         );

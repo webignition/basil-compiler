@@ -76,7 +76,7 @@ class WaitActionTranspiler implements TranspilerInterface
         );
 
         return $this->transpilableSourceComposer->compose(
-            array_merge($durationAssignmentCall->getLines(), [
+            array_merge($durationAssignmentCall->getStatements(), [
                 $waitStatement
             ]),
             [

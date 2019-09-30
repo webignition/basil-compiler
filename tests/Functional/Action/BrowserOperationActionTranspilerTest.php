@@ -41,8 +41,8 @@ class BrowserOperationActionTranspilerTest extends AbstractTestCase
         string $fixture,
         array $variableIdentifiers,
         array $additionalUseStatements,
-        array $additionalPreLines,
-        array $additionalPostLines
+        array $additionalSetupStatements,
+        array $additionalTeardownStatements
     ) {
         $transpilableSource = $this->transpiler->transpile($action);
 
@@ -50,8 +50,8 @@ class BrowserOperationActionTranspilerTest extends AbstractTestCase
             $transpilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
-            $additionalPreLines,
-            $additionalPostLines,
+            $additionalSetupStatements,
+            $additionalTeardownStatements,
             $additionalUseStatements
         );
 

@@ -44,15 +44,15 @@ class VariableAssignmentCall implements TranspilableSourceInterface
         return new VariableAssignmentCall($extendedTranspilableSource, $this->elementVariablePlaceholder);
     }
 
-    public function getLines(): array
+    public function getStatements(): array
     {
-        return $this->transpilableSource->getLines();
+        return $this->transpilableSource->getStatements();
     }
 
-    public function withAdditionalLines(array $lines): VariableAssignmentCall
+    public function withAdditionalStatements(array $statements): VariableAssignmentCall
     {
         $new = clone $this;
-        $new->transpilableSource = $this->transpilableSource->withAdditionalLines($lines);
+        $new->transpilableSource = $this->transpilableSource->withAdditionalStatements($statements);
 
         return $new;
     }

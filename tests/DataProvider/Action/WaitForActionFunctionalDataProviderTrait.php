@@ -23,10 +23,10 @@ trait WaitForActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$this->assertTrue(true);'
                 ],
-                'additionalTeardownLines' => [],
+                'additionalTeardownStatements' => [],
             ],
         ];
     }

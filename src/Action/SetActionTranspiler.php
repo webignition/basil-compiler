@@ -89,9 +89,9 @@ class SetActionTranspiler implements TranspilerInterface
         );
 
         $statements = array_merge(
-            $collectionAssignmentCall->getLines(),
-            null === $valueAssignmentCall ? [] : $valueAssignmentCall->getLines(),
-            $mutationCall->getLines()
+            $collectionAssignmentCall->getStatements(),
+            null === $valueAssignmentCall ? [] : $valueAssignmentCall->getStatements(),
+            $mutationCall->getStatements()
         );
         $calls = [
             $collectionAssignmentCall,

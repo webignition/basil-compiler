@@ -145,15 +145,15 @@ class VariableAssignmentCallFactory
         if ($variableAssignmentCall instanceof VariableAssignmentCall) {
             $variableAssignmentCallPlaceholder = $variableAssignmentCall->getElementVariablePlaceholder();
 
-            $typeCastLine = sprintf(
+            $typeCastStatement = sprintf(
                 '%s = (%s) %s',
                 (string) $variableAssignmentCallPlaceholder,
                 $type,
                 (string) $variableAssignmentCallPlaceholder
             );
 
-            $variableAssignmentCall = $variableAssignmentCall->withAdditionalLines([
-                $typeCastLine,
+            $variableAssignmentCall = $variableAssignmentCall->withAdditionalStatements([
+                $typeCastStatement,
             ]);
         }
 
@@ -302,7 +302,7 @@ class VariableAssignmentCallFactory
         );
 
         $statements = array_merge(
-            $elementAssignmentCall->getLines(),
+            $elementAssignmentCall->getStatements(),
             [
                 $attributeAssignmentStatement,
             ]
@@ -350,7 +350,7 @@ class VariableAssignmentCallFactory
         $assignmentStatement = $valuePlaceholder . ' = ' . $assignmentCall;
 
         $statements = array_merge(
-            $collectionCall->getLines(),
+            $collectionCall->getStatements(),
             [
                 $assignmentStatement,
             ]
@@ -394,7 +394,7 @@ class VariableAssignmentCallFactory
         ]);
 
         $transpilableSource = $this->transpilableSourceComposer->compose(
-            $assignmentCall->getLines(),
+            $assignmentCall->getStatements(),
             [$assignmentCall],
             new UseStatementCollection(),
             $variablePlaceholders
@@ -432,7 +432,7 @@ class VariableAssignmentCallFactory
         );
 
         $transpilableSource = $this->transpilableSourceComposer->compose(
-            $assignmentCall->getLines(),
+            $assignmentCall->getStatements(),
             [$assignmentCall],
             new UseStatementCollection(),
             new VariablePlaceholderCollection()
@@ -488,7 +488,7 @@ class VariableAssignmentCallFactory
             [
                 $elementLocatorConstructorStatement,
             ],
-            $elementExistsAssertionCall->getLines(),
+            $elementExistsAssertionCall->getStatements(),
             [
                 $findStatement,
             ]
@@ -530,16 +530,16 @@ class VariableAssignmentCallFactory
         ]);
 
         $variableAccessCall = $this->valueTranspiler->transpile($value);
-        $variableAccessLines = $variableAccessCall->getLines();
-        $variableAccessLastLine = array_pop($variableAccessLines);
+        $variableAccessStatements = $variableAccessCall->getStatements();
+        $variableAccessLastStatement = array_pop($variableAccessStatements);
 
         $assignmentStatement = sprintf(
             '%s = %s ?? ' . $default,
             $variablePlaceholder,
-            $variableAccessLastLine
+            $variableAccessLastStatement
         );
 
-        $statements = array_merge($variableAccessLines, [
+        $statements = array_merge($variableAccessStatements, [
             $assignmentStatement,
         ]);
 
@@ -583,7 +583,7 @@ class VariableAssignmentCallFactory
 
         $transpilableSource = $this->transpilableSourceComposer->compose(
             array_merge(
-                $assignmentCall->getLines(),
+                $assignmentCall->getStatements(),
                 [
                     $comparisonStatement,
                 ]

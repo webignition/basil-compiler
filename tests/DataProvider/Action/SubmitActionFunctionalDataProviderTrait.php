@@ -23,14 +23,14 @@ trait SubmitActionFunctionalDataProviderTrait
                     'ELEMENT' => '$element',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                     '$submitButton = $crawler->filter(\'#form input[type="submit"]\')->getElement(0);',
                     '$form = $crawler->filter(\'#form\')->getElement(0);',
                     '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
                     '$this->assertEquals("false", $form->getAttribute(\'data-submitted\'));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
                     '$this->assertEquals("true", $form->getAttribute(\'data-submitted\'));',
                 ],
@@ -44,14 +44,14 @@ trait SubmitActionFunctionalDataProviderTrait
                     'ELEMENT' => '$element',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                     '$submitButton = $crawler->filter(\'#form input[type="submit"]\')->getElement(0);',
                     '$form = $crawler->filter(\'#form\')->getElement(0);',
                     '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
                     '$this->assertEquals("false", $form->getAttribute(\'data-submitted\'));',
                 ],
-                'additionalTeardownLines' => [
+                'additionalTeardownStatements' => [
                     '$this->assertEquals("false", $submitButton->getAttribute(\'data-submitted\'));',
                     '$this->assertEquals("true", $form->getAttribute(\'data-submitted\'));',
                 ],

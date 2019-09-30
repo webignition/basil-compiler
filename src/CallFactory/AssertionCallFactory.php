@@ -186,8 +186,8 @@ class AssertionCallFactory
         );
 
         $statements = array_merge(
-            $expectedValueCall->getLines(),
-            $actualValueCall->getLines(),
+            $expectedValueCall->getStatements(),
+            $actualValueCall->getStatements(),
             [
                 $assertionStatement,
             ]
@@ -217,7 +217,7 @@ class AssertionCallFactory
         );
 
         $statements = array_merge(
-            $variableAssignmentCall->getLines(),
+            $variableAssignmentCall->getStatements(),
             [
                 $assertionStatement,
             ]

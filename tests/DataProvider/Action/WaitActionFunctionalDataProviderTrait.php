@@ -27,10 +27,10 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$this->assertTrue(true);'
                 ],
-                'additionalTeardownLines' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 10,
             ],
             'wait action, element value' => [
@@ -48,10 +48,10 @@ trait WaitActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Inspector::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalTeardownLines' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 20,
             ],
             'wait action, attribute value, attribute exists' => [
@@ -72,10 +72,10 @@ trait WaitActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Inspector::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalTeardownLines' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 30,
             ],
             'wait action, attribute value, attribute does not exist' => [
@@ -96,10 +96,10 @@ trait WaitActionFunctionalDataProviderTrait
                 'additionalUseStatements' => [
                     new UseStatement(Inspector::class),
                 ],
-                'additionalSetupLines' => [
+                'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalTeardownLines' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 0,
             ],
             'wait action, browser property' => [
@@ -111,8 +111,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [],
-                'additionalTeardownLines' => [],
+                'additionalSetupStatements' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 1200,
             ],
             'wait action, page property' => [
@@ -123,8 +123,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [],
-                'additionalTeardownLines' => [],
+                'additionalSetupStatements' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value exists' => [
@@ -135,8 +135,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [],
-                'additionalTeardownLines' => [],
+                'additionalSetupStatements' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value does not exist' => [
@@ -147,8 +147,8 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [],
-                'additionalSetupLines' => [],
-                'additionalTeardownLines' => [],
+                'additionalSetupStatements' => [],
+                'additionalTeardownStatements' => [],
                 'expectedDuration' => 0,
             ],
         ];

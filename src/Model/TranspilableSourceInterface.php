@@ -13,9 +13,9 @@ interface TranspilableSourceInterface
     /**
      * @return string[]
      */
-    public function getLines(): array;
+    public function getStatements(): array;
 
-    public function withAdditionalLines(array $lines);
+    public function withAdditionalStatements(array $statements);
     public function getUseStatements(): UseStatementCollection;
     public function getVariablePlaceholders(): VariablePlaceholderCollection;
     public function __toString(): string;
