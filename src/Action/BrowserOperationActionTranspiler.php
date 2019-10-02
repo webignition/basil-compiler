@@ -47,22 +47,22 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $pantherCrawlerPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CRAWLER);
-        $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
+        $variableDependencies = new VariablePlaceholderCollection();
+        $pantherCrawlerDependency = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
+        $pantherClientDependency = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
         return new CompilableSource(
             [
                 sprintf(
                     '%s = %s->%s()',
-                    $pantherCrawlerPlaceholder,
-                    $pantherClientPlaceholder,
+                    $pantherCrawlerDependency,
+                    $pantherClientDependency,
                     $model->getType()
                 ),
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders,
-            new VariablePlaceholderCollection()
+            new VariablePlaceholderCollection(),
+            $variableDependencies
         );
     }
 }
