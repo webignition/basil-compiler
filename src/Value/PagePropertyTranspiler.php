@@ -24,8 +24,8 @@ class PagePropertyTranspiler implements TranspilerInterface
     public function __construct()
     {
         $this->variableDependencies = new VariablePlaceholderCollection();
-        $pantherClientVariableDependency = $this->variableDependencies->create(VariableNames::PANTHER_CLIENT);
-        $pantherClientDependencyAsString = (string) $pantherClientVariableDependency;
+        $pantherClientDependency = $this->variableDependencies->create(VariableNames::PANTHER_CLIENT);
+        $pantherClientDependencyAsString = (string) $pantherClientDependency;
 
         $this->transpiledValueMap = [
             self::PROPERTY_NAME_TITLE => $pantherClientDependencyAsString . '->getTitle()',
