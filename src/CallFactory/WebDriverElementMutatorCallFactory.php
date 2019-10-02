@@ -25,7 +25,8 @@ class WebDriverElementMutatorCallFactory
             $collectionPlaceholder,
         ]);
 
-        $mutatorPlaceholder = $variablePlaceholders->create(VariableNames::WEBDRIVER_ELEMENT_MUTATOR);
+        $variableDependencies = new VariablePlaceholderCollection();
+        $mutatorPlaceholder = $variableDependencies->create(VariableNames::WEBDRIVER_ELEMENT_MUTATOR);
 
         $statements = [
             $mutatorPlaceholder . '->setValue(' . $collectionPlaceholder . ', ' . $valuePlaceholder . ')',
@@ -35,7 +36,7 @@ class WebDriverElementMutatorCallFactory
             $statements,
             new ClassDependencyCollection(),
             $variablePlaceholders,
-            new VariablePlaceholderCollection()
+            $variableDependencies
         );
     }
 }
