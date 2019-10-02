@@ -9,17 +9,17 @@ class UseStatementCollection extends AbstractUniqueCollection implements \Iterat
     /**
      * @param string $id
      *
-     * @return UseStatement
+     * @return ClassDependency
      *
      * @throws UnknownItemException
      */
-    public function get(string $id): UseStatement
+    public function get(string $id): ClassDependency
     {
         return parent::get($id);
     }
 
     /**
-     * @return UseStatement[]
+     * @return ClassDependency[]
      */
     public function getAll(): array
     {
@@ -38,14 +38,14 @@ class UseStatementCollection extends AbstractUniqueCollection implements \Iterat
 
     protected function add($item)
     {
-        if ($item instanceof UseStatement) {
+        if ($item instanceof ClassDependency) {
             $this->doAdd($item);
         }
     }
 
     // Iterator methods
 
-    public function current(): UseStatement
+    public function current(): ClassDependency
     {
         return parent::current();
     }

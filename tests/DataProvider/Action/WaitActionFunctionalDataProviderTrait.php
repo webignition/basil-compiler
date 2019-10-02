@@ -9,7 +9,7 @@ use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -46,7 +46,7 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
@@ -70,7 +70,7 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
@@ -94,7 +94,7 @@ trait WaitActionFunctionalDataProviderTrait
                     'DURATION' => '$duration',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',

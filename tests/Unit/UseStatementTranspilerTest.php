@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit;
 
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\UseStatementTranspiler;
 
@@ -26,7 +26,7 @@ class UseStatementTranspilerTest extends \PHPUnit\Framework\TestCase
 
     public function testHandlesDoesHandle()
     {
-        $model = new UseStatement(UseStatement::class);
+        $model = new ClassDependency(ClassDependency::class);
 
         $this->assertTrue($this->transpiler->handles($model));
     }

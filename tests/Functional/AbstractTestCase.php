@@ -6,7 +6,7 @@ use Facebook\WebDriver\WebDriverDimension;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
@@ -70,7 +70,7 @@ abstract class AbstractTestCase extends PantherTestCase
             $additionalTeardownStatements,
             new UseStatementCollection(array_merge(
                 [
-                    new UseStatement(Navigator::class),
+                    new ClassDependency(Navigator::class),
                 ],
                 $additionalUseStatements
             ))

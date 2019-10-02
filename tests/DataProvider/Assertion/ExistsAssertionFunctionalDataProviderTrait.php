@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -33,7 +33,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'exists comparison, attribute identifier examined value' => [

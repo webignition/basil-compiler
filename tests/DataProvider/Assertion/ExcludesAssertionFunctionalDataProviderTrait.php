@@ -10,7 +10,7 @@ use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -38,7 +38,7 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'excludes comparison, attribute identifier examined value, scalar expected value' => [
@@ -58,7 +58,7 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'excludes comparison, environment examined value, scalar expected value' => [
@@ -115,7 +115,7 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'excludes comparison, element identifier examined value, attribute identifier expected value' => [
@@ -140,7 +140,7 @@ trait ExcludesAssertionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'excludes comparison, attribute identifier examined value, environment expected value' => [

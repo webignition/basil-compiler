@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
@@ -20,7 +20,7 @@ class UseStatementTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof UseStatement;
+        return $model instanceof ClassDependency;
     }
 
     /**
@@ -32,7 +32,7 @@ class UseStatementTranspiler implements TranspilerInterface
      */
     public function transpile(object $model): CompilableSourceInterface
     {
-        if (!$model instanceof UseStatement) {
+        if (!$model instanceof ClassDependency) {
             throw new NonTranspilableModelException($model);
         }
 

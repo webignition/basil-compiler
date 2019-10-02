@@ -8,7 +8,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
@@ -44,7 +44,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
 
         $this->expectedUseStatements = new UseStatementCollection([
-            new UseStatement(ElementLocator::class),
+            new ClassDependency(ElementLocator::class),
         ]);
 
         $this->expectedPlaceholders = VariablePlaceholderCollection::createCollection([

@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class UseStatement implements UniqueItemInterface
+class ClassDependency implements UniqueItemInterface
 {
     private $className;
     private $alias;

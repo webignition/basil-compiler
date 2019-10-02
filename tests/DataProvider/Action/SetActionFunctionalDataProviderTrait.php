@@ -9,7 +9,7 @@ use webignition\BasilModel\Action\InputAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 use webignition\WebDriverElementMutator\Mutator;
@@ -49,8 +49,8 @@ trait SetActionFunctionalDataProviderTrait
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                     'additionalUseStatements' => [
-                        new UseStatement(Inspector::class),
-                        new UseStatement(Mutator::class),
+                        new ClassDependency(Inspector::class),
+                        new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
                         '$inspector = Inspector::create($crawler);',
@@ -74,7 +74,7 @@ trait SetActionFunctionalDataProviderTrait
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                     'additionalUseStatements' => [
-                        new UseStatement(Mutator::class),
+                        new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
@@ -92,7 +92,7 @@ trait SetActionFunctionalDataProviderTrait
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                     'additionalUseStatements' => [
-                        new UseStatement(Mutator::class),
+                        new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
@@ -110,7 +110,7 @@ trait SetActionFunctionalDataProviderTrait
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                     'additionalUseStatements' => [
-                        new UseStatement(Mutator::class),
+                        new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
@@ -128,7 +128,7 @@ trait SetActionFunctionalDataProviderTrait
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                     'additionalUseStatements' => [
-                        new UseStatement(Mutator::class),
+                        new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
@@ -155,7 +155,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -173,7 +173,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -191,7 +191,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -209,7 +209,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -235,7 +235,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -253,7 +253,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -271,7 +271,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -289,7 +289,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -315,7 +315,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -333,7 +333,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -351,7 +351,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -369,7 +369,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -387,7 +387,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -405,7 +405,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -431,7 +431,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -449,7 +449,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -467,7 +467,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -485,7 +485,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -503,7 +503,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -521,7 +521,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -547,7 +547,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -569,7 +569,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -591,7 +591,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -613,7 +613,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -635,7 +635,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
@@ -657,7 +657,7 @@ trait SetActionFunctionalDataProviderTrait
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
                 'additionalUseStatements' => [
-                    new UseStatement(Mutator::class),
+                    new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
