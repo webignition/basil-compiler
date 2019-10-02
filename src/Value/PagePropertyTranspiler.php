@@ -24,12 +24,12 @@ class PagePropertyTranspiler implements TranspilerInterface
     public function __construct()
     {
         $this->variableDependencies = new VariablePlaceholderCollection();
-        $pantherClientDependency = $this->variableDependencies->create(VariableNames::PANTHER_CLIENT);
-        $pantherClientDependencyAsString = (string) $pantherClientDependency;
+        $pantherClientPlaceholder = $this->variableDependencies->create(VariableNames::PANTHER_CLIENT);
+        $pantherClientPlaceholderAsString = (string) $pantherClientPlaceholder;
 
         $this->transpiledValueMap = [
-            self::PROPERTY_NAME_TITLE => $pantherClientDependencyAsString . '->getTitle()',
-            self::PROPERTY_NAME_URL => $pantherClientDependencyAsString . '->getCurrentURL()',
+            self::PROPERTY_NAME_TITLE => $pantherClientPlaceholderAsString . '->getTitle()',
+            self::PROPERTY_NAME_URL => $pantherClientPlaceholderAsString . '->getCurrentURL()',
         ];
     }
 

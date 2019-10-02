@@ -63,15 +63,15 @@ class WaitForActionTranspiler implements TranspilerInterface
         }
 
         $variableDependencies = new VariablePlaceholderCollection();
-        $pantherCrawlerDependency = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
-        $pantherClientDependency = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
+        $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
+        $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
         return new CompilableSource(
             [
                 sprintf(
                     '%s = %s->waitFor(\'%s\')',
-                    $pantherCrawlerDependency,
-                    $pantherClientDependency,
+                    $pantherCrawlerPlaceholder,
+                    $pantherClientPlaceholder,
                     $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
             ],
