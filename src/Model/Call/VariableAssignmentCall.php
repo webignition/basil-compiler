@@ -30,22 +30,6 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $this->elementVariablePlaceholder;
     }
 
-    public function extend(
-        string $template,
-        ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variableExports,
-        VariablePlaceholderCollection $variableDependencies
-    ): CompilableSourceInterface {
-        $extendedCompilableSource = $this->compilableSource->extend(
-            $template,
-            $classDependencies,
-            $variableExports,
-            $variableDependencies
-        );
-
-        return new VariableAssignmentCall($extendedCompilableSource, $this->elementVariablePlaceholder);
-    }
-
     public function getStatements(): array
     {
         return $this->compilableSource->getStatements();

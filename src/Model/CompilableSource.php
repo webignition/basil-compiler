@@ -21,20 +21,6 @@ class CompilableSource implements CompilableSourceInterface
         $this->variableDependencies = $variableDependencies;
     }
 
-    public function extend(
-        string $template,
-        ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variableExports,
-        VariablePlaceholderCollection $variableDependencies
-    ): CompilableSourceInterface {
-        return new CompilableSource(
-            explode("\n", sprintf($template, (string) $this)),
-            $this->getClassDependencies()->merge([$classDependencies]),
-            $this->getVariableExports()->merge([$variableExports]),
-            $this->getVariableDependencies()->merge([$variableDependencies])
-        );
-    }
-
     /**
      * @return string[]
      */
