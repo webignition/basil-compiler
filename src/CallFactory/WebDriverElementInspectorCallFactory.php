@@ -23,7 +23,8 @@ class WebDriverElementInspectorCallFactory
             $collectionPlaceholder,
         ]);
 
-        $inspectorPlaceholder = $variablePlaceholders->create(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR);
+        $variableDependencies = new VariablePlaceholderCollection();
+        $inspectorPlaceholder = $variableDependencies->create(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR);
 
         $statements = [
             $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
@@ -33,7 +34,7 @@ class WebDriverElementInspectorCallFactory
             $statements,
             new ClassDependencyCollection(),
             $variablePlaceholders,
-            new VariablePlaceholderCollection()
+            $variableDependencies
         );
     }
 }
