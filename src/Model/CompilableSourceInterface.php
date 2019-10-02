@@ -4,13 +4,6 @@ namespace webignition\BasilTranspiler\Model;
 
 interface CompilableSourceInterface
 {
-    public function extend(
-        string $template,
-        ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variableExports,
-        VariablePlaceholderCollection $variableDependencies
-    ): CompilableSourceInterface;
-
     /**
      * @return string[]
      */
