@@ -21,7 +21,7 @@ trait ForwardActionFunctionalDataProviderTrait
                 'variableIdentifiers' => [
                     VariableNames::PANTHER_CRAWLER => '$crawler',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertEquals("Test fixture web server default document", self::$client->getTitle());',
                     '$crawler = $crawler->filter(\'#link-to-assertions\')->getElement(0)->click();',

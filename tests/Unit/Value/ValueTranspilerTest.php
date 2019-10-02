@@ -13,7 +13,7 @@ use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
@@ -92,7 +92,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'value' => new LiteralValue('value'),
                 'expectedTranspilableSource' => new CompilableSource(
                     ['"value"'],
-                    new UseStatementCollection(),
+                    new ClassDependencyCollection(),
                     new VariablePlaceholderCollection()
                 ),
             ],
@@ -100,7 +100,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'value' => new LiteralValue('100'),
                 'expectedTranspilableSource' => new CompilableSource(
                     ['"100"'],
-                    new UseStatementCollection(),
+                    new ClassDependencyCollection(),
                     new VariablePlaceholderCollection()
                 ),
             ],
@@ -112,7 +112,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedTranspilableSource' => new CompilableSource(
                     [(string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'],
-                    new UseStatementCollection(),
+                    new ClassDependencyCollection(),
                     VariablePlaceholderCollection::createCollection([
                         VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                     ])
@@ -128,7 +128,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                         '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
                         . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
                         ],
-                        new UseStatementCollection(),
+                        new ClassDependencyCollection(),
                         new VariablePlaceholderCollection([
                             new VariablePlaceholder('WEBDRIVER_DIMENSION'),
                             new VariablePlaceholder('BROWSER_SIZE'),

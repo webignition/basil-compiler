@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class UseStatement implements UniqueItemInterface
+class ClassDependency implements UniqueItemInterface
 {
     private $className;
     private $alias;
@@ -25,17 +25,12 @@ class UseStatement implements UniqueItemInterface
 
     public function getId(): string
     {
-        return (string) $this;
-    }
-
-    public function __toString(): string
-    {
-        $string = $this->className;
+        $id = $this->className;
 
         if (null !== $this->alias) {
-            $string .= ' as ' . $this->alias;
+            $id .= ':' . $this->alias;
         }
 
-        return $string;
+        return $id;
     }
 }

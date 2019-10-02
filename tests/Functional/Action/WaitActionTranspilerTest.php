@@ -34,7 +34,7 @@ class WaitActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
-        array $additionalUseStatements,
+        array $additionalClassDependencies,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
         int $expectedDuration
@@ -49,7 +49,7 @@ class WaitActionTranspilerTest extends AbstractTestCase
             $fixture,
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalUseStatements
+            $additionalClassDependencies
         );
 
         $executableCallStatements = explode("\n", $executableCall);

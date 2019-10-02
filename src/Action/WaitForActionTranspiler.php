@@ -7,7 +7,7 @@ use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
@@ -75,7 +75,7 @@ class WaitForActionTranspiler implements TranspilerInterface
                     $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
             ],
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
             $variablePlaceholders
         );
     }

@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
@@ -31,6 +31,6 @@ class WebDriverElementMutatorCallFactory
             $mutatorPlaceholder . '->setValue(' . $collectionPlaceholder . ', ' . $valuePlaceholder . ')',
         ];
 
-        return new CompilableSource($statements, new UseStatementCollection(), $variablePlaceholders);
+        return new CompilableSource($statements, new ClassDependencyCollection(), $variablePlaceholders);
     }
 }

@@ -12,8 +12,8 @@ use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatement;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\DomElementLocator\ElementLocator;
@@ -52,8 +52,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
             ],
             [],
-            new UseStatementCollection([
-                new UseStatement(Navigator::class),
+            new ClassDependencyCollection([
+                new ClassDependency(Navigator::class),
             ])
         );
 
@@ -119,8 +119,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
             ],
             [],
-            new UseStatementCollection([
-                new UseStatement(Navigator::class),
+            new ClassDependencyCollection([
+                new ClassDependency(Navigator::class),
             ])
         );
         $element = eval($executableCall);
@@ -135,8 +135,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'fixture' => '/form.html',
                 'arguments' => new CompilableSource(
                     ['new ElementLocator(\'input\', 1)'],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),
@@ -158,8 +158,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'input\', 1), ' .
                         'new ElementLocator(\'form[action="/action2"]\', 1)'
                     ],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),
@@ -195,8 +195,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
             ],
             [],
-            new UseStatementCollection([
-                new UseStatement(Navigator::class),
+            new ClassDependencyCollection([
+                new ClassDependency(Navigator::class),
             ])
         );
 
@@ -277,8 +277,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 '$domCrawlerNavigator = Navigator::create($crawler); ',
             ],
             [],
-            new UseStatementCollection([
-                new UseStatement(Navigator::class),
+            new ClassDependencyCollection([
+                new ClassDependency(Navigator::class),
             ])
         );
 
@@ -292,8 +292,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'fixture' => '/index.html',
                 'arguments' => new CompilableSource(
                     ['new ElementLocator(\'.non-existent\', 1)'],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),
@@ -306,8 +306,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'.non-existent-child\', 1), ' .
                         'new ElementLocator(\'.non-existent-parent\', 1)'
                     ],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),
@@ -320,8 +320,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'.non-existent-child\', 1), ' .
                         'new ElementLocator(\'form[action="/action1"]\', 1)'
                     ],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),
@@ -331,8 +331,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'fixture' => '/index.html',
                 'arguments' => new CompilableSource(
                     ['new ElementLocator(\'h1\', 1)'],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),
@@ -345,8 +345,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'input\', 1), ' .
                         'new ElementLocator(\'form[action="/action1"]\', 1)'
                     ],
-                    new UseStatementCollection([
-                        new UseStatement(ElementLocator::class)
+                    new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class)
                     ]),
                     new VariablePlaceholderCollection()
                 ),

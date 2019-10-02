@@ -3,7 +3,7 @@
 namespace webignition\BasilTranspiler\Model\Call;
 
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
@@ -32,12 +32,12 @@ class VariableAssignmentCall implements CompilableSourceInterface
 
     public function extend(
         string $template,
-        UseStatementCollection $useStatements,
+        ClassDependencyCollection $classDependencies,
         VariablePlaceholderCollection $variablePlaceholders
     ): CompilableSourceInterface {
         $extendedCompilableSource = $this->compilableSource->extend(
             $template,
-            $useStatements,
+            $classDependencies,
             $variablePlaceholders
         );
 
@@ -57,9 +57,9 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $new;
     }
 
-    public function getUseStatements(): UseStatementCollection
+    public function getClassDependencies(): ClassDependencyCollection
     {
-        return $this->compilableSource->getUseStatements();
+        return $this->compilableSource->getClassDependencies();
     }
 
     public function getVariablePlaceholders(): VariablePlaceholderCollection

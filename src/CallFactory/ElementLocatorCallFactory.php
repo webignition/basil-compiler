@@ -5,8 +5,8 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatement;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\PlaceholderFactory;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
@@ -57,8 +57,8 @@ class ElementLocatorCallFactory
             [
                 $content,
             ],
-            new UseStatementCollection([
-                new UseStatement(ElementLocator::class),
+            new ClassDependencyCollection([
+                new ClassDependency(ElementLocator::class),
             ]),
             new VariablePlaceholderCollection()
         );

@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler;
 
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
 class TranspilableSourceComposer
@@ -17,7 +17,7 @@ class TranspilableSourceComposer
     /**
      * @param string[] $statements
      * @param CompilableSourceInterface[] $calls
-     * @param UseStatementCollection $useStatements
+     * @param ClassDependencyCollection $classDependencies
      * @param VariablePlaceholderCollection $variablePlaceholders
      *
      * @return CompilableSourceInterface
@@ -25,14 +25,14 @@ class TranspilableSourceComposer
     public function compose(
         array $statements,
         array $calls,
-        UseStatementCollection $useStatements,
+        ClassDependencyCollection $classDependencies,
         VariablePlaceholderCollection $variablePlaceholders
     ) {
         foreach ($calls as $call) {
-            $useStatements = $useStatements->merge([$call->getUseStatements()]);
+            $classDependencies = $classDependencies->merge([$call->getClassDependencies()]);
             $variablePlaceholders = $variablePlaceholders->merge([$call->getVariablePlaceholders()]);
         }
 
-        return new CompilableSource($statements, $useStatements, $variablePlaceholders);
+        return new CompilableSource($statements, $classDependencies, $variablePlaceholders);
     }
 }
