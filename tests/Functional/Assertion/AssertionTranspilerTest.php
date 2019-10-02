@@ -56,7 +56,7 @@ class AssertionTranspilerTest extends AbstractTestCase
         AssertionInterface $assertion,
         array $variableIdentifiers,
         array $additionalSetupStatements = [],
-        array $additionalUseStatements = []
+        array $additionalClassDependencies = []
     ) {
         $compilableSource = $this->transpiler->transpile($assertion);
 
@@ -66,7 +66,7 @@ class AssertionTranspilerTest extends AbstractTestCase
             $fixture,
             $additionalSetupStatements,
             [],
-            $additionalUseStatements
+            $additionalClassDependencies
         );
 
         eval($executableCall);

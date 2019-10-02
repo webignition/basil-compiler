@@ -48,7 +48,7 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [
+                    'additionalClassDependencies' => [
                         new ClassDependency(Inspector::class),
                         new ClassDependency(Mutator::class),
                     ],
@@ -73,7 +73,7 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [
+                    'additionalClassDependencies' => [
                         new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
@@ -91,7 +91,7 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [
+                    'additionalClassDependencies' => [
                         new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
@@ -109,7 +109,7 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [
+                    'additionalClassDependencies' => [
                         new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
@@ -127,7 +127,7 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalUseStatements' => [
+                    'additionalClassDependencies' => [
                         new ClassDependency(Mutator::class),
                     ],
                     'additionalSetupStatements' => [
@@ -154,7 +154,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -172,7 +172,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -190,7 +190,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -208,7 +208,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -234,7 +234,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -252,7 +252,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -270,7 +270,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -288,7 +288,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -314,7 +314,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -332,7 +332,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -350,7 +350,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -368,7 +368,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -386,7 +386,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -404,7 +404,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -430,7 +430,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -448,7 +448,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -466,7 +466,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -484,7 +484,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -502,7 +502,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -520,7 +520,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -546,7 +546,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -568,7 +568,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -590,7 +590,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -612,7 +612,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -634,7 +634,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [
@@ -656,7 +656,7 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Mutator::class),
                 ],
                 'additionalSetupStatements' => [

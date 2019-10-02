@@ -53,7 +53,7 @@ class ActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
-        array $additionalUseStatements,
+        array $additionalClassDependencies,
         array $additionalSetupStatements,
         array $additionalTeardownStatements
     ) {
@@ -65,7 +65,7 @@ class ActionTranspilerTest extends AbstractTestCase
             $fixture,
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalUseStatements
+            $additionalClassDependencies
         );
 
         eval($executableCall);

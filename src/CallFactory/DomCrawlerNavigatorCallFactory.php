@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -109,7 +109,7 @@ class DomCrawlerNavigatorCallFactory
 
         $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
-        return $arguments->extend($template, new UseStatementCollection(), $variablePlaceholders);
+        return $arguments->extend($template, new ClassDependencyCollection(), $variablePlaceholders);
     }
 
     /**
@@ -128,7 +128,7 @@ class DomCrawlerNavigatorCallFactory
 
             $compilableSource = $compilableSource->extend(
                 sprintf('%s, %s', '%s', (string) $parentCompilableSource),
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
                 new VariablePlaceholderCollection()
             );
         }

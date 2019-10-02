@@ -5,27 +5,27 @@ namespace webignition\BasilTranspiler\Model;
 class CompilableSource implements CompilableSourceInterface
 {
     private $statements;
-    private $useStatements;
+    private $classDependencies;
     private $variablePlaceholders;
 
     public function __construct(
         array $statements,
-        UseStatementCollection $useStatements,
+        ClassDependencyCollection $classDependencies,
         VariablePlaceholderCollection $variablePlaceholders
     ) {
         $this->statements = $statements;
-        $this->useStatements = $useStatements;
+        $this->classDependencies = $classDependencies;
         $this->variablePlaceholders = $variablePlaceholders;
     }
 
     public function extend(
         string $template,
-        UseStatementCollection $useStatements,
+        ClassDependencyCollection $classDependencies,
         VariablePlaceholderCollection $variablePlaceholders
     ): CompilableSourceInterface {
         return new CompilableSource(
             explode("\n", sprintf($template, (string) $this)),
-            $this->getUseStatements()->merge([$useStatements]),
+            $this->getClassDependencies()->merge([$classDependencies]),
             $this->getVariablePlaceholders()->merge([$variablePlaceholders])
         );
     }
@@ -38,9 +38,9 @@ class CompilableSource implements CompilableSourceInterface
         return $this->statements;
     }
 
-    public function getUseStatements(): UseStatementCollection
+    public function getClassDependencies(): ClassDependencyCollection
     {
-        return $this->useStatements;
+        return $this->classDependencies;
     }
 
     public function getVariablePlaceholders(): VariablePlaceholderCollection

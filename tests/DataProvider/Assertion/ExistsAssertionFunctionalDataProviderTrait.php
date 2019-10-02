@@ -32,7 +32,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],

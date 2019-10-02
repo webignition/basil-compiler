@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilableSourceComposer;
@@ -201,7 +201,7 @@ class AssertionCallFactory
         return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
             new VariablePlaceholderCollection()
         );
     }
@@ -230,7 +230,7 @@ class AssertionCallFactory
         return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
             new VariablePlaceholderCollection([
                 $this->phpUnitTestCasePlaceholder,
             ])

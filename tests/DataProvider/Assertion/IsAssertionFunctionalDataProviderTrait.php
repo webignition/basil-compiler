@@ -37,7 +37,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -57,7 +57,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -114,7 +114,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -139,7 +139,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -202,7 +202,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -222,7 +222,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -242,7 +242,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -262,7 +262,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -282,7 +282,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],
@@ -302,7 +302,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
+                'additionalClassDependencies' => [
                     new ClassDependency(Inspector::class),
                 ],
             ],

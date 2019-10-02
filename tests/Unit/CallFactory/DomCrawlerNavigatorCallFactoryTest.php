@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
@@ -28,9 +28,9 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     private $domCrawlerNavigatorVariablePlaceholder;
 
     /**
-     * @var UseStatementCollection
+     * @var ClassDependencyCollection
      */
-    private $expectedUseStatements;
+    private $expectedClassDependencies;
 
     /**
      * @var VariablePlaceholderCollection
@@ -43,7 +43,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->factory = DomCrawlerNavigatorCallFactory::createFactory();
 
-        $this->expectedUseStatements = new UseStatementCollection([
+        $this->expectedClassDependencies = new ClassDependencyCollection([
             new ClassDependency(ElementLocator::class),
         ]);
 
@@ -64,7 +64,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
         $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 
@@ -79,7 +79,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
         $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 
@@ -92,7 +92,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
         $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 
@@ -107,7 +107,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
         $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 }

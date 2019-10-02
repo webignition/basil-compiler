@@ -6,7 +6,7 @@ use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\NoArgumentsAction;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -60,7 +60,7 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
                     $model->getType()
                 ),
             ],
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
             $variablePlaceholders
         );
     }

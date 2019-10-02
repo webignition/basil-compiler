@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Functional\Value;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -41,7 +41,7 @@ class ValueTranspilerTest extends AbstractTestCase
     ) {
         $compilableSource = $this->transpiler->transpile($model);
 
-        $this->assertEquals(new UseStatementCollection(), $compilableSource->getUseStatements());
+        $this->assertEquals(new ClassDependencyCollection(), $compilableSource->getClassDependencies());
         $this->assertEquals($expectedVariablePlaceholders, $compilableSource->getVariablePlaceholders());
 
         $executableCall = $this->executableCallFactory->createWithReturn(

@@ -6,7 +6,7 @@ use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilableSourceComposer;
@@ -80,7 +80,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
             $variablePlaceholders
         );
     }

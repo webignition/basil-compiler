@@ -8,12 +8,12 @@ namespace webignition\BasilTranspiler\Tests\Unit;
 
 use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\UseStatementTranspiler;
+use webignition\BasilTranspiler\ClassDependencyTranspiler;
 
-class UseStatementTranspilerTest extends \PHPUnit\Framework\TestCase
+class ClassDependencyTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var UseStatementTranspiler
+     * @var ClassDependencyTranspiler
      */
     private $transpiler;
 
@@ -21,7 +21,7 @@ class UseStatementTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = UseStatementTranspiler::createTranspiler();
+        $this->transpiler = ClassDependencyTranspiler::createTranspiler();
     }
 
     public function testHandlesDoesHandle()

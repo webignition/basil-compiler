@@ -7,7 +7,7 @@ use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
@@ -55,7 +55,7 @@ abstract class AbstractTestCase extends PantherTestCase
         string $fixture,
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        array $additionalUseStatements = []
+        array $additionalClassDependencies = []
     ): string {
         return $this->executableCallFactory->create(
             $compilableSource,
@@ -68,11 +68,11 @@ abstract class AbstractTestCase extends PantherTestCase
                 $additionalSetupStatements
             ),
             $additionalTeardownStatements,
-            new UseStatementCollection(array_merge(
+            new ClassDependencyCollection(array_merge(
                 [
                     new ClassDependency(Navigator::class),
                 ],
-                $additionalUseStatements
+                $additionalClassDependencies
             ))
         );
     }

@@ -5,17 +5,17 @@ namespace webignition\BasilTranspiler;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
-class UseStatementTranspiler implements TranspilerInterface
+class ClassDependencyTranspiler implements TranspilerInterface
 {
     const CLASS_NAME_ONLY_TEMPLATE = 'use %s';
     const WITH_ALIAS_TEMPLATE = self::CLASS_NAME_ONLY_TEMPLATE . ' as %s';
 
-    public static function createTranspiler(): UseStatementTranspiler
+    public static function createTranspiler(): ClassDependencyTranspiler
     {
-        return new UseStatementTranspiler();
+        return new ClassDependencyTranspiler();
     }
 
     public function handles(object $model): bool
@@ -46,7 +46,7 @@ class UseStatementTranspiler implements TranspilerInterface
             [
                 $content
             ],
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
             new VariablePlaceholderCollection()
         );
     }

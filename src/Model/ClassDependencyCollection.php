@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\Model;
 
 use webignition\BasilTranspiler\UnknownItemException;
 
-class UseStatementCollection extends AbstractUniqueCollection implements \Iterator
+class ClassDependencyCollection extends AbstractUniqueCollection implements \Iterator
 {
     /**
      * @param string $id
@@ -26,12 +26,12 @@ class UseStatementCollection extends AbstractUniqueCollection implements \Iterat
         return parent::getAll();
     }
 
-    public function withAdditionalItems(array $items): UseStatementCollection
+    public function withAdditionalItems(array $items): ClassDependencyCollection
     {
         return parent::withAdditionalItems($items);
     }
 
-    public function merge(array $collections): UseStatementCollection
+    public function merge(array $collections): ClassDependencyCollection
     {
         return parent::merge($collections);
     }
