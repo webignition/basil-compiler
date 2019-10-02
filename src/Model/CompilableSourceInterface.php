@@ -12,5 +12,12 @@ interface CompilableSourceInterface
     public function getClassDependencies(): ClassDependencyCollection;
     public function getVariableExports(): VariablePlaceholderCollection;
     public function getVariableDependencies(): VariablePlaceholderCollection;
+
+    public function withClassDependencies(ClassDependencyCollection $classDependencies): CompilableSourceInterface;
+    public function withVariableDependencies(
+        VariablePlaceholderCollection $variableDependencies
+    ): CompilableSourceInterface;
+    public function withVariableExports(VariablePlaceholderCollection $variableExports): CompilableSourceInterface;
+
     public function __toString(): string;
 }

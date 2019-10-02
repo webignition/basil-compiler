@@ -5,9 +5,8 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\Statement;
-use webignition\BasilTranspiler\Model\StatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -54,32 +53,26 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $dimensionAssignmentContent = sprintf(
+        $dimensionAssignmentStatement = sprintf(
             '%s = %s',
             $webDriverDimensionPlaceholder,
             $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()'
         );
 
-        $dimensionAssignmentStatement = new Statement($dimensionAssignmentContent);
-        $dimensionAssignmentStatement = $dimensionAssignmentStatement
-            ->withVariableDependencies($variableDependencies)
-            ->withVariableExports($variableExports);
-
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';
 
-        $dimensionConcatenationContent = '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall;
-        $dimensionConcatenationStatement = new Statement($dimensionConcatenationContent);
-        $dimensionConcatenationStatement = $dimensionConcatenationStatement
+        $dimensionConcatenationStatement = '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall;
+
+        $compilableSource = new CompilableSource([
+            $dimensionAssignmentStatement,
+            $dimensionConcatenationStatement,
+        ]);
+
+        $compilableSource = $compilableSource
             ->withVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
-        return new VariableAssignmentCall(
-            new StatementCollection([
-                $dimensionAssignmentStatement,
-                $dimensionConcatenationStatement,
-            ]),
-            $valuePlaceholder
-        );
+        return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
     }
 }
