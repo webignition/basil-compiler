@@ -35,14 +35,6 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $this->compilableSource->getStatements();
     }
 
-    public function withAdditionalStatements(array $statements): VariableAssignmentCall
-    {
-        $new = clone $this;
-        $new->compilableSource = $this->compilableSource->withAdditionalStatements($statements);
-
-        return $new;
-    }
-
     public function getClassDependencies(): ClassDependencyCollection
     {
         return $this->compilableSource->getClassDependencies();

@@ -44,14 +44,6 @@ class CompilableSource implements CompilableSourceInterface
         return $this->variableDependencies;
     }
 
-    public function withAdditionalStatements(array $statements): CompilableSourceInterface
-    {
-        $new = clone $this;
-        $new->statements = array_merge($this->statements, $statements);
-
-        return $new;
-    }
-
     public function __toString(): string
     {
         return implode("\n", $this->statements);
