@@ -47,9 +47,9 @@ class BrowserPropertyTranspiler implements TranspilerInterface
             throw new UnknownObjectPropertyException($model);
         }
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $webDriverDimensionPlaceholder = $variablePlaceholders->create('WEBDRIVER_DIMENSION');
-        $valuePlaceholder = $variablePlaceholders->create('BROWSER_SIZE');
+        $variableExports = new VariablePlaceholderCollection();
+        $webDriverDimensionPlaceholder = $variableExports->create('WEBDRIVER_DIMENSION');
+        $valuePlaceholder = $variableExports->create('BROWSER_SIZE');
 
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
@@ -72,7 +72,7 @@ class BrowserPropertyTranspiler implements TranspilerInterface
                     $dimensionConcatenationStatement,
                 ],
                 new ClassDependencyCollection(),
-                $variablePlaceholders,
+                $variableExports,
                 $variableDependencies
             ),
             $valuePlaceholder

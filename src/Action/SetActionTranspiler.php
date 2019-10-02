@@ -67,10 +67,10 @@ class SetActionTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $elementLocatorPlaceholder = $variablePlaceholders->create('ELEMENT_LOCATOR');
-        $collectionPlaceholder = $variablePlaceholders->create('COLLECTION');
-        $valuePlaceholder = $variablePlaceholders->create('VALUE');
+        $variableExports = new VariablePlaceholderCollection();
+        $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
+        $collectionPlaceholder = $variableExports->create('COLLECTION');
+        $valuePlaceholder = $variableExports->create('VALUE');
 
         $collectionAssignmentCall = $this->variableAssignmentCallFactory->createForElementCollection(
             $identifier,
@@ -106,7 +106,7 @@ class SetActionTranspiler implements TranspilerInterface
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
     }

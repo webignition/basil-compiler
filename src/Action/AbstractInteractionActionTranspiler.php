@@ -56,9 +56,9 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             throw new NonTranspilableModelException($model);
         }
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $elementLocatorPlaceholder = $variablePlaceholders->create('ELEMENT_LOCATOR');
-        $elementPlaceholder = $variablePlaceholders->create('ELEMENT');
+        $variableExports = new VariablePlaceholderCollection();
+        $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
+        $elementPlaceholder = $variableExports->create('ELEMENT');
 
         $elementVariableAssignmentCall = $this->variableAssignmentCallFactory->createForElement(
             $identifier,
@@ -81,7 +81,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
     }

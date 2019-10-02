@@ -252,7 +252,7 @@ class VariableAssignmentCallFactory
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $elementPlaceholder
     ): VariableAssignmentCall {
-        $variablePlaceholders = new VariablePlaceholderCollection([
+        $variableExports = new VariablePlaceholderCollection([
             $elementLocatorPlaceholder,
             $elementPlaceholder,
         ]);
@@ -266,7 +266,7 @@ class VariableAssignmentCallFactory
                 '%s'
             ),
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -293,8 +293,8 @@ class VariableAssignmentCallFactory
             $elementPlaceholder
         );
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $attributePlaceholder,
         ]);
 
@@ -321,7 +321,7 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -345,8 +345,8 @@ class VariableAssignmentCallFactory
         );
         $collectionPlaceholder = $collectionCall->getElementVariablePlaceholder();
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $valuePlaceholder,
             $collectionPlaceholder,
         ]);
@@ -371,7 +371,7 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -395,8 +395,8 @@ class VariableAssignmentCallFactory
             $valuePlaceholder
         );
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $valuePlaceholder
         ]);
 
@@ -404,7 +404,7 @@ class VariableAssignmentCallFactory
             $assignmentCall->getStatements(),
             [$assignmentCall],
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -421,8 +421,8 @@ class VariableAssignmentCallFactory
         DomIdentifierInterface $attributeIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $valuePlaceholder
         ]);
 
@@ -436,7 +436,7 @@ class VariableAssignmentCallFactory
         $assignmentCall = $assignmentCall->extend(
             '%s !== null',
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -468,13 +468,13 @@ class VariableAssignmentCallFactory
         CompilableSourceInterface $hasCall,
         CompilableSourceInterface $findCall
     ) {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $elementLocatorPlaceholder,
             $returnValuePlaceholder,
         ]);
 
-        $hasVariablePlaceholder = $variablePlaceholders->create('HAS');
+        $hasVariablePlaceholder = $variableExports->create('HAS');
 
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
@@ -482,7 +482,7 @@ class VariableAssignmentCallFactory
             $hasCall->extend(
                 $hasVariablePlaceholder . ' = ' . $hasCall,
                 new ClassDependencyCollection(),
-                $variablePlaceholders,
+                $variableExports,
                 new VariablePlaceholderCollection()
             ),
             $hasVariablePlaceholder
@@ -516,7 +516,7 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -537,7 +537,7 @@ class VariableAssignmentCallFactory
         VariablePlaceholder $variablePlaceholder,
         string $default = 'null'
     ) {
-        $variablePlaceholders = new VariablePlaceholderCollection([
+        $variableExports = new VariablePlaceholderCollection([
             $variablePlaceholder,
         ]);
 
@@ -563,7 +563,7 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -581,7 +581,7 @@ class VariableAssignmentCallFactory
      */
     private function createForScalarExistence(ValueInterface $value, VariablePlaceholder $variablePlaceholder)
     {
-        $variablePlaceholders = new VariablePlaceholderCollection([
+        $variableExports = new VariablePlaceholderCollection([
             $variablePlaceholder,
         ]);
 
@@ -589,7 +589,7 @@ class VariableAssignmentCallFactory
         $assignmentCall = $assignmentCall->extend(
             '%s',
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -606,7 +606,7 @@ class VariableAssignmentCallFactory
                 $assignmentCall,
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 

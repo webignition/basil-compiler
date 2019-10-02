@@ -35,7 +35,7 @@ class ValueTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         ValueInterface $model,
-        VariablePlaceholderCollection $expectedVariablePlaceholders,
+        VariablePlaceholderCollection $expectedVariableExports,
         VariablePlaceholderCollection $expectedVariableDependencies,
         $expectedExecutedResult,
         array $additionalVariableIdentifiers = []
@@ -43,7 +43,7 @@ class ValueTranspilerTest extends AbstractTestCase
         $compilableSource = $this->transpiler->transpile($model);
 
         $this->assertEquals(new ClassDependencyCollection(), $compilableSource->getClassDependencies());
-        $this->assertEquals($expectedVariablePlaceholders, $compilableSource->getVariablePlaceholders());
+        $this->assertEquals($expectedVariableExports, $compilableSource->getVariableExports());
         $this->assertEquals($expectedVariableDependencies, $compilableSource->getVariableDependencies());
 
         $executableCall = $this->executableCallFactory->createWithReturn(
@@ -66,7 +66,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'browser property: size' => [
                 'fixture' => '/empty.html',
                 'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
-                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                'expectedVariableExports' => VariablePlaceholderCollection::createCollection([
                     'WEBDRIVER_DIMENSION',
                     'BROWSER_SIZE',
                 ]),
@@ -82,7 +82,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: title' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection(),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
                 'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
@@ -91,7 +91,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: url' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
-                'expectedVariablePlaceholders' => new VariablePlaceholderCollection(),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
                 'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),

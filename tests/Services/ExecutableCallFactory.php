@@ -95,7 +95,7 @@ class ExecutableCallFactory
         $transpilableSourceWithReturn = new CompilableSource(
             $statements,
             $compilableSource->getClassDependencies(),
-            $compilableSource->getVariablePlaceholders(),
+            $compilableSource->getVariableExports(),
             new VariablePlaceholderCollection()
         );
 
