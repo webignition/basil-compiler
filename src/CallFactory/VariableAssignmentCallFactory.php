@@ -259,12 +259,15 @@ class VariableAssignmentCallFactory
 
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier($elementIdentifier);
 
-        $assignmentStatement = $hasCall->extend(
-            sprintf(
-                '%s = %s',
-                $elementPlaceholder,
-                '%s'
-            ),
+        $assignmentStatement = $this->transpilableSourceComposer->compose(
+            [
+                sprintf(
+                    '%s = %s',
+                    (string) $elementPlaceholder,
+                    (string) $hasCall
+                ),
+            ],
+            [$hasCall],
             new ClassDependencyCollection(),
             $variableExports,
             new VariablePlaceholderCollection()
@@ -433,18 +436,22 @@ class VariableAssignmentCallFactory
             $valuePlaceholder
         );
 
-        $assignmentCall = $assignmentCall->extend(
-            '%s !== null',
-            new ClassDependencyCollection(),
-            $variableExports,
-            new VariablePlaceholderCollection()
+        $existenceAssignmentStatement = sprintf(
+            '%s = %s !== null',
+            (string) $valuePlaceholder,
+            (string) $valuePlaceholder
         );
 
         $compilableSource = $this->transpilableSourceComposer->compose(
-            $assignmentCall->getStatements(),
+            array_merge(
+                $assignmentCall->getStatements(),
+                [
+                    $existenceAssignmentStatement,
+                ]
+            ),
             [$assignmentCall],
             new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
+            $variableExports,
             new VariablePlaceholderCollection()
         );
 
@@ -478,13 +485,26 @@ class VariableAssignmentCallFactory
 
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
+        $hasAssignmentStatement = sprintf(
+            '%s = %s',
+            (string) $hasVariablePlaceholder,
+            (string) $hasCall
+        );
+
+        $hasAssignmentCall = $this->transpilableSourceComposer->compose(
+            [
+                $hasAssignmentStatement,
+            ],
+            [
+                $hasCall
+            ],
+            new ClassDependencyCollection(),
+            $variableExports,
+            new VariablePlaceholderCollection()
+        );
+
         $hasVariableAssignmentCall = new VariableAssignmentCall(
-            $hasCall->extend(
-                $hasVariablePlaceholder . ' = ' . $hasCall,
-                new ClassDependencyCollection(),
-                $variableExports,
-                new VariablePlaceholderCollection()
-            ),
+            $hasAssignmentCall,
             $hasVariablePlaceholder
         );
 
@@ -586,12 +606,6 @@ class VariableAssignmentCallFactory
         ]);
 
         $assignmentCall = $this->createForScalar($value, $variablePlaceholder);
-        $assignmentCall = $assignmentCall->extend(
-            '%s',
-            new ClassDependencyCollection(),
-            $variableExports,
-            new VariablePlaceholderCollection()
-        );
 
         $comparisonStatement = $variablePlaceholder . ' = ' . $variablePlaceholder . ' !== null';
 

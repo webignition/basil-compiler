@@ -6,21 +6,27 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactory
 {
     private $elementLocatorCallFactory;
+    private $transpilableSourceComposer;
 
-    public function __construct(ElementLocatorCallFactory $elementLocatorCallFactory)
-    {
+    public function __construct(
+        ElementLocatorCallFactory $elementLocatorCallFactory,
+        TranspilableSourceComposer $transpilableSourceComposer
+    ) {
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
+        $this->transpilableSourceComposer = $transpilableSourceComposer;
     }
 
     public static function createFactory(): DomCrawlerNavigatorCallFactory
     {
         return new DomCrawlerNavigatorCallFactory(
-            ElementLocatorCallFactory::createFactory()
+            ElementLocatorCallFactory::createFactory(),
+            TranspilableSourceComposer::create()
         );
     }
 
@@ -107,10 +113,18 @@ class DomCrawlerNavigatorCallFactory
         $variableDependencies = new VariablePlaceholderCollection();
         $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
+        $createStatement = sprintf(
+            (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)',
+            (string) $arguments
+        );
 
-        return $arguments->extend(
-            $template,
+        return $this->transpilableSourceComposer->compose(
+            [
+                $createStatement,
+            ],
+            [
+                $arguments,
+            ],
             new ClassDependencyCollection(),
             new VariablePlaceholderCollection(),
             $variableDependencies
@@ -129,10 +143,22 @@ class DomCrawlerNavigatorCallFactory
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
         if ($parentIdentifier instanceof DomIdentifierInterface) {
-            $parentCompilableSource = $this->elementLocatorCallFactory->createConstructorCall($parentIdentifier);
+            $parentElementLocatorConstructorCall = $this->elementLocatorCallFactory->createConstructorCall(
+                $parentIdentifier
+            );
 
-            $compilableSource = $compilableSource->extend(
-                sprintf('%s, %s', '%s', (string) $parentCompilableSource),
+            $compilableSource = $this->transpilableSourceComposer->compose(
+                [
+                    sprintf(
+                        '%s, %s',
+                        (string) $compilableSource,
+                        (string) $parentElementLocatorConstructorCall
+                    ),
+                ],
+                [
+                    $compilableSource,
+                    $parentElementLocatorConstructorCall,
+                ],
                 new ClassDependencyCollection(),
                 new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
