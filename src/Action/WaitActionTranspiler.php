@@ -83,7 +83,8 @@ class WaitActionTranspiler implements TranspilerInterface
                 $durationAssignmentCall
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

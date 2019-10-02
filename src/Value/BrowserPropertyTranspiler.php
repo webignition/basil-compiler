@@ -83,7 +83,8 @@ class BrowserPropertyTranspiler implements TranspilerInterface
                     $webDriverDimensionPlaceholder,
                     $valuePlaceholder,
                     $pantherClientPlaceholder,
-                ])
+                ]),
+                new VariablePlaceholderCollection()
             ),
             $valuePlaceholder
         );

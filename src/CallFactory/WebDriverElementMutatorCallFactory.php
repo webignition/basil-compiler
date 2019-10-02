@@ -31,6 +31,11 @@ class WebDriverElementMutatorCallFactory
             $mutatorPlaceholder . '->setValue(' . $collectionPlaceholder . ', ' . $valuePlaceholder . ')',
         ];
 
-        return new CompilableSource($statements, new ClassDependencyCollection(), $variablePlaceholders);
+        return new CompilableSource(
+            $statements,
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
+        );
     }
 }

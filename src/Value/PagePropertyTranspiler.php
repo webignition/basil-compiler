@@ -60,7 +60,8 @@ class PagePropertyTranspiler implements TranspilerInterface
                 return new CompilableSource(
                     [$transpiledValue],
                     new ClassDependencyCollection(),
-                    $this->variablePlaceholders
+                    $this->variablePlaceholders,
+                    new VariablePlaceholderCollection()
                 );
             }
 

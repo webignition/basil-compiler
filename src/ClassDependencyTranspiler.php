@@ -47,6 +47,7 @@ class ClassDependencyTranspiler implements TranspilerInterface
                 $content
             ],
             new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
             new VariablePlaceholderCollection()
         );
     }

@@ -47,7 +47,8 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
             return new CompilableSource(
                 [$content],
                 new ClassDependencyCollection(),
-                $variablePlaceholders
+                $variablePlaceholders,
+                new VariablePlaceholderCollection()
             );
         }
 

@@ -93,6 +93,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedTranspilableSource' => new CompilableSource(
                     ['"value"'],
                     new ClassDependencyCollection(),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
             ],
@@ -101,6 +102,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedTranspilableSource' => new CompilableSource(
                     ['"100"'],
                     new ClassDependencyCollection(),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
             ],
@@ -115,7 +117,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     new ClassDependencyCollection(),
                     VariablePlaceholderCollection::createCollection([
                         VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-                    ])
+                    ]),
+                    new VariablePlaceholderCollection()
                 ),
             ],
             'browser object value, size' => [
@@ -133,7 +136,8 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                             new VariablePlaceholder('WEBDRIVER_DIMENSION'),
                             new VariablePlaceholder('BROWSER_SIZE'),
                             new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
-                        ])
+                        ]),
+                        new VariablePlaceholderCollection()
                     ),
                     new VariablePlaceholder('BROWSER_SIZE')
                 ),

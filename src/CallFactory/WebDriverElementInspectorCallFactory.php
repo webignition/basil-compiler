@@ -29,6 +29,11 @@ class WebDriverElementInspectorCallFactory
             $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
         ];
 
-        return new CompilableSource($statements, new ClassDependencyCollection(), $variablePlaceholders);
+        return new CompilableSource(
+            $statements,
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
+        );
     }
 }

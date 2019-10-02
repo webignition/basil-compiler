@@ -202,6 +202,7 @@ class AssertionCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
             new VariablePlaceholderCollection()
         );
     }
@@ -233,7 +234,8 @@ class AssertionCallFactory
             new ClassDependencyCollection(),
             new VariablePlaceholderCollection([
                 $this->phpUnitTestCasePlaceholder,
-            ])
+            ]),
+            new VariablePlaceholderCollection()
         );
     }
 }

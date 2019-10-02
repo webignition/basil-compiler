@@ -76,7 +76,8 @@ class WaitForActionTranspiler implements TranspilerInterface
                 ),
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

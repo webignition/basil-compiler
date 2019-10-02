@@ -61,7 +61,8 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
                 ),
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

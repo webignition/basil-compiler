@@ -109,7 +109,12 @@ class DomCrawlerNavigatorCallFactory
 
         $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
-        return $arguments->extend($template, new ClassDependencyCollection(), $variablePlaceholders);
+        return $arguments->extend(
+            $template,
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
+        );
     }
 
     /**
@@ -129,6 +134,7 @@ class DomCrawlerNavigatorCallFactory
             $compilableSource = $compilableSource->extend(
                 sprintf('%s, %s', '%s', (string) $parentCompilableSource),
                 new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             );
         }
