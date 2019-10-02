@@ -4,8 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\VariableNames;
@@ -27,6 +26,7 @@ class AssertionCallFactory
 
     private $transpilableSourceComposer;
     private $phpUnitTestCasePlaceholder;
+    private $variableDependencies;
 
     /**
      * @var string
@@ -41,7 +41,9 @@ class AssertionCallFactory
     public function __construct(TranspilableSourceComposer $transpilableSourceComposer)
     {
         $this->transpilableSourceComposer = $transpilableSourceComposer;
-        $this->phpUnitTestCasePlaceholder = new VariablePlaceholder(VariableNames::PHPUNIT_TEST_CASE);
+
+        $this->variableDependencies = new VariablePlaceholderCollection();
+        $this->phpUnitTestCasePlaceholder = $this->variableDependencies->create(VariableNames::PHPUNIT_TEST_CASE);
 
         $this->attributeExistsTemplate = sprintf(
             self::VARIABLE_EXISTS_TEMPLATE,
@@ -201,8 +203,9 @@ class AssertionCallFactory
         return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
-            new VariablePlaceholderCollection()
+            new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
+            $this->variableDependencies
         );
     }
 
@@ -230,7 +233,8 @@ class AssertionCallFactory
         return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
             new VariablePlaceholderCollection([
                 $this->phpUnitTestCasePlaceholder,
             ])

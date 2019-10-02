@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\Value;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -27,7 +27,8 @@ class LiteralValueTranspiler implements TranspilerInterface
         if ($this->handles($model)) {
             return new CompilableSource(
                 [(string) $model],
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             );
         }

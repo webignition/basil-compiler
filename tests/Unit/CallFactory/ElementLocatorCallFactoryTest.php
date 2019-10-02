@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\DomElementLocator\ElementLocator;
 use webignition\DomElementLocator\ElementLocatorInterface;
@@ -45,9 +45,9 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                new UseStatement(ElementLocator::class),
+                new ClassDependency(ElementLocator::class),
             ],
-            $compilableSource->getUseStatements()->getAll()
+            $compilableSource->getClassDependencies()->getAll()
         );
 
         $this->assertEquals([], $compilableSource->getVariablePlaceholders()->getAll());

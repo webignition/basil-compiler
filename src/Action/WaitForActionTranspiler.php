@@ -7,7 +7,7 @@ use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
@@ -62,9 +62,9 @@ class WaitForActionTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $pantherCrawlerPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CRAWLER);
-        $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
+        $variableDependencies = new VariablePlaceholderCollection();
+        $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
+        $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
         return new CompilableSource(
             [
@@ -75,8 +75,9 @@ class WaitForActionTranspiler implements TranspilerInterface
                     $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
             ],
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
+            $variableDependencies
         );
     }
 }

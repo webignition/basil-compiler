@@ -6,8 +6,9 @@ interface CompilableSourceInterface
 {
     public function extend(
         string $template,
-        UseStatementCollection $useStatements,
-        VariablePlaceholderCollection $variablePlaceholders
+        ClassDependencyCollection $classDependencies,
+        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableDependencies
     ): CompilableSourceInterface;
 
     /**
@@ -16,7 +17,8 @@ interface CompilableSourceInterface
     public function getStatements(): array;
 
     public function withAdditionalStatements(array $statements);
-    public function getUseStatements(): UseStatementCollection;
+    public function getClassDependencies(): ClassDependencyCollection;
     public function getVariablePlaceholders(): VariablePlaceholderCollection;
+    public function getVariableDependencies(): VariablePlaceholderCollection;
     public function __toString(): string;
 }

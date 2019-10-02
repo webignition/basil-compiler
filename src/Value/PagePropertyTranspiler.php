@@ -6,7 +6,7 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -18,14 +18,14 @@ class PagePropertyTranspiler implements TranspilerInterface
     const PROPERTY_NAME_TITLE = 'title';
     const PROPERTY_NAME_URL = 'url';
 
-    private $variablePlaceholders;
+    private $variableDependencies;
     private $transpiledValueMap;
 
     public function __construct()
     {
-        $this->variablePlaceholders = new VariablePlaceholderCollection();
-        $pantherClientVariablePlaceholder = $this->variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
-        $pantherClientPlaceholderAsString = (string) $pantherClientVariablePlaceholder;
+        $this->variableDependencies = new VariablePlaceholderCollection();
+        $pantherClientPlaceholder = $this->variableDependencies->create(VariableNames::PANTHER_CLIENT);
+        $pantherClientPlaceholderAsString = (string) $pantherClientPlaceholder;
 
         $this->transpiledValueMap = [
             self::PROPERTY_NAME_TITLE => $pantherClientPlaceholderAsString . '->getTitle()',
@@ -59,8 +59,9 @@ class PagePropertyTranspiler implements TranspilerInterface
             if (is_string($transpiledValue)) {
                 return new CompilableSource(
                     [$transpiledValue],
-                    new UseStatementCollection(),
-                    $this->variablePlaceholders
+                    new ClassDependencyCollection(),
+                    new VariablePlaceholderCollection(),
+                    $this->variableDependencies
                 );
             }
 

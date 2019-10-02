@@ -9,7 +9,7 @@ use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -26,7 +26,7 @@ trait WaitActionFunctionalDataProviderTrait
                 'variableIdentifiers' => [
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertTrue(true);'
                 ],
@@ -45,8 +45,8 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
@@ -69,8 +69,8 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
@@ -93,8 +93,8 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
@@ -110,7 +110,7 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
                 'expectedDuration' => 1200,
@@ -122,7 +122,7 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
                 'expectedDuration' => 5,
@@ -134,7 +134,7 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
                 'expectedDuration' => 5,
@@ -146,7 +146,7 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
                 'expectedDuration' => 0,

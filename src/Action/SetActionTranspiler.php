@@ -8,7 +8,7 @@ use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilableSourceComposer;
@@ -105,8 +105,9 @@ class SetActionTranspiler implements TranspilerInterface
         return $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

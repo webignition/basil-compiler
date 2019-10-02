@@ -10,7 +10,7 @@ use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -82,7 +82,8 @@ class VariableAssignmentCallFactory
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -90,7 +91,8 @@ class VariableAssignmentCallFactory
         $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCallForTranspiledArguments(
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -214,7 +216,8 @@ class VariableAssignmentCallFactory
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -222,7 +225,8 @@ class VariableAssignmentCallFactory
         $findCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -261,8 +265,9 @@ class VariableAssignmentCallFactory
                 $elementPlaceholder,
                 '%s'
             ),
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($assignmentStatement, $elementPlaceholder);
@@ -315,8 +320,9 @@ class VariableAssignmentCallFactory
         $compilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $attributePlaceholder);
@@ -364,8 +370,9 @@ class VariableAssignmentCallFactory
         $compilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
@@ -396,8 +403,9 @@ class VariableAssignmentCallFactory
         $compilableSource = $this->transpilableSourceComposer->compose(
             $assignmentCall->getStatements(),
             [$assignmentCall],
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
@@ -427,14 +435,16 @@ class VariableAssignmentCallFactory
 
         $assignmentCall = $assignmentCall->extend(
             '%s !== null',
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         $compilableSource = $this->transpilableSourceComposer->compose(
             $assignmentCall->getStatements(),
             [$assignmentCall],
-            new UseStatementCollection(),
+            new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
             new VariablePlaceholderCollection()
         );
 
@@ -471,8 +481,9 @@ class VariableAssignmentCallFactory
         $hasVariableAssignmentCall = new VariableAssignmentCall(
             $hasCall->extend(
                 $hasVariablePlaceholder . ' = ' . $hasCall,
-                new UseStatementCollection(),
-                $variablePlaceholders
+                new ClassDependencyCollection(),
+                $variablePlaceholders,
+                new VariablePlaceholderCollection()
             ),
             $hasVariablePlaceholder
         );
@@ -504,8 +515,9 @@ class VariableAssignmentCallFactory
         $compilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $returnValuePlaceholder);
@@ -550,8 +562,9 @@ class VariableAssignmentCallFactory
         $compilableSource = $this->transpilableSourceComposer->compose(
             $statements,
             $calls,
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $variablePlaceholder);
@@ -575,8 +588,9 @@ class VariableAssignmentCallFactory
         $assignmentCall = $this->createForScalar($value, $variablePlaceholder);
         $assignmentCall = $assignmentCall->extend(
             '%s',
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         $comparisonStatement = $variablePlaceholder . ' = ' . $variablePlaceholder . ' !== null';
@@ -591,8 +605,9 @@ class VariableAssignmentCallFactory
             [
                 $assignmentCall,
             ],
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $variablePlaceholder);

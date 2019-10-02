@@ -21,7 +21,7 @@ trait ReloadActionFunctionalDataProviderTrait
                 'variableIdentifiers' => [
                     VariableNames::PANTHER_CRAWLER => '$crawler',
                 ],
-                'additionalUseStatements' => [],
+                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertCount(0, $crawler->filter("#hello"));',
                     'usleep(100000);',

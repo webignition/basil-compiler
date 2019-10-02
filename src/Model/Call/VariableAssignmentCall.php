@@ -3,7 +3,7 @@
 namespace webignition\BasilTranspiler\Model\Call;
 
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
@@ -32,13 +32,15 @@ class VariableAssignmentCall implements CompilableSourceInterface
 
     public function extend(
         string $template,
-        UseStatementCollection $useStatements,
-        VariablePlaceholderCollection $variablePlaceholders
+        ClassDependencyCollection $classDependencies,
+        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableDependencies
     ): CompilableSourceInterface {
         $extendedCompilableSource = $this->compilableSource->extend(
             $template,
-            $useStatements,
-            $variablePlaceholders
+            $classDependencies,
+            $variablePlaceholders,
+            $variableDependencies
         );
 
         return new VariableAssignmentCall($extendedCompilableSource, $this->elementVariablePlaceholder);
@@ -57,14 +59,19 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $new;
     }
 
-    public function getUseStatements(): UseStatementCollection
+    public function getClassDependencies(): ClassDependencyCollection
     {
-        return $this->compilableSource->getUseStatements();
+        return $this->compilableSource->getClassDependencies();
     }
 
     public function getVariablePlaceholders(): VariablePlaceholderCollection
     {
         return $this->compilableSource->getVariablePlaceholders();
+    }
+
+    public function getVariableDependencies(): VariablePlaceholderCollection
+    {
+        return $this->compilableSource->getVariableDependencies();
     }
 
     public function __toString(): string

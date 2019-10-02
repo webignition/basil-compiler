@@ -8,27 +8,28 @@ namespace webignition\BasilTranspiler\Tests\Services;
 
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
-use webignition\BasilTranspiler\UseStatementTranspiler;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\ClassDependencyTranspiler;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
 class ExecutableCallFactory
 {
-    private $useStatementTranspiler;
+    private $classDependencyTranspiler;
     private $variablePlaceholderResolver;
 
     public function __construct(
-        UseStatementTranspiler $useStatementTranspiler,
+        ClassDependencyTranspiler $classDependencyTranspiler,
         VariablePlaceholderResolver $variablePlaceholderResolver
     ) {
-        $this->useStatementTranspiler = $useStatementTranspiler;
+        $this->classDependencyTranspiler = $classDependencyTranspiler;
         $this->variablePlaceholderResolver = $variablePlaceholderResolver;
     }
 
     public static function createFactory(): ExecutableCallFactory
     {
         return new ExecutableCallFactory(
-            UseStatementTranspiler::createTranspiler(),
+            ClassDependencyTranspiler::createTranspiler(),
             new VariablePlaceholderResolver()
         );
     }
@@ -38,19 +39,19 @@ class ExecutableCallFactory
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?UseStatementCollection $additionalUseStatements = null
+        ?ClassDependencyCollection $additionalClassDependencies = null
     ): string {
-        $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
+        $additionalClassDependencies = $additionalClassDependencies ?? new ClassDependencyCollection();
 
-        $useStatements = $compilableSource->getUseStatements();
-        $useStatements = $useStatements->merge([
-            $additionalUseStatements,
+        $classDependencies = $compilableSource->getClassDependencies();
+        $classDependencies = $classDependencies->merge([
+            $additionalClassDependencies,
         ]);
 
         $executableCall = '';
 
-        foreach ($useStatements as $key => $value) {
-            $executableCall .= (string) $this->useStatementTranspiler->transpile($value) . ";\n";
+        foreach ($classDependencies as $key => $value) {
+            $executableCall .= (string) $this->classDependencyTranspiler->transpile($value) . ";\n";
         }
 
         foreach ($setupStatements as $statement) {
@@ -83,7 +84,7 @@ class ExecutableCallFactory
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?UseStatementCollection $additionalUseStatements = null
+        ?ClassDependencyCollection $additionalClassDependencies = null
     ): string {
         $statements = $compilableSource->getStatements();
         $lastStatementPosition = count($statements) - 1;
@@ -93,8 +94,9 @@ class ExecutableCallFactory
 
         $transpilableSourceWithReturn = new CompilableSource(
             $statements,
-            $compilableSource->getUseStatements(),
-            $compilableSource->getVariablePlaceholders()
+            $compilableSource->getClassDependencies(),
+            $compilableSource->getVariablePlaceholders(),
+            new VariablePlaceholderCollection()
         );
 
         return $this->create(
@@ -102,7 +104,7 @@ class ExecutableCallFactory
             $variableIdentifiers,
             $setupStatements,
             $teardownStatements,
-            $additionalUseStatements
+            $additionalClassDependencies
         );
     }
 }

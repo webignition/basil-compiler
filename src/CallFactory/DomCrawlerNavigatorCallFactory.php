@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -104,12 +104,17 @@ class DomCrawlerNavigatorCallFactory
         CompilableSourceInterface $arguments,
         string $methodName
     ): CompilableSourceInterface {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $domCrawlerNavigatorPlaceholder = $variablePlaceholders->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
+        $variableDependencies = new VariablePlaceholderCollection();
+        $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
         $template = (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)';
 
-        return $arguments->extend($template, new UseStatementCollection(), $variablePlaceholders);
+        return $arguments->extend(
+            $template,
+            new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
+            $variableDependencies
+        );
     }
 
     /**
@@ -128,7 +133,8 @@ class DomCrawlerNavigatorCallFactory
 
             $compilableSource = $compilableSource->extend(
                 sprintf('%s, %s', '%s', (string) $parentCompilableSource),
-                new UseStatementCollection(),
+                new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             );
         }

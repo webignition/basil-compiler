@@ -7,7 +7,7 @@ use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -17,15 +17,6 @@ use webignition\BasilTranspiler\VariableNames;
 class BrowserPropertyTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
-
-    private $variablePlaceholders;
-
-    public function __construct()
-    {
-        $this->variablePlaceholders = VariablePlaceholderCollection::createCollection([
-            VariableNames::PANTHER_CLIENT,
-        ]);
-    }
 
     public static function createTranspiler(): BrowserPropertyTranspiler
     {
@@ -59,7 +50,9 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variablePlaceholders = new VariablePlaceholderCollection();
         $webDriverDimensionPlaceholder = $variablePlaceholders->create('WEBDRIVER_DIMENSION');
         $valuePlaceholder = $variablePlaceholders->create('BROWSER_SIZE');
-        $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
+
+        $variableDependencies = new VariablePlaceholderCollection();
+        $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
         $dimensionAssignmentStatement = sprintf(
             '%s = %s',
@@ -78,12 +71,9 @@ class BrowserPropertyTranspiler implements TranspilerInterface
                     $dimensionAssignmentStatement,
                     $dimensionConcatenationStatement,
                 ],
-                new UseStatementCollection(),
-                new VariablePlaceholderCollection([
-                    $webDriverDimensionPlaceholder,
-                    $valuePlaceholder,
-                    $pantherClientPlaceholder,
-                ])
+                new ClassDependencyCollection(),
+                $variablePlaceholders,
+                $variableDependencies
             ),
             $valuePlaceholder
         );

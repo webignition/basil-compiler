@@ -5,28 +5,33 @@ namespace webignition\BasilTranspiler\Model;
 class CompilableSource implements CompilableSourceInterface
 {
     private $statements;
-    private $useStatements;
+    private $classDependencies;
     private $variablePlaceholders;
+    private $variableDependencies;
 
     public function __construct(
         array $statements,
-        UseStatementCollection $useStatements,
-        VariablePlaceholderCollection $variablePlaceholders
+        ClassDependencyCollection $classDependencies,
+        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableDependencies
     ) {
         $this->statements = $statements;
-        $this->useStatements = $useStatements;
+        $this->classDependencies = $classDependencies;
         $this->variablePlaceholders = $variablePlaceholders;
+        $this->variableDependencies = $variableDependencies;
     }
 
     public function extend(
         string $template,
-        UseStatementCollection $useStatements,
-        VariablePlaceholderCollection $variablePlaceholders
+        ClassDependencyCollection $classDependencies,
+        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableDependencies
     ): CompilableSourceInterface {
         return new CompilableSource(
             explode("\n", sprintf($template, (string) $this)),
-            $this->getUseStatements()->merge([$useStatements]),
-            $this->getVariablePlaceholders()->merge([$variablePlaceholders])
+            $this->getClassDependencies()->merge([$classDependencies]),
+            $this->getVariablePlaceholders()->merge([$variablePlaceholders]),
+            $this->getVariableDependencies()->merge([$variableDependencies])
         );
     }
 
@@ -38,14 +43,19 @@ class CompilableSource implements CompilableSourceInterface
         return $this->statements;
     }
 
-    public function getUseStatements(): UseStatementCollection
+    public function getClassDependencies(): ClassDependencyCollection
     {
-        return $this->useStatements;
+        return $this->classDependencies;
     }
 
     public function getVariablePlaceholders(): VariablePlaceholderCollection
     {
         return $this->variablePlaceholders;
+    }
+
+    public function getVariableDependencies(): VariablePlaceholderCollection
+    {
+        return $this->variableDependencies;
     }
 
     public function withAdditionalStatements(array $statements): CompilableSourceInterface

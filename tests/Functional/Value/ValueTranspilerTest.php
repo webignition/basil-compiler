@@ -9,7 +9,7 @@ namespace webignition\BasilTranspiler\Tests\Functional\Value;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -36,13 +36,15 @@ class ValueTranspilerTest extends AbstractTestCase
         string $fixture,
         ValueInterface $model,
         VariablePlaceholderCollection $expectedVariablePlaceholders,
+        VariablePlaceholderCollection $expectedVariableDependencies,
         $expectedExecutedResult,
         array $additionalVariableIdentifiers = []
     ) {
         $compilableSource = $this->transpiler->transpile($model);
 
-        $this->assertEquals(new UseStatementCollection(), $compilableSource->getUseStatements());
+        $this->assertEquals(new ClassDependencyCollection(), $compilableSource->getClassDependencies());
         $this->assertEquals($expectedVariablePlaceholders, $compilableSource->getVariablePlaceholders());
+        $this->assertEquals($expectedVariableDependencies, $compilableSource->getVariableDependencies());
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $compilableSource,
@@ -67,6 +69,8 @@ class ValueTranspilerTest extends AbstractTestCase
                 'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
                     'WEBDRIVER_DIMENSION',
                     'BROWSER_SIZE',
+                ]),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => '1200x1100',
@@ -78,7 +82,8 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: title' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
-                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection(),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => 'Test fixture web server default document',
@@ -86,7 +91,8 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: url' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
-                'expectedVariablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                'expectedVariablePlaceholders' => new VariablePlaceholderCollection(),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
                     VariableNames::PANTHER_CLIENT,
                 ]),
                 'expectedExecutedResult' => 'http://127.0.0.1:9080/index.html',

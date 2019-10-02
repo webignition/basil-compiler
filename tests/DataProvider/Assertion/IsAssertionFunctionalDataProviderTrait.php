@@ -10,7 +10,7 @@ use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Model\UseStatement;
+use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -37,8 +37,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, attribute identifier examined value, scalar expected value' => [
@@ -57,8 +57,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, environment examined value, scalar expected value' => [
@@ -114,8 +114,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, element identifier examined value, attribute identifier expected value' => [
@@ -139,8 +139,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, attribute identifier examined value, environment expected value' => [
@@ -202,8 +202,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, select element identifier examined value, scalar expected value (2)' => [
@@ -222,8 +222,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, option collection element identifier examined value, scalar expected value (1)' => [
@@ -242,8 +242,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, option collection element identifier examined value, scalar expected value (2)' => [
@@ -262,8 +262,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, radio group element identifier examined value, scalar expected value (1)' => [
@@ -282,8 +282,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
             'is comparison, radio group element identifier examined value, scalar expected value (2)' => [
@@ -302,8 +302,8 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalUseStatements' => [
-                    new UseStatement(Inspector::class),
+                'additionalClassDependencies' => [
+                    new ClassDependency(Inspector::class),
                 ],
             ],
         ];

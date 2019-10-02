@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\Action;
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilableSourceComposer;
@@ -82,8 +82,9 @@ class WaitActionTranspiler implements TranspilerInterface
             [
                 $durationAssignmentCall
             ],
-            new UseStatementCollection(),
-            $variablePlaceholders
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

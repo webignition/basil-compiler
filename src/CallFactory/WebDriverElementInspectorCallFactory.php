@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\UseStatementCollection;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
@@ -23,12 +23,18 @@ class WebDriverElementInspectorCallFactory
             $collectionPlaceholder,
         ]);
 
-        $inspectorPlaceholder = $variablePlaceholders->create(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR);
+        $variableDependencies = new VariablePlaceholderCollection();
+        $inspectorPlaceholder = $variableDependencies->create(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR);
 
         $statements = [
             $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
         ];
 
-        return new CompilableSource($statements, new UseStatementCollection(), $variablePlaceholders);
+        return new CompilableSource(
+            $statements,
+            new ClassDependencyCollection(),
+            $variablePlaceholders,
+            $variableDependencies
+        );
     }
 }
