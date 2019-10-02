@@ -10,9 +10,6 @@ use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -80,9 +77,19 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider transpileDataProvider
      */
-    public function testTranspile(ValueInterface $model, CompilableSourceInterface $expectedTranspilableSource)
-    {
-        $this->assertEquals($expectedTranspilableSource, $this->transpiler->transpile($model));
+    public function testTranspile(
+        ValueInterface $model,
+        array $expectedStatements,
+        ClassDependencyCollection $expectedClassDependencies,
+        VariablePlaceholderCollection $expectedVariableDependencies,
+        VariablePlaceholderCollection $expectedVariableExports
+    ) {
+        $compilableSource = $this->transpiler->transpile($model);
+
+        $this->assertEquals($expectedStatements, $compilableSource->getStatements());
+        $this->assertEquals($expectedClassDependencies, $compilableSource->getClassDependencies());
+        $this->assertEquals($expectedVariableDependencies, $compilableSource->getVariableDependencies());
+        $this->assertEquals($expectedVariableExports, $compilableSource->getVariableExports());
     }
 
     public function transpileDataProvider(): array
@@ -90,21 +97,21 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
         return [
             'literal string value: string' => [
                 'value' => new LiteralValue('value'),
-                'expectedTranspilableSource' => new CompilableSource(
-                    ['"value"'],
-                    new ClassDependencyCollection(),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'expectedStatements' => [
+                    '"value"',
+                ],
+                'expectedClassDependencies' => new ClassDependencyCollection(),
+                'expectedVariableDependencies' => new VariablePlaceholderCollection(),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
             ],
             'literal string value: integer' => [
                 'value' => new LiteralValue('100'),
-                'expectedTranspilableSource' => new CompilableSource(
-                    ['"100"'],
-                    new ClassDependencyCollection(),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'expectedStatements' => [
+                    '"100"',
+                ],
+                'expectedClassDependencies' => new ClassDependencyCollection(),
+                'expectedVariableDependencies' => new VariablePlaceholderCollection(),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
             ],
             'environment parameter value' => [
                 'value' => new ObjectValue(
@@ -112,62 +119,52 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '$env.KEY',
                     'KEY'
                 ),
-                'expectedTranspilableSource' => new CompilableSource(
-                    [(string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'],
-                    new ClassDependencyCollection(),
-                    new VariablePlaceholderCollection(),
-                    VariablePlaceholderCollection::createCollection([
-                        VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-                    ])
-                ),
+                'expectedStatements' => [
+                    (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']',
+                ],
+                'expectedClassDependencies' => new ClassDependencyCollection(),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
+                ]),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
             ],
             'browser property, size' => [
                 'value' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
-                'expectedTranspilableSource' => new VariableAssignmentCall(
-                    new CompilableSource(
-                        [
-                            '{{ WEBDRIVER_DIMENSION }} = '
-                            . '{{ PANTHER_CLIENT }}->getWebDriver()->manage()->window()->getSize()',
-                            '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
-                            . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
-                        ],
-                        new ClassDependencyCollection(),
-                        new VariablePlaceholderCollection([
-                            new VariablePlaceholder('WEBDRIVER_DIMENSION'),
-                            new VariablePlaceholder('BROWSER_SIZE'),
-                        ]),
-                        new VariablePlaceholderCollection([
-                            new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
-                        ])
-                    ),
-                    new VariablePlaceholder('BROWSER_SIZE')
-                ),
+                'expectedStatements' => [
+                    '{{ WEBDRIVER_DIMENSION }} = {{ PANTHER_CLIENT }}->getWebDriver()->manage()->window()->getSize()',
+                    '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
+                    . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
+                ],
+                'expectedClassDependencies' => new ClassDependencyCollection(),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PANTHER_CLIENT,
+                ]),
+                'expectedVariableExports' => VariablePlaceholderCollection::createCollection([
+                    'WEBDRIVER_DIMENSION',
+                    'BROWSER_SIZE',
+                ]),
             ],
             'page property, url' => [
                 'value' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
-                'expectedTranspilableSource' => new CompilableSource(
-                    [
-                        '{{ PANTHER_CLIENT }}->getCurrentURL()'
-                    ],
-                    new ClassDependencyCollection(),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection([
-                        new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
-                    ])
-                ),
+                'expectedStatements' => [
+                    '{{ PANTHER_CLIENT }}->getCurrentURL()',
+                ],
+                'expectedClassDependencies' => new ClassDependencyCollection(),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PANTHER_CLIENT,
+                ]),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
             ],
             'page property, title' => [
                 'value' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
-                'expectedTranspilableSource' => new CompilableSource(
-                    [
-                        '{{ PANTHER_CLIENT }}->getTitle()'
-                    ],
-                    new ClassDependencyCollection(),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection([
-                        new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
-                    ])
-                ),
+                'expectedStatements' => [
+                    '{{ PANTHER_CLIENT }}->getTitle()',
+                ],
+                'expectedClassDependencies' => new ClassDependencyCollection(),
+                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
+                    VariableNames::PANTHER_CLIENT,
+                ]),
+                'expectedVariableExports' => new VariablePlaceholderCollection(),
             ],
         ];
     }
