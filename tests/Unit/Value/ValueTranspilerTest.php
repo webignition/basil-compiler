@@ -115,31 +115,58 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedTranspilableSource' => new CompilableSource(
                     [(string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'],
                     new ClassDependencyCollection(),
+                    new VariablePlaceholderCollection(),
                     VariablePlaceholderCollection::createCollection([
                         VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-                    ]),
-                    new VariablePlaceholderCollection()
+                    ])
                 ),
             ],
-            'browser object value, size' => [
+            'browser property, size' => [
                 'value' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
                 'expectedTranspilableSource' => new VariableAssignmentCall(
                     new CompilableSource(
                         [
-                        '{{ WEBDRIVER_DIMENSION }} = '
-                        . '{{ PANTHER_CLIENT }}->getWebDriver()->manage()->window()->getSize()',
-                        '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
-                        . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
+                            '{{ WEBDRIVER_DIMENSION }} = '
+                            . '{{ PANTHER_CLIENT }}->getWebDriver()->manage()->window()->getSize()',
+                            '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
+                            . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
                         ],
                         new ClassDependencyCollection(),
                         new VariablePlaceholderCollection([
                             new VariablePlaceholder('WEBDRIVER_DIMENSION'),
                             new VariablePlaceholder('BROWSER_SIZE'),
-                            new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
                         ]),
-                        new VariablePlaceholderCollection()
+                        new VariablePlaceholderCollection([
+                            new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                        ])
                     ),
                     new VariablePlaceholder('BROWSER_SIZE')
+                ),
+            ],
+            'page property, url' => [
+                'value' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
+                'expectedTranspilableSource' => new CompilableSource(
+                    [
+                        '{{ PANTHER_CLIENT }}->getCurrentURL()'
+                    ],
+                    new ClassDependencyCollection(),
+                    new VariablePlaceholderCollection(),
+                    new VariablePlaceholderCollection([
+                        new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                    ])
+                ),
+            ],
+            'page property, title' => [
+                'value' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
+                'expectedTranspilableSource' => new CompilableSource(
+                    [
+                        '{{ PANTHER_CLIENT }}->getTitle()'
+                    ],
+                    new ClassDependencyCollection(),
+                    new VariablePlaceholderCollection(),
+                    new VariablePlaceholderCollection([
+                        new VariablePlaceholder(VariableNames::PANTHER_CLIENT),
+                    ])
                 ),
             ],
         ];

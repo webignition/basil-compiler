@@ -18,18 +18,18 @@ class PagePropertyTranspiler implements TranspilerInterface
     const PROPERTY_NAME_TITLE = 'title';
     const PROPERTY_NAME_URL = 'url';
 
-    private $variablePlaceholders;
+    private $variableDependencies;
     private $transpiledValueMap;
 
     public function __construct()
     {
-        $this->variablePlaceholders = new VariablePlaceholderCollection();
-        $pantherClientVariablePlaceholder = $this->variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
-        $pantherClientPlaceholderAsString = (string) $pantherClientVariablePlaceholder;
+        $this->variableDependencies = new VariablePlaceholderCollection();
+        $pantherClientVariableDependency = $this->variableDependencies->create(VariableNames::PANTHER_CLIENT);
+        $pantherClientDependencyAsString = (string) $pantherClientVariableDependency;
 
         $this->transpiledValueMap = [
-            self::PROPERTY_NAME_TITLE => $pantherClientPlaceholderAsString . '->getTitle()',
-            self::PROPERTY_NAME_URL => $pantherClientPlaceholderAsString . '->getCurrentURL()',
+            self::PROPERTY_NAME_TITLE => $pantherClientDependencyAsString . '->getTitle()',
+            self::PROPERTY_NAME_URL => $pantherClientDependencyAsString . '->getCurrentURL()',
         ];
     }
 
@@ -60,8 +60,8 @@ class PagePropertyTranspiler implements TranspilerInterface
                 return new CompilableSource(
                     [$transpiledValue],
                     new ClassDependencyCollection(),
-                    $this->variablePlaceholders,
-                    new VariablePlaceholderCollection()
+                    new VariablePlaceholderCollection(),
+                    $this->variableDependencies
                 );
             }
 

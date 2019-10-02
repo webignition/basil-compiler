@@ -34,21 +34,21 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
     public function transpile(object $model): CompilableSourceInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
-            $variablePlaceholders = new VariablePlaceholderCollection();
-            $environmentVariableArrayPlaceholder = $variablePlaceholders->create(
+            $variableDependencies = new VariablePlaceholderCollection();
+            $environmentVariableArrayDependency = $variableDependencies->create(
                 VariableNames::ENVIRONMENT_VARIABLE_ARRAY
             );
 
             $content = sprintf(
-                (string) $environmentVariableArrayPlaceholder . '[\'%s\']',
+                (string) $environmentVariableArrayDependency . '[\'%s\']',
                 $model->getProperty()
             );
 
             return new CompilableSource(
                 [$content],
                 new ClassDependencyCollection(),
-                $variablePlaceholders,
-                new VariablePlaceholderCollection()
+                new VariablePlaceholderCollection(),
+                $variableDependencies
             );
         }
 
