@@ -154,9 +154,18 @@ class VariableAssignmentCallFactory
                 (string) $variableAssignmentCallPlaceholder
             );
 
-            $variableAssignmentCall = $variableAssignmentCall->withAdditionalStatements([
-                $typeCastStatement,
-            ]);
+            $variableAssignmentCall = new VariableAssignmentCall(
+                new CompilableSource(
+                    array_merge(
+                        $variableAssignmentCall->getStatements(),
+                        [$typeCastStatement]
+                    ),
+                    $variableAssignmentCall->getClassDependencies(),
+                    $variableAssignmentCall->getVariableExports(),
+                    $variableAssignmentCall->getVariableDependencies()
+                ),
+                $variableAssignmentCall->getElementVariablePlaceholder()
+            );
         }
 
         return $variableAssignmentCall;

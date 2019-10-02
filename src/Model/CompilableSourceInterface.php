@@ -9,7 +9,6 @@ interface CompilableSourceInterface
      */
     public function getStatements(): array;
 
-    public function withAdditionalStatements(array $statements);
     public function getClassDependencies(): ClassDependencyCollection;
     public function getVariableExports(): VariablePlaceholderCollection;
     public function getVariableDependencies(): VariablePlaceholderCollection;
