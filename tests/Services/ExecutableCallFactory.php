@@ -10,6 +10,7 @@ use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
+use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
 class ExecutableCallFactory
@@ -94,7 +95,8 @@ class ExecutableCallFactory
         $transpilableSourceWithReturn = new CompilableSource(
             $statements,
             $compilableSource->getClassDependencies(),
-            $compilableSource->getVariablePlaceholders()
+            $compilableSource->getVariablePlaceholders(),
+            new VariablePlaceholderCollection()
         );
 
         return $this->create(

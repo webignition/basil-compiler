@@ -28,6 +28,7 @@ class LiteralValueTranspiler implements TranspilerInterface
             return new CompilableSource(
                 [(string) $model],
                 new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             );
         }

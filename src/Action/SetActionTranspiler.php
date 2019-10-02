@@ -106,7 +106,8 @@ class SetActionTranspiler implements TranspilerInterface
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

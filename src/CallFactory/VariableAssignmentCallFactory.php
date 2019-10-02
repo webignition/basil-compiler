@@ -83,6 +83,7 @@ class VariableAssignmentCallFactory
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -91,6 +92,7 @@ class VariableAssignmentCallFactory
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -215,6 +217,7 @@ class VariableAssignmentCallFactory
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -223,6 +226,7 @@ class VariableAssignmentCallFactory
             new CompilableSource(
                 [(string) $elementLocatorPlaceholder],
                 new ClassDependencyCollection(),
+                new VariablePlaceholderCollection(),
                 new VariablePlaceholderCollection()
             )
         );
@@ -262,7 +266,8 @@ class VariableAssignmentCallFactory
                 '%s'
             ),
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($assignmentStatement, $elementPlaceholder);
@@ -316,7 +321,8 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $attributePlaceholder);
@@ -365,7 +371,8 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
@@ -397,7 +404,8 @@ class VariableAssignmentCallFactory
             $assignmentCall->getStatements(),
             [$assignmentCall],
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
@@ -428,13 +436,15 @@ class VariableAssignmentCallFactory
         $assignmentCall = $assignmentCall->extend(
             '%s !== null',
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         $compilableSource = $this->transpilableSourceComposer->compose(
             $assignmentCall->getStatements(),
             [$assignmentCall],
             new ClassDependencyCollection(),
+            new VariablePlaceholderCollection(),
             new VariablePlaceholderCollection()
         );
 
@@ -472,7 +482,8 @@ class VariableAssignmentCallFactory
             $hasCall->extend(
                 $hasVariablePlaceholder . ' = ' . $hasCall,
                 new ClassDependencyCollection(),
-                $variablePlaceholders
+                $variablePlaceholders,
+                new VariablePlaceholderCollection()
             ),
             $hasVariablePlaceholder
         );
@@ -505,7 +516,8 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $returnValuePlaceholder);
@@ -551,7 +563,8 @@ class VariableAssignmentCallFactory
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $variablePlaceholder);
@@ -576,7 +589,8 @@ class VariableAssignmentCallFactory
         $assignmentCall = $assignmentCall->extend(
             '%s',
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         $comparisonStatement = $variablePlaceholder . ' = ' . $variablePlaceholder . ' !== null';
@@ -592,7 +606,8 @@ class VariableAssignmentCallFactory
                 $assignmentCall,
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
 
         return new VariableAssignmentCall($compilableSource, $variablePlaceholder);

@@ -81,7 +81,8 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $statements,
             $calls,
             new ClassDependencyCollection(),
-            $variablePlaceholders
+            $variablePlaceholders,
+            new VariablePlaceholderCollection()
         );
     }
 }

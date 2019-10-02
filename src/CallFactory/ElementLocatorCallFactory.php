@@ -60,6 +60,7 @@ class ElementLocatorCallFactory
             new ClassDependencyCollection([
                 new ClassDependency(ElementLocator::class),
             ]),
+            new VariablePlaceholderCollection(),
             new VariablePlaceholderCollection()
         );
     }

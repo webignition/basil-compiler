@@ -18,15 +18,6 @@ class BrowserPropertyTranspiler implements TranspilerInterface
 {
     const PROPERTY_NAME_SIZE = 'size';
 
-    private $variablePlaceholders;
-
-    public function __construct()
-    {
-        $this->variablePlaceholders = VariablePlaceholderCollection::createCollection([
-            VariableNames::PANTHER_CLIENT,
-        ]);
-    }
-
     public static function createTranspiler(): BrowserPropertyTranspiler
     {
         return new BrowserPropertyTranspiler();
@@ -59,7 +50,9 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variablePlaceholders = new VariablePlaceholderCollection();
         $webDriverDimensionPlaceholder = $variablePlaceholders->create('WEBDRIVER_DIMENSION');
         $valuePlaceholder = $variablePlaceholders->create('BROWSER_SIZE');
-        $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
+
+        $variableDependencies = new VariablePlaceholderCollection();
+        $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
         $dimensionAssignmentStatement = sprintf(
             '%s = %s',
@@ -79,11 +72,8 @@ class BrowserPropertyTranspiler implements TranspilerInterface
                     $dimensionConcatenationStatement,
                 ],
                 new ClassDependencyCollection(),
-                new VariablePlaceholderCollection([
-                    $webDriverDimensionPlaceholder,
-                    $valuePlaceholder,
-                    $pantherClientPlaceholder,
-                ])
+                $variablePlaceholders,
+                $variableDependencies
             ),
             $valuePlaceholder
         );

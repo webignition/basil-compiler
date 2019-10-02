@@ -35,7 +35,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @var VariablePlaceholderCollection
      */
-    private $expectedPlaceholders;
+    private $expectedVariableDependencies;
 
     protected function setUp(): void
     {
@@ -47,12 +47,10 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             new ClassDependency(ElementLocator::class),
         ]);
 
-        $this->expectedPlaceholders = VariablePlaceholderCollection::createCollection([
-            VariableNames::DOM_CRAWLER_NAVIGATOR
-        ]);
+        $this->expectedVariableDependencies = new VariablePlaceholderCollection();
 
         $this->domCrawlerNavigatorVariablePlaceholder =
-            $this->expectedPlaceholders->get(VariableNames::DOM_CRAWLER_NAVIGATOR);
+            $this->expectedVariableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
     }
 
     public function testCreateFindCallForIdentifier()
@@ -65,7 +63,8 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 
     public function testCreateFindCallForTranspiledLocator()
@@ -80,7 +79,8 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 
     public function testCreateHasCallForIdentifier()
@@ -93,7 +93,8 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 
     public function testCreateHasCallForTranspiledLocator()
@@ -108,6 +109,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 }

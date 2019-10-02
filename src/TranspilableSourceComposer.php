@@ -19,6 +19,7 @@ class TranspilableSourceComposer
      * @param CompilableSourceInterface[] $calls
      * @param ClassDependencyCollection $classDependencies
      * @param VariablePlaceholderCollection $variablePlaceholders
+     * @param VariablePlaceholderCollection $variableDependencies
      *
      * @return CompilableSourceInterface
      */
@@ -26,13 +27,14 @@ class TranspilableSourceComposer
         array $statements,
         array $calls,
         ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variablePlaceholders
+        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableDependencies
     ) {
         foreach ($calls as $call) {
             $classDependencies = $classDependencies->merge([$call->getClassDependencies()]);
             $variablePlaceholders = $variablePlaceholders->merge([$call->getVariablePlaceholders()]);
         }
 
-        return new CompilableSource($statements, $classDependencies, $variablePlaceholders);
+        return new CompilableSource($statements, $classDependencies, $variablePlaceholders, $variableDependencies);
     }
 }

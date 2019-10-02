@@ -138,6 +138,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
@@ -161,6 +162,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
@@ -295,6 +297,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => false,
@@ -309,6 +312,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => false,
@@ -323,6 +327,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => false,
@@ -334,6 +339,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => true,
@@ -348,6 +354,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class)
                     ]),
+                    new VariablePlaceholderCollection(),
                     new VariablePlaceholderCollection()
                 ),
                 'expectedHasElement' => true,
