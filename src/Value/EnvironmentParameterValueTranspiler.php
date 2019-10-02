@@ -4,8 +4,8 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -27,11 +27,11 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilableSourceInterface
+     * @return CompilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilableSourceInterface
+    public function transpile(object $model): CompilableSourceInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             $variablePlaceholders = new VariablePlaceholderCollection();
@@ -44,7 +44,7 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
                 $model->getProperty()
             );
 
-            return new TranspilableSource(
+            return new CompilableSource(
                 [$content],
                 new UseStatementCollection(),
                 $variablePlaceholders

@@ -39,12 +39,12 @@ class WaitActionTranspilerTest extends AbstractTestCase
         array $additionalTeardownStatements,
         int $expectedDuration
     ) {
-        $transpilableSource = $this->transpiler->transpile($action);
+        $compilableSource = $this->transpiler->transpile($action);
 
         $expectedDurationThreshold = $expectedDuration + 1;
 
         $executableCall = $this->createExecutableCall(
-            $transpilableSource,
+            $compilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
             $additionalSetupStatements,

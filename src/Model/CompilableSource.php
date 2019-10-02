@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class TranspilableSource implements TranspilableSourceInterface
+class CompilableSource implements CompilableSourceInterface
 {
     private $statements;
     private $useStatements;
@@ -22,8 +22,8 @@ class TranspilableSource implements TranspilableSourceInterface
         string $template,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
-    ): TranspilableSourceInterface {
-        return new TranspilableSource(
+    ): CompilableSourceInterface {
+        return new CompilableSource(
             explode("\n", sprintf($template, (string) $this)),
             $this->getUseStatements()->merge([$useStatements]),
             $this->getVariablePlaceholders()->merge([$variablePlaceholders])
@@ -48,7 +48,7 @@ class TranspilableSource implements TranspilableSourceInterface
         return $this->variablePlaceholders;
     }
 
-    public function withAdditionalStatements(array $statements): TranspilableSourceInterface
+    public function withAdditionalStatements(array $statements): CompilableSourceInterface
     {
         $new = clone $this;
         $new->statements = array_merge($this->statements, $statements);

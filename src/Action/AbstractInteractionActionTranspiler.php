@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\Action;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -36,11 +36,11 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
     /**
      * @param object $model
      *
-     * @return TranspilableSourceInterface
+     * @return CompilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilableSourceInterface
+    public function transpile(object $model): CompilableSourceInterface
     {
         if (!$model instanceof InteractionActionInterface) {
             throw new NonTranspilableModelException($model);

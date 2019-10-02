@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
@@ -19,7 +19,7 @@ class WebDriverElementMutatorCallFactory
     public function createSetValueCall(
         VariablePlaceholder $collectionPlaceholder,
         VariablePlaceholder $valuePlaceholder
-    ): TranspilableSourceInterface {
+    ): CompilableSourceInterface {
         $variablePlaceholders = new VariablePlaceholderCollection();
         $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
             $collectionPlaceholder,
@@ -31,6 +31,6 @@ class WebDriverElementMutatorCallFactory
             $mutatorPlaceholder . '->setValue(' . $collectionPlaceholder . ', ' . $valuePlaceholder . ')',
         ];
 
-        return new TranspilableSource($statements, new UseStatementCollection(), $variablePlaceholders);
+        return new CompilableSource($statements, new UseStatementCollection(), $variablePlaceholders);
     }
 }

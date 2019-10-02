@@ -4,8 +4,8 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\NoArgumentsAction;
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -33,11 +33,11 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilableSourceInterface
+     * @return CompilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilableSourceInterface
+    public function transpile(object $model): CompilableSourceInterface
     {
         if (!$model instanceof NoArgumentsAction) {
             throw new NonTranspilableModelException($model);
@@ -51,7 +51,7 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
 
-        return new TranspilableSource(
+        return new CompilableSource(
             [
                 sprintf(
                     '%s = %s->%s()',
