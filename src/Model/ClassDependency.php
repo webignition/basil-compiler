@@ -25,17 +25,12 @@ class ClassDependency implements UniqueItemInterface
 
     public function getId(): string
     {
-        return (string) $this;
-    }
-
-    public function __toString(): string
-    {
-        $string = $this->className;
+        $id = $this->className;
 
         if (null !== $this->alias) {
-            $string .= ' as ' . $this->alias;
+            $id .= ':' . $this->alias;
         }
 
-        return $string;
+        return $id;
     }
 }
