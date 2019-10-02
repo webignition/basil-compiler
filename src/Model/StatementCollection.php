@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class StatementCollection implements \Iterator
+class StatementCollection implements \Iterator, CompilableSourceInterface
 {
     /**
      * @var StatementInterface[]
@@ -24,6 +24,63 @@ class StatementCollection implements \Iterator
         $this->statements[] = $statement;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getStatements(): array
+    {
+        $statementContent = [];
+
+        foreach ($this->statements as $statement) {
+            $statementContent[] = (string) $statement;
+        }
+
+        return $statementContent;
+    }
+
+    public function getClassDependencies(): ClassDependencyCollection
+    {
+        $classDependencies = new ClassDependencyCollection();
+
+        foreach ($this->statements as $statement) {
+            $classDependencies = $classDependencies->merge([
+                $statement->getClassDependencies()
+            ]);
+        }
+
+        return $classDependencies;
+    }
+
+    public function getVariableExports(): VariablePlaceholderCollection
+    {
+        $variableExports = new VariablePlaceholderCollection();
+
+        foreach ($this->statements as $statement) {
+            $variableExports = $variableExports->merge([
+                $statement->getVariableExports(),
+            ]);
+        }
+
+        return $variableExports;
+    }
+
+    public function getVariableDependencies(): VariablePlaceholderCollection
+    {
+        $variableDependencies = new VariablePlaceholderCollection();
+
+        foreach ($this->statements as $statement) {
+            $variableDependencies = $variableDependencies->merge([
+                $statement->getVariableDependencies(),
+            ]);
+        }
+
+        return $variableDependencies;
+    }
+
+    public function __toString(): string
+    {
+        return implode("\n", $this->getStatements());
+    }
     // Iterator methods
 
     public function rewind()

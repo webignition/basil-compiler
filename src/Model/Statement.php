@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class Statement implements StatementInterface
+class Statement implements StatementInterface, CompilableSourceInterface
 {
     private $content;
     private $classDependencies;
@@ -46,6 +46,11 @@ class Statement implements StatementInterface
         return $new;
     }
 
+    /**
+     * @param VariablePlaceholderCollection $variableDependencies
+     *
+     * @return StatementInterface|CompilableSourceInterface
+     */
     public function withVariableDependencies(VariablePlaceholderCollection $variableDependencies): StatementInterface
     {
         $new = clone $this;
@@ -60,5 +65,20 @@ class Statement implements StatementInterface
         $new->variableExports = $variableExports;
 
         return $new;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getStatements(): array
+    {
+        return [
+            $this->content,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return $this->content;
     }
 }
