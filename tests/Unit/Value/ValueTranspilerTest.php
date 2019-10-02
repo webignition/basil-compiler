@@ -11,8 +11,8 @@ use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -80,7 +80,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider transpileDataProvider
      */
-    public function testTranspile(ValueInterface $model, TranspilableSourceInterface $expectedTranspilableSource)
+    public function testTranspile(ValueInterface $model, CompilableSourceInterface $expectedTranspilableSource)
     {
         $this->assertEquals($expectedTranspilableSource, $this->transpiler->transpile($model));
     }
@@ -90,7 +90,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
         return [
             'literal string value: string' => [
                 'value' => new LiteralValue('value'),
-                'expectedTranspilableSource' => new TranspilableSource(
+                'expectedTranspilableSource' => new CompilableSource(
                     ['"value"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
@@ -98,7 +98,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             ],
             'literal string value: integer' => [
                 'value' => new LiteralValue('100'),
-                'expectedTranspilableSource' => new TranspilableSource(
+                'expectedTranspilableSource' => new CompilableSource(
                     ['"100"'],
                     new UseStatementCollection(),
                     new VariablePlaceholderCollection()
@@ -110,7 +110,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '$env.KEY',
                     'KEY'
                 ),
-                'expectedTranspilableSource' => new TranspilableSource(
+                'expectedTranspilableSource' => new CompilableSource(
                     [(string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']'],
                     new UseStatementCollection(),
                     VariablePlaceholderCollection::createCollection([
@@ -121,7 +121,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
             'browser object value, size' => [
                 'value' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
                 'expectedTranspilableSource' => new VariableAssignmentCall(
-                    new TranspilableSource(
+                    new CompilableSource(
                         [
                         '{{ WEBDRIVER_DIMENSION }} = '
                         . '{{ PANTHER_CLIENT }}->getWebDriver()->manage()->window()->getSize()',

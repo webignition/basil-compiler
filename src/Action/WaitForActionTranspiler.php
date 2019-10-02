@@ -5,8 +5,8 @@ namespace webignition\BasilTranspiler\Action;
 use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -36,11 +36,11 @@ class WaitForActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilableSourceInterface
+     * @return CompilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilableSourceInterface
+    public function transpile(object $model): CompilableSourceInterface
     {
         if (!$model instanceof InteractionActionInterface) {
             throw new NonTranspilableModelException($model);
@@ -66,7 +66,7 @@ class WaitForActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variablePlaceholders->create(VariableNames::PANTHER_CLIENT);
 
-        return new TranspilableSource(
+        return new CompilableSource(
             [
                 sprintf(
                     '%s = %s->waitFor(\'%s\')',

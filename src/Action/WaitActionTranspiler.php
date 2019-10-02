@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -43,11 +43,11 @@ class WaitActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return TranspilableSourceInterface
+     * @return CompilableSourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): TranspilableSourceInterface
+    public function transpile(object $model): CompilableSourceInterface
     {
         if (!$model instanceof WaitActionInterface) {
             throw new NonTranspilableModelException($model);

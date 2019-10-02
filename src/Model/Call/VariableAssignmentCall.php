@@ -2,27 +2,27 @@
 
 namespace webignition\BasilTranspiler\Model\Call;
 
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
-class VariableAssignmentCall implements TranspilableSourceInterface
+class VariableAssignmentCall implements CompilableSourceInterface
 {
-    private $transpilableSource;
+    private $compilableSource;
     private $elementVariablePlaceholder;
 
     public function __construct(
-        TranspilableSourceInterface $transpilableSource,
+        CompilableSourceInterface $compilableSource,
         VariablePlaceholder $variablePlaceholder
     ) {
-        $this->transpilableSource = $transpilableSource;
+        $this->compilableSource = $compilableSource;
         $this->elementVariablePlaceholder = $variablePlaceholder;
     }
 
-    public function getTranspilationSource(): TranspilableSourceInterface
+    public function getCompilableSource(): CompilableSourceInterface
     {
-        return $this->transpilableSource;
+        return $this->compilableSource;
     }
 
     public function getElementVariablePlaceholder(): VariablePlaceholder
@@ -34,41 +34,41 @@ class VariableAssignmentCall implements TranspilableSourceInterface
         string $template,
         UseStatementCollection $useStatements,
         VariablePlaceholderCollection $variablePlaceholders
-    ): TranspilableSourceInterface {
-        $extendedTranspilableSource = $this->transpilableSource->extend(
+    ): CompilableSourceInterface {
+        $extendedCompilableSource = $this->compilableSource->extend(
             $template,
             $useStatements,
             $variablePlaceholders
         );
 
-        return new VariableAssignmentCall($extendedTranspilableSource, $this->elementVariablePlaceholder);
+        return new VariableAssignmentCall($extendedCompilableSource, $this->elementVariablePlaceholder);
     }
 
     public function getStatements(): array
     {
-        return $this->transpilableSource->getStatements();
+        return $this->compilableSource->getStatements();
     }
 
     public function withAdditionalStatements(array $statements): VariableAssignmentCall
     {
         $new = clone $this;
-        $new->transpilableSource = $this->transpilableSource->withAdditionalStatements($statements);
+        $new->compilableSource = $this->compilableSource->withAdditionalStatements($statements);
 
         return $new;
     }
 
     public function getUseStatements(): UseStatementCollection
     {
-        return $this->transpilableSource->getUseStatements();
+        return $this->compilableSource->getUseStatements();
     }
 
     public function getVariablePlaceholders(): VariablePlaceholderCollection
     {
-        return $this->transpilableSource->getVariablePlaceholders();
+        return $this->compilableSource->getVariablePlaceholders();
     }
 
     public function __toString(): string
     {
-        return $this->transpilableSource->__toString();
+        return $this->compilableSource->__toString();
     }
 }

@@ -38,10 +38,10 @@ class WaitForActionTranspilerTest extends AbstractTestCase
         array $additionalSetupStatements,
         array $additionalTeardownStatements
     ) {
-        $transpilableSource = $this->transpiler->transpile($action);
+        $compilableSource = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $transpilableSource,
+            $compilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
             $additionalSetupStatements,

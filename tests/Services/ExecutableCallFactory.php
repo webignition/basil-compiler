@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\UseStatementTranspiler;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
@@ -34,7 +34,7 @@ class ExecutableCallFactory
     }
 
     public function create(
-        TranspilableSourceInterface $transpilableSource,
+        CompilableSourceInterface $compilableSource,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
@@ -42,7 +42,7 @@ class ExecutableCallFactory
     ): string {
         $additionalUseStatements = $additionalUseStatements ?? new UseStatementCollection();
 
-        $useStatements = $transpilableSource->getUseStatements();
+        $useStatements = $compilableSource->getUseStatements();
         $useStatements = $useStatements->merge([
             $additionalUseStatements,
         ]);
@@ -57,7 +57,7 @@ class ExecutableCallFactory
             $executableCall .= $statement . "\n";
         }
 
-        $statements = $transpilableSource->getStatements();
+        $statements = $compilableSource->getStatements();
 
         array_walk($statements, function (string &$statement) {
             $statement .= ';';
@@ -79,22 +79,22 @@ class ExecutableCallFactory
     }
 
     public function createWithReturn(
-        TranspilableSourceInterface $transpilableSource,
+        CompilableSourceInterface $compilableSource,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
         ?UseStatementCollection $additionalUseStatements = null
     ): string {
-        $statements = $transpilableSource->getStatements();
+        $statements = $compilableSource->getStatements();
         $lastStatementPosition = count($statements) - 1;
         $lastStatement = $statements[$lastStatementPosition];
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $transpilableSourceWithReturn = new TranspilableSource(
+        $transpilableSourceWithReturn = new CompilableSource(
             $statements,
-            $transpilableSource->getUseStatements(),
-            $transpilableSource->getVariablePlaceholders()
+            $compilableSource->getUseStatements(),
+            $compilableSource->getVariablePlaceholders()
         );
 
         return $this->create(

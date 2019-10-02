@@ -3,8 +3,8 @@
 namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilTranspiler\Model\TranspilableSource;
-use webignition\BasilTranspiler\Model\TranspilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
+use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\UseStatementCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -22,10 +22,10 @@ class LiteralValueTranspiler implements TranspilerInterface
         return $model instanceof LiteralValueInterface;
     }
 
-    public function transpile(object $model): TranspilableSourceInterface
+    public function transpile(object $model): CompilableSourceInterface
     {
         if ($this->handles($model)) {
-            return new TranspilableSource(
+            return new CompilableSource(
                 [(string) $model],
                 new UseStatementCollection(),
                 new VariablePlaceholderCollection()

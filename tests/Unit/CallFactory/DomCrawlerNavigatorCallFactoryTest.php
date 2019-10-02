@@ -57,15 +57,15 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFindCallForIdentifier()
     {
-        $transpilableSource = $this->factory->createFindCallForIdentifier(
+        $compilableSource = $this->factory->createFindCallForIdentifier(
             TestIdentifierFactory::createElementIdentifier('.selector')
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $transpilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilableSource->getUseStatements());
-        $this->assertEquals($this->expectedPlaceholders, $transpilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 
     public function testCreateFindCallForTranspiledLocator()
@@ -74,26 +74,26 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $findElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
-        $transpilableSource = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
+        $compilableSource = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $transpilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilableSource->getUseStatements());
-        $this->assertEquals($this->expectedPlaceholders, $transpilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 
     public function testCreateHasCallForIdentifier()
     {
-        $transpilableSource = $this->factory->createHasCallForIdentifier(
+        $compilableSource = $this->factory->createHasCallForIdentifier(
             TestIdentifierFactory::createElementIdentifier('.selector')
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $transpilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilableSource->getUseStatements());
-        $this->assertEquals($this->expectedPlaceholders, $transpilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 
     public function testCreateHasCallForTranspiledLocator()
@@ -102,12 +102,12 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
         $hasElementCallArguments = $this->factory->createElementCallArguments($identifier);
 
-        $transpilableSource = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
+        $compilableSource = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $transpilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedUseStatements, $transpilableSource->getUseStatements());
-        $this->assertEquals($this->expectedPlaceholders, $transpilableSource->getVariablePlaceholders());
+        $this->assertEquals($this->expectedUseStatements, $compilableSource->getUseStatements());
+        $this->assertEquals($this->expectedPlaceholders, $compilableSource->getVariablePlaceholders());
     }
 }
