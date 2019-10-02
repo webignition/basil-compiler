@@ -6,31 +6,31 @@ class CompilableSource implements CompilableSourceInterface
 {
     private $statements;
     private $classDependencies;
-    private $variablePlaceholders;
+    private $variableExports;
     private $variableDependencies;
 
     public function __construct(
         array $statements,
         ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableExports,
         VariablePlaceholderCollection $variableDependencies
     ) {
         $this->statements = $statements;
         $this->classDependencies = $classDependencies;
-        $this->variablePlaceholders = $variablePlaceholders;
+        $this->variableExports = $variableExports;
         $this->variableDependencies = $variableDependencies;
     }
 
     public function extend(
         string $template,
         ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variablePlaceholders,
+        VariablePlaceholderCollection $variableExports,
         VariablePlaceholderCollection $variableDependencies
     ): CompilableSourceInterface {
         return new CompilableSource(
             explode("\n", sprintf($template, (string) $this)),
             $this->getClassDependencies()->merge([$classDependencies]),
-            $this->getVariablePlaceholders()->merge([$variablePlaceholders]),
+            $this->getVariableExports()->merge([$variableExports]),
             $this->getVariableDependencies()->merge([$variableDependencies])
         );
     }
@@ -48,9 +48,9 @@ class CompilableSource implements CompilableSourceInterface
         return $this->classDependencies;
     }
 
-    public function getVariablePlaceholders(): VariablePlaceholderCollection
+    public function getVariableExports(): VariablePlaceholderCollection
     {
-        return $this->variablePlaceholders;
+        return $this->variableExports;
     }
 
     public function getVariableDependencies(): VariablePlaceholderCollection

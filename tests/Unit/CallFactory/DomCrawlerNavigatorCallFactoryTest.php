@@ -63,7 +63,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariableExports());
         $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 
@@ -79,7 +79,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariableExports());
         $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 
@@ -93,7 +93,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariableExports());
         $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 
@@ -109,7 +109,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
         $this->assertEquals($this->expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariablePlaceholders());
+        $this->assertEquals(new VariablePlaceholderCollection(), $compilableSource->getVariableExports());
         $this->assertEquals($this->expectedVariableDependencies, $compilableSource->getVariableDependencies());
     }
 }

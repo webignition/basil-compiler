@@ -53,8 +53,8 @@ class WaitActionTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $durationPlaceholder = $variablePlaceholders->create(self::DURATION_PLACEHOLDER);
+        $variableExports = new VariablePlaceholderCollection();
+        $durationPlaceholder = $variableExports->create(self::DURATION_PLACEHOLDER);
 
         $duration = $model->getDuration();
 
@@ -83,7 +83,7 @@ class WaitActionTranspiler implements TranspilerInterface
                 $durationAssignmentCall
             ],
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             new VariablePlaceholderCollection()
         );
     }

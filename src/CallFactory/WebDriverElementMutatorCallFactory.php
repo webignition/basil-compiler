@@ -20,8 +20,8 @@ class WebDriverElementMutatorCallFactory
         VariablePlaceholder $collectionPlaceholder,
         VariablePlaceholder $valuePlaceholder
     ): CompilableSourceInterface {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $collectionPlaceholder,
         ]);
 
@@ -35,7 +35,7 @@ class WebDriverElementMutatorCallFactory
         return new CompilableSource(
             $statements,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             $variableDependencies
         );
     }

@@ -18,8 +18,8 @@ class WebDriverElementInspectorCallFactory
 
     public function createGetValueCall(VariablePlaceholder $collectionPlaceholder): CompilableSourceInterface
     {
-        $variablePlaceholders = new VariablePlaceholderCollection();
-        $variablePlaceholders = $variablePlaceholders->withAdditionalItems([
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->withAdditionalItems([
             $collectionPlaceholder,
         ]);
 
@@ -33,7 +33,7 @@ class WebDriverElementInspectorCallFactory
         return new CompilableSource(
             $statements,
             new ClassDependencyCollection(),
-            $variablePlaceholders,
+            $variableExports,
             $variableDependencies
         );
     }
