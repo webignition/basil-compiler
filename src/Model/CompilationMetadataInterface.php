@@ -14,6 +14,18 @@ interface CompilationMetadataInterface
     ): CompilationMetadataInterface;
     public function withVariableExports(VariablePlaceholderCollection $variableExports): CompilationMetadataInterface;
 
+    public function withAdditionalClassDependencies(
+        ClassDependencyCollection $classDependencies
+    ): CompilationMetadataInterface;
+
+    public function withAdditionalVariableDependencies(
+        VariablePlaceholderCollection $variableDependencies
+    ): CompilationMetadataInterface;
+
+    public function withAdditionalVariableExports(
+        VariablePlaceholderCollection $variableExports
+    ): CompilationMetadataInterface;
+
     /**
      * @param CompilationMetadataInterface[] $compilationMetadataCollection
      *

@@ -44,15 +44,13 @@ class ValueTranspilerTest extends AbstractTestCase
 
         $this->assertEquals($expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
 
-        $executableCall = $this->executableCallFactory->createWithReturn(
+        $executableCall = $this->createExecutableCallWithReturn(
             $compilableSource,
+            $fixture,
             array_merge(
                 self::VARIABLE_IDENTIFIERS,
                 $additionalVariableIdentifiers
-            ),
-            [
-                'self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-            ]
+            )
         );
 
         $this->assertEquals($expectedExecutedResult, eval($executableCall));

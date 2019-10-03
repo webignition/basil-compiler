@@ -41,11 +41,13 @@ class ExecutableCallFactory
         ?CompilationMetadataInterface $additionalCompilationMetadata = null
     ): string {
         if (null !== $additionalCompilationMetadata) {
-            $compilableSource = $compilableSource->withCompilationMetadata(
-                $compilableSource->getCompilationMetadata()->merge([
-                    $additionalCompilationMetadata,
-                ])
-            );
+            $compilationMetadata = $compilableSource->getCompilationMetadata();
+            $compilationMetadata = $compilationMetadata->merge([
+                $compilationMetadata,
+                $additionalCompilationMetadata
+            ]);
+
+            $compilableSource = $compilableSource->withCompilationMetadata($compilationMetadata);
         }
 
         $compilationMetadata = $compilableSource->getCompilationMetadata();

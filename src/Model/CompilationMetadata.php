@@ -55,6 +55,34 @@ class CompilationMetadata implements CompilationMetadataInterface
         return $new;
     }
 
+    public function withAdditionalClassDependencies(
+        ClassDependencyCollection $classDependencies
+    ): CompilationMetadataInterface {
+        $new = clone $this;
+        $new->classDependencies = $new->classDependencies->merge([$classDependencies]);
+
+        return $new;
+    }
+
+    public function withAdditionalVariableDependencies(
+        VariablePlaceholderCollection $variableDependencies
+    ): CompilationMetadataInterface {
+        $new = clone $this;
+        $new->variableDependencies = $new->variableDependencies->merge([$variableDependencies]);
+
+        return $new;
+    }
+
+
+    public function withAdditionalVariableExports(
+        VariablePlaceholderCollection $variableExports
+    ): CompilationMetadataInterface {
+        $new = clone $this;
+        $new->variableExports = $new->variableExports->merge([$variableExports]);
+
+        return $new;
+    }
+
     /**
      * @param CompilationMetadataInterface[] $compilationMetadataCollection
      *
