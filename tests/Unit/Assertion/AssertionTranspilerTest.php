@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 
+use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionDataProviderTrait;

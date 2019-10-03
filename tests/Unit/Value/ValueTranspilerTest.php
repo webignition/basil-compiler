@@ -6,13 +6,14 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Value;
 
+use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\VariablePlaceholder;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
@@ -22,7 +23,6 @@ use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTra
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
 
 class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {

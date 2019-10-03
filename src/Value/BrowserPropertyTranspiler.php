@@ -2,13 +2,13 @@
 
 namespace webignition\BasilTranspiler\Value;
 
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;

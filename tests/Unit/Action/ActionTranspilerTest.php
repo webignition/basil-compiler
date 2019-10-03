@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
+use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionDataProviderTrait;

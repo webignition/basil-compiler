@@ -2,12 +2,12 @@
 
 namespace webignition\BasilTranspiler\Action;
 
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\NoArgumentsAction;
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;

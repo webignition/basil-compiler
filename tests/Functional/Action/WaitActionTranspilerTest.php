@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\WaitActionTranspiler;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 

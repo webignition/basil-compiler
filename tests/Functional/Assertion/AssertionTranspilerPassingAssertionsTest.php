@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Assertion;
 
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IncludesAssertionFunctionalDataProviderTrait;

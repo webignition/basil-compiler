@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\BrowserOperationActionTranspiler;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ReloadActionFunctionalDataProviderTrait;

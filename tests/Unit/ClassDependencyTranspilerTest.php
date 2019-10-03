@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit;
 
-use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
 

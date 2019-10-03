@@ -6,12 +6,13 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Value;
 
+use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;

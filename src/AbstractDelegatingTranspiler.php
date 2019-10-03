@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
 
 abstract class AbstractDelegatingTranspiler implements TranspilerInterface
 {
