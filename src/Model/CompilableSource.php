@@ -11,11 +11,10 @@ class CompilableSource implements CompilableSourceInterface
 
     private $compilationMetadata;
 
-    public function __construct(array $statements)
+    public function __construct(array $statements, ?CompilationMetadataInterface $compilationMetadata = null)
     {
         $this->statements = $statements;
-
-        $this->compilationMetadata = new CompilationMetadata();
+        $this->compilationMetadata = $compilationMetadata ?? new CompilationMetadata();
     }
 
     /**

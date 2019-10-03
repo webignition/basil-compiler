@@ -9,7 +9,8 @@ namespace webignition\BasilTranspiler\Tests\Functional\Value;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -35,16 +36,13 @@ class ValueTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         ValueInterface $model,
-        VariablePlaceholderCollection $expectedVariableExports,
-        VariablePlaceholderCollection $expectedVariableDependencies,
+        CompilationMetadataInterface $expectedCompilationMetadata,
         $expectedExecutedResult,
         array $additionalVariableIdentifiers = []
     ) {
         $compilableSource = $this->transpiler->transpile($model);
 
-        $this->assertEquals(new ClassDependencyCollection(), $compilableSource->getClassDependencies());
-        $this->assertEquals($expectedVariableExports, $compilableSource->getVariableExports());
-        $this->assertEquals($expectedVariableDependencies, $compilableSource->getVariableDependencies());
+        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
 
         $executableCall = $this->executableCallFactory->createWithReturn(
             $compilableSource,
@@ -66,13 +64,13 @@ class ValueTranspilerTest extends AbstractTestCase
             'browser property: size' => [
                 'fixture' => '/empty.html',
                 'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
-                'expectedVariableExports' => VariablePlaceholderCollection::createCollection([
-                    'WEBDRIVER_DIMENSION',
-                    'BROWSER_SIZE',
-                ]),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::PANTHER_CLIENT,
-                ]),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PANTHER_CLIENT,
+                    ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'WEBDRIVER_DIMENSION',
+                        'BROWSER_SIZE',
+                    ])),
                 'expectedExecutedResult' => '1200x1100',
                 'additionalVariableIdentifiers' => [
                     'WEBDRIVER_DIMENSION' => '$webDriverDimension',
@@ -82,19 +80,19 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: title' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::PANTHER_CLIENT,
-                ]),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PANTHER_CLIENT,
+                    ])),
                 'expectedExecutedResult' => 'Test fixture web server default document',
             ],
             'page property: url' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::PANTHER_CLIENT,
-                ]),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PANTHER_CLIENT,
+                    ])),
                 'expectedExecutedResult' => 'http://127.0.0.1:9080/index.html',
             ],
         ];

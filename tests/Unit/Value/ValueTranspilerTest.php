@@ -10,7 +10,8 @@ use webignition\BasilModel\Value\LiteralValue;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
@@ -80,16 +81,12 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     public function testTranspile(
         ValueInterface $model,
         array $expectedStatements,
-        ClassDependencyCollection $expectedClassDependencies,
-        VariablePlaceholderCollection $expectedVariableDependencies,
-        VariablePlaceholderCollection $expectedVariableExports
+        CompilationMetadataInterface $expectedCompilationMetadata
     ) {
         $compilableSource = $this->transpiler->transpile($model);
 
         $this->assertEquals($expectedStatements, $compilableSource->getStatements());
-        $this->assertEquals($expectedClassDependencies, $compilableSource->getClassDependencies());
-        $this->assertEquals($expectedVariableDependencies, $compilableSource->getVariableDependencies());
-        $this->assertEquals($expectedVariableExports, $compilableSource->getVariableExports());
+        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
     }
 
     public function transpileDataProvider(): array
@@ -100,18 +97,14 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedStatements' => [
                     '"value"',
                 ],
-                'expectedClassDependencies' => new ClassDependencyCollection(),
-                'expectedVariableDependencies' => new VariablePlaceholderCollection(),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
+                'expectedCompilationMetadata' => new CompilationMetadata(),
             ],
             'literal string value: integer' => [
                 'value' => new LiteralValue('100'),
                 'expectedStatements' => [
                     '"100"',
                 ],
-                'expectedClassDependencies' => new ClassDependencyCollection(),
-                'expectedVariableDependencies' => new VariablePlaceholderCollection(),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
+                'expectedCompilationMetadata' => new CompilationMetadata(),
             ],
             'environment parameter value' => [
                 'value' => new ObjectValue(
@@ -122,11 +115,10 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedStatements' => [
                     (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']',
                 ],
-                'expectedClassDependencies' => new ClassDependencyCollection(),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
-                ]),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
+                    ])),
             ],
             'browser property, size' => [
                 'value' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
@@ -135,36 +127,33 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
                     . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
                 ],
-                'expectedClassDependencies' => new ClassDependencyCollection(),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::PANTHER_CLIENT,
-                ]),
-                'expectedVariableExports' => VariablePlaceholderCollection::createCollection([
-                    'WEBDRIVER_DIMENSION',
-                    'BROWSER_SIZE',
-                ]),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PANTHER_CLIENT,
+                    ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'WEBDRIVER_DIMENSION',
+                        'BROWSER_SIZE',
+                    ])),
             ],
             'page property, url' => [
                 'value' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
                 'expectedStatements' => [
                     '{{ PANTHER_CLIENT }}->getCurrentURL()',
                 ],
-                'expectedClassDependencies' => new ClassDependencyCollection(),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::PANTHER_CLIENT,
-                ]),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PANTHER_CLIENT,
+                    ])),
             ],
             'page property, title' => [
                 'value' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
                 'expectedStatements' => [
                     '{{ PANTHER_CLIENT }}->getTitle()',
                 ],
-                'expectedClassDependencies' => new ClassDependencyCollection(),
-                'expectedVariableDependencies' => VariablePlaceholderCollection::createCollection([
-                    VariableNames::PANTHER_CLIENT,
-                ]),
-                'expectedVariableExports' => new VariablePlaceholderCollection(),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PANTHER_CLIENT,
+                    ])),
             ],
         ];
     }
