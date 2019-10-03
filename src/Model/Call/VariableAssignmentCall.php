@@ -54,4 +54,20 @@ class VariableAssignmentCall implements CompilableSourceInterface
     {
         return $this->compilableSource->__toString();
     }
+
+    public function withClassDependencies(ClassDependencyCollection $classDependencies): CompilableSourceInterface
+    {
+        return $this->compilableSource->withClassDependencies($classDependencies);
+    }
+
+    public function withVariableDependencies(
+        VariablePlaceholderCollection $variableDependencies
+    ): CompilableSourceInterface {
+        return $this->compilableSource->withVariableDependencies($variableDependencies);
+    }
+
+    public function withVariableExports(VariablePlaceholderCollection $variableExports): CompilableSourceInterface
+    {
+        return $this->compilableSource->withVariableExports($variableExports);
+    }
 }

@@ -2,11 +2,11 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
-use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory
@@ -24,7 +24,6 @@ class AssertionCallFactory
     const VARIABLE_EXISTS_TEMPLATE = self::ASSERT_NOT_NULL_TEMPLATE;
     const VARIABLE_NOT_EXISTS_TEMPLATE = self::ASSERT_NULL_TEMPLATE;
 
-    private $transpilableSourceComposer;
     private $phpUnitTestCasePlaceholder;
     private $variableDependencies;
 
@@ -38,10 +37,8 @@ class AssertionCallFactory
      */
     private $attributeNotExistsTemplate = '';
 
-    public function __construct(TranspilableSourceComposer $transpilableSourceComposer)
+    public function __construct()
     {
-        $this->transpilableSourceComposer = $transpilableSourceComposer;
-
         $this->variableDependencies = new VariablePlaceholderCollection();
         $this->phpUnitTestCasePlaceholder = $this->variableDependencies->create(VariableNames::PHPUNIT_TEST_CASE);
 
@@ -60,9 +57,7 @@ class AssertionCallFactory
 
     public static function createFactory(): AssertionCallFactory
     {
-        return new AssertionCallFactory(
-            TranspilableSourceComposer::create()
-        );
+        return new AssertionCallFactory();
     }
 
     public function createValueIsTrueAssertionCall(
@@ -180,6 +175,27 @@ class AssertionCallFactory
         VariableAssignmentCall $actualValueCall,
         string $assertionTemplate
     ): CompilableSourceInterface {
+        $classDependencies = new ClassDependencyCollection();
+        $classDependencies = $classDependencies->merge([
+            $expectedValueCall->getClassDependencies(),
+            $actualValueCall->getClassDependencies(),
+        ]);
+
+        $variableDependencies = new VariablePlaceholderCollection();
+        $variableDependencies = $variableDependencies->merge([
+            $expectedValueCall->getVariableDependencies(),
+            $actualValueCall->getVariableDependencies(),
+        ]);
+        $variableDependencies = $variableDependencies->withAdditionalItems([
+            $this->phpUnitTestCasePlaceholder,
+        ]);
+
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->merge([
+            $expectedValueCall->getVariableExports(),
+            $actualValueCall->getVariableExports(),
+        ]);
+
         $assertionStatement = sprintf(
             $assertionTemplate,
             $this->phpUnitTestCasePlaceholder,
@@ -195,49 +211,42 @@ class AssertionCallFactory
             ]
         );
 
-        $calls = [
-            $expectedValueCall,
-            $actualValueCall,
-        ];
+        $compilableSource = new CompilableSource($statements);
+        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
+        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
+        $compilableSource = $compilableSource->withVariableExports($variableExports);
 
-        return $this->transpilableSourceComposer->compose(
-            $statements,
-            $calls,
-            new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
-            $this->variableDependencies
-        );
+        return $compilableSource;
     }
 
     private function createValueExistenceAssertionCall(
-        VariableAssignmentCall $variableAssignmentCall,
+        VariableAssignmentCall $assignmentCall,
         string $assertionTemplate
     ): CompilableSourceInterface {
+        $classDependencies = new ClassDependencyCollection();
+        $classDependencies = $classDependencies->merge([$assignmentCall->getClassDependencies()]);
+
+        $variableDependencies = new VariablePlaceholderCollection();
+        $variableDependencies = $variableDependencies->merge([$assignmentCall->getVariableDependencies()]);
+        $variableDependencies = $variableDependencies->withAdditionalItems([
+            $this->phpUnitTestCasePlaceholder,
+        ]);
+
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->merge([$assignmentCall->getVariableExports()]);
+
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            (string) $variableAssignmentCall->getElementVariablePlaceholder()
+            (string) $assignmentCall->getElementVariablePlaceholder()
         );
 
-        $statements = array_merge(
-            $variableAssignmentCall->getStatements(),
-            [
-                $assertionStatement,
-            ]
-        );
+        $compilableSource = new CompilableSource(array_merge($assignmentCall->getStatements(), [$assertionStatement]));
 
-        $calls = [
-            $variableAssignmentCall,
-        ];
+        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
+        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
+        $compilableSource = $compilableSource->withVariableExports($variableExports);
 
-        return $this->transpilableSourceComposer->compose(
-            $statements,
-            $calls,
-            new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
-            new VariablePlaceholderCollection([
-                $this->phpUnitTestCasePlaceholder,
-            ])
-        );
+        return $compilableSource;
     }
 }
