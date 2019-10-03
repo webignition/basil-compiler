@@ -6,6 +6,7 @@ use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
+use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
@@ -86,22 +87,33 @@ class SetActionTranspiler implements TranspilerInterface
         $classDependencies = new ClassDependencyCollection();
         $classDependencies = $classDependencies->merge([
             $collectionAssignmentCall->getClassDependencies(),
-            $valueAssignmentCall->getClassDependencies(),
             $mutationCall->getClassDependencies(),
         ]);
 
         $variableDependencies = new VariablePlaceholderCollection();
         $variableDependencies = $variableDependencies->merge([
             $collectionAssignmentCall->getVariableDependencies(),
-            $valueAssignmentCall->getVariableDependencies(),
             $mutationCall->getVariableDependencies(),
         ]);
 
         $variableExports = $variableExports->merge([
             $collectionAssignmentCall->getVariableExports(),
-            $valueAssignmentCall->getVariableExports(),
             $mutationCall->getVariableExports(),
         ]);
+
+        if ($valueAssignmentCall instanceof VariableAssignmentCall) {
+            $classDependencies = $classDependencies->merge([
+                $valueAssignmentCall->getClassDependencies(),
+            ]);
+
+            $variableDependencies = $variableDependencies->merge([
+                $valueAssignmentCall->getVariableDependencies(),
+            ]);
+
+            $variableExports = $variableExports->merge([
+                $valueAssignmentCall->getVariableExports(),
+            ]);
+        }
 
         $statements = array_merge(
             $collectionAssignmentCall->getStatements(),
