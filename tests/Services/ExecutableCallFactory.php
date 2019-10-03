@@ -6,10 +6,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
 class ExecutableCallFactory

@@ -2,11 +2,11 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory

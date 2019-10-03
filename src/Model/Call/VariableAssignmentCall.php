@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Model\Call;
 
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\VariablePlaceholder;
 
 class VariableAssignmentCall implements CompilableSourceInterface
 {

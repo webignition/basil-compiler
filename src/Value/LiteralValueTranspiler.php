@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Value;
 
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 

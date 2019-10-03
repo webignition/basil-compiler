@@ -2,12 +2,12 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
+use webignition\BasilCompilationSource\ClassDependency;
+use webignition\BasilCompilationSource\ClassDependencyCollection;
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\PlaceholderFactory;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\DomElementLocator\ElementLocator;

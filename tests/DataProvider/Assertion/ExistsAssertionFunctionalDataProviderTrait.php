@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
+use webignition\BasilCompilationSource\ClassDependency;
+use webignition\BasilCompilationSource\ClassDependencyCollection;
+use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilModelFactory\AssertionFactory;
-use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 

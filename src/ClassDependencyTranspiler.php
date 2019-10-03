@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilCompilationSource\ClassDependency;
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilableSourceInterface;
 
 class ClassDependencyTranspiler implements TranspilerInterface
 {

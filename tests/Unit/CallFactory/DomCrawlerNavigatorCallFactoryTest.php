@@ -6,16 +6,16 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
+use webignition\BasilCompilationSource\ClassDependency;
+use webignition\BasilCompilationSource\ClassDependencyCollection;
+use webignition\BasilCompilationSource\CompilableSource;
+use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\VariablePlaceholder;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\CompilableSource;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
-use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
 use webignition\DomElementLocator\ElementLocator;
 
 class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase

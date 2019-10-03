@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilTranspiler\Model\VariablePlaceholder;
+use webignition\BasilCompilationSource\VariablePlaceholder;
 
 class VariablePlaceholderResolver
 {

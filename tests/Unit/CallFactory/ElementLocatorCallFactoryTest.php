@@ -6,12 +6,12 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
+use webignition\BasilCompilationSource\ClassDependency;
+use webignition\BasilCompilationSource\ClassDependencyCollection;
+use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
-use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\DomElementLocator\ElementLocator;
 use webignition\DomElementLocator\ElementLocatorInterface;
