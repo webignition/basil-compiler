@@ -6,7 +6,7 @@ use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -70,21 +70,16 @@ class WaitActionTranspiler implements TranspilerInterface
             self::MICROSECONDS_PER_MILLISECOND
         );
 
-        $classDependencies = new ClassDependencyCollection();
-        $classDependencies = $classDependencies->merge([$durationAssignmentCall->getClassDependencies()]);
+        $compilationMetadata = (new CompilationMetadata())
+            ->merge([$durationAssignmentCall->getCompilationMetadata()])
+            ->withAdditionalVariableExports($variableExports);
 
-        $variableDependencies = new VariablePlaceholderCollection();
-        $variableDependencies = $variableDependencies->merge([$durationAssignmentCall->getVariableDependencies()]);
-
-        $variableExports = $variableExports->merge([$durationAssignmentCall->getVariableExports()]);
-
-        $compilableSource = new CompilableSource(array_merge($durationAssignmentCall->getStatements(), [
-            $waitStatement
-        ]));
-
-        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
-        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-        $compilableSource = $compilableSource->withVariableExports($variableExports);
+        $compilableSource = new CompilableSource(
+            array_merge($durationAssignmentCall->getStatements(), [
+                $waitStatement
+            ]),
+            $compilationMetadata
+        );
 
         return $compilableSource;
     }

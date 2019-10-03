@@ -7,6 +7,7 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -68,20 +69,9 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $this->getElementActionMethod()
         );
 
-        $compilableSource = new CompilableSource($statements);
+        $compilationMetadata = (new CompilationMetadata())
+            ->merge([$elementVariableAssignmentCall->getCompilationMetadata()]);
 
-        $compilableSource = $compilableSource->withClassDependencies(
-            $elementVariableAssignmentCall->getClassDependencies()
-        );
-
-        $compilableSource = $compilableSource->withVariableDependencies(
-            $elementVariableAssignmentCall->getVariableDependencies()
-        );
-
-        $compilableSource = $compilableSource->withVariableExports(
-            $elementVariableAssignmentCall->getVariableExports()
-        );
-
-        return $compilableSource;
+        return new CompilableSource($statements, $compilationMetadata);
     }
 }

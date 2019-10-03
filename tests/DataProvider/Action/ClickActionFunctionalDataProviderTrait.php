@@ -22,7 +22,6 @@ trait ClickActionFunctionalDataProviderTrait
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                 ],
@@ -38,7 +37,6 @@ trait ClickActionFunctionalDataProviderTrait
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertEquals("Click", self::$client->getTitle());',
                     '$submitButton = $crawler->filter(\'#form input[type="submit"]\')->getElement(0);',

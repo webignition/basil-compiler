@@ -22,7 +22,6 @@ trait WaitForActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CRAWLER => '$crawler',
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertTrue(true);'
                 ],

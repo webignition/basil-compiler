@@ -7,6 +7,7 @@ use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
@@ -65,17 +66,18 @@ class WaitForActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $compilableSource = new CompilableSource([
-            sprintf(
-                '%s = %s->waitFor(\'%s\')',
-                $pantherCrawlerPlaceholder,
-                $pantherClientPlaceholder,
-                $this->singleQuotedStringEscaper->escape($elementLocator)
-            ),
-        ]);
+        $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
-        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-
-        return $compilableSource;
+        return new CompilableSource(
+            [
+                sprintf(
+                    '%s = %s->waitFor(\'%s\')',
+                    $pantherCrawlerPlaceholder,
+                    $pantherClientPlaceholder,
+                    $this->singleQuotedStringEscaper->escape($elementLocator)
+                ),
+            ],
+            $compilationMetadata
+        );
     }
 }
