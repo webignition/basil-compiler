@@ -9,17 +9,13 @@ class CompilableSource implements CompilableSourceInterface
      */
     private $statements;
 
-    private $classDependencies;
-    private $variableDependencies;
-    private $variableExports;
+    private $compilationMetadata;
 
     public function __construct(array $statements)
     {
         $this->statements = $statements;
 
-        $this->classDependencies = new ClassDependencyCollection();
-        $this->variableDependencies = new VariablePlaceholderCollection();
-        $this->variableExports = new VariablePlaceholderCollection();
+        $this->compilationMetadata = new CompilationMetadata();
     }
 
     /**
@@ -30,57 +26,16 @@ class CompilableSource implements CompilableSourceInterface
         return $this->statements;
     }
 
-    public function getClassDependencies(): ClassDependencyCollection
+    public function getCompilationMetadata(): CompilationMetadataInterface
     {
-        return $this->classDependencies;
+        return $this->compilationMetadata;
     }
 
-    public function getVariableExports(): VariablePlaceholderCollection
-    {
-        return $this->variableExports;
-    }
-
-    public function getVariableDependencies(): VariablePlaceholderCollection
-    {
-        return $this->variableDependencies;
-    }
-
-    /**
-     * @param ClassDependencyCollection $classDependencies
-     *
-     * @return CompilableSourceInterface
-     */
-    public function withClassDependencies(ClassDependencyCollection $classDependencies): CompilableSourceInterface
-    {
-        $new = clone $this;
-        $new->classDependencies = $classDependencies;
-
-        return $new;
-    }
-
-    /**
-     * @param VariablePlaceholderCollection $variableDependencies
-     *
-     * @return CompilableSourceInterface
-     */
-    public function withVariableDependencies(
-        VariablePlaceholderCollection $variableDependencies
+    public function withCompilationMetadata(
+        CompilationMetadataInterface $compilationMetadata
     ): CompilableSourceInterface {
         $new = clone $this;
-        $new->variableDependencies = $variableDependencies;
-
-        return $new;
-    }
-
-    /**
-     * @param VariablePlaceholderCollection $variableExports
-     *
-     * @return CompilableSourceInterface
-     */
-    public function withVariableExports(VariablePlaceholderCollection $variableExports): CompilableSourceInterface
-    {
-        $new = clone $this;
-        $new->variableExports = $variableExports;
+        $new->compilationMetadata = $compilationMetadata;
 
         return $new;
     }

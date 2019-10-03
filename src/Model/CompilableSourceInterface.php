@@ -9,15 +9,10 @@ interface CompilableSourceInterface
      */
     public function getStatements(): array;
 
-    public function getClassDependencies(): ClassDependencyCollection;
-    public function getVariableExports(): VariablePlaceholderCollection;
-    public function getVariableDependencies(): VariablePlaceholderCollection;
-
-    public function withClassDependencies(ClassDependencyCollection $classDependencies): CompilableSourceInterface;
-    public function withVariableDependencies(
-        VariablePlaceholderCollection $variableDependencies
+    public function getCompilationMetadata(): CompilationMetadataInterface;
+    public function withCompilationMetadata(
+        CompilationMetadataInterface $compilationMetadata
     ): CompilableSourceInterface;
-    public function withVariableExports(VariablePlaceholderCollection $variableExports): CompilableSourceInterface;
 
     public function __toString(): string;
 }
