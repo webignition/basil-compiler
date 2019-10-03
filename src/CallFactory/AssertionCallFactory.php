@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -175,26 +175,12 @@ class AssertionCallFactory
         VariableAssignmentCall $actualValueCall,
         string $assertionTemplate
     ): CompilableSourceInterface {
-        $classDependencies = new ClassDependencyCollection();
-        $classDependencies = $classDependencies->merge([
-            $expectedValueCall->getClassDependencies(),
-            $actualValueCall->getClassDependencies(),
-        ]);
-
         $variableDependencies = new VariablePlaceholderCollection();
-        $variableDependencies = $variableDependencies->merge([
-            $expectedValueCall->getVariableDependencies(),
-            $actualValueCall->getVariableDependencies(),
-        ]);
         $variableDependencies = $variableDependencies->withAdditionalItems([
             $this->phpUnitTestCasePlaceholder,
         ]);
 
-        $variableExports = new VariablePlaceholderCollection();
-        $variableExports = $variableExports->merge([
-            $expectedValueCall->getVariableExports(),
-            $actualValueCall->getVariableExports(),
-        ]);
+        $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
         $assertionStatement = sprintf(
             $assertionTemplate,
@@ -212,9 +198,12 @@ class AssertionCallFactory
         );
 
         $compilableSource = new CompilableSource($statements);
-        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
-        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-        $compilableSource = $compilableSource->withVariableExports($variableExports);
+
+        $compilableSource = $compilableSource->mergeCompilationData([
+            $expectedValueCall->getCompilationMetadata(),
+            $actualValueCall->getCompilationMetadata(),
+            $compilationMetadata,
+        ]);
 
         return $compilableSource;
     }
@@ -223,29 +212,24 @@ class AssertionCallFactory
         VariableAssignmentCall $assignmentCall,
         string $assertionTemplate
     ): CompilableSourceInterface {
-        $classDependencies = new ClassDependencyCollection();
-        $classDependencies = $classDependencies->merge([$assignmentCall->getClassDependencies()]);
-
-        $variableDependencies = new VariablePlaceholderCollection();
-        $variableDependencies = $variableDependencies->merge([$assignmentCall->getVariableDependencies()]);
-        $variableDependencies = $variableDependencies->withAdditionalItems([
-            $this->phpUnitTestCasePlaceholder,
-        ]);
-
-        $variableExports = new VariablePlaceholderCollection();
-        $variableExports = $variableExports->merge([$assignmentCall->getVariableExports()]);
-
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
             (string) $assignmentCall->getElementVariablePlaceholder()
         );
 
-        $compilableSource = new CompilableSource(array_merge($assignmentCall->getStatements(), [$assertionStatement]));
+        $compilationMetadata = (new CompilationMetadata())->merge([
+            $assignmentCall->getCompilationMetadata(),
+        ]);
 
-        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
-        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-        $compilableSource = $compilableSource->withVariableExports($variableExports);
+        $compilationMetadata = $compilationMetadata->withAdditionalVariableDependencies(
+            new VariablePlaceholderCollection([$this->phpUnitTestCasePlaceholder])
+        );
+
+        $compilableSource = new CompilableSource(
+            array_merge($assignmentCall->getStatements(), [$assertionStatement]),
+            $compilationMetadata
+        );
 
         return $compilableSource;
     }

@@ -6,6 +6,7 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -43,9 +44,9 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
                 $model->getProperty()
             );
 
-            $compilableSource = new CompilableSource([$statement]);
+            $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
-            return $compilableSource->withVariableDependencies($variableDependencies);
+            return new CompilableSource([$statement], $compilationMetadata);
         }
 
         throw new NonTranspilableModelException($model);

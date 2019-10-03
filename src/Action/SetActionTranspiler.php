@@ -9,7 +9,7 @@ use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -84,48 +84,24 @@ class SetActionTranspiler implements TranspilerInterface
             $valuePlaceholder
         );
 
-        $classDependencies = new ClassDependencyCollection();
-        $classDependencies = $classDependencies->merge([
-            $collectionAssignmentCall->getClassDependencies(),
-            $mutationCall->getClassDependencies(),
-        ]);
-
-        $variableDependencies = new VariablePlaceholderCollection();
-        $variableDependencies = $variableDependencies->merge([
-            $collectionAssignmentCall->getVariableDependencies(),
-            $mutationCall->getVariableDependencies(),
-        ]);
-
-        $variableExports = $variableExports->merge([
-            $collectionAssignmentCall->getVariableExports(),
-            $mutationCall->getVariableExports(),
-        ]);
-
-        if ($valueAssignmentCall instanceof VariableAssignmentCall) {
-            $classDependencies = $classDependencies->merge([
-                $valueAssignmentCall->getClassDependencies(),
-            ]);
-
-            $variableDependencies = $variableDependencies->merge([
-                $valueAssignmentCall->getVariableDependencies(),
-            ]);
-
-            $variableExports = $variableExports->merge([
-                $valueAssignmentCall->getVariableExports(),
-            ]);
-        }
-
         $statements = array_merge(
             $collectionAssignmentCall->getStatements(),
             null === $valueAssignmentCall ? [] : $valueAssignmentCall->getStatements(),
             $mutationCall->getStatements()
         );
 
-        $compilableSource = new CompilableSource($statements);
-        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
-        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-        $compilableSource = $compilableSource->withVariableExports($variableExports);
+        $compilationMetadata = (new CompilationMetadata())
+            ->merge([
+                $collectionAssignmentCall->getCompilationMetadata(),
+                $mutationCall->getCompilationMetadata(),
+            ]);
 
-        return $compilableSource;
+        if ($valueAssignmentCall instanceof VariableAssignmentCall) {
+            $compilationMetadata = $compilationMetadata->merge([
+                $valueAssignmentCall->getCompilationMetadata()
+            ]);
+        }
+
+        return new CompilableSource($statements, $compilationMetadata);
     }
 }

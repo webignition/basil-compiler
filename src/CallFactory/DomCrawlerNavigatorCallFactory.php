@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -105,27 +105,19 @@ class DomCrawlerNavigatorCallFactory
         CompilableSourceInterface $arguments,
         string $methodName
     ): CompilableSourceInterface {
-        $classDependencies = new ClassDependencyCollection();
-        $classDependencies = $classDependencies->merge([$arguments->getClassDependencies()]);
-
         $variableDependencies = new VariablePlaceholderCollection();
-        $variableDependencies = $variableDependencies->merge([$arguments->getVariableDependencies()]);
         $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $variableExports = new VariablePlaceholderCollection();
-        $variableExports = $variableExports->merge([$arguments->getVariableExports()]);
+        $compilationMetadata = (new CompilationMetadata())
+            ->merge([$arguments->getCompilationMetadata()])
+            ->withAdditionalVariableDependencies($variableDependencies);
 
         $createStatement = sprintf(
             (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)',
             (string) $arguments
         );
 
-        $compilableSource = new CompilableSource([$createStatement]);
-        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
-        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-        $compilableSource = $compilableSource->withVariableExports($variableExports);
-
-        return $compilableSource;
+        return new CompilableSource([$createStatement], $compilationMetadata);
     }
 
     /**
@@ -144,35 +136,21 @@ class DomCrawlerNavigatorCallFactory
                 $parentIdentifier
             );
 
-            $classDependencies = new ClassDependencyCollection();
-            $classDependencies = $classDependencies->merge([
-                $compilableSource->getClassDependencies(),
-                $parentElementLocatorConstructorCall->getClassDependencies(),
+            $compilationMetadata = (new CompilationMetadata())->merge([
+                $compilableSource->getCompilationMetadata(),
+                $parentElementLocatorConstructorCall->getCompilationMetadata(),
             ]);
 
-            $variableDependencies = new VariablePlaceholderCollection();
-            $variableDependencies = $variableDependencies->merge([
-                $compilableSource->getVariableDependencies(),
-                $parentElementLocatorConstructorCall->getVariableDependencies(),
-            ]);
-
-            $variableExports = new VariablePlaceholderCollection();
-            $variableExports = $variableExports->merge([
-                $compilableSource->getVariableExports(),
-                $compilableSource->getVariableDependencies(),
-            ]);
-
-            $compilableSource = new CompilableSource([
-                sprintf(
-                    '%s, %s',
-                    (string) $compilableSource,
-                    (string) $parentElementLocatorConstructorCall
-                ),
-            ]);
-
-            $compilableSource = $compilableSource->withClassDependencies($classDependencies);
-            $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
-            $compilableSource = $compilableSource->withVariableExports($variableExports);
+            $compilableSource = new CompilableSource(
+                [
+                    sprintf(
+                        '%s, %s',
+                        (string) $compilableSource,
+                        (string) $parentElementLocatorConstructorCall
+                    ),
+                ],
+                $compilationMetadata
+            );
         }
 
         return $compilableSource;

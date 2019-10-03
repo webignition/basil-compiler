@@ -10,6 +10,8 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\DomElementLocator\ElementLocator;
 use webignition\DomElementLocator\ElementLocatorInterface;
@@ -43,14 +45,12 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     ) {
         $compilableSource = $this->factory->createConstructorCall($elementIdentifier);
 
-        $this->assertEquals(
-            [
-                new ClassDependency(ElementLocator::class),
-            ],
-            $compilableSource->getClassDependencies()->getAll()
-        );
+        $expectedCompilationMetadata = (new CompilationMetadata())
+            ->withClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(ElementLocator::class)
+            ]));
 
-        $this->assertEquals([], $compilableSource->getVariableExports()->getAll());
+        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
 
         $executableCall = $this->executableCallFactory->createWithReturn($compilableSource);
 

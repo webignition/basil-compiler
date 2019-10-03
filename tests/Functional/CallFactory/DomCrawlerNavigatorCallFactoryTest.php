@@ -14,9 +14,9 @@ use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\DomElementLocator\ElementLocator;
-use webignition\SymfonyDomCrawlerNavigator\Navigator;
 use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
 class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
@@ -43,18 +43,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $compilableSource = $this->factory->createFindCallForIdentifier($elementIdentifier);
 
-        $executableCall = $this->executableCallFactory->createWithReturn(
-            $compilableSource,
-            self::VARIABLE_IDENTIFIERS,
-            [
-                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ],
-            [],
-            new ClassDependencyCollection([
-                new ClassDependency(Navigator::class),
-            ])
-        );
+        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
 
         $element = eval($executableCall);
 
@@ -103,25 +92,15 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     /**
      * @dataProvider createFindCallForTranspiledArgumentsDataProvider
      */
-    public function testCreateFindCallForTranspiledLocator(
+    public function testCreateFindCallForTranspiledArguments(
         string $fixture,
         CompilableSourceInterface $arguments,
         callable $assertions
     ) {
         $compilableSource = $this->factory->createFindCallForTranspiledArguments($arguments);
 
-        $executableCall = $this->executableCallFactory->createWithReturn(
-            $compilableSource,
-            self::VARIABLE_IDENTIFIERS,
-            [
-                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ],
-            [],
-            new ClassDependencyCollection([
-                new ClassDependency(Navigator::class),
-            ])
-        );
+        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
+
         $element = eval($executableCall);
 
         $assertions($element);
@@ -132,11 +111,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'css selector, no parent' => [
                 'fixture' => '/form.html',
-                'arguments' => (new CompilableSource(
-                    ['new ElementLocator(\'input\', 1)']
-                ))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                'arguments' => (new CompilableSource(['new ElementLocator(\'input\', 1)']))
+                    ->withCompilationMetadata(
+                        (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+                            new ClassDependency(ElementLocator::class)
+                        ]))
+                    ),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -153,9 +133,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'arguments' => (new CompilableSource([
                     'new ElementLocator(\'input\', 1), ' .
                     'new ElementLocator(\'form[action="/action2"]\', 1)'
-                ]))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                ]))
+                    ->withCompilationMetadata(
+                        (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+                            new ClassDependency(ElementLocator::class)
+                        ]))
+                    ),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -180,18 +163,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $compilableSource = $this->factory->createHasCallForIdentifier($elementIdentifier);
 
-        $executableCall = $this->executableCallFactory->createWithReturn(
-            $compilableSource,
-            self::VARIABLE_IDENTIFIERS,
-            [
-                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ],
-            [],
-            new ClassDependencyCollection([
-                new ClassDependency(Navigator::class),
-            ])
-        );
+        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
 
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
@@ -262,32 +234,24 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     ) {
         $compilableSource = $this->factory->createHasCallForTranspiledArguments($arguments);
 
-        $executableCall = $this->executableCallFactory->createWithReturn(
-            $compilableSource,
-            self::VARIABLE_IDENTIFIERS,
-            [
-                '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
-                '$domCrawlerNavigator = Navigator::create($crawler); ',
-            ],
-            [],
-            new ClassDependencyCollection([
-                new ClassDependency(Navigator::class),
-            ])
-        );
+        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
 
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
 
     public function createHasCallForTranspiledArgumentsDataProvider(): array
     {
+        $expectedCompilationMetadata = (new CompilationMetadata())
+            ->withClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(ElementLocator::class)
+            ]));
+
         return [
             'not hasElement: css selector only' => [
                 'fixture' => '/index.html',
                 'arguments' => (new CompilableSource([
                     'new ElementLocator(\'.non-existent\', 1)'
-                ]))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                ]))->withCompilationMetadata($expectedCompilationMetadata),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, parent does not exist' => [
@@ -295,9 +259,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'arguments' => (new CompilableSource([
                     'new ElementLocator(\'.non-existent-child\', 1), ' .
                     'new ElementLocator(\'.non-existent-parent\', 1)'
-                ]))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                ]))->withCompilationMetadata($expectedCompilationMetadata),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, child does not exist' => [
@@ -305,18 +267,14 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'arguments' => (new CompilableSource([
                     'new ElementLocator(\'.non-existent-child\', 1), ' .
                     'new ElementLocator(\'form[action="/action1"]\', 1)'
-                ]))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                ]))->withCompilationMetadata($expectedCompilationMetadata),
                 'expectedHasElement' => false,
             ],
             'hasElement: css selector only' => [
                 'fixture' => '/index.html',
                 'arguments' => (new CompilableSource([
                     'new ElementLocator(\'h1\', 1)'
-                ]))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                ]))->withCompilationMetadata($expectedCompilationMetadata),
                 'expectedHasElement' => true,
             ],
             'hasElement: css selector with parent' => [
@@ -324,9 +282,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                 'arguments' => (new CompilableSource([
                     'new ElementLocator(\'input\', 1), ' .
                     'new ElementLocator(\'form[action="/action1"]\', 1)'
-                ]))->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ])),
+                ]))->withCompilationMetadata($expectedCompilationMetadata),
                 'expectedHasElement' => true,
             ],
         ];

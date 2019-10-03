@@ -12,6 +12,7 @@ use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ClickActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\ForwardActionFunctionalDataProviderTrait;
@@ -53,19 +54,19 @@ class ActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
-        array $additionalClassDependencies,
         array $additionalSetupStatements,
-        array $additionalTeardownStatements
+        array $additionalTeardownStatements,
+        ?CompilationMetadataInterface $additionalCompilationMetadata = null
     ) {
         $compilableSource = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
             $compilableSource,
-            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
+            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalClassDependencies
+            $additionalCompilationMetadata
         );
 
         eval($executableCall);
@@ -97,8 +98,8 @@ class ActionTranspilerTest extends AbstractTestCase
 
         $executableCall = $this->createExecutableCall(
             $compilableSource,
-            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            '/action-wait.html'
+            '/action-wait.html',
+            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers)
         );
 
         $this->expectException(ExpectationFailedException::class);

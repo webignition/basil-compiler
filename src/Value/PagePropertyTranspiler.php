@@ -6,6 +6,7 @@ use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -56,10 +57,10 @@ class PagePropertyTranspiler implements TranspilerInterface
             $transpiledValue = $this->transpiledValueMap[$model->getProperty()] ?? null;
 
             if (is_string($transpiledValue)) {
-                $compilableSource = new CompilableSource([(string) $transpiledValue]);
-                $compilableSource = $compilableSource->withVariableDependencies($this->variableDependencies);
+                $compilationMetadata = (new CompilationMetadata())
+                    ->withVariableDependencies($this->variableDependencies);
 
-                return $compilableSource;
+                return new CompilableSource([(string) $transpiledValue], $compilationMetadata);
             }
 
             throw new UnknownObjectPropertyException($model);

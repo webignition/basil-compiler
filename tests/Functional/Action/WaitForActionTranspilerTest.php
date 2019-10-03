@@ -8,6 +8,7 @@ namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\WaitForActionTranspiler;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitForActionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 
@@ -34,19 +35,19 @@ class WaitForActionTranspilerTest extends AbstractTestCase
         ActionInterface $action,
         string $fixture,
         array $variableIdentifiers,
-        array $additionalClassDependencies,
         array $additionalSetupStatements,
-        array $additionalTeardownStatements
+        array $additionalTeardownStatements,
+        ?CompilationMetadataInterface $additionalCompilationMetadata = null
     ) {
         $compilableSource = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
             $compilableSource,
-            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $fixture,
+            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalClassDependencies
+            $additionalCompilationMetadata
         );
 
         $executableCallStatements = explode("\n", $executableCall);

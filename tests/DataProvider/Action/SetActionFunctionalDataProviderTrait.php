@@ -10,6 +10,8 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 use webignition\WebDriverElementMutator\Mutator;
@@ -32,6 +34,12 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Inspector::class),
+                new ClassDependency(Mutator::class),
+            ]));
+
         return array_merge(
             $this->setActionForTextInputFunctionalDataProvider(),
             $this->setActionForTextareaFunctionalDataProvider(),
@@ -48,10 +56,6 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalClassDependencies' => [
-                        new ClassDependency(Inspector::class),
-                        new ClassDependency(Mutator::class),
-                    ],
                     'additionalSetupStatements' => [
                         '$inspector = Inspector::create($crawler);',
                         '$mutator = Mutator::create();',
@@ -61,6 +65,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("textarea content", $input->getAttribute("value"));',
                     ],
+                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 ],
                 'input action, element identifier, attribute value' => [
                     'action' => new InputAction(
@@ -73,9 +78,6 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalClassDependencies' => [
-                        new ClassDependency(Mutator::class),
-                    ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
@@ -84,6 +86,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("http://127.0.0.1:9080/action1", $input->getAttribute("value"));',
                     ],
+                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 ],
                 'input action, browser property' => [
                     'action' => $actionFactory->createFromActionString(
@@ -91,9 +94,6 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalClassDependencies' => [
-                        new ClassDependency(Mutator::class),
-                    ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
@@ -102,6 +102,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("1200x1100", $input->getAttribute("value"));',
                     ],
+                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 ],
                 'input action, page property' => [
                     'action' => $actionFactory->createFromActionString(
@@ -109,9 +110,6 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalClassDependencies' => [
-                        new ClassDependency(Mutator::class),
-                    ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
@@ -120,6 +118,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("http://127.0.0.1:9080/form.html", $input->getAttribute("value"));',
                     ],
+                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 ],
                 'input action, environment value' => [
                     'action' => $actionFactory->createFromActionString(
@@ -127,9 +126,6 @@ trait SetActionFunctionalDataProviderTrait
                     ),
                     'fixture' => '/form.html',
                     'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                    'additionalClassDependencies' => [
-                        new ClassDependency(Mutator::class),
-                    ],
                     'additionalSetupStatements' => [
                         '$mutator = Mutator::create();',
                         '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
@@ -138,6 +134,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("environment value", $input->getAttribute("value"));',
                     ],
+                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 ],
             ]
         );
@@ -147,6 +144,11 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Mutator::class),
+            ]));
+
         return [
             'input action, literal value: empty text input, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -154,9 +156,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
@@ -165,6 +164,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: empty text input, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -172,9 +172,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-without-value]\')->getElement(0);',
@@ -183,6 +180,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("non-empty value", $input->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: non-empty text input, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -190,9 +188,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-with-value]\')->getElement(0);',
@@ -201,6 +196,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: non-empty text input, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -208,9 +204,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$input = $crawler->filter(\'input[name=input-with-value]\')->getElement(0);',
@@ -219,6 +212,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("new value", $input->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
         ];
     }
@@ -227,6 +221,11 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Mutator::class),
+            ]));
+
         return [
             'input action, literal value: empty textarea, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -234,9 +233,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-empty\')->getElement(0);',
@@ -245,6 +241,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: empty textarea, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -252,9 +249,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-empty\')->getElement(0);',
@@ -263,6 +257,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("non-empty value", $textarea->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: non-empty textarea, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -270,9 +265,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-non-empty\')->getElement(0);',
@@ -281,6 +273,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: non-empty textarea, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -288,9 +281,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$textarea = $crawler->filter(\'.textarea-non-empty\')->getElement(0);',
@@ -299,6 +289,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("new value", $textarea->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
         ];
     }
@@ -307,6 +298,11 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Mutator::class),
+            ]));
+
         return [
             'input action, literal value: select none selected, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -314,9 +310,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
@@ -325,6 +318,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: select none selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -332,9 +326,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
@@ -343,6 +334,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: select none selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -350,9 +342,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
@@ -361,6 +350,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: select has selected, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -368,9 +358,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
@@ -379,6 +366,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: select has selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -386,9 +374,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
@@ -397,6 +382,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: select has selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -404,9 +390,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
@@ -415,6 +398,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
         ];
     }
@@ -423,6 +407,11 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Mutator::class),
+            ]));
+
         return [
             'input action, literal value: option group none selected, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -430,9 +419,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
@@ -441,6 +427,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: option group none selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -448,9 +435,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
@@ -459,6 +443,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: option group none selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -466,9 +451,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-none-selected\')->getElement(0);',
@@ -477,6 +459,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: option group has selected, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -484,9 +467,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
@@ -495,6 +475,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: option group has selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -502,9 +483,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
@@ -513,6 +491,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: option group has selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -520,9 +499,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$select = $crawler->filter(\'.select-has-selected\')->getElement(0);',
@@ -531,6 +507,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
         ];
     }
@@ -539,6 +516,11 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Mutator::class),
+            ]));
+
         return [
             'input action, literal value: radio group none checked, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -546,9 +528,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
@@ -561,6 +540,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: radio group none checked, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -568,9 +548,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
@@ -583,6 +560,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: radio group none checked, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -590,9 +568,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-not-checked]\');',
@@ -605,6 +580,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: radio group has checked, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -612,9 +588,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
@@ -627,6 +600,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: radio group has checked, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -634,9 +608,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
@@ -649,6 +620,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'input action, literal value: radio group has checked, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -656,9 +628,6 @@ trait SetActionFunctionalDataProviderTrait
                 ),
                 'fixture' => '/form.html',
                 'variableIdentifiers' => $this->setActionFunctionalVariableIdentifiers,
-                'additionalClassDependencies' => [
-                    new ClassDependency(Mutator::class),
-                ],
                 'additionalSetupStatements' => [
                     '$mutator = Mutator::create();',
                     '$radioGroup = $crawler->filter(\'input[name=radio-checked]\');',
@@ -671,6 +640,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(2)->isSelected());',
                 ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
         ];
     }

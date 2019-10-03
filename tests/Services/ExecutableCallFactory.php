@@ -8,8 +8,8 @@ namespace webignition\BasilTranspiler\Tests\Services;
 
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
 class ExecutableCallFactory
@@ -38,14 +38,20 @@ class ExecutableCallFactory
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?ClassDependencyCollection $additionalClassDependencies = null
+        ?CompilationMetadataInterface $additionalCompilationMetadata = null
     ): string {
-        $additionalClassDependencies = $additionalClassDependencies ?? new ClassDependencyCollection();
+        if (null !== $additionalCompilationMetadata) {
+            $compilationMetadata = $compilableSource->getCompilationMetadata();
+            $compilationMetadata = $compilationMetadata->merge([
+                $compilationMetadata,
+                $additionalCompilationMetadata
+            ]);
 
-        $classDependencies = $compilableSource->getClassDependencies();
-        $classDependencies = $classDependencies->merge([
-            $additionalClassDependencies,
-        ]);
+            $compilableSource = $compilableSource->withCompilationMetadata($compilationMetadata);
+        }
+
+        $compilationMetadata = $compilableSource->getCompilationMetadata();
+        $classDependencies = $compilationMetadata->getClassDependencies();
 
         $executableCall = '';
 
@@ -83,7 +89,7 @@ class ExecutableCallFactory
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?ClassDependencyCollection $additionalClassDependencies = null
+        ?CompilationMetadataInterface $additionalCompilationMetadata = null
     ): string {
         $statements = $compilableSource->getStatements();
         $lastStatementPosition = count($statements) - 1;
@@ -91,25 +97,14 @@ class ExecutableCallFactory
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $compilableSourceWithReturn = new CompilableSource($statements);
-        $compilableSourceWithReturn = $compilableSourceWithReturn->withClassDependencies(
-            $compilableSource->getClassDependencies()
-        );
-
-        $compilableSourceWithReturn = $compilableSourceWithReturn->withVariableDependencies(
-            $compilableSource->getVariableDependencies()
-        );
-
-        $compilableSourceWithReturn = $compilableSourceWithReturn->withVariableExports(
-            $compilableSource->getVariableExports()
-        );
+        $compilableSourceWithReturn = new CompilableSource($statements, $compilableSource->getCompilationMetadata());
 
         return $this->create(
             $compilableSourceWithReturn,
             $variableIdentifiers,
             $setupStatements,
             $teardownStatements,
-            $additionalClassDependencies
+            $additionalCompilationMetadata
         );
     }
 }

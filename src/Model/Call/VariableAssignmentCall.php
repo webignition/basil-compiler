@@ -3,9 +3,8 @@
 namespace webignition\BasilTranspiler\Model\Call;
 
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
 class VariableAssignmentCall implements CompilableSourceInterface
 {
@@ -35,39 +34,30 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $this->compilableSource->getStatements();
     }
 
-    public function getClassDependencies(): ClassDependencyCollection
+    public function getCompilationMetadata(): CompilationMetadataInterface
     {
-        return $this->compilableSource->getClassDependencies();
+        return $this->compilableSource->getCompilationMetadata();
     }
 
-    public function getVariableExports(): VariablePlaceholderCollection
-    {
-        return $this->compilableSource->getVariableExports();
+    public function withCompilationMetadata(
+        CompilationMetadataInterface $compilationMetadata
+    ): CompilableSourceInterface {
+        $new = clone $this;
+        $new->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
+
+        return $new;
     }
 
-    public function getVariableDependencies(): VariablePlaceholderCollection
+    public function mergeCompilationData(array $compilationDataCollection): CompilableSourceInterface
     {
-        return $this->compilableSource->getVariableDependencies();
+        $new = clone $this;
+        $new->compilableSource = $this->compilableSource->mergeCompilationData($compilationDataCollection);
+
+        return $new;
     }
 
     public function __toString(): string
     {
         return $this->compilableSource->__toString();
-    }
-
-    public function withClassDependencies(ClassDependencyCollection $classDependencies): CompilableSourceInterface
-    {
-        return $this->compilableSource->withClassDependencies($classDependencies);
-    }
-
-    public function withVariableDependencies(
-        VariablePlaceholderCollection $variableDependencies
-    ): CompilableSourceInterface {
-        return $this->compilableSource->withVariableDependencies($variableDependencies);
-    }
-
-    public function withVariableExports(VariablePlaceholderCollection $variableExports): CompilableSourceInterface
-    {
-        return $this->compilableSource->withVariableExports($variableExports);
     }
 }

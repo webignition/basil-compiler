@@ -10,26 +10,11 @@ use PHPUnit\Framework\ExpectationFailedException;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionFunctionalDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExistsAssertionFunctionalDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IncludesAssertionFunctionalDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsAssertionFunctionalDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\IsNotAssertionFunctionalDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\MatchesAssertionFunctionalDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Assertion\NotExistsAssertionFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\VariableNames;
 
-class AssertionTranspilerTest extends AbstractTestCase
+class AssertionTranspilerFailingAssertionsTest extends AbstractTestCase
 {
-    use ExistsAssertionFunctionalDataProviderTrait;
-    use NotExistsAssertionFunctionalDataProviderTrait;
-    use IsAssertionFunctionalDataProviderTrait;
-    use IsNotAssertionFunctionalDataProviderTrait;
-    use IncludesAssertionFunctionalDataProviderTrait;
-    use ExcludesAssertionFunctionalDataProviderTrait;
-    use MatchesAssertionFunctionalDataProviderTrait;
-
     /**
      * @var AssertionTranspiler
      */
@@ -40,36 +25,6 @@ class AssertionTranspilerTest extends AbstractTestCase
         parent::setUp();
 
         $this->transpiler = AssertionTranspiler::createTranspiler();
-    }
-
-    /**
-     * @dataProvider existsAssertionFunctionalDataProvider
-     * @dataProvider notExistsAssertionFunctionalDataProvider
-     * @dataProvider isAssertionFunctionalDataProvider
-     * @dataProvider isNotAssertionFunctionalDataProvider
-     * @dataProvider includesAssertionFunctionalDataProvider
-     * @dataProvider excludesAssertionFunctionalDataProvider
-     * @dataProvider matchesAssertionFunctionalDataProvider
-     */
-    public function testTranspileForPassingAssertions(
-        string $fixture,
-        AssertionInterface $assertion,
-        array $variableIdentifiers,
-        array $additionalSetupStatements = [],
-        array $additionalClassDependencies = []
-    ) {
-        $compilableSource = $this->transpiler->transpile($assertion);
-
-        $executableCall = $this->createExecutableCall(
-            $compilableSource,
-            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            $fixture,
-            $additionalSetupStatements,
-            [],
-            $additionalClassDependencies
-        );
-
-        eval($executableCall);
     }
 
     /**
@@ -85,8 +40,8 @@ class AssertionTranspilerTest extends AbstractTestCase
 
         $executableCall = $this->createExecutableCall(
             $compilableSource,
-            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
-            $fixture
+            $fixture,
+            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers)
         );
 
         $this->expectException(ExpectationFailedException::class);
