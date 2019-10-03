@@ -4,11 +4,11 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class WaitActionTranspiler implements TranspilerInterface
@@ -17,21 +17,16 @@ class WaitActionTranspiler implements TranspilerInterface
     const MICROSECONDS_PER_MILLISECOND = 1000;
 
     private $variableAssignmentCallFactory;
-    private $transpilableSourceComposer;
 
-    public function __construct(
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilableSourceComposer $transpilableSourceComposer
-    ) {
+    public function __construct(VariableAssignmentCallFactory $variableAssignmentCallFactory)
+    {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilableSourceComposer = $transpilableSourceComposer;
     }
 
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
-            VariableAssignmentCallFactory::createFactory(),
-            TranspilableSourceComposer::create()
+            VariableAssignmentCallFactory::createFactory()
         );
     }
 
@@ -75,16 +70,22 @@ class WaitActionTranspiler implements TranspilerInterface
             self::MICROSECONDS_PER_MILLISECOND
         );
 
-        return $this->transpilableSourceComposer->compose(
-            array_merge($durationAssignmentCall->getStatements(), [
-                $waitStatement
-            ]),
-            [
-                $durationAssignmentCall
-            ],
-            new ClassDependencyCollection(),
-            $variableExports,
-            new VariablePlaceholderCollection()
-        );
+        $classDependencies = new ClassDependencyCollection();
+        $classDependencies = $classDependencies->merge([$durationAssignmentCall->getClassDependencies()]);
+
+        $variableDependencies = new VariablePlaceholderCollection();
+        $variableDependencies = $variableDependencies->merge([$durationAssignmentCall->getVariableDependencies()]);
+
+        $variableExports = $variableExports->merge([$durationAssignmentCall->getVariableExports()]);
+
+        $compilableSource = new CompilableSource(array_merge($durationAssignmentCall->getStatements(), [
+            $waitStatement
+        ]));
+
+        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
+        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
+        $compilableSource = $compilableSource->withVariableExports($variableExports);
+
+        return $compilableSource;
     }
 }

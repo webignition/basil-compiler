@@ -6,7 +6,6 @@ use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilModel\Action\NoArgumentsAction;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -51,18 +50,17 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        return new CompilableSource(
-            [
-                sprintf(
-                    '%s = %s->%s()',
-                    $pantherCrawlerPlaceholder,
-                    $pantherClientPlaceholder,
-                    $model->getType()
-                ),
-            ],
-            new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
-            $variableDependencies
-        );
+        $compilableSource = new CompilableSource([
+            sprintf(
+                '%s = %s->%s()',
+                $pantherCrawlerPlaceholder,
+                $pantherClientPlaceholder,
+                $model->getType()
+            ),
+        ]);
+
+        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
+
+        return $compilableSource;
     }
 }

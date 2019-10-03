@@ -5,8 +5,6 @@ namespace webignition\BasilTranspiler;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 
 class ClassDependencyTranspiler implements TranspilerInterface
 {
@@ -38,17 +36,10 @@ class ClassDependencyTranspiler implements TranspilerInterface
 
         $alias = $model->getAlias();
 
-        $content = null === $alias
+        $statement = null === $alias
             ? sprintf(self::CLASS_NAME_ONLY_TEMPLATE, $model->getClassName())
             : sprintf(self::WITH_ALIAS_TEMPLATE, $model->getClassName(), $model->getAlias());
 
-        return new CompilableSource(
-            [
-                $content
-            ],
-            new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
-            new VariablePlaceholderCollection()
-        );
+        return new CompilableSource([$statement]);
     }
 }

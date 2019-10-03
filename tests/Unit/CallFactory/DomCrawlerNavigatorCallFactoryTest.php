@@ -10,6 +10,7 @@ use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\BasilTranspiler\Model\VariablePlaceholder;
@@ -69,9 +70,11 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFindCallForTranspiledLocator()
     {
-        $identifier = TestIdentifierFactory::createElementIdentifier('.selector');
-
-        $findElementCallArguments = $this->factory->createElementCallArguments($identifier);
+        $findElementCallArguments = (new CompilableSource([
+            'new ElementLocator(\'.selector\')'
+        ]))->withClassDependencies(new ClassDependencyCollection([
+            new ClassDependency(ElementLocator::class)
+        ]));
 
         $compilableSource = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
 
@@ -99,9 +102,11 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateHasCallForTranspiledLocator()
     {
-        $identifier = TestIdentifierFactory::createElementIdentifier('.selector');
-
-        $hasElementCallArguments = $this->factory->createElementCallArguments($identifier);
+        $hasElementCallArguments = (new CompilableSource([
+            'new ElementLocator(\'.selector\')'
+        ]))->withClassDependencies(new ClassDependencyCollection([
+            new ClassDependency(ElementLocator::class)
+        ]));
 
         $compilableSource = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
 

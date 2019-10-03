@@ -3,30 +3,25 @@
 namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
-use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactory
 {
     private $elementLocatorCallFactory;
-    private $transpilableSourceComposer;
 
-    public function __construct(
-        ElementLocatorCallFactory $elementLocatorCallFactory,
-        TranspilableSourceComposer $transpilableSourceComposer
-    ) {
+    public function __construct(ElementLocatorCallFactory $elementLocatorCallFactory)
+    {
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
-        $this->transpilableSourceComposer = $transpilableSourceComposer;
     }
 
     public static function createFactory(): DomCrawlerNavigatorCallFactory
     {
         return new DomCrawlerNavigatorCallFactory(
-            ElementLocatorCallFactory::createFactory(),
-            TranspilableSourceComposer::create()
+            ElementLocatorCallFactory::createFactory()
         );
     }
 
@@ -110,25 +105,27 @@ class DomCrawlerNavigatorCallFactory
         CompilableSourceInterface $arguments,
         string $methodName
     ): CompilableSourceInterface {
+        $classDependencies = new ClassDependencyCollection();
+        $classDependencies = $classDependencies->merge([$arguments->getClassDependencies()]);
+
         $variableDependencies = new VariablePlaceholderCollection();
+        $variableDependencies = $variableDependencies->merge([$arguments->getVariableDependencies()]);
         $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
+
+        $variableExports = new VariablePlaceholderCollection();
+        $variableExports = $variableExports->merge([$arguments->getVariableExports()]);
 
         $createStatement = sprintf(
             (string) $domCrawlerNavigatorPlaceholder . '->' . $methodName . '(%s)',
             (string) $arguments
         );
 
-        return $this->transpilableSourceComposer->compose(
-            [
-                $createStatement,
-            ],
-            [
-                $arguments,
-            ],
-            new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
-            $variableDependencies
-        );
+        $compilableSource = new CompilableSource([$createStatement]);
+        $compilableSource = $compilableSource->withClassDependencies($classDependencies);
+        $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
+        $compilableSource = $compilableSource->withVariableExports($variableExports);
+
+        return $compilableSource;
     }
 
     /**
@@ -136,7 +133,7 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return CompilableSourceInterface
      */
-    public function createElementCallArguments(
+    private function createElementCallArguments(
         DomIdentifierInterface $elementIdentifier
     ): CompilableSourceInterface {
         $compilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
@@ -147,22 +144,35 @@ class DomCrawlerNavigatorCallFactory
                 $parentIdentifier
             );
 
-            $compilableSource = $this->transpilableSourceComposer->compose(
-                [
-                    sprintf(
-                        '%s, %s',
-                        (string) $compilableSource,
-                        (string) $parentElementLocatorConstructorCall
-                    ),
-                ],
-                [
-                    $compilableSource,
-                    $parentElementLocatorConstructorCall,
-                ],
-                new ClassDependencyCollection(),
-                new VariablePlaceholderCollection(),
-                new VariablePlaceholderCollection()
-            );
+            $classDependencies = new ClassDependencyCollection();
+            $classDependencies = $classDependencies->merge([
+                $compilableSource->getClassDependencies(),
+                $parentElementLocatorConstructorCall->getClassDependencies(),
+            ]);
+
+            $variableDependencies = new VariablePlaceholderCollection();
+            $variableDependencies = $variableDependencies->merge([
+                $compilableSource->getVariableDependencies(),
+                $parentElementLocatorConstructorCall->getVariableDependencies(),
+            ]);
+
+            $variableExports = new VariablePlaceholderCollection();
+            $variableExports = $variableExports->merge([
+                $compilableSource->getVariableExports(),
+                $compilableSource->getVariableDependencies(),
+            ]);
+
+            $compilableSource = new CompilableSource([
+                sprintf(
+                    '%s, %s',
+                    (string) $compilableSource,
+                    (string) $parentElementLocatorConstructorCall
+                ),
+            ]);
+
+            $compilableSource = $compilableSource->withClassDependencies($classDependencies);
+            $compilableSource = $compilableSource->withVariableDependencies($variableDependencies);
+            $compilableSource = $compilableSource->withVariableExports($variableExports);
         }
 
         return $compilableSource;

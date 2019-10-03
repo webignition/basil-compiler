@@ -10,7 +10,6 @@ use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
 class ExecutableCallFactory
@@ -92,15 +91,21 @@ class ExecutableCallFactory
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $transpilableSourceWithReturn = new CompilableSource(
-            $statements,
-            $compilableSource->getClassDependencies(),
-            $compilableSource->getVariableExports(),
-            new VariablePlaceholderCollection()
+        $compilableSourceWithReturn = new CompilableSource($statements);
+        $compilableSourceWithReturn = $compilableSourceWithReturn->withClassDependencies(
+            $compilableSource->getClassDependencies()
+        );
+
+        $compilableSourceWithReturn = $compilableSourceWithReturn->withVariableDependencies(
+            $compilableSource->getVariableDependencies()
+        );
+
+        $compilableSourceWithReturn = $compilableSourceWithReturn->withVariableExports(
+            $compilableSource->getVariableExports()
         );
 
         return $this->create(
-            $transpilableSourceWithReturn,
+            $compilableSourceWithReturn,
             $variableIdentifiers,
             $setupStatements,
             $teardownStatements,

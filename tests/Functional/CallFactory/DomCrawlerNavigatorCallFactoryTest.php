@@ -14,7 +14,6 @@ use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\DomElementLocator\ElementLocator;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
@@ -133,14 +132,11 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'css selector, no parent' => [
                 'fixture' => '/form.html',
-                'arguments' => new CompilableSource(
-                    ['new ElementLocator(\'input\', 1)'],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource(
+                    ['new ElementLocator(\'input\', 1)']
+                ))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -154,17 +150,12 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'css selector, has parent' => [
                 'fixture' => '/form.html',
-                'arguments' => new CompilableSource(
-                    [
-                        'new ElementLocator(\'input\', 1), ' .
-                        'new ElementLocator(\'form[action="/action2"]\', 1)'
-                    ],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource([
+                    'new ElementLocator(\'input\', 1), ' .
+                    'new ElementLocator(\'form[action="/action2"]\', 1)'
+                ]))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -292,71 +283,50 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'not hasElement: css selector only' => [
                 'fixture' => '/index.html',
-                'arguments' => new CompilableSource(
-                    ['new ElementLocator(\'.non-existent\', 1)'],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource([
+                    'new ElementLocator(\'.non-existent\', 1)'
+                ]))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, parent does not exist' => [
                 'fixture' => '/index.html',
-                'arguments' => new CompilableSource(
-                    [
-                        'new ElementLocator(\'.non-existent-child\', 1), ' .
-                        'new ElementLocator(\'.non-existent-parent\', 1)'
-                    ],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource([
+                    'new ElementLocator(\'.non-existent-child\', 1), ' .
+                    'new ElementLocator(\'.non-existent-parent\', 1)'
+                ]))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, child does not exist' => [
                 'fixture' => '/form.html',
-                'arguments' => new CompilableSource(
-                    [
-                        'new ElementLocator(\'.non-existent-child\', 1), ' .
-                        'new ElementLocator(\'form[action="/action1"]\', 1)'
-                    ],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource([
+                    'new ElementLocator(\'.non-existent-child\', 1), ' .
+                    'new ElementLocator(\'form[action="/action1"]\', 1)'
+                ]))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'expectedHasElement' => false,
             ],
             'hasElement: css selector only' => [
                 'fixture' => '/index.html',
-                'arguments' => new CompilableSource(
-                    ['new ElementLocator(\'h1\', 1)'],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource([
+                    'new ElementLocator(\'h1\', 1)'
+                ]))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'expectedHasElement' => true,
             ],
             'hasElement: css selector with parent' => [
                 'fixture' => '/form.html',
-                'arguments' => new CompilableSource(
-                    [
-                        'new ElementLocator(\'input\', 1), ' .
-                        'new ElementLocator(\'form[action="/action1"]\', 1)'
-                    ],
-                    new ClassDependencyCollection([
-                        new ClassDependency(ElementLocator::class)
-                    ]),
-                    new VariablePlaceholderCollection(),
-                    new VariablePlaceholderCollection()
-                ),
+                'arguments' => (new CompilableSource([
+                    'new ElementLocator(\'input\', 1), ' .
+                    'new ElementLocator(\'form[action="/action1"]\', 1)'
+                ]))->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ])),
                 'expectedHasElement' => true,
             ],
         ];
