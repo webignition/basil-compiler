@@ -100,11 +100,11 @@ class CompilationMetadata implements CompilationMetadataInterface
             $variableExports = $variableExports->merge([$metadata->getVariableExports()]);
         }
 
-        $compilationMetadata = new CompilationMetadata();
-        $compilationMetadata->classDependencies = $classDependencies;
-        $compilationMetadata->variableDependencies = $variableDependencies;
-        $compilationMetadata->variableExports = $variableExports;
+        $new = clone $this;
+        $new->classDependencies = $new->classDependencies->merge([$classDependencies]);
+        $new->variableDependencies = $new->variableDependencies->merge([$variableDependencies]);
+        $new->variableExports = $new->variableExports->merge([$variableExports]);
 
-        return $compilationMetadata;
+        return $new;
     }
 }

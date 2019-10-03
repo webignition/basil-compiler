@@ -14,5 +14,7 @@ interface CompilableSourceInterface
         CompilationMetadataInterface $compilationMetadata
     ): CompilableSourceInterface;
 
+    public function mergeCompilationData(array $compilationDataCollection): CompilableSourceInterface;
+
     public function __toString(): string;
 }

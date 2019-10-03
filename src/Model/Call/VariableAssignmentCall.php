@@ -48,6 +48,14 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $new;
     }
 
+    public function mergeCompilationData(array $compilationDataCollection): CompilableSourceInterface
+    {
+        $new = clone $this;
+        $new->compilableSource = $this->compilableSource->mergeCompilationData($compilationDataCollection);
+
+        return $new;
+    }
+
     public function __toString(): string
     {
         return $this->compilableSource->__toString();

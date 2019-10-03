@@ -39,7 +39,7 @@ abstract class AbstractTestCase extends PantherTestCase
      */
     protected $executableCallFactory;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         self::$webServerDir = (string) realpath(
             __DIR__  . '/..' . self::FIXTURES_RELATIVE_PATH . self::FIXTURES_HTML_RELATIVE_PATH
@@ -47,7 +47,10 @@ abstract class AbstractTestCase extends PantherTestCase
 
         self::$client = self::createPantherClient();
         self::$client->getWebDriver()->manage()->window()->setSize(new WebDriverDimension(1200, 1100));
+    }
 
+    protected function setUp(): void
+    {
         $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
