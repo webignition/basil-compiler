@@ -7,7 +7,7 @@ use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
@@ -66,6 +66,8 @@ class WaitForActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
+        $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
+
         return new CompilableSource(
             [
                 sprintf(
@@ -75,9 +77,7 @@ class WaitForActionTranspiler implements TranspilerInterface
                     $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
             ],
-            new ClassDependencyCollection(),
-            new VariablePlaceholderCollection(),
-            $variableDependencies
+            $compilationMetadata
         );
     }
 }

@@ -10,6 +10,8 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -19,6 +21,13 @@ trait WaitActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
+        $emptyCompilationMetadata = new CompilationMetadata();
+
+        $additionalCompilationMetadata = (new CompilationMetadata())
+            ->withAdditionalClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Inspector::class),
+            ]));
+
         return [
             'wait action, literal duration' => [
                 'action' => $actionFactory->createFromActionString('wait 10'),
@@ -26,11 +35,11 @@ trait WaitActionFunctionalDataProviderTrait
                 'variableIdentifiers' => [
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [
                     '$this->assertTrue(true);'
                 ],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $emptyCompilationMetadata,
                 'expectedDuration' => 10,
             ],
             'wait action, element value' => [
@@ -45,13 +54,11 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 'expectedDuration' => 20,
             ],
             'wait action, attribute value, attribute exists' => [
@@ -69,13 +76,11 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 'expectedDuration' => 30,
             ],
             'wait action, attribute value, attribute does not exist' => [
@@ -93,13 +98,11 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::WEBDRIVER_ELEMENT_INSPECTOR => '$webDriverElementInspector',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
                 'expectedDuration' => 0,
             ],
             'wait action, browser property' => [
@@ -110,9 +113,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $emptyCompilationMetadata,
                 'expectedDuration' => 1200,
             ],
             'wait action, page property' => [
@@ -122,9 +125,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::PANTHER_CLIENT => 'self::$client',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $emptyCompilationMetadata,
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value exists' => [
@@ -134,9 +137,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $emptyCompilationMetadata,
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value does not exist' => [
@@ -146,9 +149,9 @@ trait WaitActionFunctionalDataProviderTrait
                     VariableNames::ENVIRONMENT_VARIABLE_ARRAY => '$_ENV',
                     'DURATION' => '$duration',
                 ],
-                'additionalClassDependencies' => [],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
+                'additionalCompilationMetadata' => $emptyCompilationMetadata,
                 'expectedDuration' => 0,
             ],
         ];

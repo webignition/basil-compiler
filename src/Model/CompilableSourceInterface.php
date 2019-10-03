@@ -9,8 +9,12 @@ interface CompilableSourceInterface
      */
     public function getStatements(): array;
 
-    public function getClassDependencies(): ClassDependencyCollection;
-    public function getVariableExports(): VariablePlaceholderCollection;
-    public function getVariableDependencies(): VariablePlaceholderCollection;
+    public function getCompilationMetadata(): CompilationMetadataInterface;
+    public function withCompilationMetadata(
+        CompilationMetadataInterface $compilationMetadata
+    ): CompilableSourceInterface;
+
+    public function mergeCompilationData(array $compilationDataCollection): CompilableSourceInterface;
+
     public function __toString(): string;
 }

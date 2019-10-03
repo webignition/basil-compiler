@@ -7,6 +7,8 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -32,9 +34,11 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
+                'additionalCompilationMetadata' => (new CompilationMetadata())->withClassDependencies(
+                    new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ])
+                ),
             ],
             'exists comparison, attribute identifier examined value' => [
                 'fixture' => '/assertions.html',

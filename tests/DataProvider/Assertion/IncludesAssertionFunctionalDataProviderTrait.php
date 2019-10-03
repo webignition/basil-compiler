@@ -11,6 +11,8 @@ use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\Model\ClassDependency;
+use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
 
@@ -19,6 +21,12 @@ trait IncludesAssertionFunctionalDataProviderTrait
     public function includesAssertionFunctionalDataProvider(): array
     {
         $assertionFactory = AssertionFactory::createFactory();
+
+        $additionalCompilationMetadata = (new CompilationMetadata())->withClassDependencies(
+            new ClassDependencyCollection([
+                new ClassDependency(Inspector::class),
+            ])
+        );
 
         return [
             'includes comparison, element identifier examined value, scalar expected value' => [
@@ -37,9 +45,7 @@ trait IncludesAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'includes comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/assertions.html',
@@ -57,9 +63,7 @@ trait IncludesAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'includes comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/empty.html',
@@ -114,9 +118,7 @@ trait IncludesAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'includes comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/assertions.html',
@@ -139,9 +141,7 @@ trait IncludesAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalClassDependencies' => [
-                    new ClassDependency(Inspector::class),
-                ],
+                'additionalCompilationMetadata' => $additionalCompilationMetadata,
             ],
             'includes comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/assertions.html',

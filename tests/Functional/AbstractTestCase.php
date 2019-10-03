@@ -8,6 +8,8 @@ use Symfony\Component\Panther\PantherTestCase;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
+use webignition\BasilTranspiler\Model\CompilationMetadataInterface;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
@@ -37,7 +39,7 @@ abstract class AbstractTestCase extends PantherTestCase
      */
     protected $executableCallFactory;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         self::$webServerDir = (string) realpath(
             __DIR__  . '/..' . self::FIXTURES_RELATIVE_PATH . self::FIXTURES_HTML_RELATIVE_PATH
@@ -45,18 +47,30 @@ abstract class AbstractTestCase extends PantherTestCase
 
         self::$client = self::createPantherClient();
         self::$client->getWebDriver()->manage()->window()->setSize(new WebDriverDimension(1200, 1100));
+    }
 
+    protected function setUp(): void
+    {
         $this->executableCallFactory = ExecutableCallFactory::createFactory();
     }
 
     protected function createExecutableCall(
         CompilableSourceInterface $compilableSource,
-        array $variableIdentifiers,
         string $fixture,
+        array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        array $additionalClassDependencies = []
+        ?CompilationMetadataInterface $additionalCompilationMetadata = null
     ): string {
+        $compilationMetadata = (new CompilationMetadata())
+            ->withClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Navigator::class),
+            ]));
+
+        if ($additionalCompilationMetadata instanceof CompilationMetadataInterface) {
+            $compilationMetadata = $compilationMetadata->merge([$additionalCompilationMetadata]);
+        }
+
         return $this->executableCallFactory->create(
             $compilableSource,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
@@ -68,12 +82,39 @@ abstract class AbstractTestCase extends PantherTestCase
                 $additionalSetupStatements
             ),
             $additionalTeardownStatements,
-            new ClassDependencyCollection(array_merge(
+            $compilationMetadata
+        );
+    }
+
+    protected function createExecutableCallWithReturn(
+        CompilableSourceInterface $compilableSource,
+        string $fixture,
+        array $variableIdentifiers = [],
+        array $additionalSetupStatements = [],
+        array $additionalTeardownStatements = [],
+        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+    ): string {
+        $compilationMetadata = (new CompilationMetadata())
+            ->withClassDependencies(new ClassDependencyCollection([
+                new ClassDependency(Navigator::class),
+            ]));
+
+        if ($additionalCompilationMetadata instanceof CompilationMetadataInterface) {
+            $compilationMetadata = $compilationMetadata->merge([$additionalCompilationMetadata]);
+        }
+
+        return $this->executableCallFactory->createWithReturn(
+            $compilableSource,
+            array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
+            array_merge(
                 [
-                    new ClassDependency(Navigator::class),
+                    '$crawler = self::$client->request(\'GET\', \'' . $fixture . '\'); ',
+                    '$domCrawlerNavigator = Navigator::create($crawler); ',
                 ],
-                $additionalClassDependencies
-            ))
+                $additionalSetupStatements
+            ),
+            $additionalTeardownStatements,
+            $compilationMetadata
         );
     }
 }

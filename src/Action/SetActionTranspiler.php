@@ -7,26 +7,23 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class SetActionTranspiler implements TranspilerInterface
 {
     private $variableAssignmentCallFactory;
-    private $transpilableSourceComposer;
     private $webDriverElementMutatorCallFactory;
 
     public function __construct(
         VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilableSourceComposer $transpilableSourceComposer,
         WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory
     ) {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilableSourceComposer = $transpilableSourceComposer;
         $this->webDriverElementMutatorCallFactory = $webDriverElementMutatorCallFactory;
     }
 
@@ -34,7 +31,6 @@ class SetActionTranspiler implements TranspilerInterface
     {
         return new SetActionTranspiler(
             VariableAssignmentCallFactory::createFactory(),
-            TranspilableSourceComposer::create(),
             WebDriverElementMutatorCallFactory::createFactory()
         );
     }
@@ -93,21 +89,19 @@ class SetActionTranspiler implements TranspilerInterface
             null === $valueAssignmentCall ? [] : $valueAssignmentCall->getStatements(),
             $mutationCall->getStatements()
         );
-        $calls = [
-            $collectionAssignmentCall,
-            $mutationCall,
-        ];
+
+        $compilationMetadata = (new CompilationMetadata())
+            ->merge([
+                $collectionAssignmentCall->getCompilationMetadata(),
+                $mutationCall->getCompilationMetadata(),
+            ]);
 
         if ($valueAssignmentCall instanceof VariableAssignmentCall) {
-            $calls[] = $valueAssignmentCall;
+            $compilationMetadata = $compilationMetadata->merge([
+                $valueAssignmentCall->getCompilationMetadata()
+            ]);
         }
 
-        return $this->transpilableSourceComposer->compose(
-            $statements,
-            $calls,
-            new ClassDependencyCollection(),
-            $variableExports,
-            new VariablePlaceholderCollection()
-        );
+        return new CompilableSource($statements, $compilationMetadata);
     }
 }

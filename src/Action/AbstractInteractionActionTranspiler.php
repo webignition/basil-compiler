@@ -5,24 +5,20 @@ namespace webignition\BasilTranspiler\Action;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\TranspilableSourceComposer;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 abstract class AbstractInteractionActionTranspiler implements TranspilerInterface
 {
     private $variableAssignmentCallFactory;
-    private $transpilableSourceComposer;
 
-    public function __construct(
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
-        TranspilableSourceComposer $transpilableSourceComposer
-    ) {
+    public function __construct(VariableAssignmentCallFactory $variableAssignmentCallFactory)
+    {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
-        $this->transpilableSourceComposer = $transpilableSourceComposer;
     }
 
     abstract protected function getHandledActionType(): string;
@@ -73,16 +69,9 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
             $this->getElementActionMethod()
         );
 
-        $calls = [
-            $elementVariableAssignmentCall,
-        ];
+        $compilationMetadata = (new CompilationMetadata())
+            ->merge([$elementVariableAssignmentCall->getCompilationMetadata()]);
 
-        return $this->transpilableSourceComposer->compose(
-            $statements,
-            $calls,
-            new ClassDependencyCollection(),
-            $variableExports,
-            new VariablePlaceholderCollection()
-        );
+        return new CompilableSource($statements, $compilationMetadata);
     }
 }

@@ -4,21 +4,17 @@ namespace webignition\BasilTranspiler\Model;
 
 class CompilableSource implements CompilableSourceInterface
 {
+    /**
+     * @var string[]
+     */
     private $statements;
-    private $classDependencies;
-    private $variableExports;
-    private $variableDependencies;
 
-    public function __construct(
-        array $statements,
-        ClassDependencyCollection $classDependencies,
-        VariablePlaceholderCollection $variableExports,
-        VariablePlaceholderCollection $variableDependencies
-    ) {
+    private $compilationMetadata;
+
+    public function __construct(array $statements, ?CompilationMetadataInterface $compilationMetadata = null)
+    {
         $this->statements = $statements;
-        $this->classDependencies = $classDependencies;
-        $this->variableExports = $variableExports;
-        $this->variableDependencies = $variableDependencies;
+        $this->compilationMetadata = $compilationMetadata ?? new CompilationMetadata();
     }
 
     /**
@@ -29,19 +25,26 @@ class CompilableSource implements CompilableSourceInterface
         return $this->statements;
     }
 
-    public function getClassDependencies(): ClassDependencyCollection
+    public function getCompilationMetadata(): CompilationMetadataInterface
     {
-        return $this->classDependencies;
+        return $this->compilationMetadata;
     }
 
-    public function getVariableExports(): VariablePlaceholderCollection
-    {
-        return $this->variableExports;
+    public function withCompilationMetadata(
+        CompilationMetadataInterface $compilationMetadata
+    ): CompilableSourceInterface {
+        $new = clone $this;
+        $new->compilationMetadata = $compilationMetadata;
+
+        return $new;
     }
 
-    public function getVariableDependencies(): VariablePlaceholderCollection
+    public function mergeCompilationData(array $compilationDataCollection): CompilableSourceInterface
     {
-        return $this->variableDependencies;
+        $new = clone $this;
+        $new->compilationMetadata = $new->compilationMetadata->merge($compilationDataCollection);
+
+        return $new;
     }
 
     public function __toString(): string

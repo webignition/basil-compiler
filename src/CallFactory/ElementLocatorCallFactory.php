@@ -7,7 +7,7 @@ use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
 use webignition\BasilTranspiler\Model\ClassDependency;
 use webignition\BasilTranspiler\Model\ClassDependencyCollection;
-use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\PlaceholderFactory;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\DomElementLocator\ElementLocator;
@@ -51,17 +51,12 @@ class ElementLocatorCallFactory
             $arguments .= ', ' . $position;
         }
 
-        $content = sprintf(self::TEMPLATE, $arguments);
+        $statement = sprintf(self::TEMPLATE, $arguments);
 
-        return new CompilableSource(
-            [
-                $content,
-            ],
-            new ClassDependencyCollection([
-                new ClassDependency(ElementLocator::class),
-            ]),
-            new VariablePlaceholderCollection(),
-            new VariablePlaceholderCollection()
-        );
+        $compilationMetadata = (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+            new ClassDependency(ElementLocator::class),
+        ]));
+
+        return new CompilableSource([$statement], $compilationMetadata);
     }
 }

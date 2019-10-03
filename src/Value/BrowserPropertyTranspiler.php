@@ -7,7 +7,7 @@ use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\Model\CompilableSource;
 use webignition\BasilTranspiler\Model\CompilableSourceInterface;
-use webignition\BasilTranspiler\Model\ClassDependencyCollection;
+use webignition\BasilTranspiler\Model\CompilationMetadata;
 use webignition\BasilTranspiler\Model\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -65,17 +65,18 @@ class BrowserPropertyTranspiler implements TranspilerInterface
 
         $dimensionConcatenationStatement = '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall;
 
-        return new VariableAssignmentCall(
-            new CompilableSource(
-                [
-                    $dimensionAssignmentStatement,
-                    $dimensionConcatenationStatement,
-                ],
-                new ClassDependencyCollection(),
-                $variableExports,
-                $variableDependencies
-            ),
-            $valuePlaceholder
+        $compilationMetadata = (new CompilationMetadata())
+            ->withVariableDependencies($variableDependencies)
+            ->withVariableExports($variableExports);
+
+        $compilableSource = new CompilableSource(
+            [
+                $dimensionAssignmentStatement,
+                $dimensionConcatenationStatement,
+            ],
+            $compilationMetadata
         );
+
+        return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
     }
 }
