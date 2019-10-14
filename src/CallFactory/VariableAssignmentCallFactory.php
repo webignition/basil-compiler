@@ -103,7 +103,7 @@ class VariableAssignmentCallFactory
      * @param string $type
      * @param string $default
      *
-     * @return VariableAssignmentCall|null
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
      * @throws NonTranspilableValueException
@@ -171,14 +171,15 @@ class VariableAssignmentCallFactory
      * @param ValueInterface $value
      * @param VariablePlaceholder $placeholder
      *
-     * @return VariableAssignmentCall|null
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
+     * @throws NonTranspilableValueException
      */
     public function createForValueExistence(
         ValueInterface $value,
         VariablePlaceholder $placeholder
-    ): ?VariableAssignmentCall {
+    ): VariableAssignmentCall {
         $isScalarValue = $this->objectValueTypeExaminer->isOfType($value, [
             ObjectValueType::BROWSER_PROPERTY,
             ObjectValueType::ENVIRONMENT_PARAMETER,
@@ -200,7 +201,7 @@ class VariableAssignmentCallFactory
                 : $this->createForAttributeExistence($identifier, $placeholder);
         }
 
-        return null;
+        throw new NonTranspilableValueException($value);
     }
 
     /**
