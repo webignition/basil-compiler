@@ -9,6 +9,7 @@ use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -44,18 +45,19 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         $expectedValue = $assertion->getExpectedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
-        $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
-            $examinedValue,
-            $examinedValuePlaceholder
-        );
-
         $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);
-        $expectedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
-            $expectedValue,
-            $expectedValuePlaceholder
-        );
 
-        if (null === $expectedValueAssignment || null === $examinedValueAssignment) {
+        try {
+            $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
+                $examinedValue,
+                $examinedValuePlaceholder
+            );
+
+            $expectedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
+                $expectedValue,
+                $expectedValuePlaceholder
+            );
+        } catch (NonTranspilableValueException $nonTranspilableValueException) {
             throw new NonTranspilableModelException($assertion);
         }
 

@@ -9,6 +9,7 @@ use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\VariableNames;
 
@@ -62,12 +63,13 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $examinedValue = $model->getExaminedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
-        $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValueExistence(
-            $examinedValue,
-            $examinedValuePlaceholder
-        );
 
-        if (null === $examinedValueAssignment) {
+        try {
+            $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValueExistence(
+                $examinedValue,
+                $examinedValuePlaceholder
+            );
+        } catch (NonTranspilableValueException $nonTranspilableValueException) {
             throw new NonTranspilableModelException($model);
         }
 

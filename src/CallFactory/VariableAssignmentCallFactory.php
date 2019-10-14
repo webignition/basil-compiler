@@ -14,6 +14,7 @@ use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -102,16 +103,17 @@ class VariableAssignmentCallFactory
      * @param string $type
      * @param string $default
      *
-     * @return VariableAssignmentCall|null
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
+     * @throws NonTranspilableValueException
      */
     public function createForValue(
         ValueInterface $value,
         VariablePlaceholder $placeholder,
         string $type = 'string',
         string $default = 'null'
-    ): ?VariableAssignmentCall {
+    ): VariableAssignmentCall {
         $assignment = null;
 
         $isOfScalarObjectType = $this->objectValueTypeExaminer->isOfType($value, [
@@ -158,6 +160,10 @@ class VariableAssignmentCallFactory
             );
         }
 
+        if (null === $assignment) {
+            throw new NonTranspilableValueException($value);
+        }
+
         return $assignment;
     }
 
@@ -165,14 +171,15 @@ class VariableAssignmentCallFactory
      * @param ValueInterface $value
      * @param VariablePlaceholder $placeholder
      *
-     * @return VariableAssignmentCall|null
+     * @return VariableAssignmentCall
      *
      * @throws NonTranspilableModelException
+     * @throws NonTranspilableValueException
      */
     public function createForValueExistence(
         ValueInterface $value,
         VariablePlaceholder $placeholder
-    ): ?VariableAssignmentCall {
+    ): VariableAssignmentCall {
         $isScalarValue = $this->objectValueTypeExaminer->isOfType($value, [
             ObjectValueType::BROWSER_PROPERTY,
             ObjectValueType::ENVIRONMENT_PARAMETER,
@@ -194,7 +201,7 @@ class VariableAssignmentCallFactory
                 : $this->createForAttributeExistence($identifier, $placeholder);
         }
 
-        return null;
+        throw new NonTranspilableValueException($value);
     }
 
     /**
