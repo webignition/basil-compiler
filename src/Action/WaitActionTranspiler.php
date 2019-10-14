@@ -53,14 +53,14 @@ class WaitActionTranspiler implements TranspilerInterface
 
         $duration = $model->getDuration();
 
-        $durationAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
+        $durationAssignment = $this->variableAssignmentCallFactory->createForValue(
             $duration,
             $durationPlaceholder,
             'int',
             '0'
         );
 
-        if (null === $durationAssignmentCall) {
+        if (null === $durationAssignment) {
             throw new NonTranspilableModelException($model);
         }
 
@@ -71,11 +71,11 @@ class WaitActionTranspiler implements TranspilerInterface
         );
 
         $compilationMetadata = (new CompilationMetadata())
-            ->merge([$durationAssignmentCall->getCompilationMetadata()])
+            ->merge([$durationAssignment->getCompilationMetadata()])
             ->withAdditionalVariableExports($variableExports);
 
         $compilableSource = new CompilableSource(
-            array_merge($durationAssignmentCall->getStatements(), [
+            array_merge($durationAssignment->getStatements(), [
                 $waitStatement
             ]),
             $compilationMetadata

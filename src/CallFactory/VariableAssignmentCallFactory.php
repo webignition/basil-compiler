@@ -112,7 +112,7 @@ class VariableAssignmentCallFactory
         string $type = 'string',
         string $default = 'null'
     ): ?VariableAssignmentCall {
-        $assignmentCall = null;
+        $assignment = null;
 
         $isOfScalarObjectType = $this->objectValueTypeExaminer->isOfType($value, [
             ObjectValueType::BROWSER_PROPERTY,
@@ -123,43 +123,42 @@ class VariableAssignmentCallFactory
         $isScalarValue = $value instanceof LiteralValueInterface || $isOfScalarObjectType;
 
         if ($isScalarValue) {
-            $assignmentCall = $this->createForScalar($value, $placeholder, $default);
+            $assignment = $this->createForScalar($value, $placeholder, $default);
         }
 
-        if (null === $assignmentCall && $value instanceof DomIdentifierValueInterface) {
+        if (null === $assignment && $value instanceof DomIdentifierValueInterface) {
             $identifier = $value->getIdentifier();
 
-            $assignmentCall = null === $identifier->getAttributeName()
-                ? $this->createForElementCollectionValue($identifier, $placeholder)
-                : $this->createForAttributeValue($identifier, $placeholder);
+            if (null === $identifier->getAttributeName()) {
+                $assignment = $this->createForElementCollectionValue($identifier, $placeholder);
+            } else {
+                $assignment = $this->createForAttribute(
+                    $identifier,
+                    $this->createElementLocatorPlaceholder(),
+                    $this->createElementPlaceholder(),
+                    $placeholder
+                );
+            }
         }
 
-        if ($assignmentCall instanceof VariableAssignmentCall) {
-            $variableAssignmentCallPlaceholder = $assignmentCall->getVariablePlaceholder();
+        if ($assignment instanceof VariableAssignmentCall) {
+            $variableAssignmentCallPlaceholder = $assignment->getVariablePlaceholder();
 
-            $typeCastStatement = sprintf(
-                '%s = (%s) %s',
-                (string) $variableAssignmentCallPlaceholder,
-                $type,
-                (string) $variableAssignmentCallPlaceholder
-            );
-
-            $compilableSource = new CompilableSource(array_merge(
-                $assignmentCall->getStatements(),
-                [$typeCastStatement]
-            ));
-
-            $compilableSource = $compilableSource->mergeCompilationData([
-                $assignmentCall->getCompilationMetadata(),
-            ]);
-
-            $assignmentCall = new VariableAssignmentCall(
-                $compilableSource,
-                $assignmentCall->getVariablePlaceholder()
+            $assignment = new VariableAssignmentCall(
+                new CompilableSource(
+                    array_merge(
+                        $assignment->getStatements(),
+                        [
+                            sprintf('(%s) %s', $type, (string) $variableAssignmentCallPlaceholder)
+                        ]
+                    ),
+                    $assignment->getCompilationMetadata()
+                ),
+                $variableAssignmentCallPlaceholder
             );
         }
 
-        return $assignmentCall;
+        return $assignment;
     }
 
     /**
@@ -191,11 +190,7 @@ class VariableAssignmentCallFactory
             $identifier = $value->getIdentifier();
 
             return null === $identifier->getAttributeName()
-                ? $this->createForElementExistence(
-                    $identifier,
-                    VariableAssignmentCallFactory::createElementLocatorPlaceholder(),
-                    $placeholder
-                )
+                ? $this->createForElementExistence($identifier, $placeholder)
                 : $this->createForAttributeExistence($identifier, $placeholder);
         }
 
@@ -236,36 +231,32 @@ class VariableAssignmentCallFactory
 
     /**
      * @param DomIdentifierInterface $elementIdentifier
-     * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $elementPlaceholder
      *
      * @return VariableAssignmentCall
      */
     private function createForElementExistence(
         DomIdentifierInterface $elementIdentifier,
-        VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $elementPlaceholder
     ): VariableAssignmentCall {
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier($elementIdentifier);
 
         $variableExports = new VariablePlaceholderCollection([
-            $elementLocatorPlaceholder,
             $elementPlaceholder,
         ]);
-
-        $assignmentStatement = sprintf(
-            '%s = %s',
-            (string) $elementPlaceholder,
-            (string) $hasCall
-        );
 
         $compilationMetadata = (new CompilationMetadata())
             ->merge([$hasCall->getCompilationMetadata()])
             ->withAdditionalVariableExports($variableExports);
 
-        $compilableSource = new CompilableSource([$assignmentStatement], $compilationMetadata);
+        $elementExistenceAccess = new CompilableSource(
+            [
+                (string) $hasCall,
+            ],
+            $compilationMetadata
+        );
 
-        return new VariableAssignmentCall($compilableSource, $elementPlaceholder);
+        return new VariableAssignmentCall($elementExistenceAccess, $elementPlaceholder);
     }
 
     /**
@@ -287,34 +278,34 @@ class VariableAssignmentCallFactory
             $attributePlaceholder,
         ]);
 
-        $elementAssignmentCall = $this->createForElement(
+        $elementAssignment = $this->createForElement(
             $attributeIdentifier,
             $elementLocatorPlaceholder,
             $elementPlaceholder
         );
 
-        $elementPlaceholder = $elementAssignmentCall->getVariablePlaceholder();
-
-        $attributeAssignmentStatement = $attributePlaceholder . ' = ' . sprintf(
-            '%s->getAttribute(\'%s\')',
-            $elementPlaceholder,
-            $this->singleQuotedStringEscaper->escape((string) $attributeIdentifier->getAttributeName())
-        );
-
-        $statements = array_merge(
-            $elementAssignmentCall->getStatements(),
-            [
-                $attributeAssignmentStatement,
-            ]
-        );
+        $elementPlaceholder = $elementAssignment->getVariablePlaceholder();
 
         $compilationMetadata = (new CompilationMetadata())
-            ->merge([$elementAssignmentCall->getCompilationMetadata()])
+            ->merge([$elementAssignment->getCompilationMetadata()])
             ->withAdditionalVariableExports($variableExports);
 
-        $compilableSource = new CompilableSource($statements, $compilationMetadata);
-
-        return new VariableAssignmentCall($compilableSource, $attributePlaceholder);
+        return new VariableAssignmentCall(
+            new CompilableSource(
+                array_merge(
+                    $elementAssignment->getStatements(),
+                    [
+                        sprintf(
+                            '%s->getAttribute(\'%s\')',
+                            $elementPlaceholder,
+                            $this->singleQuotedStringEscaper->escape((string) $attributeIdentifier->getAttributeName())
+                        ),
+                    ]
+                ),
+                $compilationMetadata
+            ),
+            $attributePlaceholder
+        );
     }
 
     /**
@@ -327,13 +318,13 @@ class VariableAssignmentCallFactory
         DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
-        $collectionCall = $this->createForElementCollection(
+        $collectionAssignment = $this->createForElementCollection(
             $elementIdentifier,
             $this->createElementLocatorPlaceholder(),
             $valuePlaceholder
         );
 
-        $collectionPlaceholder = $collectionCall->getVariablePlaceholder();
+        $collectionPlaceholder = $collectionAssignment->getVariablePlaceholder();
 
         $variableExports = new VariablePlaceholderCollection();
         $variableExports = $variableExports->withAdditionalItems([
@@ -341,57 +332,23 @@ class VariableAssignmentCallFactory
             $collectionPlaceholder,
         ]);
 
-        $assignmentCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($collectionPlaceholder);
-
-        $assignmentStatement = $valuePlaceholder . ' = ' . $assignmentCall;
+        $getValueCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($collectionPlaceholder);
 
         $compilationMetadata = (new CompilationMetadata())->withVariableExports($variableExports);
-
-        $compilableSource = new CompilableSource(array_merge(
-            $collectionCall->getStatements(),
-            [
-                $assignmentStatement,
-            ]
-        ));
-
-        $compilableSource = $compilableSource->mergeCompilationData([
-            $collectionCall->getCompilationMetadata(),
-            $assignmentCall->getCompilationMetadata(),
-            $compilationMetadata
+        $compilationMetadata = $compilationMetadata->merge([
+            $collectionAssignment->getCompilationMetadata(),
+            $getValueCall->getCompilationMetadata(),
         ]);
 
-        return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
-    }
-
-    /**
-     * @param DomIdentifierInterface $attributeIdentifier
-     * @param VariablePlaceholder $valuePlaceholder
-     *
-     * @return VariableAssignmentCall
-     */
-    private function createForAttributeValue(
-        DomIdentifierInterface $attributeIdentifier,
-        VariablePlaceholder $valuePlaceholder
-    ): VariableAssignmentCall {
-        $assignmentCall = $this->createForAttribute(
-            $attributeIdentifier,
-            $this->createElementLocatorPlaceholder(),
-            $this->createElementPlaceholder(),
-            $valuePlaceholder
+        $valueAssignmentSource = new CompilableSource(
+            array_merge(
+                $collectionAssignment->getStatements(),
+                $getValueCall->getStatements()
+            ),
+            $compilationMetadata
         );
 
-        $variableExports = new VariablePlaceholderCollection();
-        $variableExports = $variableExports->withAdditionalItems([
-            $valuePlaceholder
-        ]);
-
-        $compilationMetadata = (new CompilationMetadata())
-            ->merge([$assignmentCall->getCompilationMetadata()])
-            ->withAdditionalVariableExports($variableExports);
-
-        $compilableSource = new CompilableSource($assignmentCall->getStatements(), $compilationMetadata);
-
-        return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
+        return new VariableAssignmentCall($valueAssignmentSource, $valuePlaceholder);
     }
 
     /**
@@ -404,39 +361,24 @@ class VariableAssignmentCallFactory
         DomIdentifierInterface $attributeIdentifier,
         VariablePlaceholder $valuePlaceholder
     ): VariableAssignmentCall {
-        $assignmentCall = $this->createForAttribute(
+        $assignment = $this->createForAttribute(
             $attributeIdentifier,
             $this->createElementLocatorPlaceholder(),
             $this->createElementPlaceholder(),
             $valuePlaceholder
         );
 
-        $existenceAssignmentStatement = sprintf(
-            '%s = %s !== null',
-            (string) $valuePlaceholder,
-            (string) $valuePlaceholder
-        );
-
-        $variableExports = new VariablePlaceholderCollection();
-        $variableExports = $variableExports->withAdditionalItems([
-            $valuePlaceholder
-        ]);
-
-        $compilationMetadata = (new CompilationMetadata())
-            ->merge([$assignmentCall->getCompilationMetadata()])
-            ->withAdditionalVariableExports($variableExports);
-
-        $compilableSource = new CompilableSource(
+        $existenceSource = new CompilableSource(
             array_merge(
-                $assignmentCall->getStatements(),
+                $assignment->getStatements(),
                 [
-                    $existenceAssignmentStatement,
+                    $valuePlaceholder . ' !== null'
                 ]
             ),
-            $compilationMetadata
+            $assignment->getCompilationMetadata()
         );
 
-        return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
+        return new VariableAssignmentCall($existenceSource, $valuePlaceholder);
     }
 
 
@@ -467,29 +409,23 @@ class VariableAssignmentCallFactory
         $elementLocatorConstructor = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
         $elementLocatorConstructorStatement = $elementLocatorPlaceholder . ' = ' . $elementLocatorConstructor;
 
-        $hasAssignmentCall = new CompilableSource([sprintf(
-            '%s = %s',
-            (string) $hasVariablePlaceholder,
-            (string) $hasCall
-        )]);
-
-        $hasAssignmentCall = $hasAssignmentCall->mergeCompilationData([
-            $hasCall->getCompilationMetadata(),
-        ]);
-
-        $hasVariableAssignmentCall = new VariableAssignmentCall($hasAssignmentCall, $hasVariablePlaceholder);
-
-        $elementExistsAssertionCall = $this->assertionCallFactory->createValueIsTrueAssertionCall(
-            $hasVariableAssignmentCall
+        $hasAssignment = new VariableAssignmentCall(
+            new CompilableSource(
+                [
+                    (string) $hasCall,
+                ],
+                $hasCall->getCompilationMetadata()
+            ),
+            $hasVariablePlaceholder
         );
 
-        $findStatement = $returnValuePlaceholder . ' = ' . $findCall;
+        $elementExistsAssertion = $this->assertionCallFactory->createValueIsTrueAssertionCall($hasAssignment);
 
         $compilationMetadata = (new CompilationMetadata())->merge([
             $hasCall->getCompilationMetadata(),
             $findCall->getCompilationMetadata(),
             $elementLocatorConstructor->getCompilationMetadata(),
-            $elementExistsAssertionCall->getCompilationMetadata(),
+            $elementExistsAssertion->getCompilationMetadata(),
         ]);
 
         $compilationMetadata = $compilationMetadata->withAdditionalVariableExports($variableExports);
@@ -499,9 +435,9 @@ class VariableAssignmentCallFactory
                 [
                     $elementLocatorConstructorStatement,
                 ],
-                $elementExistsAssertionCall->getStatements(),
+                $elementExistsAssertion->getStatements(),
                 [
-                    $findStatement,
+                    (string) $findCall,
                 ]
             ),
             $compilationMetadata
@@ -532,24 +468,22 @@ class VariableAssignmentCallFactory
         $accessStatements = $accessCall->getStatements();
         $variableAccessLastStatement = array_pop($accessStatements);
 
-        $assignmentStatement = sprintf(
-            '%s = %s ?? ' . $default,
-            $variablePlaceholder,
-            $variableAccessLastStatement
-        );
-
         $compilationMetadata = (new CompilationMetadata())->withVariableExports($variableExports);
-
-        $compilableSource = new CompilableSource(array_merge($accessStatements, [
-            $assignmentStatement,
-        ]));
-
-        $compilableSource = $compilableSource->mergeCompilationData([
+        $compilationMetadata = $compilationMetadata->merge([
             $accessCall->getCompilationMetadata(),
-            $compilationMetadata,
         ]);
 
-        return new VariableAssignmentCall($compilableSource, $variablePlaceholder);
+        $source = new CompilableSource(
+            array_merge(
+                $accessStatements,
+                [
+                    $variableAccessLastStatement . ' ?? ' . $default,
+                ]
+            ),
+            $compilationMetadata
+        );
+
+        return new VariableAssignmentCall($source, $variablePlaceholder);
     }
 
     /**
@@ -566,24 +500,23 @@ class VariableAssignmentCallFactory
             $variablePlaceholder,
         ]);
 
-        $assignmentCall = $this->createForScalar($value, $variablePlaceholder);
-
-        $comparisonStatement = $variablePlaceholder . ' = ' . $variablePlaceholder . ' !== null';
-
-        $statements = array_merge(
-            $assignmentCall->getStatements(),
-            [
-                $comparisonStatement
-            ]
-        );
+        $assignment = $this->createForScalar($value, $variablePlaceholder);
 
         $compilationMetadata = (new CompilationMetadata())
-            ->merge([$assignmentCall->getCompilationMetadata()])
+            ->merge([$assignment->getCompilationMetadata()])
             ->withAdditionalVariableExports($variableExports);
 
-        $compilableSource = new CompilableSource($statements, $compilationMetadata);
+        $comparisonSource = new CompilableSource(
+            array_merge(
+                $assignment->getStatements(),
+                [
+                    $variablePlaceholder . ' !== null'
+                ]
+            ),
+            $compilationMetadata
+        );
 
-        return new VariableAssignmentCall($compilableSource, $variablePlaceholder);
+        return new VariableAssignmentCall($comparisonSource, $variablePlaceholder);
     }
 
     private function createElementLocatorPlaceholder(): VariablePlaceholder

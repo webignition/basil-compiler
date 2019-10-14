@@ -56,13 +56,13 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
         $elementPlaceholder = $variableExports->create('ELEMENT');
 
-        $elementVariableAssignmentCall = $this->variableAssignmentCallFactory->createForElement(
+        $elementVariableAssignment = $this->variableAssignmentCallFactory->createForElement(
             $identifier,
             $elementLocatorPlaceholder,
             $elementPlaceholder
         );
 
-        $statements = $elementVariableAssignmentCall->getStatements();
+        $statements = $elementVariableAssignment->getStatements();
         $statements[] = sprintf(
             '%s->%s()',
             (string) $elementPlaceholder,
@@ -70,7 +70,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         );
 
         $compilationMetadata = (new CompilationMetadata())
-            ->merge([$elementVariableAssignmentCall->getCompilationMetadata()]);
+            ->merge([$elementVariableAssignment->getCompilationMetadata()]);
 
         return new CompilableSource($statements, $compilationMetadata);
     }

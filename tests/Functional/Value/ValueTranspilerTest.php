@@ -68,12 +68,10 @@ class ValueTranspilerTest extends AbstractTestCase
                         VariableNames::PANTHER_CLIENT,
                     ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
                         'WEBDRIVER_DIMENSION',
-                        'BROWSER_SIZE',
                     ])),
                 'expectedExecutedResult' => '1200x1100',
                 'additionalVariableIdentifiers' => [
                     'WEBDRIVER_DIMENSION' => '$webDriverDimension',
-                    'BROWSER_SIZE' => '$browser'
                 ],
             ],
             'page property: title' => [

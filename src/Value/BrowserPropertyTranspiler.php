@@ -49,34 +49,33 @@ class BrowserPropertyTranspiler implements TranspilerInterface
 
         $variableExports = new VariablePlaceholderCollection();
         $webDriverDimensionPlaceholder = $variableExports->create('WEBDRIVER_DIMENSION');
-        $valuePlaceholder = $variableExports->create('BROWSER_SIZE');
 
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $dimensionAssignmentStatement = sprintf(
-            '%s = %s',
-            $webDriverDimensionPlaceholder,
-            $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()'
+        $dimensionAccess = new CompilableSource(
+            [
+                $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()',
+            ],
+            (new CompilationMetadata())->withVariableDependencies($variableDependencies)
         );
+
+        $dimensionAssignment = new VariableAssignmentCall($dimensionAccess, $webDriverDimensionPlaceholder);
 
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';
 
-        $dimensionConcatenationStatement = '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall;
+        $dimensionConcatenation = new CompilableSource([
+            '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall,
+        ]);
 
         $compilationMetadata = (new CompilationMetadata())
             ->withVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
-        $compilableSource = new CompilableSource(
-            [
-                $dimensionAssignmentStatement,
-                $dimensionConcatenationStatement,
-            ],
+        return new CompilableSource(
+            array_merge($dimensionAssignment->getStatements(), $dimensionConcatenation->getStatements()),
             $compilationMetadata
         );
-
-        return new VariableAssignmentCall($compilableSource, $valuePlaceholder);
     }
 }

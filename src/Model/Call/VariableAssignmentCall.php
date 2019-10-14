@@ -8,6 +8,8 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 
 class VariableAssignmentCall implements CompilableSourceInterface
 {
+    const STATEMENT_PATTERN = '%s = %s';
+
     private $compilableSource;
     private $variablePlaceholder;
 
@@ -31,7 +33,14 @@ class VariableAssignmentCall implements CompilableSourceInterface
 
     public function getStatements(): array
     {
-        return $this->compilableSource->getStatements();
+        $statements = $this->compilableSource->getStatements();
+        $finalStatement = array_pop($statements);
+
+        $finalStatement = sprintf(self::STATEMENT_PATTERN, $this->variablePlaceholder, $finalStatement);
+
+        $statements[] = $finalStatement;
+
+        return $statements;
     }
 
     public function getCompilationMetadata(): CompilationMetadataInterface

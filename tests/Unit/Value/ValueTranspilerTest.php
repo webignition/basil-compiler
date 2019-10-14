@@ -132,7 +132,6 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                         VariableNames::PANTHER_CLIENT,
                     ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
                         'WEBDRIVER_DIMENSION',
-                        'BROWSER_SIZE',
                     ])),
             ],
             'page property, url' => [
