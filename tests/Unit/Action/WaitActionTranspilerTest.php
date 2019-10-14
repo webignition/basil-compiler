@@ -7,6 +7,10 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
+use webignition\BasilModel\Action\InputAction;
+use webignition\BasilModel\Action\WaitAction;
+use webignition\BasilModel\Identifier\DomIdentifier;
+use webignition\BasilModel\Value\PageElementReference;
 use webignition\BasilTranspiler\Action\WaitActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\BackActionDataProviderTrait;
@@ -85,5 +89,21 @@ class WaitActionTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedExceptionMessage' => 'Non-transpilable model "' . \stdClass::class . '"',
             ],
         ];
+    }
+
+    public function testTranspileWithNonTranspilableValue()
+    {
+        $action = new WaitAction(
+            'wait 30',
+            new PageElementReference(
+                'page_import_name.elements.element_name',
+                'page_import_name',
+                'element_name'
+            )
+        );
+
+        $this->expectException(NonTranspilableModelException::class);
+
+        $this->transpiler->transpile($action);
     }
 }

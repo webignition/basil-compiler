@@ -12,6 +12,7 @@ use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class SetActionTranspiler implements TranspilerInterface
@@ -74,10 +75,14 @@ class SetActionTranspiler implements TranspilerInterface
             $collectionPlaceholder
         );
 
-        $valueAssignment = $this->variableAssignmentCallFactory->createForValue(
-            $model->getValue(),
-            $valuePlaceholder
-        );
+        try {
+            $valueAssignment = $this->variableAssignmentCallFactory->createForValue(
+                $model->getValue(),
+                $valuePlaceholder
+            );
+        } catch (NonTranspilableValueException $nonTranspilableValueException) {
+            throw new NonTranspilableModelException($model);
+        }
 
         $mutationCall = $this->webDriverElementMutatorCallFactory->createSetValueCall(
             $collectionPlaceholder,

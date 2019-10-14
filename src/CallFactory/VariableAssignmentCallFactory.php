@@ -14,6 +14,7 @@ use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -105,13 +106,14 @@ class VariableAssignmentCallFactory
      * @return VariableAssignmentCall|null
      *
      * @throws NonTranspilableModelException
+     * @throws NonTranspilableValueException
      */
     public function createForValue(
         ValueInterface $value,
         VariablePlaceholder $placeholder,
         string $type = 'string',
         string $default = 'null'
-    ): ?VariableAssignmentCall {
+    ): VariableAssignmentCall {
         $assignment = null;
 
         $isOfScalarObjectType = $this->objectValueTypeExaminer->isOfType($value, [
@@ -156,6 +158,10 @@ class VariableAssignmentCallFactory
                 ),
                 $variableAssignmentCallPlaceholder
             );
+        }
+
+        if (null === $assignment) {
+            throw new NonTranspilableValueException($value);
         }
 
         return $assignment;

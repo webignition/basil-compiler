@@ -9,6 +9,7 @@ use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class WaitActionTranspiler implements TranspilerInterface
@@ -53,14 +54,14 @@ class WaitActionTranspiler implements TranspilerInterface
 
         $duration = $model->getDuration();
 
-        $durationAssignment = $this->variableAssignmentCallFactory->createForValue(
-            $duration,
-            $durationPlaceholder,
-            'int',
-            '0'
-        );
-
-        if (null === $durationAssignment) {
+        try {
+            $durationAssignment = $this->variableAssignmentCallFactory->createForValue(
+                $duration,
+                $durationPlaceholder,
+                'int',
+                '0'
+            );
+        } catch (NonTranspilableValueException $nonTranspilableValueException) {
             throw new NonTranspilableModelException($model);
         }
 
