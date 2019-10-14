@@ -256,10 +256,7 @@ class VariableAssignmentCallFactory
             $compilationMetadata
         );
 
-        return new VariableAssignmentCall(
-            $elementExistenceAccess,
-            $elementPlaceholder
-        );
+        return new VariableAssignmentCall($elementExistenceAccess, $elementPlaceholder);
     }
 
     /**
@@ -519,10 +516,7 @@ class VariableAssignmentCallFactory
             $compilationMetadata
         );
 
-        return new VariableAssignmentCall(
-            $comparisonSource,
-            $variablePlaceholder
-        );
+        return new VariableAssignmentCall($comparisonSource, $variablePlaceholder);
     }
 
     private function createElementLocatorPlaceholder(): VariablePlaceholder
