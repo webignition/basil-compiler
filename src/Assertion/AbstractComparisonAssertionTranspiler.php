@@ -44,25 +44,25 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         $expectedValue = $assertion->getExpectedValue();
 
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
-        $examinedValueAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
+        $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
             $examinedValue,
             $examinedValuePlaceholder
         );
 
         $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);
-        $expectedValueAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
+        $expectedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
             $expectedValue,
             $expectedValuePlaceholder
         );
 
-        if (null === $expectedValueAssignmentCall || null === $examinedValueAssignmentCall) {
+        if (null === $expectedValueAssignment || null === $examinedValueAssignment) {
             throw new NonTranspilableModelException($assertion);
         }
 
         return $this->getAssertionCall(
             $assertion,
-            $examinedValueAssignmentCall,
-            $expectedValueAssignmentCall
+            $examinedValueAssignment,
+            $expectedValueAssignment
         );
     }
 }

@@ -68,13 +68,13 @@ class SetActionTranspiler implements TranspilerInterface
         $collectionPlaceholder = $variableExports->create('COLLECTION');
         $valuePlaceholder = $variableExports->create('VALUE');
 
-        $collectionAssignmentCall = $this->variableAssignmentCallFactory->createForElementCollection(
+        $collectionAssignment = $this->variableAssignmentCallFactory->createForElementCollection(
             $identifier,
             $elementLocatorPlaceholder,
             $collectionPlaceholder
         );
 
-        $valueAssignmentCall = $this->variableAssignmentCallFactory->createForValue(
+        $valueAssignment = $this->variableAssignmentCallFactory->createForValue(
             $model->getValue(),
             $valuePlaceholder
         );
@@ -85,20 +85,20 @@ class SetActionTranspiler implements TranspilerInterface
         );
 
         $statements = array_merge(
-            $collectionAssignmentCall->getStatements(),
-            null === $valueAssignmentCall ? [] : $valueAssignmentCall->getStatements(),
+            $collectionAssignment->getStatements(),
+            null === $valueAssignment ? [] : $valueAssignment->getStatements(),
             $mutationCall->getStatements()
         );
 
         $compilationMetadata = (new CompilationMetadata())
             ->merge([
-                $collectionAssignmentCall->getCompilationMetadata(),
+                $collectionAssignment->getCompilationMetadata(),
                 $mutationCall->getCompilationMetadata(),
             ]);
 
-        if ($valueAssignmentCall instanceof VariableAssignmentCall) {
+        if ($valueAssignment instanceof VariableAssignmentCall) {
             $compilationMetadata = $compilationMetadata->merge([
-                $valueAssignmentCall->getCompilationMetadata()
+                $valueAssignment->getCompilationMetadata()
             ]);
         }
 
