@@ -135,7 +135,7 @@ class VariableAssignmentCallFactory
         }
 
         if ($assignmentCall instanceof VariableAssignmentCall) {
-            $variableAssignmentCallPlaceholder = $assignmentCall->getElementVariablePlaceholder();
+            $variableAssignmentCallPlaceholder = $assignmentCall->getVariablePlaceholder();
 
             $typeCastStatement = sprintf(
                 '%s = (%s) %s',
@@ -155,7 +155,7 @@ class VariableAssignmentCallFactory
 
             $assignmentCall = new VariableAssignmentCall(
                 $compilableSource,
-                $assignmentCall->getElementVariablePlaceholder()
+                $assignmentCall->getVariablePlaceholder()
             );
         }
 
@@ -293,7 +293,7 @@ class VariableAssignmentCallFactory
             $elementPlaceholder
         );
 
-        $elementPlaceholder = $elementAssignmentCall->getElementVariablePlaceholder();
+        $elementPlaceholder = $elementAssignmentCall->getVariablePlaceholder();
 
         $attributeAssignmentStatement = $attributePlaceholder . ' = ' . sprintf(
             '%s->getAttribute(\'%s\')',
@@ -333,7 +333,7 @@ class VariableAssignmentCallFactory
             $valuePlaceholder
         );
 
-        $collectionPlaceholder = $collectionCall->getElementVariablePlaceholder();
+        $collectionPlaceholder = $collectionCall->getVariablePlaceholder();
 
         $variableExports = new VariablePlaceholderCollection();
         $variableExports = $variableExports->withAdditionalItems([

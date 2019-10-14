@@ -185,8 +185,8 @@ class AssertionCallFactory
         $assertionStatement = sprintf(
             $assertionTemplate,
             $this->phpUnitTestCasePlaceholder,
-            $expectedValueCall->getElementVariablePlaceholder(),
-            $actualValueCall->getElementVariablePlaceholder()
+            $expectedValueCall->getVariablePlaceholder(),
+            $actualValueCall->getVariablePlaceholder()
         );
 
         $statements = array_merge(
@@ -215,7 +215,7 @@ class AssertionCallFactory
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            (string) $assignmentCall->getElementVariablePlaceholder()
+            (string) $assignmentCall->getVariablePlaceholder()
         );
 
         $compilationMetadata = (new CompilationMetadata())->merge([
