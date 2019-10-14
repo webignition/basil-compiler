@@ -9,14 +9,14 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 class VariableAssignmentCall implements CompilableSourceInterface
 {
     private $compilableSource;
-    private $elementVariablePlaceholder;
+    private $variablePlaceholder;
 
     public function __construct(
         CompilableSourceInterface $compilableSource,
         VariablePlaceholder $variablePlaceholder
     ) {
         $this->compilableSource = $compilableSource;
-        $this->elementVariablePlaceholder = $variablePlaceholder;
+        $this->variablePlaceholder = $variablePlaceholder;
     }
 
     public function getCompilableSource(): CompilableSourceInterface
@@ -24,9 +24,9 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $this->compilableSource;
     }
 
-    public function getElementVariablePlaceholder(): VariablePlaceholder
+    public function getVariablePlaceholder(): VariablePlaceholder
     {
-        return $this->elementVariablePlaceholder;
+        return $this->variablePlaceholder;
     }
 
     public function getStatements(): array
