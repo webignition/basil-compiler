@@ -10,7 +10,6 @@ use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -98,14 +97,9 @@ class SetActionTranspiler implements TranspilerInterface
         $compilationMetadata = (new CompilationMetadata())
             ->merge([
                 $collectionAssignment->getCompilationMetadata(),
+                $valueAssignment->getCompilationMetadata(),
                 $mutationCall->getCompilationMetadata(),
             ]);
-
-        if ($valueAssignment instanceof VariableAssignmentCall) {
-            $compilationMetadata = $compilationMetadata->merge([
-                $valueAssignment->getCompilationMetadata()
-            ]);
-        }
 
         return new CompilableSource($statements, $compilationMetadata);
     }
