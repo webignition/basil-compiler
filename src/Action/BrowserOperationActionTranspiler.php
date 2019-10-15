@@ -53,16 +53,15 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
 
         $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
-        return new CompilableSource(
-            [
+        return (new CompilableSource())
+            ->withStatements([
                 sprintf(
                     '%s = %s->%s()',
                     $pantherCrawlerPlaceholder,
                     $pantherClientPlaceholder,
                     $model->getType()
                 ),
-            ],
-            $compilationMetadata
-        );
+            ])
+            ->withCompilationMetadata($compilationMetadata);
     }
 }

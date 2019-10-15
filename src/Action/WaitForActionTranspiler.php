@@ -68,16 +68,15 @@ class WaitForActionTranspiler implements TranspilerInterface
 
         $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
-        return new CompilableSource(
-            [
+        return (new CompilableSource())
+            ->withStatements([
                 sprintf(
                     '%s = %s->waitFor(\'%s\')',
                     $pantherCrawlerPlaceholder,
                     $pantherClientPlaceholder,
                     $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
-            ],
-            $compilationMetadata
-        );
+            ])
+            ->withCompilationMetadata($compilationMetadata);
     }
 }

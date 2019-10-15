@@ -4,7 +4,6 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
@@ -88,19 +87,7 @@ class SetActionTranspiler implements TranspilerInterface
             $valuePlaceholder
         );
 
-        $statements = array_merge(
-            $collectionAssignment->getStatements(),
-            $valueAssignment->getStatements(),
-            $mutationCall->getStatements()
-        );
-
-        $compilationMetadata = (new CompilationMetadata())
-            ->merge([
-                $collectionAssignment->getCompilationMetadata(),
-                $valueAssignment->getCompilationMetadata(),
-                $mutationCall->getCompilationMetadata(),
-            ]);
-
-        return new CompilableSource($statements, $compilationMetadata);
+        return (new CompilableSource())
+            ->withPredecessors([$collectionAssignment, $valueAssignment, $mutationCall]);
     }
 }

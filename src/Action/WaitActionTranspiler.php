@@ -4,7 +4,6 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
@@ -71,17 +70,8 @@ class WaitActionTranspiler implements TranspilerInterface
             self::MICROSECONDS_PER_MILLISECOND
         );
 
-        $compilationMetadata = (new CompilationMetadata())
-            ->merge([$durationAssignment->getCompilationMetadata()])
-            ->withAdditionalVariableExports($variableExports);
-
-        $compilableSource = new CompilableSource(
-            array_merge($durationAssignment->getStatements(), [
-                $waitStatement
-            ]),
-            $compilationMetadata
-        );
-
-        return $compilableSource;
+        return (new CompilableSource())
+            ->withPredecessors([$durationAssignment])
+            ->withStatements([$waitStatement]);
     }
 }
