@@ -69,13 +69,15 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFindCallForTranspiledLocator()
     {
-        $findElementCallArguments = (new CompilableSource([
-            'new ElementLocator(\'.selector\')'
-        ]))->withCompilationMetadata(
-            (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
-                new ClassDependency(ElementLocator::class)
-            ]))
-        );
+        $findElementCallArguments = (new CompilableSource())
+            ->withStatements([
+                'new ElementLocator(\'.selector\')'
+            ])
+            ->withCompilationMetadata(
+                (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ]))
+            );
 
         $compilableSource = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
 
@@ -99,13 +101,15 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateHasCallForTranspiledLocator()
     {
-        $hasElementCallArguments = (new CompilableSource([
-            'new ElementLocator(\'.selector\')'
-        ]))->withCompilationMetadata(
-            (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
-                new ClassDependency(ElementLocator::class)
-            ]))
-        );
+        $hasElementCallArguments = (new CompilableSource())
+            ->withStatements([
+                'new ElementLocator(\'.selector\')'
+            ])
+            ->withCompilationMetadata(
+                (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+                    new ClassDependency(ElementLocator::class)
+                ]))
+            );
 
         $compilableSource = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
 
