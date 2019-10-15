@@ -22,6 +22,19 @@ class VariableAssignment extends CompilableSource
         $this->setPlaceholderAsVariableExport();
     }
 
+    public static function fromCompilableSource(
+        CompilableSourceInterface $source,
+        VariablePlaceholder $variablePlaceholder
+    ): CompilableSourceInterface {
+        $variableAssignment = new VariableAssignment($variablePlaceholder);
+
+        $variableAssignment = $variableAssignment->withPredecessors($source->getPredecessors());
+        $variableAssignment = $variableAssignment->withStatements($source->getStatements());
+        $variableAssignment = $variableAssignment->withCompilationMetadata($source->getCompilationMetadata());
+
+        return $variableAssignment;
+    }
+
     public function getVariablePlaceholder(): VariablePlaceholder
     {
         return $this->variablePlaceholder;

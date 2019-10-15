@@ -61,7 +61,7 @@ class AssertionCallFactory
     }
 
     public function createValueIsTrueAssertionCall(
-        VariableAssignment $variableAssignmentCall
+        CompilableSourceInterface $variableAssignmentCall
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
@@ -196,13 +196,17 @@ class AssertionCallFactory
     }
 
     private function createValueExistenceAssertionCall(
-        VariableAssignment $assignmentCall,
+        CompilableSourceInterface $assignmentCall,
         string $assertionTemplate
     ): CompilableSourceInterface {
+        $placeholder = $assignmentCall instanceof VariableAssignment
+            ? (string) $assignmentCall->getVariablePlaceholder()
+            : '';
+
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            (string) $assignmentCall->getVariablePlaceholder()
+            $placeholder
         );
 
         return (new CompilableSource())
