@@ -21,12 +21,7 @@ class VariableAssignment implements CompilableSourceInterface
         $this->compilableSource = $compilableSource;
         $this->variablePlaceholder = $variablePlaceholder;
 
-        $compilationMetadata = $this->compilableSource->getCompilationMetadata();
-        $compilationMetadata = $compilationMetadata->withAdditionalVariableExports(new VariablePlaceholderCollection([
-            $variablePlaceholder
-        ]));
-
-        $this->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
+        $this->setPlaceholderAsVariableExport();
     }
 
     public function getCompilableSource(): CompilableSourceInterface
@@ -77,6 +72,7 @@ class VariableAssignment implements CompilableSourceInterface
     ): CompilableSourceInterface {
         $new = clone $this;
         $new->compilableSource = $new->compilableSource->withCompilationMetadata($compilationMetadata);
+        $this->setPlaceholderAsVariableExport();
 
         return $new;
     }
@@ -90,5 +86,15 @@ class VariableAssignment implements CompilableSourceInterface
     public function __toString(): string
     {
         return $this->compilableSource->__toString();
+    }
+
+    private function setPlaceholderAsVariableExport()
+    {
+        $compilationMetadata = $this->compilableSource->getCompilationMetadata();
+        $compilationMetadata = $compilationMetadata->withAdditionalVariableExports(new VariablePlaceholderCollection([
+            $this->variablePlaceholder,
+        ]));
+
+        $this->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
     }
 }
