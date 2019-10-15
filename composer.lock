@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6dcb0aca26437f685932024b99f141f",
+    "content-hash": "cf0704c46233cca705aacc08c95ca169",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -751,16 +751,16 @@
         },
         {
             "name": "webignition/php-basil-compilation-source",
-            "version": "0.6",
+            "version": "0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilation-source.git",
-                "reference": "69d0231c6a7d422349b8f4348e7695a3255349b5"
+                "reference": "9828739d4b2b50bb20cc437caace5a429a9da304"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/69d0231c6a7d422349b8f4348e7695a3255349b5",
-                "reference": "69d0231c6a7d422349b8f4348e7695a3255349b5",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/9828739d4b2b50bb20cc437caace5a429a9da304",
+                "reference": "9828739d4b2b50bb20cc437caace5a429a9da304",
                 "shasum": ""
             },
             "require": {
@@ -788,7 +788,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilation-source",
-            "time": "2019-10-15T13:32:56+00:00"
+            "time": "2019-10-15T16:04:45+00:00"
         },
         {
             "name": "webignition/php-basil-context-aware-exception",
