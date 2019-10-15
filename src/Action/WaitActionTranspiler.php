@@ -6,7 +6,7 @@ use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\WaitActionInterface;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -18,7 +18,7 @@ class WaitActionTranspiler implements TranspilerInterface
 
     private $variableAssignmentCallFactory;
 
-    public function __construct(VariableAssignmentCallFactory $variableAssignmentCallFactory)
+    public function __construct(VariableAssignmentFactory $variableAssignmentCallFactory)
     {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
     }
@@ -26,7 +26,7 @@ class WaitActionTranspiler implements TranspilerInterface
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
-            VariableAssignmentCallFactory::createFactory()
+            VariableAssignmentFactory::createFactory()
         );
     }
 

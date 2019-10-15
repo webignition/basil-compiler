@@ -7,7 +7,7 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
@@ -19,7 +19,7 @@ class SetActionTranspiler implements TranspilerInterface
     private $webDriverElementMutatorCallFactory;
 
     public function __construct(
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
+        VariableAssignmentFactory $variableAssignmentCallFactory,
         WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory
     ) {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
@@ -29,7 +29,7 @@ class SetActionTranspiler implements TranspilerInterface
     public static function createTranspiler(): SetActionTranspiler
     {
         return new SetActionTranspiler(
-            VariableAssignmentCallFactory::createFactory(),
+            VariableAssignmentFactory::createFactory(),
             WebDriverElementMutatorCallFactory::createFactory()
         );
     }

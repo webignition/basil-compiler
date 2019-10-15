@@ -7,7 +7,7 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -15,7 +15,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
 {
     private $variableAssignmentCallFactory;
 
-    public function __construct(VariableAssignmentCallFactory $variableAssignmentCallFactory)
+    public function __construct(VariableAssignmentFactory $variableAssignmentCallFactory)
     {
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
     }

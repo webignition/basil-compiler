@@ -7,7 +7,7 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -20,7 +20,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentCallFactory $variableAssignmentCallFactory
+        VariableAssignmentFactory $variableAssignmentCallFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
@@ -30,7 +30,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     {
         return new ExistsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentCallFactory::createFactory()
+            VariableAssignmentFactory::createFactory()
         );
     }
 

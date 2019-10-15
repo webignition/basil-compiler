@@ -19,7 +19,7 @@ use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 
-class VariableAssignmentCallFactory
+class VariableAssignmentFactory
 {
     const DEFAULT_ELEMENT_LOCATOR_PLACEHOLDER_NAME = 'ELEMENT_LOCATOR';
     const DEFAULT_ELEMENT_PLACEHOLDER_NAME = 'ELEMENT';
@@ -50,9 +50,9 @@ class VariableAssignmentCallFactory
         $this->objectValueTypeExaminer = $objectValueTypeExaminer;
     }
 
-    public static function createFactory(): VariableAssignmentCallFactory
+    public static function createFactory(): VariableAssignmentFactory
     {
-        return new VariableAssignmentCallFactory(
+        return new VariableAssignmentFactory(
             AssertionCallFactory::createFactory(),
             ElementLocatorCallFactory::createFactory(),
             DomCrawlerNavigatorCallFactory::createFactory(),
