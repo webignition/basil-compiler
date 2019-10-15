@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\Model\Call;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
+use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 
 class VariableAssignmentCall implements CompilableSourceInterface
 {
@@ -19,6 +20,13 @@ class VariableAssignmentCall implements CompilableSourceInterface
     ) {
         $this->compilableSource = $compilableSource;
         $this->variablePlaceholder = $variablePlaceholder;
+
+        $compilationMetadata = $this->compilableSource->getCompilationMetadata();
+        $compilationMetadata = $compilationMetadata->withAdditionalVariableExports(new VariablePlaceholderCollection([
+            $variablePlaceholder
+        ]));
+
+        $this->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
     }
 
     public function getCompilableSource(): CompilableSourceInterface
@@ -48,21 +56,43 @@ class VariableAssignmentCall implements CompilableSourceInterface
         return $this->compilableSource->getCompilationMetadata();
     }
 
-    public function withCompilationMetadata(
-        CompilationMetadataInterface $compilationMetadata
-    ): CompilableSourceInterface {
-        $new = clone $this;
-        $new->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
-
-        return $new;
-    }
-
     public function mergeCompilationData(array $compilationDataCollection): CompilableSourceInterface
     {
         $new = clone $this;
         $new->compilableSource = $this->compilableSource->mergeCompilationData($compilationDataCollection);
 
         return $new;
+    }
+
+    public function withPredecessors(array $predecessors): CompilableSourceInterface
+    {
+        $new = clone $this;
+        $new->compilableSource = $new->compilableSource->withPredecessors($predecessors);
+
+        return $new;
+    }
+
+    public function withStatements(array $statements): CompilableSourceInterface
+    {
+        $new = clone $this;
+        $new->compilableSource = $new->compilableSource->withStatements($statements);
+
+        return $new;
+    }
+
+    public function withCompilationMetadata(
+        CompilationMetadataInterface $compilationMetadata
+    ): CompilableSourceInterface {
+        $new = clone $this;
+        $new->compilableSource = $new->compilableSource->withCompilationMetadata($compilationMetadata);
+
+        return $new;
+    }
+
+    public function appendStatement(int $index, string $content)
+    {
+        $new = clone $this;
+        $new->compilableSource->appendStatement($index, $content);
     }
 
     public function __toString(): string

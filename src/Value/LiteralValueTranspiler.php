@@ -23,8 +23,8 @@ class LiteralValueTranspiler implements TranspilerInterface
     public function transpile(object $model): CompilableSourceInterface
     {
         if ($this->handles($model)) {
-            return new CompilableSource([
-                (string) $model
+            return (new CompilableSource())->withStatements([
+                (string) $model,
             ]);
         }
 

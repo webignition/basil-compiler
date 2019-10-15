@@ -117,7 +117,9 @@ class DomCrawlerNavigatorCallFactory
             (string) $arguments
         );
 
-        return new CompilableSource([$createStatement], $compilationMetadata);
+        return (new CompilableSource())
+            ->withStatements([$createStatement])
+            ->withCompilationMetadata($compilationMetadata);
     }
 
     /**
@@ -141,16 +143,15 @@ class DomCrawlerNavigatorCallFactory
                 $parentElementLocatorConstructorCall->getCompilationMetadata(),
             ]);
 
-            $compilableSource = new CompilableSource(
-                [
+            $compilableSource = (new CompilableSource())
+                ->withStatements([
                     sprintf(
                         '%s, %s',
                         (string) $compilableSource,
                         (string) $parentElementLocatorConstructorCall
                     ),
-                ],
-                $compilationMetadata
-            );
+                ])
+                ->withCompilationMetadata($compilationMetadata);
         }
 
         return $compilableSource;

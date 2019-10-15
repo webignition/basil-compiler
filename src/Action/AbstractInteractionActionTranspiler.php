@@ -4,7 +4,6 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
@@ -56,22 +55,18 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
         $elementPlaceholder = $variableExports->create('ELEMENT');
 
-        $elementVariableAssignment = $this->variableAssignmentCallFactory->createForElement(
+        $elementAssignment = $this->variableAssignmentCallFactory->createForElement(
             $identifier,
             $elementLocatorPlaceholder,
             $elementPlaceholder
         );
 
-        $statements = $elementVariableAssignment->getStatements();
-        $statements[] = sprintf(
-            '%s->%s()',
-            (string) $elementPlaceholder,
-            $this->getElementActionMethod()
-        );
-
-        $compilationMetadata = (new CompilationMetadata())
-            ->merge([$elementVariableAssignment->getCompilationMetadata()]);
-
-        return new CompilableSource($statements, $compilationMetadata);
+        return (new CompilableSource())
+            ->withPredecessors([$elementAssignment])
+            ->withStatements([sprintf(
+                '%s->%s()',
+                (string) $elementPlaceholder,
+                $this->getElementActionMethod()
+            )]);
     }
 }

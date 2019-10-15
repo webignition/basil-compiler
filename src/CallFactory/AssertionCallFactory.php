@@ -189,23 +189,10 @@ class AssertionCallFactory
             $actualValueCall->getVariablePlaceholder()
         );
 
-        $statements = array_merge(
-            $expectedValueCall->getStatements(),
-            $actualValueCall->getStatements(),
-            [
-                $assertionStatement,
-            ]
-        );
-
-        $compilableSource = new CompilableSource($statements);
-
-        $compilableSource = $compilableSource->mergeCompilationData([
-            $expectedValueCall->getCompilationMetadata(),
-            $actualValueCall->getCompilationMetadata(),
-            $compilationMetadata,
-        ]);
-
-        return $compilableSource;
+        return (new CompilableSource())
+            ->withPredecessors([$expectedValueCall, $actualValueCall])
+            ->withStatements([$assertionStatement])
+            ->withCompilationMetadata($compilationMetadata);
     }
 
     private function createValueExistenceAssertionCall(
@@ -218,19 +205,8 @@ class AssertionCallFactory
             (string) $assignmentCall->getVariablePlaceholder()
         );
 
-        $compilationMetadata = (new CompilationMetadata())->merge([
-            $assignmentCall->getCompilationMetadata(),
-        ]);
-
-        $compilationMetadata = $compilationMetadata->withAdditionalVariableDependencies(
-            new VariablePlaceholderCollection([$this->phpUnitTestCasePlaceholder])
-        );
-
-        $compilableSource = new CompilableSource(
-            array_merge($assignmentCall->getStatements(), [$assertionStatement]),
-            $compilationMetadata
-        );
-
-        return $compilableSource;
+        return (new CompilableSource())
+            ->withStatements([$assertionStatement])
+            ->withPredecessors([$assignmentCall]);
     }
 }

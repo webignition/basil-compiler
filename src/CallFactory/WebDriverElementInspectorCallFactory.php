@@ -30,12 +30,11 @@ class WebDriverElementInspectorCallFactory
             ->withAdditionalVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
-        $compilableSource = new CompilableSource(
-            [
+        $compilableSource = (new CompilableSource())
+            ->withStatements([
                 $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
-            ],
-            $compilationMetadata
-        );
+            ])
+            ->withCompilationMetadata($compilationMetadata);
 
         return $compilableSource;
     }

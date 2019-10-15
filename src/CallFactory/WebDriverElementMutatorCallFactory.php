@@ -37,6 +37,8 @@ class WebDriverElementMutatorCallFactory
             ->withVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
-        return new CompilableSource($statements, $compilationMetadata);
+        return (new CompilableSource())
+            ->withStatements($statements)
+            ->withCompilationMetadata($compilationMetadata);
     }
 }

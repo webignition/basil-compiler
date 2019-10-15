@@ -60,7 +60,9 @@ class PagePropertyTranspiler implements TranspilerInterface
                 $compilationMetadata = (new CompilationMetadata())
                     ->withVariableDependencies($this->variableDependencies);
 
-                return new CompilableSource([(string) $transpiledValue], $compilationMetadata);
+                return (new CompilableSource())
+                    ->withStatements([(string) $transpiledValue])
+                    ->withCompilationMetadata($compilationMetadata);
             }
 
             throw new UnknownObjectPropertyException($model);
