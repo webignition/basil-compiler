@@ -84,9 +84,15 @@ class VariableAssignmentCall implements CompilableSourceInterface
         CompilationMetadataInterface $compilationMetadata
     ): CompilableSourceInterface {
         $new = clone $this;
-        $new->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
+        $new->compilableSource = $new->compilableSource->withCompilationMetadata($compilationMetadata);
 
         return $new;
+    }
+
+    public function appendStatement(int $index, string $content)
+    {
+        $new = clone $this;
+        $new->compilableSource->appendStatement($index, $content);
     }
 
     public function __toString(): string
