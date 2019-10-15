@@ -57,6 +57,8 @@ class ElementLocatorCallFactory
             new ClassDependency(ElementLocator::class),
         ]));
 
-        return new CompilableSource([$statement], $compilationMetadata);
+        return (new CompilableSource())
+            ->withStatements([$statement])
+            ->withCompilationMetadata($compilationMetadata);
     }
 }
