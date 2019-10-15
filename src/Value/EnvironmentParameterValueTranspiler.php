@@ -46,7 +46,9 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
 
             $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
-            return new CompilableSource([$statement], $compilationMetadata);
+            return (new CompilableSource())
+                ->withStatements([$statement])
+                ->withCompilationMetadata($compilationMetadata);
         }
 
         throw new NonTranspilableModelException($model);

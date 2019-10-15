@@ -53,29 +53,23 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $dimensionAccess = new CompilableSource(
-            [
+        $dimensionAccess = (new CompilableSource())
+            ->withStatements([
                 $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()',
-            ],
-            (new CompilationMetadata())->withVariableDependencies($variableDependencies)
-        );
+            ])
+            ->withCompilationMetadata((new CompilationMetadata())->withVariableDependencies($variableDependencies));
 
         $dimensionAssignment = new VariableAssignmentCall($dimensionAccess, $webDriverDimensionPlaceholder);
 
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';
 
-        $dimensionConcatenation = new CompilableSource([
-            '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall,
-        ]);
+        $dimensionConcatenation = (new CompilableSource())
+            ->withStatements([
+                '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall,
+            ]);
 
-        $compilationMetadata = (new CompilationMetadata())
-            ->withVariableDependencies($variableDependencies)
-            ->withVariableExports($variableExports);
-
-        return new CompilableSource(
-            array_merge($dimensionAssignment->getStatements(), $dimensionConcatenation->getStatements()),
-            $compilationMetadata
-        );
+        return (new CompilableSource())
+            ->withPredecessors([$dimensionAssignment, $dimensionConcatenation]);
     }
 }
