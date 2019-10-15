@@ -40,6 +40,6 @@ class ClassDependencyTranspiler implements TranspilerInterface
             ? sprintf(self::CLASS_NAME_ONLY_TEMPLATE, $model->getClassName())
             : sprintf(self::WITH_ALIAS_TEMPLATE, $model->getClassName(), $model->getAlias());
 
-        return new CompilableSource([$statement]);
+        return (new CompilableSource())->withStatements([$statement]);
     }
 }

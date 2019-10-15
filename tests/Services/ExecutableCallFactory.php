@@ -97,7 +97,9 @@ class ExecutableCallFactory
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $compilableSourceWithReturn = new CompilableSource($statements, $compilableSource->getCompilationMetadata());
+        $compilableSourceWithReturn = (new CompilableSource())
+            ->withStatements($statements)
+            ->withCompilationMetadata($compilableSource->getCompilationMetadata());
 
         return $this->create(
             $compilableSourceWithReturn,
