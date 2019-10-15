@@ -15,14 +15,14 @@ use webignition\BasilTranspiler\TranspilerInterface;
 
 class SetActionTranspiler implements TranspilerInterface
 {
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
     private $webDriverElementMutatorCallFactory;
 
     public function __construct(
-        VariableAssignmentFactory $variableAssignmentCallFactory,
+        VariableAssignmentFactory $variableAssignmentFactory,
         WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory
     ) {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
         $this->webDriverElementMutatorCallFactory = $webDriverElementMutatorCallFactory;
     }
 
@@ -67,14 +67,14 @@ class SetActionTranspiler implements TranspilerInterface
         $collectionPlaceholder = $variableExports->create('COLLECTION');
         $valuePlaceholder = $variableExports->create('VALUE');
 
-        $collectionAssignment = $this->variableAssignmentCallFactory->createForElementCollection(
+        $collectionAssignment = $this->variableAssignmentFactory->createForElementCollection(
             $identifier,
             $elementLocatorPlaceholder,
             $collectionPlaceholder
         );
 
         try {
-            $valueAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $valueAssignment = $this->variableAssignmentFactory->createForValue(
                 $model->getValue(),
                 $valuePlaceholder
             );

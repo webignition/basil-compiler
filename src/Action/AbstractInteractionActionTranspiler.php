@@ -13,11 +13,11 @@ use webignition\BasilTranspiler\TranspilerInterface;
 
 abstract class AbstractInteractionActionTranspiler implements TranspilerInterface
 {
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
-    public function __construct(VariableAssignmentFactory $variableAssignmentCallFactory)
+    public function __construct(VariableAssignmentFactory $variableAssignmentFactory)
     {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     abstract protected function getHandledActionType(): string;
@@ -55,7 +55,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
         $elementPlaceholder = $variableExports->create('ELEMENT');
 
-        $elementAssignment = $this->variableAssignmentCallFactory->createForElement(
+        $elementAssignment = $this->variableAssignmentFactory->createForElement(
             $identifier,
             $elementLocatorPlaceholder,
             $elementPlaceholder

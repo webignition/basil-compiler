@@ -16,11 +16,11 @@ class WaitActionTranspiler implements TranspilerInterface
     const DURATION_PLACEHOLDER = 'DURATION';
     const MICROSECONDS_PER_MILLISECOND = 1000;
 
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
-    public function __construct(VariableAssignmentFactory $variableAssignmentCallFactory)
+    public function __construct(VariableAssignmentFactory $variableAssignmentFactory)
     {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     public static function createTranspiler(): WaitActionTranspiler
@@ -54,7 +54,7 @@ class WaitActionTranspiler implements TranspilerInterface
         $duration = $model->getDuration();
 
         try {
-            $durationAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $durationAssignment = $this->variableAssignmentFactory->createForValue(
                 $duration,
                 $durationPlaceholder,
                 'int',

@@ -16,14 +16,14 @@ use webignition\BasilTranspiler\VariableNames;
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentFactory $variableAssignmentCallFactory
+        VariableAssignmentFactory $variableAssignmentFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
@@ -65,7 +65,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
 
         try {
-            $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValueExistence(
+            $examinedValueAssignment = $this->variableAssignmentFactory->createForValueExistence(
                 $examinedValue,
                 $examinedValuePlaceholder
             );

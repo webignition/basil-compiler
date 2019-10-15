@@ -16,14 +16,14 @@ use webignition\BasilTranspiler\VariableNames;
 abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
     protected $assertionCallFactory;
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentFactory $variableAssignmentCallFactory
+        VariableAssignmentFactory $variableAssignmentFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     abstract protected function getAssertionCall(
@@ -48,12 +48,12 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);
 
         try {
-            $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $examinedValueAssignment = $this->variableAssignmentFactory->createForValue(
                 $examinedValue,
                 $examinedValuePlaceholder
             );
 
-            $expectedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $expectedValueAssignment = $this->variableAssignmentFactory->createForValue(
                 $expectedValue,
                 $expectedValuePlaceholder
             );
