@@ -751,16 +751,16 @@
         },
         {
             "name": "webignition/php-basil-compilation-source",
-            "version": "0.1",
+            "version": "0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilation-source.git",
-                "reference": "ba562a31b73edf2e35c555f21d6bd03ff42d885d"
+                "reference": "c7c4721f45b809b08439de746e122df3b5d7a011"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/ba562a31b73edf2e35c555f21d6bd03ff42d885d",
-                "reference": "ba562a31b73edf2e35c555f21d6bd03ff42d885d",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/c7c4721f45b809b08439de746e122df3b5d7a011",
+                "reference": "c7c4721f45b809b08439de746e122df3b5d7a011",
                 "shasum": ""
             },
             "require": {
@@ -788,7 +788,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilation-source",
-            "time": "2019-10-03T14:34:12+00:00"
+            "time": "2019-10-15T10:41:24+00:00"
         },
         {
             "name": "webignition/php-basil-context-aware-exception",
