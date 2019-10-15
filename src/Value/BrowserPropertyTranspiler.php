@@ -8,7 +8,7 @@ use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;
@@ -59,7 +59,7 @@ class BrowserPropertyTranspiler implements TranspilerInterface
             ])
             ->withCompilationMetadata((new CompilationMetadata())->withVariableDependencies($variableDependencies));
 
-        $dimensionAssignment = new VariableAssignmentCall($dimensionAccess, $webDriverDimensionPlaceholder);
+        $dimensionAssignment = new VariableAssignment($dimensionAccess, $webDriverDimensionPlaceholder);
 
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';

@@ -7,7 +7,7 @@ use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -51,8 +51,8 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
 
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignmentCall $examinedValue,
-        VariableAssignmentCall $expectedValue
+        VariableAssignment $examinedValue,
+        VariableAssignment $expectedValue
     ): CompilableSourceInterface {
         return AssertionComparison::IS === $assertion->getComparison()
             ? $this->assertionCallFactory->createValuesAreEqualAssertionCall($examinedValue, $expectedValue)

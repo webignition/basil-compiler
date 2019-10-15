@@ -7,7 +7,7 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -28,8 +28,8 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
 
     abstract protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignmentCall $examinedValue,
-        VariableAssignmentCall $expectedValue
+        VariableAssignment $examinedValue,
+        VariableAssignment $expectedValue
     ): CompilableSourceInterface;
 
     /**

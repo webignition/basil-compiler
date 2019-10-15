@@ -12,7 +12,7 @@ use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\ObjectValueTypeExaminer;
@@ -68,7 +68,7 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $elementPlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     public function createForElement(
         DomIdentifierInterface $elementIdentifier,
@@ -101,7 +101,7 @@ class VariableAssignmentCallFactory
      * @param string $type
      * @param string $default
      *
-     * @return VariableAssignmentCall
+     * @return \webignition\BasilTranspiler\Model\VariableAssignment
      *
      * @throws NonTranspilableModelException
      * @throws NonTranspilableValueException
@@ -111,7 +111,7 @@ class VariableAssignmentCallFactory
         VariablePlaceholder $placeholder,
         string $type = 'string',
         string $default = 'null'
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $assignment = null;
 
         $isOfScalarObjectType = $this->objectValueTypeExaminer->isOfType($value, [
@@ -141,7 +141,7 @@ class VariableAssignmentCallFactory
             }
         }
 
-        if ($assignment instanceof VariableAssignmentCall) {
+        if ($assignment instanceof VariableAssignment) {
             $variableAssignmentCallPlaceholder = $assignment->getVariablePlaceholder();
 
             $source = (new CompilableSource())
@@ -150,7 +150,7 @@ class VariableAssignmentCallFactory
                     sprintf('(%s) %s', $type, (string) $variableAssignmentCallPlaceholder)
                 ]);
 
-            $assignment = new VariableAssignmentCall($source, $variableAssignmentCallPlaceholder);
+            $assignment = new VariableAssignment($source, $variableAssignmentCallPlaceholder);
         }
 
         if (null === $assignment) {
@@ -164,7 +164,7 @@ class VariableAssignmentCallFactory
      * @param ValueInterface $value
      * @param VariablePlaceholder $placeholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      *
      * @throws NonTranspilableModelException
      * @throws NonTranspilableValueException
@@ -172,7 +172,7 @@ class VariableAssignmentCallFactory
     public function createForValueExistence(
         ValueInterface $value,
         VariablePlaceholder $placeholder
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $isScalarValue = $this->objectValueTypeExaminer->isOfType($value, [
             ObjectValueType::BROWSER_PROPERTY,
             ObjectValueType::ENVIRONMENT_PARAMETER,
@@ -202,7 +202,7 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $elementLocatorPlaceholder
      * @param VariablePlaceholder $collectionPlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     public function createForElementCollection(
         DomIdentifierInterface $elementIdentifier,
@@ -232,12 +232,12 @@ class VariableAssignmentCallFactory
      * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $elementPlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     private function createForElementExistence(
         DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $elementPlaceholder
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier($elementIdentifier);
 
         $variableExports = new VariablePlaceholderCollection([
@@ -254,7 +254,7 @@ class VariableAssignmentCallFactory
             ])
             ->withCompilationMetadata($compilationMetadata);
 
-        return new VariableAssignmentCall($elementExistenceAccess, $elementPlaceholder);
+        return new VariableAssignment($elementExistenceAccess, $elementPlaceholder);
     }
 
     /**
@@ -263,14 +263,14 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $elementPlaceholder
      * @param VariablePlaceholder $attributePlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     private function createForAttribute(
         DomIdentifierInterface $identifier,
         VariablePlaceholder $elementLocatorPlaceholder,
         VariablePlaceholder $elementPlaceholder,
         VariablePlaceholder $attributePlaceholder
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $elementAssignment = $this->createForElement($identifier, $elementLocatorPlaceholder, $elementPlaceholder);
 
         $source = (new CompilableSource())
@@ -283,7 +283,7 @@ class VariableAssignmentCallFactory
                 ),
             ]);
 
-        return new VariableAssignmentCall(
+        return new VariableAssignment(
             $source,
             $attributePlaceholder
         );
@@ -293,12 +293,12 @@ class VariableAssignmentCallFactory
      * @param DomIdentifierInterface $elementIdentifier
      * @param VariablePlaceholder $valuePlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     private function createForElementCollectionValue(
         DomIdentifierInterface $elementIdentifier,
         VariablePlaceholder $valuePlaceholder
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $collectionAssignment = $this->createForElementCollection(
             $elementIdentifier,
             $this->createElementLocatorPlaceholder(),
@@ -312,19 +312,19 @@ class VariableAssignmentCallFactory
         $source = new CompilableSource();
         $source = $source->withPredecessors([$collectionAssignment, $getValueAssignment]);
 
-        return new VariableAssignmentCall($source, $valuePlaceholder);
+        return new VariableAssignment($source, $valuePlaceholder);
     }
 
     /**
      * @param DomIdentifierInterface $attributeIdentifier
      * @param VariablePlaceholder $valuePlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     private function createForAttributeExistence(
         DomIdentifierInterface $attributeIdentifier,
         VariablePlaceholder $valuePlaceholder
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $assignment = $this->createForAttribute(
             $attributeIdentifier,
             $this->createElementLocatorPlaceholder(),
@@ -338,7 +338,7 @@ class VariableAssignmentCallFactory
                 $valuePlaceholder . ' !== null'
             ]);
 
-        return new VariableAssignmentCall($source, $valuePlaceholder);
+        return new VariableAssignment($source, $valuePlaceholder);
     }
 
 
@@ -349,7 +349,7 @@ class VariableAssignmentCallFactory
      * @param CompilableSourceInterface $hasCall
      * @param CompilableSourceInterface $findCall
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      */
     private function createForElementOrCollection(
         DomIdentifierInterface $elementIdentifier,
@@ -364,12 +364,12 @@ class VariableAssignmentCallFactory
             $returnValuePlaceholder,
         ]);
 
-        $elementLocatorAssignment = new VariableAssignmentCall(
+        $elementLocatorAssignment = new VariableAssignment(
             $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier),
             $elementLocatorPlaceholder
         );
 
-        $hasAssignment = new VariableAssignmentCall($hasCall, $variableExports->create('HAS'));
+        $hasAssignment = new VariableAssignment($hasCall, $variableExports->create('HAS'));
 
         $elementExistsAssertion = $this->assertionCallFactory->createValueIsTrueAssertionCall($hasAssignment);
 
@@ -380,7 +380,7 @@ class VariableAssignmentCallFactory
                 $findCall,
             ]);
 
-        return new VariableAssignmentCall($source, $returnValuePlaceholder);
+        return new VariableAssignment($source, $returnValuePlaceholder);
     }
 
     /**
@@ -388,7 +388,7 @@ class VariableAssignmentCallFactory
      * @param VariablePlaceholder $variablePlaceholder
      * @param string $default
      *
-     * @return VariableAssignmentCall
+     * @return \webignition\BasilTranspiler\Model\VariableAssignment
      *
      * @throws NonTranspilableModelException
      */
@@ -396,21 +396,21 @@ class VariableAssignmentCallFactory
         ValueInterface $value,
         VariablePlaceholder $variablePlaceholder,
         string $default = 'null'
-    ): VariableAssignmentCall {
+    ): VariableAssignment {
         $accessCall = $this->valueTranspiler->transpile($value);
         $accessCall->appendStatement(0, ' ?? ' . $default);
 
         $source = (new CompilableSource())
             ->withPredecessors([$accessCall]);
 
-        return new VariableAssignmentCall($source, $variablePlaceholder);
+        return new VariableAssignment($source, $variablePlaceholder);
     }
 
     /**
      * @param ValueInterface $value
      * @param VariablePlaceholder $variablePlaceholder
      *
-     * @return VariableAssignmentCall
+     * @return VariableAssignment
      *
      * @throws NonTranspilableModelException
      */
@@ -422,7 +422,7 @@ class VariableAssignmentCallFactory
             ->withStatements([$variablePlaceholder . ' !== null'])
             ->withPredecessors([$assignment]);
 
-        return new VariableAssignmentCall($source, $variablePlaceholder);
+        return new VariableAssignment($source, $variablePlaceholder);
     }
 
     private function createElementLocatorPlaceholder(): VariablePlaceholder
