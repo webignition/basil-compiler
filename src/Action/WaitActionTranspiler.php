@@ -6,7 +6,7 @@ use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\WaitActionInterface;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -16,17 +16,17 @@ class WaitActionTranspiler implements TranspilerInterface
     const DURATION_PLACEHOLDER = 'DURATION';
     const MICROSECONDS_PER_MILLISECOND = 1000;
 
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
-    public function __construct(VariableAssignmentCallFactory $variableAssignmentCallFactory)
+    public function __construct(VariableAssignmentFactory $variableAssignmentFactory)
     {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
-            VariableAssignmentCallFactory::createFactory()
+            VariableAssignmentFactory::createFactory()
         );
     }
 
@@ -54,7 +54,7 @@ class WaitActionTranspiler implements TranspilerInterface
         $duration = $model->getDuration();
 
         try {
-            $durationAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $durationAssignment = $this->variableAssignmentFactory->createForValue(
                 $duration,
                 $durationPlaceholder,
                 'int',

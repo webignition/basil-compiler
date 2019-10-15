@@ -7,7 +7,7 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -16,21 +16,21 @@ use webignition\BasilTranspiler\VariableNames;
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentCallFactory $variableAssignmentCallFactory
+        VariableAssignmentFactory $variableAssignmentFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
     {
         return new ExistsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentCallFactory::createFactory()
+            VariableAssignmentFactory::createFactory()
         );
     }
 
@@ -65,7 +65,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
 
         try {
-            $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValueExistence(
+            $examinedValueAssignment = $this->variableAssignmentFactory->createForValueExistence(
                 $examinedValue,
                 $examinedValuePlaceholder
             );

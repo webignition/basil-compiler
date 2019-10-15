@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Model\Call;
+namespace webignition\BasilTranspiler\Model;
 
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 
-class VariableAssignmentCall implements CompilableSourceInterface
+class VariableAssignment implements CompilableSourceInterface
 {
     const STATEMENT_PATTERN = '%s = %s';
 

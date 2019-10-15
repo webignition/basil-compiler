@@ -6,8 +6,8 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -16,20 +16,20 @@ use webignition\BasilTranspiler\VariableNames;
 abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
     protected $assertionCallFactory;
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentCallFactory $variableAssignmentCallFactory
+        VariableAssignmentFactory $variableAssignmentFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     abstract protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignmentCall $examinedValue,
-        VariableAssignmentCall $expectedValue
+        VariableAssignment $examinedValue,
+        VariableAssignment $expectedValue
     ): CompilableSourceInterface;
 
     /**
@@ -48,12 +48,12 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);
 
         try {
-            $examinedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $examinedValueAssignment = $this->variableAssignmentFactory->createForValue(
                 $examinedValue,
                 $examinedValuePlaceholder
             );
 
-            $expectedValueAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $expectedValueAssignment = $this->variableAssignmentFactory->createForValue(
                 $expectedValue,
                 $expectedValuePlaceholder
             );

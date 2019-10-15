@@ -7,17 +7,17 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 abstract class AbstractInteractionActionTranspiler implements TranspilerInterface
 {
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
 
-    public function __construct(VariableAssignmentCallFactory $variableAssignmentCallFactory)
+    public function __construct(VariableAssignmentFactory $variableAssignmentFactory)
     {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
     }
 
     abstract protected function getHandledActionType(): string;
@@ -55,7 +55,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
         $elementPlaceholder = $variableExports->create('ELEMENT');
 
-        $elementAssignment = $this->variableAssignmentCallFactory->createForElement(
+        $elementAssignment = $this->variableAssignmentFactory->createForElement(
             $identifier,
             $elementLocatorPlaceholder,
             $elementPlaceholder

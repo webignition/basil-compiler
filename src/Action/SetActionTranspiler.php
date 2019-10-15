@@ -7,7 +7,7 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\NonTranspilableValueException;
@@ -15,21 +15,21 @@ use webignition\BasilTranspiler\TranspilerInterface;
 
 class SetActionTranspiler implements TranspilerInterface
 {
-    private $variableAssignmentCallFactory;
+    private $variableAssignmentFactory;
     private $webDriverElementMutatorCallFactory;
 
     public function __construct(
-        VariableAssignmentCallFactory $variableAssignmentCallFactory,
+        VariableAssignmentFactory $variableAssignmentFactory,
         WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory
     ) {
-        $this->variableAssignmentCallFactory = $variableAssignmentCallFactory;
+        $this->variableAssignmentFactory = $variableAssignmentFactory;
         $this->webDriverElementMutatorCallFactory = $webDriverElementMutatorCallFactory;
     }
 
     public static function createTranspiler(): SetActionTranspiler
     {
         return new SetActionTranspiler(
-            VariableAssignmentCallFactory::createFactory(),
+            VariableAssignmentFactory::createFactory(),
             WebDriverElementMutatorCallFactory::createFactory()
         );
     }
@@ -67,14 +67,14 @@ class SetActionTranspiler implements TranspilerInterface
         $collectionPlaceholder = $variableExports->create('COLLECTION');
         $valuePlaceholder = $variableExports->create('VALUE');
 
-        $collectionAssignment = $this->variableAssignmentCallFactory->createForElementCollection(
+        $collectionAssignment = $this->variableAssignmentFactory->createForElementCollection(
             $identifier,
             $elementLocatorPlaceholder,
             $collectionPlaceholder
         );
 
         try {
-            $valueAssignment = $this->variableAssignmentCallFactory->createForValue(
+            $valueAssignment = $this->variableAssignmentFactory->createForValue(
                 $model->getValue(),
                 $valuePlaceholder
             );

@@ -6,8 +6,8 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentCallFactory;
-use webignition\BasilTranspiler\Model\Call\VariableAssignmentCall;
+use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -17,7 +17,7 @@ class MatchesComparisonTranspiler extends AbstractComparisonAssertionTranspiler 
     {
         return new MatchesComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentCallFactory::createFactory()
+            VariableAssignmentFactory::createFactory()
         );
     }
 
@@ -52,8 +52,8 @@ class MatchesComparisonTranspiler extends AbstractComparisonAssertionTranspiler 
 
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignmentCall $examinedValue,
-        VariableAssignmentCall $expectedValue
+        VariableAssignment $examinedValue,
+        VariableAssignment $expectedValue
     ): CompilableSourceInterface {
         return $this->assertionCallFactory->createValueMatchesValueAssertionCall($expectedValue, $examinedValue);
     }
