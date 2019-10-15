@@ -51,8 +51,8 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
 
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignment $examinedValue,
-        VariableAssignment $expectedValue
+        CompilableSourceInterface $examinedValue,
+        CompilableSourceInterface $expectedValue
     ): CompilableSourceInterface {
         return AssertionComparison::IS === $assertion->getComparison()
             ? $this->assertionCallFactory->createValuesAreEqualAssertionCall($examinedValue, $expectedValue)

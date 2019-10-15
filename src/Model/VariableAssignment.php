@@ -56,7 +56,10 @@ class VariableAssignment extends CompilableSource
         CompilationMetadataInterface $compilationMetadata
     ): CompilableSourceInterface {
         $new = parent::withCompilationMetadata($compilationMetadata);
-        $new = $new->setPlaceholderAsVariableExport();
+
+        if ($new instanceof VariableAssignment) {
+            $new = $new->setPlaceholderAsVariableExport();
+        }
 
         return $new;
     }

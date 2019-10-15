@@ -70,7 +70,7 @@ class AssertionCallFactory
     }
 
     public function createValueIsFalseAssertionCall(
-        VariableAssignment $variableAssignmentCall
+        CompilableSourceInterface $variableAssignmentCall
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
@@ -78,15 +78,9 @@ class AssertionCallFactory
         );
     }
 
-    /**
-     * @param VariableAssignment $expectedValueCall
-     * @param VariableAssignment $actualValueCall
-     *
-     * @return CompilableSourceInterface
-     */
     public function createValuesAreEqualAssertionCall(
-        VariableAssignment $expectedValueCall,
-        VariableAssignment $actualValueCall
+        CompilableSourceInterface $expectedValueCall,
+        CompilableSourceInterface $actualValueCall
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
@@ -95,15 +89,9 @@ class AssertionCallFactory
         );
     }
 
-    /**
-     * @param VariableAssignment $expectedValueCall
-     * @param VariableAssignment $actualValueCall
-     *
-     * @return CompilableSourceInterface
-     */
     public function createValuesAreNotEqualAssertionCall(
-        VariableAssignment $expectedValueCall,
-        VariableAssignment $actualValueCall
+        CompilableSourceInterface $expectedValueCall,
+        CompilableSourceInterface $actualValueCall
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
@@ -112,15 +100,9 @@ class AssertionCallFactory
         );
     }
 
-    /**
-     * @param VariableAssignment $needle
-     * @param VariableAssignment $haystack
-     *
-     * @return CompilableSourceInterface
-     */
     public function createValueIncludesValueAssertionCall(
-        VariableAssignment $needle,
-        VariableAssignment $haystack
+        CompilableSourceInterface $needle,
+        CompilableSourceInterface $haystack
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
@@ -129,15 +111,9 @@ class AssertionCallFactory
         );
     }
 
-    /**
-     * @param VariableAssignment $needle
-     * @param VariableAssignment $haystack
-     *
-     * @return CompilableSourceInterface
-     */
     public function createValueNotIncludesValueAssertionCall(
-        VariableAssignment $needle,
-        VariableAssignment $haystack
+        CompilableSourceInterface $needle,
+        CompilableSourceInterface $haystack
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
@@ -146,15 +122,9 @@ class AssertionCallFactory
         );
     }
 
-    /**
-     * @param VariableAssignment $needle
-     * @param VariableAssignment $haystack
-     *
-     * @return CompilableSourceInterface
-     */
     public function createValueMatchesValueAssertionCall(
-        VariableAssignment $needle,
-        VariableAssignment $haystack
+        CompilableSourceInterface $needle,
+        CompilableSourceInterface $haystack
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
@@ -163,16 +133,9 @@ class AssertionCallFactory
         );
     }
 
-    /**
-     * @param VariableAssignment $expectedValueCall
-     * @param VariableAssignment $actualValueCall
-     * @param string $assertionTemplate
-     *
-     * @return CompilableSourceInterface
-     */
     private function createValueComparisonAssertionCall(
-        VariableAssignment $expectedValueCall,
-        VariableAssignment $actualValueCall,
+        CompilableSourceInterface $expectedValueCall,
+        CompilableSourceInterface $actualValueCall,
         string $assertionTemplate
     ): CompilableSourceInterface {
         $variableDependencies = new VariablePlaceholderCollection();
@@ -182,11 +145,19 @@ class AssertionCallFactory
 
         $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
 
+        $expectedValuePlaceholder = $expectedValueCall instanceof VariableAssignment
+            ? $expectedValueCall->getVariablePlaceholder()
+            : '';
+
+        $actualValuePlaceholder = $actualValueCall instanceof VariableAssignment
+            ? $actualValueCall->getVariablePlaceholder()
+            : '';
+
         $assertionStatement = sprintf(
             $assertionTemplate,
             $this->phpUnitTestCasePlaceholder,
-            $expectedValueCall->getVariablePlaceholder(),
-            $actualValueCall->getVariablePlaceholder()
+            $expectedValuePlaceholder,
+            $actualValuePlaceholder
         );
 
         return (new CompilableSource())

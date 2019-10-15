@@ -52,8 +52,8 @@ class MatchesComparisonTranspiler extends AbstractComparisonAssertionTranspiler 
 
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignment $examinedValue,
-        VariableAssignment $expectedValue
+        CompilableSourceInterface $examinedValue,
+        CompilableSourceInterface $expectedValue
     ): CompilableSourceInterface {
         return $this->assertionCallFactory->createValueMatchesValueAssertionCall($expectedValue, $examinedValue);
     }
