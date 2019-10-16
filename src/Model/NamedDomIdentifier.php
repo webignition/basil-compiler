@@ -25,4 +25,9 @@ class NamedDomIdentifier implements NamedDomIdentifierInterface
     {
         return $this->placeholder;
     }
+
+    public function includeValue(): bool
+    {
+        return null !== $this->identifier->getAttributeName();
+    }
 }

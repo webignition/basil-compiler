@@ -19,6 +19,7 @@ use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\NamedDomIdentifierValueFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\DomElementLocator\ElementLocator;
+use webignition\WebDriverElementCollection\WebDriverElementCollection;
 use webignition\WebDriverElementInspector\Inspector;
 
 class NamedDomIdentifierTranspilerTest extends AbstractTestCase
@@ -45,7 +46,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
         string $fixture,
         NamedDomIdentifierInterface $namedDomIdentifier,
         CompilationMetadataInterface $expectedCompilationMetadata,
-        $expectedExecutedResult,
+        callable $resultAssertions,
         array $additionalVariableIdentifiers = [],
         array $additionalSetupStatements = [],
         ?CompilationMetadataInterface $additionalCompilationMetadata = null
@@ -66,7 +67,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
             $additionalCompilationMetadata
         );
 
-        $this->assertEquals($expectedExecutedResult, eval($executableCall));
+        $resultAssertions(eval($executableCall));
     }
 
     public function transpileDataProvider(): array
@@ -85,13 +86,19 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PHPUNIT_TEST_CASE,
                         VariableNames::DOM_CRAWLER_NAVIGATOR,
-                        VariableNames::WEBDRIVER_ELEMENT_INSPECTOR,
                     ]))
                     ->withVariableExports(VariablePlaceholderCollection::createCollection([
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => '',
+                'resultAssertions' => function (WebDriverElementCollection $collection) {
+                    $this->assertInstanceOf(WebDriverElementCollection::class, $collection);
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->current();
+
+                    $this->assertEquals('', $element->getAttribute('value'));
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
@@ -119,13 +126,19 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PHPUNIT_TEST_CASE,
                         VariableNames::DOM_CRAWLER_NAVIGATOR,
-                        VariableNames::WEBDRIVER_ELEMENT_INSPECTOR,
                     ]))
                     ->withVariableExports(VariablePlaceholderCollection::createCollection([
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => 'test',
+                'resultAssertions' => function (WebDriverElementCollection $collection) {
+                    $this->assertInstanceOf(WebDriverElementCollection::class, $collection);
+                    $this->assertCount(1, $collection);
+
+                    $element = $collection->current();
+
+                    $this->assertEquals('', $element->getAttribute('test'));
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
@@ -157,7 +170,9 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => 'input-without-value',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('input-without-value', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
@@ -190,7 +205,9 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => 'input-2',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('input-2', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',

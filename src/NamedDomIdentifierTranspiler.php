@@ -117,28 +117,33 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
             $hasPlaceholder
         );
 
-        if ($hasAttribute) {
-            $valueAssignment = (new CompilableSource())
-                ->withStatements([
-                    sprintf(
-                        '%s = %s->getAttribute(\'%s\')',
-                        $elementPlaceholder,
-                        $elementPlaceholder,
-                        $this->singleQuotedStringEscaper->escape((string) $identifier->getAttributeName())
-                    )
-                ]);
-        } else {
-            $getValueCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($elementPlaceholder);
+        $predecessors = [
+            $elementExistsAssertion,
+            $elementOrCollectionAssignment,
+        ];
 
-            $valueAssignment = clone $getValueCall;
-            $valueAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
+        if ($model->includeValue()) {
+            if ($hasAttribute) {
+                $valueAssignment = (new CompilableSource())
+                    ->withStatements([
+                        sprintf(
+                            '%s = %s->getAttribute(\'%s\')',
+                            $elementPlaceholder,
+                            $elementPlaceholder,
+                            $this->singleQuotedStringEscaper->escape((string) $identifier->getAttributeName())
+                        )
+                    ]);
+            } else {
+                $getValueCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($elementPlaceholder);
+
+                $valueAssignment = clone $getValueCall;
+                $valueAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
+            }
+
+            $predecessors[] = $valueAssignment;
         }
 
         return (new CompilableSource())
-            ->withPredecessors([
-                $elementExistsAssertion,
-                $elementOrCollectionAssignment,
-                $valueAssignment,
-            ]);
+            ->withPredecessors($predecessors);
     }
 }

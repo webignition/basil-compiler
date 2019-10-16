@@ -42,7 +42,9 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => '',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
@@ -78,7 +80,9 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => 'test',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('test', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
@@ -112,7 +116,9 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => 'input-without-value',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('input-without-value', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',
@@ -147,7 +153,9 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                         'HAS',
                         'ELEMENT',
                     ])),
-                'expectedExecutedResult' => 'input-2',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('input-2', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'HAS' => '$has',
                     'ELEMENT' => '$element',

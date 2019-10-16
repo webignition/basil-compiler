@@ -41,7 +41,7 @@ class ValueTranspilerTest extends AbstractTestCase
         string $fixture,
         ValueInterface $model,
         CompilationMetadataInterface $expectedCompilationMetadata,
-        $expectedExecutedResult,
+        callable $resultAssertions,
         array $additionalVariableIdentifiers = [],
         array $additionalSetupStatements = [],
         ?CompilationMetadataInterface $additionalCompilationMetadata = null
@@ -62,7 +62,7 @@ class ValueTranspilerTest extends AbstractTestCase
             $additionalCompilationMetadata
         );
 
-        $this->assertEquals($expectedExecutedResult, eval($executableCall));
+        $resultAssertions(eval($executableCall));
     }
 
     public function transpileDataProvider(): array
@@ -77,7 +77,9 @@ class ValueTranspilerTest extends AbstractTestCase
                     ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
                         'WEBDRIVER_DIMENSION',
                     ])),
-                'expectedExecutedResult' => '1200x1100',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('1200x1100', $result);
+                },
                 'additionalVariableIdentifiers' => [
                     'WEBDRIVER_DIMENSION' => '$webDriverDimension',
                 ],
@@ -89,7 +91,9 @@ class ValueTranspilerTest extends AbstractTestCase
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
-                'expectedExecutedResult' => 'Test fixture web server default document',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('Test fixture web server default document', $result);
+                },
             ],
             'page property: url' => [
                 'fixture' => '/index.html',
@@ -98,7 +102,9 @@ class ValueTranspilerTest extends AbstractTestCase
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
-                'expectedExecutedResult' => 'http://127.0.0.1:9080/index.html',
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('http://127.0.0.1:9080/index.html', $result);
+                },
             ],
         ];
     }
