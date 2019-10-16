@@ -74,7 +74,13 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         }
 
         return AssertionComparison::EXISTS === $model->getComparison()
-            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($examinedValueAssignment)
-            : $this->assertionCallFactory->createValueIsFalseAssertionCall($examinedValueAssignment);
+            ? $this->assertionCallFactory->createValueIsTrueAssertionCall(
+                $examinedValueAssignment,
+                $examinedValuePlaceholder
+            )
+            : $this->assertionCallFactory->createValueIsFalseAssertionCall(
+                $examinedValueAssignment,
+                $examinedValuePlaceholder
+            );
     }
 }

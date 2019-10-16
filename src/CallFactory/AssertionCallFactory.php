@@ -7,7 +7,6 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
-use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\VariableNames;
 
 class AssertionCallFactory
@@ -63,83 +62,107 @@ class AssertionCallFactory
 
     public function createValueIsTrueAssertionCall(
         CompilableSourceInterface $variableAssignmentCall,
-        ?VariablePlaceholder $placeholder = null
+        VariablePlaceholder $placeholder
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            self::ASSERT_TRUE_TEMPLATE,
-            $placeholder
+            $placeholder,
+            self::ASSERT_TRUE_TEMPLATE
         );
     }
 
     public function createValueIsFalseAssertionCall(
-        CompilableSourceInterface $variableAssignmentCall
+        CompilableSourceInterface $variableAssignmentCall,
+        VariablePlaceholder $placeholder
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
+            $placeholder,
             self::ASSERT_FALSE_TEMPLATE
         );
     }
 
     public function createValuesAreEqualAssertionCall(
         CompilableSourceInterface $expectedValueCall,
-        CompilableSourceInterface $actualValueCall
+        CompilableSourceInterface $actualValueCall,
+        VariablePlaceholder $expectedValuePlaceholder,
+        VariablePlaceholder $actualValuePlaceholder
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
             $actualValueCall,
-            self::ASSERT_EQUALS_TEMPLATE
+            self::ASSERT_EQUALS_TEMPLATE,
+            $expectedValuePlaceholder,
+            $actualValuePlaceholder
         );
     }
 
     public function createValuesAreNotEqualAssertionCall(
         CompilableSourceInterface $expectedValueCall,
-        CompilableSourceInterface $actualValueCall
+        CompilableSourceInterface $actualValueCall,
+        VariablePlaceholder $expectedValuePlaceholder,
+        VariablePlaceholder $actualValuePlaceholder
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $expectedValueCall,
             $actualValueCall,
-            self::ASSERT_NOT_EQUALS_TEMPLATE
+            self::ASSERT_NOT_EQUALS_TEMPLATE,
+            $expectedValuePlaceholder,
+            $actualValuePlaceholder
         );
     }
 
     public function createValueIncludesValueAssertionCall(
         CompilableSourceInterface $needle,
-        CompilableSourceInterface $haystack
+        CompilableSourceInterface $haystack,
+        VariablePlaceholder $needlePlaceholder,
+        VariablePlaceholder $haystackPlaceholder
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
-            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE
+            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE,
+            $needlePlaceholder,
+            $haystackPlaceholder
         );
     }
 
     public function createValueNotIncludesValueAssertionCall(
         CompilableSourceInterface $needle,
-        CompilableSourceInterface $haystack
+        CompilableSourceInterface $haystack,
+        VariablePlaceholder $needlePlaceholder,
+        VariablePlaceholder $haystackPlaceholder
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
-            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE
+            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE,
+            $needlePlaceholder,
+            $haystackPlaceholder
         );
     }
 
     public function createValueMatchesValueAssertionCall(
         CompilableSourceInterface $needle,
-        CompilableSourceInterface $haystack
+        CompilableSourceInterface $haystack,
+        VariablePlaceholder $needlePlaceholder,
+        VariablePlaceholder $haystackPlaceholder
     ): CompilableSourceInterface {
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
-            self::ASSERT_MATCHES_TEMPLATE
+            self::ASSERT_MATCHES_TEMPLATE,
+            $needlePlaceholder,
+            $haystackPlaceholder
         );
     }
 
     private function createValueComparisonAssertionCall(
         CompilableSourceInterface $expectedValueCall,
         CompilableSourceInterface $actualValueCall,
-        string $assertionTemplate
+        string $assertionTemplate,
+        VariablePlaceholder $expectedValuePlaceholder,
+        VariablePlaceholder $actualValuePlaceholder
     ): CompilableSourceInterface {
         $variableDependencies = new VariablePlaceholderCollection();
         $variableDependencies = $variableDependencies->withAdditionalItems([
@@ -147,14 +170,6 @@ class AssertionCallFactory
         ]);
 
         $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
-
-        $expectedValuePlaceholder = $expectedValueCall instanceof VariableAssignment
-            ? $expectedValueCall->getVariablePlaceholder()
-            : '';
-
-        $actualValuePlaceholder = $actualValueCall instanceof VariableAssignment
-            ? $actualValueCall->getVariablePlaceholder()
-            : '';
 
         $assertionStatement = sprintf(
             $assertionTemplate,
@@ -171,23 +186,13 @@ class AssertionCallFactory
 
     private function createValueExistenceAssertionCall(
         CompilableSourceInterface $assignmentCall,
-        string $assertionTemplate,
-        ?VariablePlaceholder $variablePlaceholder = null
+        VariablePlaceholder $variablePlaceholder,
+        string $assertionTemplate
     ): CompilableSourceInterface {
-        $placeholder = '';
-
-        if ($variablePlaceholder instanceof VariablePlaceholder) {
-            $placeholder = (string) $variablePlaceholder;
-        }
-
-        if (null === $variablePlaceholder && $assignmentCall instanceof VariableAssignment) {
-            $placeholder = (string) $assignmentCall->getVariablePlaceholder();
-        }
-
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            $placeholder
+            (string) $variablePlaceholder
         );
 
         $compilationMetadata = (new CompilationMetadata())

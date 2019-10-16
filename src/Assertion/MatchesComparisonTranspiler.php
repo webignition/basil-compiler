@@ -3,11 +3,11 @@
 namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
-use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -53,8 +53,15 @@ class MatchesComparisonTranspiler extends AbstractComparisonAssertionTranspiler 
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
         CompilableSourceInterface $examinedValue,
-        CompilableSourceInterface $expectedValue
+        CompilableSourceInterface $expectedValue,
+        VariablePlaceholder $examinedValuePlaceholder,
+        VariablePlaceholder $expectedValuePlaceholder
     ): CompilableSourceInterface {
-        return $this->assertionCallFactory->createValueMatchesValueAssertionCall($expectedValue, $examinedValue);
+        return $this->assertionCallFactory->createValueMatchesValueAssertionCall(
+            $expectedValue,
+            $examinedValue,
+            $expectedValuePlaceholder,
+            $examinedValuePlaceholder
+        );
     }
 }
