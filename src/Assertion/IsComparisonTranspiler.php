@@ -3,11 +3,11 @@
 namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
-use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
@@ -52,10 +52,22 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
         CompilableSourceInterface $examinedValue,
-        CompilableSourceInterface $expectedValue
+        CompilableSourceInterface $expectedValue,
+        VariablePlaceholder $examinedValuePlaceholder,
+        VariablePlaceholder $expectedValuePlaceholder
     ): CompilableSourceInterface {
         return AssertionComparison::IS === $assertion->getComparison()
-            ? $this->assertionCallFactory->createValuesAreEqualAssertionCall($examinedValue, $expectedValue)
-            : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall($examinedValue, $expectedValue);
+            ? $this->assertionCallFactory->createValuesAreEqualAssertionCall(
+                $examinedValue,
+                $expectedValue,
+                $examinedValuePlaceholder,
+                $expectedValuePlaceholder
+            )
+            : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall(
+                $examinedValue,
+                $expectedValue,
+                $examinedValuePlaceholder,
+                $expectedValuePlaceholder
+            );
     }
 }

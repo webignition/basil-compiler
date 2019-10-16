@@ -28,7 +28,9 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
     abstract protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
         CompilableSourceInterface $examinedValue,
-        CompilableSourceInterface $expectedValue
+        CompilableSourceInterface $expectedValue,
+        VariablePlaceholder $examinedValuePlaceholder,
+        VariablePlaceholder $expectedValuePlaceholder
     ): CompilableSourceInterface;
 
     /**
@@ -63,7 +65,9 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         return $this->getAssertionCall(
             $assertion,
             $examinedValueAssignment,
-            $expectedValueAssignment
+            $expectedValueAssignment,
+            $examinedValuePlaceholder,
+            $expectedValuePlaceholder
         );
     }
 }
