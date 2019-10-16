@@ -14,6 +14,11 @@ trait ExistsAssertionDataProviderTrait
         $assertionFactory = AssertionFactory::createFactory();
 
         return [
+            'exists comparison, page property examined value' => [
+                'assertion' => $assertionFactory->createFromAssertionString(
+                    '$page.url exists'
+                ),
+            ],
             'exists comparison, element identifier examined value' => [
                 'assertion' => $assertionFactory->createFromAssertionString(
                     '".selector" exists'

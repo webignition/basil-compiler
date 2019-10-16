@@ -6,10 +6,12 @@ use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\WaitActionInterface;
+use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class WaitActionTranspiler implements TranspilerInterface
 {
@@ -17,16 +19,21 @@ class WaitActionTranspiler implements TranspilerInterface
     const MICROSECONDS_PER_MILLISECOND = 1000;
 
     private $variableAssignmentFactory;
+    private $valueTranspiler;
 
-    public function __construct(VariableAssignmentFactory $variableAssignmentFactory)
-    {
+    public function __construct(
+        VariableAssignmentFactory $variableAssignmentFactory,
+        ValueTranspiler $valueTranspiler
+    ) {
         $this->variableAssignmentFactory = $variableAssignmentFactory;
+        $this->valueTranspiler = $valueTranspiler;
     }
 
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
-            VariableAssignmentFactory::createFactory()
+            VariableAssignmentFactory::createFactory(),
+            ValueTranspiler::createTranspiler()
         );
     }
 
@@ -53,16 +60,18 @@ class WaitActionTranspiler implements TranspilerInterface
 
         $duration = $model->getDuration();
 
-        try {
-            $durationAssignment = $this->variableAssignmentFactory->createForValue(
-                $duration,
-                $durationPlaceholder,
-                'int',
-                '0'
-            );
-        } catch (NonTranspilableValueException $nonTranspilableValueException) {
-            throw new NonTranspilableModelException($model);
+        if ($duration instanceof DomIdentifierValueInterface) {
+            $duration = new NamedDomIdentifierValue($duration, $durationPlaceholder);
         }
+
+        $durationAccessor = $this->valueTranspiler->transpile($duration);
+
+        $durationAssignment = $this->variableAssignmentFactory->createForValueAccessor(
+            $durationAccessor,
+            $durationPlaceholder,
+            'int',
+            '0'
+        );
 
         $waitStatement = sprintf(
             'usleep(%s * %s)',

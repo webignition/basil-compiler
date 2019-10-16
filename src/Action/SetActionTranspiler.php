@@ -7,30 +7,36 @@ use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
+use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
+use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\NonTranspilableValueException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class SetActionTranspiler implements TranspilerInterface
 {
     private $variableAssignmentFactory;
     private $webDriverElementMutatorCallFactory;
+    private $valueTranspiler;
 
     public function __construct(
         VariableAssignmentFactory $variableAssignmentFactory,
-        WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory
+        WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory,
+        ValueTranspiler $valueTranspiler
     ) {
         $this->variableAssignmentFactory = $variableAssignmentFactory;
         $this->webDriverElementMutatorCallFactory = $webDriverElementMutatorCallFactory;
+        $this->valueTranspiler = $valueTranspiler;
     }
 
     public static function createTranspiler(): SetActionTranspiler
     {
         return new SetActionTranspiler(
             VariableAssignmentFactory::createFactory(),
-            WebDriverElementMutatorCallFactory::createFactory()
+            WebDriverElementMutatorCallFactory::createFactory(),
+            ValueTranspiler::createTranspiler()
         );
     }
 
@@ -73,14 +79,14 @@ class SetActionTranspiler implements TranspilerInterface
             $collectionPlaceholder
         );
 
-        try {
-            $valueAssignment = $this->variableAssignmentFactory->createForValue(
-                $model->getValue(),
-                $valuePlaceholder
-            );
-        } catch (NonTranspilableValueException $nonTranspilableValueException) {
-            throw new NonTranspilableModelException($model);
+        $value = $model->getValue();
+
+        if ($value instanceof DomIdentifierValueInterface) {
+            $value = new NamedDomIdentifierValue($value, $valuePlaceholder);
         }
+
+        $valueAccessor = $this->valueTranspiler->transpile($value);
+        $valueAssignment = $this->variableAssignmentFactory->createForValueAccessor($valueAccessor, $valuePlaceholder);
 
         $mutationCall = $this->webDriverElementMutatorCallFactory->createSetValueCall(
             $collectionPlaceholder,
