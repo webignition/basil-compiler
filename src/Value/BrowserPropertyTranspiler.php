@@ -53,13 +53,11 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $dimensionAccess = (new CompilableSource())
+        $dimensionAssignment = (new VariableAssignment($webDriverDimensionPlaceholder))
             ->withStatements([
                 $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()',
             ])
             ->withCompilationMetadata((new CompilationMetadata())->withVariableDependencies($variableDependencies));
-
-        $dimensionAssignment = new VariableAssignment($dimensionAccess, $webDriverDimensionPlaceholder);
 
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';

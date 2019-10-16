@@ -2,36 +2,37 @@
 
 namespace webignition\BasilTranspiler\Model;
 
+use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\CompilationMetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 
-class VariableAssignment implements CompilableSourceInterface
+class VariableAssignment extends CompilableSource
 {
     const STATEMENT_PATTERN = '%s = %s';
 
-    private $compilableSource;
     private $variablePlaceholder;
 
-    public function __construct(
-        CompilableSourceInterface $compilableSource,
-        VariablePlaceholder $variablePlaceholder
-    ) {
-        $this->compilableSource = $compilableSource;
+    public function __construct(VariablePlaceholder $variablePlaceholder)
+    {
+        parent::__construct();
+
         $this->variablePlaceholder = $variablePlaceholder;
-
-        $compilationMetadata = $this->compilableSource->getCompilationMetadata();
-        $compilationMetadata = $compilationMetadata->withAdditionalVariableExports(new VariablePlaceholderCollection([
-            $variablePlaceholder
-        ]));
-
-        $this->compilableSource = $this->compilableSource->withCompilationMetadata($compilationMetadata);
+        $this->setPlaceholderAsVariableExport();
     }
 
-    public function getCompilableSource(): CompilableSourceInterface
-    {
-        return $this->compilableSource;
+    public static function fromCompilableSource(
+        CompilableSourceInterface $source,
+        VariablePlaceholder $variablePlaceholder
+    ): CompilableSourceInterface {
+        $variableAssignment = new VariableAssignment($variablePlaceholder);
+
+        $variableAssignment = $variableAssignment->withPredecessors($source->getPredecessors());
+        $variableAssignment = $variableAssignment->withStatements($source->getStatements());
+        $variableAssignment = $variableAssignment->withCompilationMetadata($source->getCompilationMetadata());
+
+        return $variableAssignment;
     }
 
     public function getVariablePlaceholder(): VariablePlaceholder
@@ -41,7 +42,7 @@ class VariableAssignment implements CompilableSourceInterface
 
     public function getStatements(): array
     {
-        $statements = $this->compilableSource->getStatements();
+        $statements = parent::getStatements();
         $finalStatement = array_pop($statements);
 
         $finalStatement = sprintf(self::STATEMENT_PATTERN, $this->variablePlaceholder, $finalStatement);
@@ -51,44 +52,25 @@ class VariableAssignment implements CompilableSourceInterface
         return $statements;
     }
 
-    public function getCompilationMetadata(): CompilationMetadataInterface
-    {
-        return $this->compilableSource->getCompilationMetadata();
-    }
-
-    public function withPredecessors(array $predecessors): CompilableSourceInterface
-    {
-        $new = clone $this;
-        $new->compilableSource = $new->compilableSource->withPredecessors($predecessors);
-
-        return $new;
-    }
-
-    public function withStatements(array $statements): CompilableSourceInterface
-    {
-        $new = clone $this;
-        $new->compilableSource = $new->compilableSource->withStatements($statements);
-
-        return $new;
-    }
-
     public function withCompilationMetadata(
         CompilationMetadataInterface $compilationMetadata
     ): CompilableSourceInterface {
-        $new = clone $this;
-        $new->compilableSource = $new->compilableSource->withCompilationMetadata($compilationMetadata);
+        $new = parent::withCompilationMetadata($compilationMetadata);
+
+        if ($new instanceof VariableAssignment) {
+            $new = $new->setPlaceholderAsVariableExport();
+        }
 
         return $new;
     }
 
-    public function appendStatement(int $index, string $content)
+    private function setPlaceholderAsVariableExport()
     {
-        $new = clone $this;
-        $new->compilableSource->appendStatement($index, $content);
-    }
+        $compilationMetadata = $this->getCompilationMetadata();
+        $compilationMetadata = $compilationMetadata->withAdditionalVariableExports(new VariablePlaceholderCollection([
+            $this->variablePlaceholder,
+        ]));
 
-    public function __toString(): string
-    {
-        return $this->compilableSource->__toString();
+        return parent::withCompilationMetadata($compilationMetadata);
     }
 }

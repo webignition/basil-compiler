@@ -52,8 +52,8 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
 
     protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        VariableAssignment $examinedValue,
-        VariableAssignment $expectedValue
+        CompilableSourceInterface $examinedValue,
+        CompilableSourceInterface $expectedValue
     ): CompilableSourceInterface {
         return AssertionComparison::INCLUDES === $assertion->getComparison()
             ? $this->assertionCallFactory->createValueIncludesValueAssertionCall($expectedValue, $examinedValue)
