@@ -8,6 +8,7 @@ use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\CallFactory\ElementCallArgumentFactory;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementInspectorCallFactory;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
@@ -22,19 +23,22 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
     private $assertionCallFactory;
     private $webDriverElementInspectorCallFactory;
     private $singleQuotedStringEscaper;
+    private $elementCallArgumentFactory;
 
     public function __construct(
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         ElementLocatorCallFactory $elementLocatorCallFactory,
         AssertionCallFactory $assertionCallFactory,
         WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory,
-        SingleQuotedStringEscaper $singleQuotedStringEscaper
+        SingleQuotedStringEscaper $singleQuotedStringEscaper,
+        ElementCallArgumentFactory $elementCallArgumentFactory
     ) {
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
         $this->assertionCallFactory = $assertionCallFactory;
         $this->webDriverElementInspectorCallFactory = $webDriverElementInspectorCallFactory;
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
+        $this->elementCallArgumentFactory = $elementCallArgumentFactory;
     }
 
     public static function createTranspiler(): NamedDomIdentifierValueTranspiler
@@ -44,7 +48,8 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
             ElementLocatorCallFactory::createFactory(),
             AssertionCallFactory::createFactory(),
             WebDriverElementInspectorCallFactory::createFactory(),
-            SingleQuotedStringEscaper::create()
+            SingleQuotedStringEscaper::create(),
+            ElementCallArgumentFactory::createFactory()
         );
     }
 
@@ -62,7 +67,7 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
         $identifier = $model->getIdentifier();
         $hasAttribute = null !== $identifier->getAttributeName();
 
-        $elementCallArguments = $this->domCrawlerNavigatorCallFactory->createElementCallArguments($identifier);
+        $elementCallArguments = $this->elementCallArgumentFactory->createElementCallArguments($identifier);
 
         if ($hasAttribute) {
             $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(

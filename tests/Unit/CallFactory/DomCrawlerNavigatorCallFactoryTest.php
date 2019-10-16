@@ -55,18 +55,6 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             ->withVariableDependencies($expectedVariableDependencies);
     }
 
-    public function testCreateFindCallForIdentifier()
-    {
-        $compilableSource = $this->factory->createFindCallForIdentifier(
-            TestIdentifierFactory::createElementIdentifier('.selector')
-        );
-
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
-
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
-    }
-
     public function testCreateFindCallForTranspiledLocator()
     {
         $findElementCallArguments = (new CompilableSource())
