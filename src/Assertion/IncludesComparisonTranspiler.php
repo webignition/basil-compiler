@@ -10,6 +10,7 @@ use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\Value\ValueTranspiler;
 
 class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler implements TranspilerInterface
 {
@@ -17,7 +18,8 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
     {
         return new IncludesComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentFactory::createFactory()
+            VariableAssignmentFactory::createFactory(),
+            ValueTranspiler::createTranspiler()
         );
     }
 
