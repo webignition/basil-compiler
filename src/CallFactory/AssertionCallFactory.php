@@ -63,20 +63,22 @@ class AssertionCallFactory
 
     public function createValueIsTrueAssertionCall(
         CompilableSourceInterface $variableAssignmentCall,
-        ?VariablePlaceholder $placeholder = null
+        VariablePlaceholder $placeholder
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            self::ASSERT_TRUE_TEMPLATE,
-            $placeholder
+            $placeholder,
+            self::ASSERT_TRUE_TEMPLATE
         );
     }
 
     public function createValueIsFalseAssertionCall(
-        CompilableSourceInterface $variableAssignmentCall
+        CompilableSourceInterface $variableAssignmentCall,
+        VariablePlaceholder $placeholder
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
+            $placeholder,
             self::ASSERT_FALSE_TEMPLATE
         );
     }
@@ -171,23 +173,13 @@ class AssertionCallFactory
 
     private function createValueExistenceAssertionCall(
         CompilableSourceInterface $assignmentCall,
-        string $assertionTemplate,
-        ?VariablePlaceholder $variablePlaceholder = null
+        VariablePlaceholder $variablePlaceholder,
+        string $assertionTemplate
     ): CompilableSourceInterface {
-        $placeholder = '';
-
-        if ($variablePlaceholder instanceof VariablePlaceholder) {
-            $placeholder = (string) $variablePlaceholder;
-        }
-
-        if (null === $variablePlaceholder && $assignmentCall instanceof VariableAssignment) {
-            $placeholder = (string) $assignmentCall->getVariablePlaceholder();
-        }
-
         $assertionStatement = sprintf(
             $assertionTemplate,
             (string) $this->phpUnitTestCasePlaceholder,
-            $placeholder
+            (string) $variablePlaceholder
         );
 
         $compilationMetadata = (new CompilationMetadata())

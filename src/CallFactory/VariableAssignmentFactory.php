@@ -306,12 +306,14 @@ class VariableAssignmentFactory
             $elementLocatorPlaceholder
         );
 
-        $hasAssignment = VariableAssignment::fromCompilableSource(
-            $hasCall,
-            $variableExports->create('HAS')
-        );
+        $hasPlaceholder = $variableExports->create('HAS');
 
-        $elementExistsAssertion = $this->assertionCallFactory->createValueIsTrueAssertionCall($hasAssignment);
+        $hasAssignment = VariableAssignment::fromCompilableSource($hasCall, $hasPlaceholder);
+
+        $elementExistsAssertion = $this->assertionCallFactory->createValueIsTrueAssertionCall(
+            $hasAssignment,
+            $hasPlaceholder
+        );
 
         return (new VariableAssignment($returnValuePlaceholder))
             ->withPredecessors([
