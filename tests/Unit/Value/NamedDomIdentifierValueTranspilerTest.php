@@ -14,9 +14,9 @@ use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterVal
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
-use webignition\BasilTranspiler\Value\LiteralValueTranspiler;
+use webignition\BasilTranspiler\Value\NamedDomIdentifierValueTranspiler;
 
-class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
+class NamedDomIdentifierValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
     use NamedDomIdentifierValueDataProviderTrait;
@@ -26,7 +26,7 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
     use UnhandledValueDataProviderTrait;
 
     /**
-     * @var LiteralValueTranspiler
+     * @var NamedDomIdentifierValueTranspiler
      */
     private $transpiler;
 
@@ -34,11 +34,11 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = LiteralValueTranspiler::createTranspiler();
+        $this->transpiler = NamedDomIdentifierValueTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider literalValueDataProvider
+     * @dataProvider namedDomIdentifierValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {
@@ -47,8 +47,8 @@ class LiteralValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserPropertyDataProvider
-     * @dataProvider namedDomIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
+     * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
      * @dataProvider unhandledValueDataProvider
      */
