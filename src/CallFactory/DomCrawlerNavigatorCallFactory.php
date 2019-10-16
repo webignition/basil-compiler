@@ -12,30 +12,22 @@ use webignition\BasilTranspiler\VariableNames;
 class DomCrawlerNavigatorCallFactory
 {
     private $elementLocatorCallFactory;
+    private $elementCallArgumentFactory;
 
-    public function __construct(ElementLocatorCallFactory $elementLocatorCallFactory)
-    {
+    public function __construct(
+        ElementLocatorCallFactory $elementLocatorCallFactory,
+        ElementCallArgumentFactory $elementCallArgumentFactory
+    ) {
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
+        $this->elementCallArgumentFactory = $elementCallArgumentFactory;
     }
 
     public static function createFactory(): DomCrawlerNavigatorCallFactory
     {
         return new DomCrawlerNavigatorCallFactory(
-            ElementLocatorCallFactory::createFactory()
+            ElementLocatorCallFactory::createFactory(),
+            ElementCallArgumentFactory::createFactory()
         );
-    }
-
-    /**
-     * @param DomIdentifierInterface $elementIdentifier
-     *
-     * @return CompilableSourceInterface
-     */
-    public function createFindCallForIdentifier(
-        DomIdentifierInterface $elementIdentifier
-    ): CompilableSourceInterface {
-        $arguments = $this->createElementCallArguments($elementIdentifier);
-
-        return $this->createFindCallForTranspiledArguments($arguments);
     }
 
     /**
@@ -68,7 +60,7 @@ class DomCrawlerNavigatorCallFactory
     public function createHasCallForIdentifier(
         DomIdentifierInterface $elementIdentifier
     ): CompilableSourceInterface {
-        $hasElementCallArguments = $this->createElementCallArguments($elementIdentifier);
+        $hasElementCallArguments = $this->elementCallArgumentFactory->createElementCallArguments($elementIdentifier);
 
         return $this->createHasCallForTranspiledArguments($hasElementCallArguments);
     }
@@ -120,40 +112,5 @@ class DomCrawlerNavigatorCallFactory
         return (new CompilableSource())
             ->withStatements([$createStatement])
             ->withCompilationMetadata($compilationMetadata);
-    }
-
-    /**
-     * @param DomIdentifierInterface $elementIdentifier
-     *
-     * @return CompilableSourceInterface
-     */
-    public function createElementCallArguments(
-        DomIdentifierInterface $elementIdentifier
-    ): CompilableSourceInterface {
-        $compilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
-
-        $parentIdentifier = $elementIdentifier->getParentIdentifier();
-        if ($parentIdentifier instanceof DomIdentifierInterface) {
-            $parentElementLocatorConstructorCall = $this->elementLocatorCallFactory->createConstructorCall(
-                $parentIdentifier
-            );
-
-            $compilationMetadata = (new CompilationMetadata())->merge([
-                $compilableSource->getCompilationMetadata(),
-                $parentElementLocatorConstructorCall->getCompilationMetadata(),
-            ]);
-
-            $compilableSource = (new CompilableSource())
-                ->withStatements([
-                    sprintf(
-                        '%s, %s',
-                        (string) $compilableSource,
-                        (string) $parentElementLocatorConstructorCall
-                    ),
-                ])
-                ->withCompilationMetadata($compilationMetadata);
-        }
-
-        return $compilableSource;
     }
 }

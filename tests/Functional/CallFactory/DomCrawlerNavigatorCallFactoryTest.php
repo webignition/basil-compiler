@@ -34,62 +34,6 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createFindCallForIdentifierDataProvider
-     */
-    public function testCreateFindCallForIdentifier(
-        string $fixture,
-        DomIdentifierInterface $elementIdentifier,
-        callable $assertions
-    ) {
-        $compilableSource = $this->factory->createFindCallForIdentifier($elementIdentifier);
-
-        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
-
-        $element = eval($executableCall);
-
-        $assertions($element);
-    }
-
-    public function createFindCallForIdentifierDataProvider(): array
-    {
-        return [
-            'css selector, no parent' => [
-                'fixture' => '/form.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('input[name=input-with-value]'),
-                'assertions' => function (WebDriverElementCollectionInterface $collection) {
-                    $this->assertCount(1, $collection);
-
-                    $element = $collection->get(0);
-                    $this->assertInstanceOf(WebDriverElement::class, $element);
-
-                    if ($element instanceof WebDriverElement) {
-                        $this->assertSame('input-with-value', $element->getAttribute('name'));
-                    }
-                },
-            ],
-            'css selector, has parent' => [
-                'fixture' => '/form.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    'input',
-                    1,
-                    null,
-                    TestIdentifierFactory::createElementIdentifier('form[action="/action2"]')
-                ),
-                'assertions' => function (WebDriverElementCollectionInterface $collection) {
-                    $this->assertCount(1, $collection);
-
-                    $element = $collection->get(0);
-                    $this->assertInstanceOf(WebDriverElement::class, $element);
-
-                    if ($element instanceof WebDriverElement) {
-                        $this->assertSame('input-2', $element->getAttribute('name'));
-                    }
-                },
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider createFindCallForTranspiledArgumentsDataProvider
      */
     public function testCreateFindCallForTranspiledArguments(
