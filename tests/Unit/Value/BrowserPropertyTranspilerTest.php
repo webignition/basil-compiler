@@ -11,7 +11,7 @@ use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\NamedDomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
@@ -22,7 +22,7 @@ use webignition\BasilTranspiler\Value\BrowserPropertyTranspiler;
 class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
-    use DomIdentifierValueDataProviderTrait;
+    use NamedDomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use PagePropertyProviderTrait;
@@ -49,7 +49,7 @@ class BrowserPropertyTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider domIdentifierValueDataProvider
+     * @dataProvider namedDomIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider

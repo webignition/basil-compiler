@@ -9,24 +9,24 @@ namespace webignition\BasilTranspiler\Tests\Unit\Value;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\BrowserPropertyDataProviderTrait;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\DomIdentifierValueDataProviderTrait;
+use webignition\BasilTranspiler\Tests\DataProvider\Value\NamedDomIdentifierValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\EnvironmentParameterValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\LiteralValueDataProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\PagePropertyProviderTrait;
 use webignition\BasilTranspiler\Tests\DataProvider\Value\UnhandledValueDataProviderTrait;
-use webignition\BasilTranspiler\Value\DomIdentifierValueTranspiler;
+use webignition\BasilTranspiler\Value\NamedDomIdentifierValueTranspiler;
 
-class DomIdentifierValueTranspilerTest extends \PHPUnit\Framework\TestCase
+class NamedDomIdentifierValueTranspilerTest extends \PHPUnit\Framework\TestCase
 {
     use BrowserPropertyDataProviderTrait;
-    use DomIdentifierValueDataProviderTrait;
+    use NamedDomIdentifierValueDataProviderTrait;
     use EnvironmentParameterValueDataProviderTrait;
     use LiteralValueDataProviderTrait;
     use PagePropertyProviderTrait;
     use UnhandledValueDataProviderTrait;
 
     /**
-     * @var DomIdentifierValueTranspiler
+     * @var NamedDomIdentifierValueTranspiler
      */
     private $transpiler;
 
@@ -34,11 +34,11 @@ class DomIdentifierValueTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->transpiler = DomIdentifierValueTranspiler::createTranspiler();
+        $this->transpiler = NamedDomIdentifierValueTranspiler::createTranspiler();
     }
 
     /**
-     * @dataProvider domIdentifierValueDataProvider
+     * @dataProvider namedDomIdentifierValueDataProvider
      */
     public function testHandlesDoesHandle(ValueInterface $model)
     {

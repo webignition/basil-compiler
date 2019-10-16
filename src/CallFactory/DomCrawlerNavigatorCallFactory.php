@@ -127,7 +127,7 @@ class DomCrawlerNavigatorCallFactory
      *
      * @return CompilableSourceInterface
      */
-    private function createElementCallArguments(
+    public function createElementCallArguments(
         DomIdentifierInterface $elementIdentifier
     ): CompilableSourceInterface {
         $compilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);

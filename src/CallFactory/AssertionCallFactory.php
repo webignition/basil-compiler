@@ -5,6 +5,7 @@ namespace webignition\BasilTranspiler\CallFactory;
 use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\VariableNames;
@@ -61,11 +62,13 @@ class AssertionCallFactory
     }
 
     public function createValueIsTrueAssertionCall(
-        CompilableSourceInterface $variableAssignmentCall
+        CompilableSourceInterface $variableAssignmentCall,
+        ?VariablePlaceholder $placeholder = null
     ): CompilableSourceInterface {
         return $this->createValueExistenceAssertionCall(
             $variableAssignmentCall,
-            self::ASSERT_TRUE_TEMPLATE
+            self::ASSERT_TRUE_TEMPLATE,
+            $placeholder
         );
     }
 
@@ -168,11 +171,18 @@ class AssertionCallFactory
 
     private function createValueExistenceAssertionCall(
         CompilableSourceInterface $assignmentCall,
-        string $assertionTemplate
+        string $assertionTemplate,
+        ?VariablePlaceholder $variablePlaceholder = null
     ): CompilableSourceInterface {
-        $placeholder = $assignmentCall instanceof VariableAssignment
-            ? (string) $assignmentCall->getVariablePlaceholder()
-            : '';
+        $placeholder = '';
+
+        if ($variablePlaceholder instanceof VariablePlaceholder) {
+            $placeholder = (string) $variablePlaceholder;
+        }
+
+        if (null === $variablePlaceholder && $assignmentCall instanceof VariableAssignment) {
+            $placeholder = (string) $assignmentCall->getVariablePlaceholder();
+        }
 
         $assertionStatement = sprintf(
             $assertionTemplate,
@@ -180,7 +190,11 @@ class AssertionCallFactory
             $placeholder
         );
 
+        $compilationMetadata = (new CompilationMetadata())
+            ->withVariableDependencies($this->variableDependencies);
+
         return (new CompilableSource())
+            ->withCompilationMetadata($compilationMetadata)
             ->withStatements([$assertionStatement])
             ->withPredecessors([$assignmentCall]);
     }
