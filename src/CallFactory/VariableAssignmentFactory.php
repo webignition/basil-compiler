@@ -35,31 +35,6 @@ class VariableAssignmentFactory
         );
     }
 
-    public function createForElement(
-        DomIdentifierInterface $identifier,
-        VariablePlaceholder $elementLocatorPlaceholder,
-        VariablePlaceholder $elementPlaceholder
-    ) {
-        $argumentsVariableExports = new VariablePlaceholderCollection([
-            $elementLocatorPlaceholder,
-        ]);
-
-        $arguments = (new CompilableSource())
-            ->withStatements([(string) $elementLocatorPlaceholder])
-            ->withCompilationMetadata((new CompilationMetadata())->withVariableExports($argumentsVariableExports));
-
-        $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments($arguments);
-        $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCallForTranspiledArguments($arguments);
-
-        return $this->createForElementOrCollection(
-            $identifier,
-            $elementLocatorPlaceholder,
-            $elementPlaceholder,
-            $hasCall,
-            $findCall
-        );
-    }
-
     public function createForValueAccessor(
         CompilableSourceInterface $accessor,
         VariablePlaceholder $placeholder,

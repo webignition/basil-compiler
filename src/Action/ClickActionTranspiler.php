@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\Action;
 
 use webignition\BasilModel\Action\ActionTypes;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class ClickActionTranspiler extends AbstractInteractionActionTranspiler implements TranspilerInterface
@@ -11,7 +12,8 @@ class ClickActionTranspiler extends AbstractInteractionActionTranspiler implemen
     public static function createTranspiler(): ClickActionTranspiler
     {
         return new ClickActionTranspiler(
-            VariableAssignmentFactory::createFactory()
+            VariableAssignmentFactory::createFactory(),
+            NamedDomIdentifierTranspiler::createTranspiler()
         );
     }
 
