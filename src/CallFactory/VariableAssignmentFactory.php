@@ -9,7 +9,6 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
-use webignition\BasilModel\Value\LiteralValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\Model\VariableAssignment;
@@ -29,7 +28,6 @@ class VariableAssignmentFactory
     private $domCrawlerNavigatorCallFactory;
     private $valueTranspiler;
     private $singleQuotedStringEscaper;
-    private $webDriverElementInspectorCallFactory;
     private $objectValueTypeExaminer;
 
     public function __construct(
@@ -38,7 +36,6 @@ class VariableAssignmentFactory
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         ValueTranspiler $valueTranspiler,
         SingleQuotedStringEscaper $singleQuotedStringEscaper,
-        WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory,
         ObjectValueTypeExaminer $objectValueTypeExaminer
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
@@ -46,7 +43,6 @@ class VariableAssignmentFactory
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->valueTranspiler = $valueTranspiler;
         $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
-        $this->webDriverElementInspectorCallFactory = $webDriverElementInspectorCallFactory;
         $this->objectValueTypeExaminer = $objectValueTypeExaminer;
     }
 
@@ -58,7 +54,6 @@ class VariableAssignmentFactory
             DomCrawlerNavigatorCallFactory::createFactory(),
             ValueTranspiler::createTranspiler(),
             SingleQuotedStringEscaper::create(),
-            WebDriverElementInspectorCallFactory::createFactory(),
             ObjectValueTypeExaminer::createExaminer()
         );
     }
@@ -111,69 +106,6 @@ class VariableAssignmentFactory
             ->withStatements([
                 sprintf('%s = (%s) %s', (string) $placeholder, $type, (string) $placeholder)
             ]);
-    }
-
-    /**
-     * @param ValueInterface $value
-     * @param VariablePlaceholder $placeholder
-     * @param string $type
-     * @param string $default
-     *
-     * @return CompilableSourceInterface
-     *
-     * @throws NonTranspilableModelException
-     * @throws NonTranspilableValueException
-     */
-    public function createForValue(
-        ValueInterface $value,
-        VariablePlaceholder $placeholder,
-        string $type = 'string',
-        string $default = 'null'
-    ): CompilableSourceInterface {
-        $assignment = null;
-
-        $isOfScalarObjectType = $this->objectValueTypeExaminer->isOfType($value, [
-            ObjectValueType::BROWSER_PROPERTY,
-            ObjectValueType::ENVIRONMENT_PARAMETER,
-            ObjectValueType::PAGE_PROPERTY,
-        ]);
-
-        $isScalarValue = $value instanceof LiteralValueInterface || $isOfScalarObjectType;
-
-        if ($isScalarValue) {
-            $assignment = $this->createForScalar($value, $placeholder, $default);
-        }
-
-        if (null === $assignment && $value instanceof DomIdentifierValueInterface) {
-            $identifier = $value->getIdentifier();
-
-            if (null === $identifier->getAttributeName()) {
-                $assignment = $this->createForElementCollectionValue($identifier, $placeholder);
-            } else {
-                $assignment = $this->createForAttribute(
-                    $identifier,
-                    $this->createElementLocatorPlaceholder(),
-                    $this->createElementPlaceholder(),
-                    $placeholder
-                );
-            }
-        }
-
-        if ($assignment instanceof VariableAssignment) {
-            $variableAssignmentCallPlaceholder = $assignment->getVariablePlaceholder();
-
-            $assignment = (new VariableAssignment($variableAssignmentCallPlaceholder))
-                ->withPredecessors([$assignment])
-                ->withStatements([
-                    sprintf('(%s) %s', $type, (string) $variableAssignmentCallPlaceholder)
-                ]);
-        }
-
-        if (null === $assignment) {
-            throw new NonTranspilableValueException($value);
-        }
-
-        return $assignment;
     }
 
     /**
@@ -275,24 +207,6 @@ class VariableAssignmentFactory
                     $this->singleQuotedStringEscaper->escape((string) $identifier->getAttributeName())
                 ),
             ]);
-    }
-
-    private function createForElementCollectionValue(
-        DomIdentifierInterface $identifier,
-        VariablePlaceholder $valuePlaceholder
-    ): CompilableSourceInterface {
-        $collectionAssignment = $this->createForElementCollection(
-            $identifier,
-            $this->createElementLocatorPlaceholder(),
-            $valuePlaceholder
-        );
-
-        $collectionPlaceholder = $collectionAssignment->getVariablePlaceholder();
-
-        $getValueAssignment = $this->webDriverElementInspectorCallFactory->createGetValueCall($collectionPlaceholder);
-
-        return (new VariableAssignment($valuePlaceholder))
-            ->withPredecessors([$collectionAssignment, $getValueAssignment]);
     }
 
     private function createForAttributeExistence(
