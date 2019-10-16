@@ -4,7 +4,7 @@ namespace webignition\BasilTranspiler\Model;
 
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilModel\Value\DomIdentifierValue;
+use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 
 class NamedDomIdentifierValue implements ValueInterface
@@ -12,7 +12,7 @@ class NamedDomIdentifierValue implements ValueInterface
     private $domIdentifierValue;
     private $placeholder;
 
-    public function __construct(DomIdentifierValue $domIdentifierValue, VariablePlaceholder $placeholder)
+    public function __construct(DomIdentifierValueInterface $domIdentifierValue, VariablePlaceholder $placeholder)
     {
         $this->domIdentifierValue = $domIdentifierValue;
         $this->placeholder = $placeholder;
