@@ -4,6 +4,7 @@ namespace webignition\BasilTranspiler\Value;
 
 use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\AbstractDelegatingTranspiler;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class ValueTranspiler extends AbstractDelegatingTranspiler implements TranspilerInterface
@@ -16,7 +17,7 @@ class ValueTranspiler extends AbstractDelegatingTranspiler implements Transpiler
                 EnvironmentParameterValueTranspiler::createTranspiler(),
                 LiteralValueTranspiler::createTranspiler(),
                 PagePropertyTranspiler::createTranspiler(),
-                NamedDomIdentifierValueTranspiler::createTranspiler(),
+                NamedDomIdentifierTranspiler::createTranspiler(),
             ]
         );
     }

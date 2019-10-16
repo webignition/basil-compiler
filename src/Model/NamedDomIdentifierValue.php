@@ -7,7 +7,7 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilModel\Value\ValueInterface;
 
-class NamedDomIdentifierValue implements ValueInterface
+class NamedDomIdentifierValue implements ValueInterface, NamedDomIdentifierInterface
 {
     private $domIdentifierValue;
     private $placeholder;

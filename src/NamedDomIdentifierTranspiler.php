@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace webignition\BasilTranspiler\Value;
+namespace webignition\BasilTranspiler;
 
 use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
@@ -11,12 +11,9 @@ use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\ElementCallArgumentFactory;
 use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementInspectorCallFactory;
-use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
-use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\SingleQuotedStringEscaper;
-use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\Model\NamedDomIdentifierInterface;
 
-class NamedDomIdentifierValueTranspiler implements TranspilerInterface
+class NamedDomIdentifierTranspiler implements TranspilerInterface
 {
     private $domCrawlerNavigatorCallFactory;
     private $elementLocatorCallFactory;
@@ -41,9 +38,9 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
         $this->elementCallArgumentFactory = $elementCallArgumentFactory;
     }
 
-    public static function createTranspiler(): NamedDomIdentifierValueTranspiler
+    public static function createTranspiler(): NamedDomIdentifierTranspiler
     {
-        return new NamedDomIdentifierValueTranspiler(
+        return new NamedDomIdentifierTranspiler(
             DomCrawlerNavigatorCallFactory::createFactory(),
             ElementLocatorCallFactory::createFactory(),
             AssertionCallFactory::createFactory(),
@@ -55,12 +52,12 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
 
     public function handles(object $model): bool
     {
-        return $model instanceof NamedDomIdentifierValue;
+        return $model instanceof NamedDomIdentifierInterface;
     }
 
     public function transpile(object $model): CompilableSourceInterface
     {
-        if (!$model instanceof NamedDomIdentifierValue) {
+        if (!$model instanceof NamedDomIdentifierInterface) {
             throw new NonTranspilableModelException($model);
         }
 
