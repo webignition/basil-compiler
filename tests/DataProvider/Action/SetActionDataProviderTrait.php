@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
+use webignition\BasilModel\Action\InputAction;
+use webignition\BasilModel\Identifier\DomIdentifier;
+use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilModelFactory\Action\ActionFactory;
 
 trait SetActionDataProviderTrait
@@ -20,13 +23,23 @@ trait SetActionDataProviderTrait
                 ),
             ],
             'input action, element identifier, element value' => [
-                'action' => $actionFactory->createFromActionString(
-                    'set ".selector" to ".source"'
+                'action' => new InputAction(
+                    'set ".selector" to ".source"',
+                    new DomIdentifier('.selector'),
+                    new DomIdentifierValue(
+                        new DomIdentifier('.source')
+                    ),
+                    '".selector" to ".source"'
                 ),
             ],
             'input action, element identifier, attribute value' => [
-                'action' => $actionFactory->createFromActionString(
-                    'set ".selector" to ".source".attribute_name'
+                'action' => new InputAction(
+                    'set ".selector" to ".source".attribute_name',
+                    new DomIdentifier('.selector'),
+                    new DomIdentifierValue(
+                        (new DomIdentifier('.source'))->withAttributeName('attribute_name')
+                    ),
+                    '".selector" to ".source"'
                 ),
             ],
             'input action, browser property' => [
