@@ -176,6 +176,74 @@ class ValueTranspilerTest extends AbstractTestCase
                         new ClassDependency(Inspector::class),
                     ]))
             ],
+            'attribute value, no parent' => [
+                'fixture' => '/form.html',
+                'model' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('input', 1))->withAttributeName('name')
+                    ),
+                    new VariablePlaceholder('ELEMENT')
+                ),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT',
+                    ])),
+                'expectedExecutedResult' => 'input-without-value',
+                'additionalVariableIdentifiers' => [
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                ],
+                'additionalSetupStatements' => [
+                    '$inspector = new Inspector();',
+                ],
+                'additionalCompilationMetadata' => (new CompilationMetadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ]))
+            ],
+            'attribute value, has parent' => [
+                'fixture' => '/form.html',
+                'model' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('input', 1))
+                            ->withAttributeName('name')
+                            ->withParentIdentifier(new DomIdentifier('form[action="/action2"]'))
+                    ),
+                    new VariablePlaceholder('ELEMENT')
+                ),
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT',
+                    ])),
+                'expectedExecutedResult' => 'input-2',
+                'additionalVariableIdentifiers' => [
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                ],
+                'additionalSetupStatements' => [
+                    '$inspector = new Inspector();',
+                ],
+                'additionalCompilationMetadata' => (new CompilationMetadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ]))
+            ],
         ];
     }
 }

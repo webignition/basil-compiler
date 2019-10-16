@@ -12,6 +12,7 @@ use webignition\BasilTranspiler\CallFactory\ElementLocatorCallFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementInspectorCallFactory;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NonTranspilableModelException;
+use webignition\BasilTranspiler\SingleQuotedStringEscaper;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 class NamedDomIdentifierValueTranspiler implements TranspilerInterface
@@ -20,17 +21,20 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
     private $elementLocatorCallFactory;
     private $assertionCallFactory;
     private $webDriverElementInspectorCallFactory;
+    private $singleQuotedStringEscaper;
 
     public function __construct(
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         ElementLocatorCallFactory $elementLocatorCallFactory,
         AssertionCallFactory $assertionCallFactory,
-        WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory
+        WebDriverElementInspectorCallFactory $webDriverElementInspectorCallFactory,
+        SingleQuotedStringEscaper $singleQuotedStringEscaper
     ) {
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->elementLocatorCallFactory = $elementLocatorCallFactory;
         $this->assertionCallFactory = $assertionCallFactory;
         $this->webDriverElementInspectorCallFactory = $webDriverElementInspectorCallFactory;
+        $this->singleQuotedStringEscaper = $singleQuotedStringEscaper;
     }
 
     public static function createTranspiler(): NamedDomIdentifierValueTranspiler
@@ -39,7 +43,8 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
             DomCrawlerNavigatorCallFactory::createFactory(),
             ElementLocatorCallFactory::createFactory(),
             AssertionCallFactory::createFactory(),
-            WebDriverElementInspectorCallFactory::createFactory()
+            WebDriverElementInspectorCallFactory::createFactory(),
+            SingleQuotedStringEscaper::create()
         );
     }
 
@@ -55,26 +60,37 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
         }
 
         $identifier = $model->getIdentifier();
+        $hasAttribute = null !== $identifier->getAttributeName();
 
         $elementCallArguments = $this->domCrawlerNavigatorCallFactory->createElementCallArguments($identifier);
 
-        $hasElementCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
-            $elementCallArguments
-        );
+        if ($hasAttribute) {
+            $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
+                $elementCallArguments
+            );
 
-        $findElementCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
-            $elementCallArguments
-        );
+            $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCallForTranspiledArguments(
+                $elementCallArguments
+            );
+        } else {
+            $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
+                $elementCallArguments
+            );
+
+            $findCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
+                $elementCallArguments
+            );
+        }
 
         $hasAssignmentVariableExports = new VariablePlaceholderCollection();
         $hasPlaceholder = $hasAssignmentVariableExports->create('HAS');
 
-        $hasAssignment = clone $hasElementCall;
+        $hasAssignment = clone $hasCall;
         $hasAssignment->prependStatement(-1, $hasPlaceholder . ' = ');
         $hasAssignment = $hasAssignment->withCompilationMetadata(
             (new CompilationMetadata())
                 ->merge([
-                    $hasElementCall->getCompilationMetadata(),
+                    $hasCall->getCompilationMetadata(),
                 ])
                 ->withVariableExports($hasAssignmentVariableExports)
         );
@@ -84,12 +100,12 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
             $elementPlaceholder,
         ]);
 
-        $collectionAssignment = clone $findElementCall;
-        $collectionAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
-        $collectionAssignment = $collectionAssignment->withCompilationMetadata(
+        $elementOrCollectionAssignment = clone $findCall;
+        $elementOrCollectionAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
+        $elementOrCollectionAssignment = $elementOrCollectionAssignment->withCompilationMetadata(
             (new CompilationMetadata())
                 ->merge([
-                    $findElementCall->getCompilationMetadata(),
+                    $findCall->getCompilationMetadata(),
                 ])
                 ->withVariableExports($collectionAssignmentVariableExports)
         );
@@ -99,16 +115,28 @@ class NamedDomIdentifierValueTranspiler implements TranspilerInterface
             $hasPlaceholder
         );
 
-        $getValueCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($elementPlaceholder);
+        if ($hasAttribute) {
+            $valueAssignment = (new CompilableSource())
+                ->withStatements([
+                    sprintf(
+                        '%s = %s->getAttribute(\'%s\')',
+                        $elementPlaceholder,
+                        $elementPlaceholder,
+                        $this->singleQuotedStringEscaper->escape((string) $identifier->getAttributeName())
+                    )
+                ]);
+        } else {
+            $getValueCall = $this->webDriverElementInspectorCallFactory->createGetValueCall($elementPlaceholder);
 
-        $getValueAssignment = clone $getValueCall;
-        $getValueAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
+            $valueAssignment = clone $getValueCall;
+            $valueAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
+        }
 
         return (new CompilableSource())
             ->withPredecessors([
                 $elementExistsAssertion,
-                $collectionAssignment,
-                $getValueAssignment,
+                $elementOrCollectionAssignment,
+                $valueAssignment,
             ]);
     }
 }

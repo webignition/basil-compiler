@@ -214,6 +214,62 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                         'ELEMENT_HAS_PARENT',
                     ])),
             ],
+            'attribute value, no parent' => [
+                'value' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('.selector'))->withAttributeName('attribute_name')
+                    ),
+                    new VariablePlaceholder('ELEMENT_NO_PARENT')
+                ),
+                'expectedStatements' => [
+                    '{{ HAS }} = {{ DOM_CRAWLER_NAVIGATOR }}->hasOne(new ElementLocator(\'.selector\'))',
+                    '{{ PHPUNIT_TEST_CASE }}->assertTrue({{ HAS }})',
+                    '{{ ELEMENT_NO_PARENT }} = {{ DOM_CRAWLER_NAVIGATOR }}->findOne(new ElementLocator(\'.selector\'))',
+                    '{{ ELEMENT_NO_PARENT }} = {{ ELEMENT_NO_PARENT }}->getAttribute(\'attribute_name\')',
+                ],
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT_NO_PARENT',
+                    ])),
+            ],
+            'attribute value, has parent' => [
+                'value' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('.selector'))
+                            ->withAttributeName('attribute_name')
+                            ->withParentIdentifier(new DomIdentifier('.parent'))
+                    ),
+                    new VariablePlaceholder('ELEMENT_NO_PARENT')
+                ),
+                'expectedStatements' => [
+                    '{{ HAS }} = {{ DOM_CRAWLER_NAVIGATOR }}'
+                    .'->hasOne(new ElementLocator(\'.selector\'), new ElementLocator(\'.parent\'))',
+                    '{{ PHPUNIT_TEST_CASE }}->assertTrue({{ HAS }})',
+                    '{{ ELEMENT_NO_PARENT }} = {{ DOM_CRAWLER_NAVIGATOR }}'
+                    .'->findOne(new ElementLocator(\'.selector\'), new ElementLocator(\'.parent\'))',
+                    '{{ ELEMENT_NO_PARENT }} = {{ ELEMENT_NO_PARENT }}->getAttribute(\'attribute_name\')',
+                ],
+                'expectedCompilationMetadata' => (new CompilationMetadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT_NO_PARENT',
+                    ])),
+            ],
         ];
     }
 
