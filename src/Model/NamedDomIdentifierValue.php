@@ -28,6 +28,11 @@ class NamedDomIdentifierValue implements ValueInterface, NamedDomIdentifierInter
         return $this->placeholder;
     }
 
+    public function includeValue(): bool
+    {
+        return true;
+    }
+
     public function isEmpty(): bool
     {
         return $this->domIdentifierValue->isEmpty();

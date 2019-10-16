@@ -9,4 +9,5 @@ interface NamedDomIdentifierInterface
 {
     public function getIdentifier(): DomIdentifierInterface;
     public function getPlaceholder(): VariablePlaceholder;
+    public function includeValue(): bool;
 }
