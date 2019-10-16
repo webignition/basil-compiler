@@ -2,35 +2,48 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
+use webignition\BasilCompilationSource\CompilableSource;
 use webignition\BasilCompilationSource\CompilableSourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
+use webignition\BasilModel\Value\DomIdentifierValueInterface;
+use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
-use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
+use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\NonTranspilableValueException;
+use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\TranspilerInterface;
+use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
 
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
-    private $variableAssignmentFactory;
+    private $objectValueTypeExaminer;
+    private $valueTranspiler;
+    private $domCrawlerNavigatorCallFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        VariableAssignmentFactory $variableAssignmentFactory
+        ObjectValueTypeExaminer $objectValueTypeExaminer,
+        ValueTranspiler $valueTranspiler,
+        DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
-        $this->variableAssignmentFactory = $variableAssignmentFactory;
+        $this->objectValueTypeExaminer = $objectValueTypeExaminer;
+        $this->valueTranspiler = $valueTranspiler;
+        $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
     {
         return new ExistsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            VariableAssignmentFactory::createFactory()
+            ObjectValueTypeExaminer::createExaminer(),
+            ValueTranspiler::createTranspiler(),
+            DomCrawlerNavigatorCallFactory::createFactory()
         );
     }
 
@@ -60,27 +73,66 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             throw new NonTranspilableModelException($model);
         }
 
-        $examinedValue = $model->getExaminedValue();
+        $value = $model->getExaminedValue();
+        $valuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
 
-        $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
+        $isScalarValue = $this->objectValueTypeExaminer->isOfType($value, [
+            ObjectValueType::BROWSER_PROPERTY,
+            ObjectValueType::ENVIRONMENT_PARAMETER,
+            ObjectValueType::PAGE_PROPERTY,
+        ]);
 
-        try {
-            $examinedValueAssignment = $this->variableAssignmentFactory->createForValueExistence(
-                $examinedValue,
-                $examinedValuePlaceholder
-            );
-        } catch (NonTranspilableValueException $nonTranspilableValueException) {
-            throw new NonTranspilableModelException($model);
+        $existence = null;
+
+        if ($isScalarValue) {
+            $accessor = $this->valueTranspiler->transpile($value);
+            $accessor->appendStatement(0, ' ?? null');
+
+            $assignment = clone $accessor;
+            $assignment->prependStatement(-1, $valuePlaceholder . ' = ');
+
+            $existence = (new CompilableSource())
+                ->withPredecessors([$assignment])
+                ->withStatements([
+                    sprintf('%s = %s !== null', $valuePlaceholder, $valuePlaceholder)
+                ]);
+
+            return $this->createAssertionCall($model->getComparison(), $existence, $valuePlaceholder);
         }
 
-        return AssertionComparison::EXISTS === $model->getComparison()
-            ? $this->assertionCallFactory->createValueIsTrueAssertionCall(
-                $examinedValueAssignment,
-                $examinedValuePlaceholder
-            )
-            : $this->assertionCallFactory->createValueIsFalseAssertionCall(
-                $examinedValueAssignment,
-                $examinedValuePlaceholder
-            );
+        if ($value instanceof DomIdentifierValueInterface) {
+            $identifier = $value->getIdentifier();
+
+            if (null === $identifier->getAttributeName()) {
+                $accessor = $this->domCrawlerNavigatorCallFactory->createHasCallForIdentifier($identifier);
+
+                $assignment = clone $accessor;
+                $assignment->prependStatement(-1, $valuePlaceholder . ' = ');
+
+                return $this->createAssertionCall($model->getComparison(), $assignment, $valuePlaceholder);
+            }
+
+            $accessor = $this->valueTranspiler->transpile(new NamedDomIdentifierValue($value, $valuePlaceholder));
+
+            $existence = (new CompilableSource())
+                ->withPredecessors([$accessor])
+                ->withStatements([
+                    sprintf('%s = %s !== null', $valuePlaceholder, $valuePlaceholder)
+                ]);
+
+            return $this->createAssertionCall($model->getComparison(), $existence, $valuePlaceholder);
+        }
+
+        throw new NonTranspilableModelException($model);
+    }
+
+    private function createAssertionCall(
+        string $comparison,
+        CompilableSourceInterface $source,
+        VariablePlaceholder $valuePlaceholder
+    ): CompilableSourceInterface {
+        return AssertionComparison::EXISTS === $comparison
+            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($source, $valuePlaceholder)
+            : $this->assertionCallFactory->createValueIsFalseAssertionCall($source, $valuePlaceholder);
     }
 }
