@@ -47,6 +47,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider browserPropertyDataProvider
+     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider environmentParameterValueDataProvider
      * @dataProvider literalValueDataProvider
      * @dataProvider pagePropertyDataProvider
@@ -57,7 +58,6 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider domIdentifierValueDataProvider
      * @dataProvider handlesDoesNotHandleDataProvider
      * @dataProvider unhandledValueDataProvider
      */

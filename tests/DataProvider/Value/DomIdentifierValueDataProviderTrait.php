@@ -12,8 +12,13 @@ trait DomIdentifierValueDataProviderTrait
     public function domIdentifierValueDataProvider(): array
     {
         return [
-            'default element value' => [
+            'element value' => [
                 'model' => new DomIdentifierValue(new DomIdentifier('.selector')),
+            ],
+            'attribute value' => [
+                'model' => new DomIdentifierValue(
+                    (new DomIdentifier('.selector'))->withAttributeName('attribute_name')
+                ),
             ],
         ];
     }

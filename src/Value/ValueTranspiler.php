@@ -16,6 +16,7 @@ class ValueTranspiler extends AbstractDelegatingTranspiler implements Transpiler
                 EnvironmentParameterValueTranspiler::createTranspiler(),
                 LiteralValueTranspiler::createTranspiler(),
                 PagePropertyTranspiler::createTranspiler(),
+                DomIdentifierValueTranspiler::createTranspiler(),
             ]
         );
     }
