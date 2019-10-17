@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
@@ -34,24 +34,24 @@ class ExecutableCallFactory
     }
 
     public function create(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $source,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
-        if (null !== $additionalCompilationMetadata) {
-            $compilationMetadata = $compilableSource->getCompilationMetadata();
-            $compilationMetadata = $compilationMetadata->merge([
-                $compilationMetadata,
-                $additionalCompilationMetadata
+        if (null !== $additionalMetadata) {
+            $metadata = $source->getMetadata();
+            $metadata = $metadata->merge([
+                $metadata,
+                $additionalMetadata
             ]);
 
-            $compilableSource = $compilableSource->withCompilationMetadata($compilationMetadata);
+            $source = $source->withMetadata($metadata);
         }
 
-        $compilationMetadata = $compilableSource->getCompilationMetadata();
-        $classDependencies = $compilationMetadata->getClassDependencies();
+        $metadata = $source->getMetadata();
+        $classDependencies = $metadata->getClassDependencies();
 
         $executableCall = '';
 
@@ -63,7 +63,7 @@ class ExecutableCallFactory
             $executableCall .= $statement . "\n";
         }
 
-        $statements = $compilableSource->getStatements();
+        $statements = $source->getStatements();
 
         array_walk($statements, function (string &$statement) {
             $statement .= ';';
@@ -85,28 +85,28 @@ class ExecutableCallFactory
     }
 
     public function createWithReturn(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $source,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
-        $statements = $compilableSource->getStatements();
+        $statements = $source->getStatements();
         $lastStatementPosition = count($statements) - 1;
         $lastStatement = $statements[$lastStatementPosition];
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $compilableSourceWithReturn = (new CompilableSource())
+        $sourceWithReturn = (new Source())
             ->withStatements($statements)
-            ->withCompilationMetadata($compilableSource->getCompilationMetadata());
+            ->withMetadata($source->getMetadata());
 
         return $this->create(
-            $compilableSourceWithReturn,
+            $sourceWithReturn,
             $variableIdentifiers,
             $setupStatements,
             $teardownStatements,
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
     }
 }

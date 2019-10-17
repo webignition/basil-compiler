@@ -4,9 +4,9 @@ namespace webignition\BasilTranspiler\CallFactory;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\PlaceholderFactory;
 use webignition\BasilTranspiler\SingleQuotedStringEscaper;
@@ -38,9 +38,9 @@ class ElementLocatorCallFactory
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
-    public function createConstructorCall(DomIdentifierInterface $elementIdentifier): CompilableSourceInterface
+    public function createConstructorCall(DomIdentifierInterface $elementIdentifier): SourceInterface
     {
         $elementLocator = $elementIdentifier->getLocator();
 
@@ -53,12 +53,12 @@ class ElementLocatorCallFactory
 
         $statement = sprintf(self::TEMPLATE, $arguments);
 
-        $compilationMetadata = (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+        $metadata = (new Metadata())->withClassDependencies(new ClassDependencyCollection([
             new ClassDependency(ElementLocator::class),
         ]));
 
-        return (new CompilableSource())
+        return (new Source())
             ->withStatements([$statement])
-            ->withCompilationMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 }

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Assertion;
 
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -76,9 +76,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspileDoesNotFail(AssertionInterface $model)
     {
-        $compilableSource = $this->transpiler->transpile($model);
+        $source = $this->transpiler->transpile($model);
 
-        $this->assertInstanceOf(CompilableSourceInterface::class, $compilableSource);
+        $this->assertInstanceOf(SourceInterface::class, $source);
     }
 
     public function testTranspileNonTranspilableModel()

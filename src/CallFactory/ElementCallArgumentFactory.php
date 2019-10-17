@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 
 class ElementCallArgumentFactory
@@ -26,12 +26,12 @@ class ElementCallArgumentFactory
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createElementCallArguments(
         DomIdentifierInterface $elementIdentifier
-    ): CompilableSourceInterface {
-        $compilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+    ): SourceInterface {
+        $source = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
         if ($parentIdentifier instanceof DomIdentifierInterface) {
@@ -39,22 +39,22 @@ class ElementCallArgumentFactory
                 $parentIdentifier
             );
 
-            $compilationMetadata = (new CompilationMetadata())->merge([
-                $compilableSource->getCompilationMetadata(),
-                $parentElementLocatorConstructorCall->getCompilationMetadata(),
+            $metadata = (new Metadata())->merge([
+                $source->getMetadata(),
+                $parentElementLocatorConstructorCall->getMetadata(),
             ]);
 
-            $compilableSource = (new CompilableSource())
+            $source = (new Source())
                 ->withStatements([
                     sprintf(
                         '%s, %s',
-                        (string) $compilableSource,
+                        (string) $source,
                         (string) $parentElementLocatorConstructorCall
                     ),
                 ])
-                ->withCompilationMetadata($compilationMetadata);
+                ->withMetadata($metadata);
         }
 
-        return $compilableSource;
+        return $source;
     }
 }

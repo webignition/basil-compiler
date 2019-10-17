@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\SourceInterface;
 
 interface TranspilerInterface
 {
@@ -12,9 +12,9 @@ interface TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface;
+    public function transpile(object $model): SourceInterface;
 }

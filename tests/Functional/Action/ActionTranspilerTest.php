@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
 use PHPUnit\Framework\ExpectationFailedException;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
@@ -56,17 +56,17 @@ class ActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
-        $compilableSource = $this->transpiler->transpile($action);
+        $source = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         eval($executableCall);
@@ -94,10 +94,10 @@ class ActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         string $expectedExpectationFailedExceptionMessage
     ) {
-        $compilableSource = $this->transpiler->transpile($action);
+        $source = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             '/action-wait.html',
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers)
         );

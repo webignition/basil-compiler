@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
@@ -21,9 +21,9 @@ trait WaitActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $emptyCompilationMetadata = new CompilationMetadata();
+        $emptyMetadata = new Metadata();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
             ]));
@@ -39,7 +39,7 @@ trait WaitActionFunctionalDataProviderTrait
                     '$this->assertTrue(true);'
                 ],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $emptyCompilationMetadata,
+                'additionalMetadata' => $emptyMetadata,
                 'expectedDuration' => 10,
             ],
             'wait action, element value' => [
@@ -58,7 +58,7 @@ trait WaitActionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
                 'expectedDuration' => 20,
             ],
             'wait action, attribute value, attribute exists' => [
@@ -80,7 +80,7 @@ trait WaitActionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
                 'expectedDuration' => 30,
             ],
             'wait action, attribute value, attribute does not exist' => [
@@ -102,7 +102,7 @@ trait WaitActionFunctionalDataProviderTrait
                     '$webDriverElementInspector = Inspector::create();',
                 ],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
                 'expectedDuration' => 0,
             ],
             'wait action, browser property' => [
@@ -115,7 +115,7 @@ trait WaitActionFunctionalDataProviderTrait
                 ],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $emptyCompilationMetadata,
+                'additionalMetadata' => $emptyMetadata,
                 'expectedDuration' => 1200,
             ],
             'wait action, page property' => [
@@ -127,7 +127,7 @@ trait WaitActionFunctionalDataProviderTrait
                 ],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $emptyCompilationMetadata,
+                'additionalMetadata' => $emptyMetadata,
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value exists' => [
@@ -139,7 +139,7 @@ trait WaitActionFunctionalDataProviderTrait
                 ],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $emptyCompilationMetadata,
+                'additionalMetadata' => $emptyMetadata,
                 'expectedDuration' => 5,
             ],
             'wait action, environment value, value does not exist' => [
@@ -151,7 +151,7 @@ trait WaitActionFunctionalDataProviderTrait
                 ],
                 'additionalSetupStatements' => [],
                 'additionalTeardownStatements' => [],
-                'additionalCompilationMetadata' => $emptyCompilationMetadata,
+                'additionalMetadata' => $emptyMetadata,
                 'expectedDuration' => 0,
             ],
         ];

@@ -7,9 +7,9 @@ use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
@@ -55,24 +55,24 @@ abstract class AbstractTestCase extends PantherTestCase
     }
 
     protected function createExecutableCall(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $source,
         string $fixture,
         array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
-        $compilationMetadata = (new CompilationMetadata())
+        $metadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Navigator::class),
             ]));
 
-        if ($additionalCompilationMetadata instanceof CompilationMetadataInterface) {
-            $compilationMetadata = $compilationMetadata->merge([$additionalCompilationMetadata]);
+        if ($additionalMetadata instanceof MetadataInterface) {
+            $metadata = $metadata->merge([$additionalMetadata]);
         }
 
         return $this->executableCallFactory->create(
-            $compilableSource,
+            $source,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             array_merge(
                 [
@@ -82,29 +82,29 @@ abstract class AbstractTestCase extends PantherTestCase
                 $additionalSetupStatements
             ),
             $additionalTeardownStatements,
-            $compilationMetadata
+            $metadata
         );
     }
 
     protected function createExecutableCallWithReturn(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $source,
         string $fixture,
         array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
-        $compilationMetadata = (new CompilationMetadata())
+        $metadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Navigator::class),
             ]));
 
-        if ($additionalCompilationMetadata instanceof CompilationMetadataInterface) {
-            $compilationMetadata = $compilationMetadata->merge([$additionalCompilationMetadata]);
+        if ($additionalMetadata instanceof MetadataInterface) {
+            $metadata = $metadata->merge([$additionalMetadata]);
         }
 
         return $this->executableCallFactory->createWithReturn(
-            $compilableSource,
+            $source,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             array_merge(
                 [
@@ -114,7 +114,7 @@ abstract class AbstractTestCase extends PantherTestCase
                 $additionalSetupStatements
             ),
             $additionalTeardownStatements,
-            $compilationMetadata
+            $metadata
         );
     }
 }

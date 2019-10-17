@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
@@ -30,12 +30,12 @@ class BrowserPropertyTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      * @throws UnknownObjectPropertyException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if (!$this->handles($model) || !$model instanceof ObjectValueInterface) {
             throw new NonTranspilableModelException($model);
@@ -52,7 +52,7 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $dimensionAssignment = (new CompilableSource())
+        $dimensionAssignment = (new Source())
             ->withStatements([
                 sprintf(
                     '%s = %s->getWebDriver()->manage()->window()->getSize()',
@@ -60,8 +60,8 @@ class BrowserPropertyTranspiler implements TranspilerInterface
                     $pantherClientPlaceholder
                 ),
             ])
-            ->withCompilationMetadata(
-                (new CompilationMetadata())
+            ->withMetadata(
+                (new Metadata())
                 ->withVariableDependencies($variableDependencies)
                 ->withVariableExports($variableExports)
             );
@@ -69,12 +69,12 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';
 
-        $dimensionConcatenation = (new CompilableSource())
+        $dimensionConcatenation = (new Source())
             ->withStatements([
                 '(string) ' . $getWidthCall . ' . \'x\' . (string) ' . $getHeightCall,
             ]);
 
-        return (new CompilableSource())
+        return (new Source())
             ->withPredecessors([$dimensionAssignment, $dimensionConcatenation]);
     }
 }

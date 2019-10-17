@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Action\InputAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
@@ -34,7 +34,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
                 new ClassDependency(Mutator::class),
@@ -65,7 +65,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("textarea content", $input->getAttribute("value"));',
                     ],
-                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                    'additionalMetadata' => $additionalMetadata,
                 ],
                 'input action, element identifier, attribute value' => [
                     'action' => new InputAction(
@@ -86,7 +86,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("http://127.0.0.1:9080/action1", $input->getAttribute("value"));',
                     ],
-                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                    'additionalMetadata' => $additionalMetadata,
                 ],
                 'input action, browser property' => [
                     'action' => $actionFactory->createFromActionString(
@@ -102,7 +102,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("1200x1100", $input->getAttribute("value"));',
                     ],
-                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                    'additionalMetadata' => $additionalMetadata,
                 ],
                 'input action, page property' => [
                     'action' => $actionFactory->createFromActionString(
@@ -118,7 +118,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("http://127.0.0.1:9080/form.html", $input->getAttribute("value"));',
                     ],
-                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                    'additionalMetadata' => $additionalMetadata,
                 ],
                 'input action, environment value' => [
                     'action' => $actionFactory->createFromActionString(
@@ -134,7 +134,7 @@ trait SetActionFunctionalDataProviderTrait
                     'additionalTeardownStatements' => [
                         '$this->assertEquals("environment value", $input->getAttribute("value"));',
                     ],
-                    'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                    'additionalMetadata' => $additionalMetadata,
                 ],
             ]
         );
@@ -144,7 +144,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -164,7 +164,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: empty text input, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -180,7 +180,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("non-empty value", $input->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: non-empty text input, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -196,7 +196,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $input->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: non-empty text input, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -212,7 +212,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("new value", $input->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
         ];
     }
@@ -221,7 +221,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -241,7 +241,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: empty textarea, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -257,7 +257,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("non-empty value", $textarea->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: non-empty textarea, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -273,7 +273,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("", $textarea->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: non-empty textarea, non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -289,7 +289,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("new value", $textarea->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
         ];
     }
@@ -298,7 +298,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -318,7 +318,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: select none selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -334,7 +334,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: select none selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -350,7 +350,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: select has selected, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -366,7 +366,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: select has selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -382,7 +382,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: select has selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -398,7 +398,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
         ];
     }
@@ -407,7 +407,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -427,7 +427,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: option group none selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -443,7 +443,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-1", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: option group none selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -459,7 +459,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("none-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: option group has selected, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -475,7 +475,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: option group has selected, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -491,7 +491,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-2", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: option group has selected, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -507,7 +507,7 @@ trait SetActionFunctionalDataProviderTrait
                 'additionalTeardownStatements' => [
                     '$this->assertEquals("has-selected-3", $select->getAttribute("value"));',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
         ];
     }
@@ -516,7 +516,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -540,7 +540,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: radio group none checked, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -560,7 +560,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: radio group none checked, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -580,7 +580,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: radio group has checked, empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -600,7 +600,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: radio group has checked, invalid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -620,7 +620,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertTrue($radioGroup->getElement(1)->isSelected());',
                     '$this->assertFalse($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'input action, literal value: radio group has checked, valid non-empty value' => [
                 'action' => $actionFactory->createFromActionString(
@@ -640,7 +640,7 @@ trait SetActionFunctionalDataProviderTrait
                     '$this->assertFalse($radioGroup->getElement(1)->isSelected());',
                     '$this->assertTrue($radioGroup->getElement(2)->isSelected());',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
         ];
     }

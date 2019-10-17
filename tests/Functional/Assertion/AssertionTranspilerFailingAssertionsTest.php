@@ -36,10 +36,10 @@ class AssertionTranspilerFailingAssertionsTest extends AbstractTestCase
         array $variableIdentifiers,
         string $expectedExpectationFailedExceptionMessage
     ) {
-        $compilableSource = $this->transpiler->transpile($assertion);
+        $source = $this->transpiler->transpile($assertion);
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers)
         );

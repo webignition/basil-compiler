@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\DomIdentifier;
@@ -22,7 +22,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
     {
         $assertionFactory = AssertionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())->withClassDependencies(
+        $additionalMetadata = (new Metadata())->withClassDependencies(
             new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
             ])
@@ -45,7 +45,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is-not comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/assertions.html',
@@ -63,7 +63,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is-not comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/empty.html',
@@ -118,7 +118,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is-not comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/assertions.html',
@@ -141,7 +141,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is-not comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/assertions.html',

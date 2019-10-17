@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Action;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
@@ -45,11 +45,11 @@ class WaitActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if (!$model instanceof WaitActionInterface) {
             throw new NonTranspilableModelException($model);
@@ -79,7 +79,7 @@ class WaitActionTranspiler implements TranspilerInterface
             self::MICROSECONDS_PER_MILLISECOND
         );
 
-        return (new CompilableSource())
+        return (new Source())
             ->withPredecessors([$durationAssignment])
             ->withStatements([$waitStatement]);
     }

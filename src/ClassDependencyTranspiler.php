@@ -3,8 +3,8 @@
 namespace webignition\BasilTranspiler;
 
 use webignition\BasilCompilationSource\ClassDependency;
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
 
 class ClassDependencyTranspiler implements TranspilerInterface
 {
@@ -24,11 +24,11 @@ class ClassDependencyTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if (!$model instanceof ClassDependency) {
             throw new NonTranspilableModelException($model);
@@ -40,6 +40,6 @@ class ClassDependencyTranspiler implements TranspilerInterface
             ? sprintf(self::CLASS_NAME_ONLY_TEMPLATE, $model->getClassName())
             : sprintf(self::WITH_ALIAS_TEMPLATE, $model->getClassName(), $model->getAlias());
 
-        return (new CompilableSource())->withStatements([$statement]);
+        return (new Source())->withStatements([$statement]);
     }
 }

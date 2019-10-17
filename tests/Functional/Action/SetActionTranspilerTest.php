@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\SetActionTranspiler;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\SetActionFunctionalDataProviderTrait;
@@ -37,17 +37,17 @@ class SetActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
-        $compilableSource = $this->transpiler->transpile($action);
+        $source = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         eval($executableCall);

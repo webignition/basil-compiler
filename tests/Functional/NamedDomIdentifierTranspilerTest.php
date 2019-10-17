@@ -6,11 +6,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional;
 
-use Facebook\WebDriver\Remote\RemoteWebElement;
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\Metadata;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Identifier\DomIdentifier;
@@ -46,18 +45,18 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         NamedDomIdentifierInterface $namedDomIdentifier,
-        CompilationMetadataInterface $expectedCompilationMetadata,
+        MetadataInterface $expectedMetadata,
         callable $resultAssertions,
         array $additionalVariableIdentifiers = [],
         array $additionalSetupStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
-        $compilableSource = $this->transpiler->transpile($namedDomIdentifier);
+        $source = $this->transpiler->transpile($namedDomIdentifier);
 
-        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
+        $this->assertEquals($expectedMetadata, $source->getMetadata());
 
         $executableCall = $this->createExecutableCallWithReturn(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(
                 self::VARIABLE_IDENTIFIERS,
@@ -65,7 +64,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
             ),
             $additionalSetupStatements,
             [],
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         $resultAssertions(eval($executableCall));
@@ -80,7 +79,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                     new DomIdentifier('input', 1),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new CompilationMetadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -106,7 +105,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new CompilationMetadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))
@@ -118,7 +117,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                         ->withParentIdentifier(new DomIdentifier('form[action="/action2"]')),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new CompilationMetadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -144,7 +143,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new CompilationMetadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))

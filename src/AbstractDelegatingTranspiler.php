@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\SourceInterface;
 
 abstract class AbstractDelegatingTranspiler implements TranspilerInterface
 {
@@ -28,11 +28,11 @@ abstract class AbstractDelegatingTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         $delegatedTranspiler = $this->findDelegatedTranspiler($model);
 

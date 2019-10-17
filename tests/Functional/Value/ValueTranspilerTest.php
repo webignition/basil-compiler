@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Value;
 
-use webignition\BasilCompilationSource\CompilationMetadata;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\Metadata;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
@@ -40,18 +40,18 @@ class ValueTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         ValueInterface $model,
-        CompilationMetadataInterface $expectedCompilationMetadata,
+        MetadataInterface $expectedMetadata,
         callable $resultAssertions,
         array $additionalVariableIdentifiers = [],
         array $additionalSetupStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
-        $compilableSource = $this->transpiler->transpile($model);
+        $source = $this->transpiler->transpile($model);
 
-        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
+        $this->assertEquals($expectedMetadata, $source->getMetadata());
 
         $executableCall = $this->createExecutableCallWithReturn(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(
                 self::VARIABLE_IDENTIFIERS,
@@ -59,7 +59,7 @@ class ValueTranspilerTest extends AbstractTestCase
             ),
             $additionalSetupStatements,
             [],
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         $resultAssertions(eval($executableCall));
@@ -71,7 +71,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'browser property: size' => [
                 'fixture' => '/empty.html',
                 'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
-                'expectedCompilationMetadata' => (new CompilationMetadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
@@ -87,7 +87,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: title' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
-                'expectedCompilationMetadata' => (new CompilationMetadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
@@ -98,7 +98,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: url' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
-                'expectedCompilationMetadata' => (new CompilationMetadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
