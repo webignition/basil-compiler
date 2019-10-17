@@ -8,16 +8,22 @@ use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\Model\NamedDomIdentifier;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 
 abstract class AbstractInteractionActionTranspiler implements TranspilerInterface
 {
     private $variableAssignmentFactory;
+    private $namedDomIdentifierTranspiler;
 
-    public function __construct(VariableAssignmentFactory $variableAssignmentFactory)
-    {
+    public function __construct(
+        VariableAssignmentFactory $variableAssignmentFactory,
+        NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler
+    ) {
         $this->variableAssignmentFactory = $variableAssignmentFactory;
+        $this->namedDomIdentifierTranspiler = $namedDomIdentifierTranspiler;
     }
 
     abstract protected function getHandledActionType(): string;
@@ -52,17 +58,15 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         }
 
         $variableExports = new VariablePlaceholderCollection();
-        $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
         $elementPlaceholder = $variableExports->create('ELEMENT');
 
-        $elementAssignment = $this->variableAssignmentFactory->createForElement(
+        $accessor = $this->namedDomIdentifierTranspiler->transpile(new NamedDomIdentifier(
             $identifier,
-            $elementLocatorPlaceholder,
             $elementPlaceholder
-        );
+        ));
 
         return (new CompilableSource())
-            ->withPredecessors([$elementAssignment])
+            ->withPredecessors([$accessor])
             ->withStatements([sprintf(
                 '%s->%s()',
                 (string) $elementPlaceholder,

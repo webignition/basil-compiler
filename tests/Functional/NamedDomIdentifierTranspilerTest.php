@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional;
 
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
 use webignition\BasilCompilationSource\CompilationMetadata;
@@ -91,12 +92,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                         'HAS',
                         'ELEMENT',
                     ])),
-                'resultAssertions' => function (WebDriverElementCollection $collection) {
-                    $this->assertInstanceOf(WebDriverElementCollection::class, $collection);
-                    $this->assertCount(1, $collection);
-
-                    $element = $collection->current();
-
+                'resultAssertions' => function (RemoteWebElement $element) {
                     $this->assertEquals('', $element->getAttribute('value'));
                 },
                 'additionalVariableIdentifiers' => [
@@ -131,12 +127,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                         'HAS',
                         'ELEMENT',
                     ])),
-                'resultAssertions' => function (WebDriverElementCollection $collection) {
-                    $this->assertInstanceOf(WebDriverElementCollection::class, $collection);
-                    $this->assertCount(1, $collection);
-
-                    $element = $collection->current();
-
+                'resultAssertions' => function (RemoteWebElement $element) {
                     $this->assertEquals('', $element->getAttribute('test'));
                 },
                 'additionalVariableIdentifiers' => [
