@@ -5,7 +5,7 @@ namespace webignition\BasilTranspiler\Model;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 
-class NamedDomIdentifier implements NamedDomIdentifierInterface
+class NamedDomElementIdentifier implements NamedDomIdentifierInterface
 {
     private $identifier;
     private $placeholder;
@@ -33,6 +33,6 @@ class NamedDomIdentifier implements NamedDomIdentifierInterface
 
     public function asCollection(): bool
     {
-        return true;
+        return false;
     }
 }
