@@ -51,7 +51,7 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $compilationMetadata = (new Metadata())->withVariableDependencies($variableDependencies);
+        $metadata = (new Metadata())->withVariableDependencies($variableDependencies);
 
         return (new Source())
             ->withStatements([
@@ -62,6 +62,6 @@ class BrowserOperationActionTranspiler implements TranspilerInterface
                     $model->getType()
                 ),
             ])
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 }

@@ -76,9 +76,9 @@ class AssertionTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspileDoesNotFail(AssertionInterface $model)
     {
-        $compilableSource = $this->transpiler->transpile($model);
+        $source = $this->transpiler->transpile($model);
 
-        $this->assertInstanceOf(SourceInterface::class, $compilableSource);
+        $this->assertInstanceOf(SourceInterface::class, $source);
     }
 
     public function testTranspileNonTranspilableModel()

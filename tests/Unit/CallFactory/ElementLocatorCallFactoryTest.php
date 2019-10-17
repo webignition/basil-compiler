@@ -43,16 +43,16 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         DomIdentifierInterface $elementIdentifier,
         ElementLocatorInterface $expectedElementLocator
     ) {
-        $compilableSource = $this->factory->createConstructorCall($elementIdentifier);
+        $source = $this->factory->createConstructorCall($elementIdentifier);
 
         $expectedCompilationMetadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(ElementLocator::class)
             ]));
 
-        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getMetadata());
+        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
 
-        $executableCall = $this->executableCallFactory->createWithReturn($compilableSource);
+        $executableCall = $this->executableCallFactory->createWithReturn($source);
 
         $elementLocator = eval($executableCall);
 

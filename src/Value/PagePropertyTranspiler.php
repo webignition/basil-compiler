@@ -57,12 +57,12 @@ class PagePropertyTranspiler implements TranspilerInterface
             $transpiledValue = $this->transpiledValueMap[$model->getProperty()] ?? null;
 
             if (is_string($transpiledValue)) {
-                $compilationMetadata = (new Metadata())
+                $metadata = (new Metadata())
                     ->withVariableDependencies($this->variableDependencies);
 
                 return (new Source())
                     ->withStatements([(string) $transpiledValue])
-                    ->withMetadata($compilationMetadata);
+                    ->withMetadata($metadata);
             }
 
             throw new UnknownObjectPropertyException($model);

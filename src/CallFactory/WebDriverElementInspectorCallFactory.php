@@ -26,16 +26,16 @@ class WebDriverElementInspectorCallFactory
         $variableDependencies = new VariablePlaceholderCollection();
         $inspectorPlaceholder = $variableDependencies->create(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR);
 
-        $compilationMetadata = (new Metadata())
+        $metadata = (new Metadata())
             ->withAdditionalVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
-        $compilableSource = (new Source())
+        $source = (new Source())
             ->withStatements([
                 $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
             ])
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
 
-        return $compilableSource;
+        return $source;
     }
 }

@@ -67,24 +67,24 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 ]))
             );
 
-        $compilableSource = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
+        $source = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $source);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getMetadata());
+        $this->assertEquals($this->expectedCompilationMetadata, $source->getMetadata());
     }
 
     public function testCreateHasCallForIdentifier()
     {
-        $compilableSource = $this->factory->createHasCallForIdentifier(
+        $source = $this->factory->createHasCallForIdentifier(
             TestIdentifierFactory::createElementIdentifier('.selector')
         );
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $source);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getMetadata());
+        $this->assertEquals($this->expectedCompilationMetadata, $source->getMetadata());
     }
 
     public function testCreateHasCallForTranspiledLocator()
@@ -99,11 +99,11 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 ]))
             );
 
-        $compilableSource = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
+        $source = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
+        $this->assertRegExp($expectedContentPattern, (string) $source);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getMetadata());
+        $this->assertEquals($this->expectedCompilationMetadata, $source->getMetadata());
     }
 }

@@ -78,9 +78,9 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testTranspileDoesNotFail(ActionInterface $model)
     {
-        $compilableSource = $this->transpiler->transpile($model);
+        $source = $this->transpiler->transpile($model);
 
-        $this->assertInstanceOf(SourceInterface::class, $compilableSource);
+        $this->assertInstanceOf(SourceInterface::class, $source);
     }
 
     public function testTranspileNonTranspilableModel()

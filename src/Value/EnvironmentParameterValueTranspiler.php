@@ -44,11 +44,11 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
                 $model->getProperty()
             );
 
-            $compilationMetadata = (new Metadata())->withVariableDependencies($variableDependencies);
+            $metadata = (new Metadata())->withVariableDependencies($variableDependencies);
 
             return (new Source())
                 ->withStatements([$statement])
-                ->withMetadata($compilationMetadata);
+                ->withMetadata($metadata);
         }
 
         throw new NonTranspilableModelException($model);

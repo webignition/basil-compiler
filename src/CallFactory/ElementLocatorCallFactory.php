@@ -53,12 +53,12 @@ class ElementLocatorCallFactory
 
         $statement = sprintf(self::TEMPLATE, $arguments);
 
-        $compilationMetadata = (new Metadata())->withClassDependencies(new ClassDependencyCollection([
+        $metadata = (new Metadata())->withClassDependencies(new ClassDependencyCollection([
             new ClassDependency(ElementLocator::class),
         ]));
 
         return (new Source())
             ->withStatements([$statement])
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 }

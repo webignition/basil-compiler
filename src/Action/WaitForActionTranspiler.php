@@ -66,7 +66,7 @@ class WaitForActionTranspiler implements TranspilerInterface
         $pantherCrawlerPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CRAWLER);
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $compilationMetadata = (new Metadata())->withVariableDependencies($variableDependencies);
+        $metadata = (new Metadata())->withVariableDependencies($variableDependencies);
 
         return (new Source())
             ->withStatements([
@@ -77,6 +77,6 @@ class WaitForActionTranspiler implements TranspilerInterface
                     $this->singleQuotedStringEscaper->escape($elementLocator)
                 ),
             ])
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 }

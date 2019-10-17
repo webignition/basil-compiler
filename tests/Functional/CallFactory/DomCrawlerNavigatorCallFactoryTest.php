@@ -41,9 +41,9 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         SourceInterface $arguments,
         callable $assertions
     ) {
-        $compilableSource = $this->factory->createFindCallForTranspiledArguments($arguments);
+        $source = $this->factory->createFindCallForTranspiledArguments($arguments);
 
-        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
+        $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
         $element = eval($executableCall);
 
@@ -107,9 +107,9 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         DomIdentifierInterface $elementIdentifier,
         bool $expectedHasElement
     ) {
-        $compilableSource = $this->factory->createHasCallForIdentifier($elementIdentifier);
+        $source = $this->factory->createHasCallForIdentifier($elementIdentifier);
 
-        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
+        $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
@@ -178,9 +178,9 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         SourceInterface $arguments,
         bool $expectedHasElement
     ) {
-        $compilableSource = $this->factory->createHasCallForTranspiledArguments($arguments);
+        $source = $this->factory->createHasCallForTranspiledArguments($arguments);
 
-        $executableCall = $this->createExecutableCallWithReturn($compilableSource, $fixture);
+        $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
         $this->assertSame($expectedHasElement, eval($executableCall));
     }

@@ -33,12 +33,12 @@ class WebDriverElementMutatorCallFactory
             $mutatorPlaceholder . '->setValue(' . $collectionPlaceholder . ', ' . $valuePlaceholder . ')',
         ];
 
-        $compilationMetadata = (new Metadata())
+        $metadata = (new Metadata())
             ->withVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
         return (new Source())
             ->withStatements($statements)
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 }

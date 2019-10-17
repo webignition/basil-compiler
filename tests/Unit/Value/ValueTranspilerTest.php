@@ -91,10 +91,10 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
         array $expectedStatements,
         MetadataInterface $expectedCompilationMetadata
     ) {
-        $compilableSource = $this->transpiler->transpile($model);
+        $source = $this->transpiler->transpile($model);
 
-        $this->assertEquals($expectedStatements, $compilableSource->getStatements());
-        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getMetadata());
+        $this->assertEquals($expectedStatements, $source->getStatements());
+        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
     }
 
     public function transpileDataProvider(): array

@@ -31,7 +31,7 @@ class ElementCallArgumentFactory
     public function createElementCallArguments(
         DomIdentifierInterface $elementIdentifier
     ): SourceInterface {
-        $compilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+        $source = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
         if ($parentIdentifier instanceof DomIdentifierInterface) {
@@ -39,22 +39,22 @@ class ElementCallArgumentFactory
                 $parentIdentifier
             );
 
-            $compilationMetadata = (new Metadata())->merge([
-                $compilableSource->getMetadata(),
+            $metadata = (new Metadata())->merge([
+                $source->getMetadata(),
                 $parentElementLocatorConstructorCall->getMetadata(),
             ]);
 
-            $compilableSource = (new Source())
+            $source = (new Source())
                 ->withStatements([
                     sprintf(
                         '%s, %s',
-                        (string) $compilableSource,
+                        (string) $source,
                         (string) $parentElementLocatorConstructorCall
                     ),
                 ])
-                ->withMetadata($compilationMetadata);
+                ->withMetadata($metadata);
         }
 
-        return $compilableSource;
+        return $source;
     }
 }

@@ -100,7 +100,7 @@ class DomCrawlerNavigatorCallFactory
         $variableDependencies = new VariablePlaceholderCollection();
         $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $compilationMetadata = (new Metadata())
+        $metadata = (new Metadata())
             ->merge([$arguments->getMetadata()])
             ->withAdditionalVariableDependencies($variableDependencies);
 
@@ -111,6 +111,6 @@ class DomCrawlerNavigatorCallFactory
 
         return (new Source())
             ->withStatements([$createStatement])
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 }

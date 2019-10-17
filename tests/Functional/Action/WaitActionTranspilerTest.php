@@ -40,12 +40,12 @@ class WaitActionTranspilerTest extends AbstractTestCase
         MetadataInterface $additionalCompilationMetadata,
         int $expectedDuration
     ) {
-        $compilableSource = $this->transpiler->transpile($action);
+        $source = $this->transpiler->transpile($action);
 
         $expectedDurationThreshold = $expectedDuration + 1;
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,

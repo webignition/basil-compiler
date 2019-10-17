@@ -58,10 +58,10 @@ class ActionTranspilerTest extends AbstractTestCase
         array $additionalTeardownStatements,
         ?MetadataInterface $additionalCompilationMetadata = null
     ) {
-        $compilableSource = $this->transpiler->transpile($action);
+        $source = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
@@ -94,10 +94,10 @@ class ActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         string $expectedExpectationFailedExceptionMessage
     ) {
-        $compilableSource = $this->transpiler->transpile($action);
+        $source = $this->transpiler->transpile($action);
 
         $executableCall = $this->createExecutableCall(
-            $compilableSource,
+            $source,
             '/action-wait.html',
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers)
         );

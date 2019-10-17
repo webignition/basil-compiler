@@ -51,12 +51,12 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
         array $additionalSetupStatements = [],
         ?MetadataInterface $additionalCompilationMetadata = null
     ) {
-        $compilableSource = $this->transpiler->transpile($namedDomIdentifier);
+        $source = $this->transpiler->transpile($namedDomIdentifier);
 
-        $this->assertEquals($expectedCompilationMetadata, $compilableSource->getMetadata());
+        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
 
         $executableCall = $this->createExecutableCallWithReturn(
-            $compilableSource,
+            $source,
             $fixture,
             array_merge(
                 self::VARIABLE_IDENTIFIERS,

@@ -169,7 +169,7 @@ class AssertionCallFactory
             $this->phpUnitTestCasePlaceholder,
         ]);
 
-        $compilationMetadata = (new Metadata())->withVariableDependencies($variableDependencies);
+        $metadata = (new Metadata())->withVariableDependencies($variableDependencies);
 
         $assertionStatement = sprintf(
             $assertionTemplate,
@@ -181,7 +181,7 @@ class AssertionCallFactory
         return (new Source())
             ->withPredecessors([$expectedValueCall, $actualValueCall])
             ->withStatements([$assertionStatement])
-            ->withMetadata($compilationMetadata);
+            ->withMetadata($metadata);
     }
 
     private function createValueExistenceAssertionCall(
@@ -195,11 +195,11 @@ class AssertionCallFactory
             (string) $variablePlaceholder
         );
 
-        $compilationMetadata = (new Metadata())
+        $metadata = (new Metadata())
             ->withVariableDependencies($this->variableDependencies);
 
         return (new Source())
-            ->withMetadata($compilationMetadata)
+            ->withMetadata($metadata)
             ->withStatements([$assertionStatement])
             ->withPredecessors([$assignmentCall]);
     }

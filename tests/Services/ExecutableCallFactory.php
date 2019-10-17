@@ -34,24 +34,24 @@ class ExecutableCallFactory
     }
 
     public function create(
-        SourceInterface $compilableSource,
+        SourceInterface $source,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
         ?MetadataInterface $additionalCompilationMetadata = null
     ): string {
         if (null !== $additionalCompilationMetadata) {
-            $compilationMetadata = $compilableSource->getMetadata();
-            $compilationMetadata = $compilationMetadata->merge([
-                $compilationMetadata,
+            $metadata = $source->getMetadata();
+            $metadata = $metadata->merge([
+                $metadata,
                 $additionalCompilationMetadata
             ]);
 
-            $compilableSource = $compilableSource->withMetadata($compilationMetadata);
+            $source = $source->withMetadata($metadata);
         }
 
-        $compilationMetadata = $compilableSource->getMetadata();
-        $classDependencies = $compilationMetadata->getClassDependencies();
+        $metadata = $source->getMetadata();
+        $classDependencies = $metadata->getClassDependencies();
 
         $executableCall = '';
 
@@ -63,7 +63,7 @@ class ExecutableCallFactory
             $executableCall .= $statement . "\n";
         }
 
-        $statements = $compilableSource->getStatements();
+        $statements = $source->getStatements();
 
         array_walk($statements, function (string &$statement) {
             $statement .= ';';
@@ -85,13 +85,13 @@ class ExecutableCallFactory
     }
 
     public function createWithReturn(
-        SourceInterface $compilableSource,
+        SourceInterface $source,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
         ?MetadataInterface $additionalCompilationMetadata = null
     ): string {
-        $statements = $compilableSource->getStatements();
+        $statements = $source->getStatements();
         $lastStatementPosition = count($statements) - 1;
         $lastStatement = $statements[$lastStatementPosition];
         $lastStatement = 'return ' . $lastStatement;
@@ -99,7 +99,7 @@ class ExecutableCallFactory
 
         $compilableSourceWithReturn = (new Source())
             ->withStatements($statements)
-            ->withMetadata($compilableSource->getMetadata());
+            ->withMetadata($source->getMetadata());
 
         return $this->create(
             $compilableSourceWithReturn,
