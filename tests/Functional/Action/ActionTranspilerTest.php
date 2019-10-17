@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
 use PHPUnit\Framework\ExpectationFailedException;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
@@ -56,7 +56,7 @@ class ActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalCompilationMetadata = null
     ) {
         $compilableSource = $this->transpiler->transpile($action);
 

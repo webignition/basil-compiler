@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\ActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -80,7 +80,7 @@ class ActionTranspilerTest extends \PHPUnit\Framework\TestCase
     {
         $compilableSource = $this->transpiler->transpile($model);
 
-        $this->assertInstanceOf(CompilableSourceInterface::class, $compilableSource);
+        $this->assertInstanceOf(SourceInterface::class, $compilableSource);
     }
 
     public function testTranspileNonTranspilableModel()

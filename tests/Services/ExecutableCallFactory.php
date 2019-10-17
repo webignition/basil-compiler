@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Services;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilTranspiler\ClassDependencyTranspiler;
 use webignition\BasilTranspiler\VariablePlaceholderResolver;
 
@@ -34,23 +34,23 @@ class ExecutableCallFactory
     }
 
     public function create(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $compilableSource,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalCompilationMetadata = null
     ): string {
         if (null !== $additionalCompilationMetadata) {
-            $compilationMetadata = $compilableSource->getCompilationMetadata();
+            $compilationMetadata = $compilableSource->getMetadata();
             $compilationMetadata = $compilationMetadata->merge([
                 $compilationMetadata,
                 $additionalCompilationMetadata
             ]);
 
-            $compilableSource = $compilableSource->withCompilationMetadata($compilationMetadata);
+            $compilableSource = $compilableSource->withMetadata($compilationMetadata);
         }
 
-        $compilationMetadata = $compilableSource->getCompilationMetadata();
+        $compilationMetadata = $compilableSource->getMetadata();
         $classDependencies = $compilationMetadata->getClassDependencies();
 
         $executableCall = '';
@@ -85,11 +85,11 @@ class ExecutableCallFactory
     }
 
     public function createWithReturn(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $compilableSource,
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalCompilationMetadata = null
     ): string {
         $statements = $compilableSource->getStatements();
         $lastStatementPosition = count($statements) - 1;
@@ -97,9 +97,9 @@ class ExecutableCallFactory
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $compilableSourceWithReturn = (new CompilableSource())
+        $compilableSourceWithReturn = (new Source())
             ->withStatements($statements)
-            ->withCompilationMetadata($compilableSource->getCompilationMetadata());
+            ->withMetadata($compilableSource->getMetadata());
 
         return $this->create(
             $compilableSourceWithReturn,

@@ -7,9 +7,9 @@ use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilTranspiler\Tests\Services\ExecutableCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\SymfonyDomCrawlerNavigator\Navigator;
@@ -55,19 +55,19 @@ abstract class AbstractTestCase extends PantherTestCase
     }
 
     protected function createExecutableCall(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $compilableSource,
         string $fixture,
         array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalCompilationMetadata = null
     ): string {
-        $compilationMetadata = (new CompilationMetadata())
+        $compilationMetadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Navigator::class),
             ]));
 
-        if ($additionalCompilationMetadata instanceof CompilationMetadataInterface) {
+        if ($additionalCompilationMetadata instanceof MetadataInterface) {
             $compilationMetadata = $compilationMetadata->merge([$additionalCompilationMetadata]);
         }
 
@@ -87,19 +87,19 @@ abstract class AbstractTestCase extends PantherTestCase
     }
 
     protected function createExecutableCallWithReturn(
-        CompilableSourceInterface $compilableSource,
+        SourceInterface $compilableSource,
         string $fixture,
         array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalCompilationMetadata = null
     ): string {
-        $compilationMetadata = (new CompilationMetadata())
+        $compilationMetadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Navigator::class),
             ]));
 
-        if ($additionalCompilationMetadata instanceof CompilationMetadataInterface) {
+        if ($additionalCompilationMetadata instanceof MetadataInterface) {
             $compilationMetadata = $compilationMetadata->merge([$additionalCompilationMetadata]);
         }
 

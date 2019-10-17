@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertion;
 use webignition\BasilModel\Identifier\DomIdentifier;
@@ -22,7 +22,7 @@ trait IsNotAssertionFunctionalDataProviderTrait
     {
         $assertionFactory = AssertionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())->withClassDependencies(
+        $additionalCompilationMetadata = (new Metadata())->withClassDependencies(
             new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
             ])

@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Action;
 
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilModel\Action\ActionInterface;
 use webignition\BasilTranspiler\Action\WaitActionTranspiler;
 use webignition\BasilTranspiler\Tests\DataProvider\Action\WaitActionFunctionalDataProviderTrait;
@@ -37,7 +37,7 @@ class WaitActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
-        CompilationMetadataInterface $additionalCompilationMetadata,
+        MetadataInterface $additionalCompilationMetadata,
         int $expectedDuration
     ) {
         $compilableSource = $this->transpiler->transpile($action);

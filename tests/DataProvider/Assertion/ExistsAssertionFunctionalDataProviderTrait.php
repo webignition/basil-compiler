@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Assertion;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModelFactory\AssertionFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\WebDriverElementInspector\Inspector;
@@ -34,7 +34,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => (new CompilationMetadata())->withClassDependencies(
+                'additionalCompilationMetadata' => (new Metadata())->withClassDependencies(
                     new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ])

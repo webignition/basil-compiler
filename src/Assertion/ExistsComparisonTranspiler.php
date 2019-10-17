@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
@@ -59,11 +59,11 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if (!$model instanceof ExaminationAssertionInterface) {
             throw new NonTranspilableModelException($model);
@@ -91,7 +91,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $assignment = clone $accessor;
             $assignment->prependStatement(-1, $valuePlaceholder . ' = ');
 
-            $existence = (new CompilableSource())
+            $existence = (new Source())
                 ->withPredecessors([$assignment])
                 ->withStatements([
                     sprintf('%s = %s !== null', $valuePlaceholder, $valuePlaceholder)
@@ -114,7 +114,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
             $accessor = $this->valueTranspiler->transpile(new NamedDomIdentifierValue($value, $valuePlaceholder));
 
-            $existence = (new CompilableSource())
+            $existence = (new Source())
                 ->withPredecessors([$accessor])
                 ->withStatements([
                     sprintf('%s = %s !== null', $valuePlaceholder, $valuePlaceholder)
@@ -128,9 +128,9 @@ class ExistsComparisonTranspiler implements TranspilerInterface
 
     private function createAssertionCall(
         string $comparison,
-        CompilableSourceInterface $source,
+        SourceInterface $source,
         VariablePlaceholder $valuePlaceholder
-    ): CompilableSourceInterface {
+    ): SourceInterface {
         return AssertionComparison::EXISTS === $comparison
             ? $this->assertionCallFactory->createValueIsTrueAssertionCall($source, $valuePlaceholder)
             : $this->assertionCallFactory->createValueIsFalseAssertionCall($source, $valuePlaceholder);

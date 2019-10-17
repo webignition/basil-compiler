@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
@@ -27,11 +27,11 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             $variableDependencies = new VariablePlaceholderCollection();
@@ -44,11 +44,11 @@ class EnvironmentParameterValueTranspiler implements TranspilerInterface
                 $model->getProperty()
             );
 
-            $compilationMetadata = (new CompilationMetadata())->withVariableDependencies($variableDependencies);
+            $compilationMetadata = (new Metadata())->withVariableDependencies($variableDependencies);
 
-            return (new CompilableSource())
+            return (new Source())
                 ->withStatements([$statement])
-                ->withCompilationMetadata($compilationMetadata);
+                ->withMetadata($compilationMetadata);
         }
 
         throw new NonTranspilableModelException($model);

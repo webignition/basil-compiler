@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilTranspiler\Tests\Functional\Assertion;
 
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilModel\Assertion\AssertionInterface;
 use webignition\BasilTranspiler\Assertion\AssertionTranspiler;
 use webignition\BasilTranspiler\Tests\DataProvider\Assertion\ExcludesAssertionFunctionalDataProviderTrait;
@@ -54,7 +54,7 @@ class AssertionTranspilerPassingAssertionsTest extends AbstractTestCase
         AssertionInterface $assertion,
         array $variableIdentifiers,
         array $additionalSetupStatements = [],
-        ?CompilationMetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalCompilationMetadata = null
     ) {
         $compilableSource = $this->transpiler->transpile($assertion);
 

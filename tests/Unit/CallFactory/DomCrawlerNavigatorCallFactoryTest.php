@@ -8,9 +8,9 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilationMetadata;
-use webignition\BasilCompilationSource\CompilationMetadataInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\Metadata;
+use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
@@ -31,7 +31,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     private $domCrawlerNavigatorVariablePlaceholder;
 
     /**
-     * @var CompilationMetadataInterface
+     * @var MetadataInterface
      */
     private $expectedCompilationMetadata;
 
@@ -50,19 +50,19 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             VariableNames::DOM_CRAWLER_NAVIGATOR
         );
 
-        $this->expectedCompilationMetadata = (new CompilationMetadata())
+        $this->expectedCompilationMetadata = (new Metadata())
             ->withClassDependencies($expectedClassDependencies)
             ->withVariableDependencies($expectedVariableDependencies);
     }
 
     public function testCreateFindCallForTranspiledLocator()
     {
-        $findElementCallArguments = (new CompilableSource())
+        $findElementCallArguments = (new Source())
             ->withStatements([
                 'new ElementLocator(\'.selector\')'
             ])
-            ->withCompilationMetadata(
-                (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+            ->withMetadata(
+                (new Metadata())->withClassDependencies(new ClassDependencyCollection([
                     new ClassDependency(ElementLocator::class)
                 ]))
             );
@@ -72,7 +72,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
+        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getMetadata());
     }
 
     public function testCreateHasCallForIdentifier()
@@ -84,17 +84,17 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
+        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getMetadata());
     }
 
     public function testCreateHasCallForTranspiledLocator()
     {
-        $hasElementCallArguments = (new CompilableSource())
+        $hasElementCallArguments = (new Source())
             ->withStatements([
                 'new ElementLocator(\'.selector\')'
             ])
-            ->withCompilationMetadata(
-                (new CompilationMetadata())->withClassDependencies(new ClassDependencyCollection([
+            ->withMetadata(
+                (new Metadata())->withClassDependencies(new ClassDependencyCollection([
                     new ClassDependency(ElementLocator::class)
                 ]))
             );
@@ -104,6 +104,6 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $compilableSource);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getCompilationMetadata());
+        $this->assertEquals($this->expectedCompilationMetadata, $compilableSource->getMetadata());
     }
 }

@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 
 class ElementCallArgumentFactory
@@ -26,11 +26,11 @@ class ElementCallArgumentFactory
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createElementCallArguments(
         DomIdentifierInterface $elementIdentifier
-    ): CompilableSourceInterface {
+    ): SourceInterface {
         $compilableSource = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
 
         $parentIdentifier = $elementIdentifier->getParentIdentifier();
@@ -39,12 +39,12 @@ class ElementCallArgumentFactory
                 $parentIdentifier
             );
 
-            $compilationMetadata = (new CompilationMetadata())->merge([
-                $compilableSource->getCompilationMetadata(),
-                $parentElementLocatorConstructorCall->getCompilationMetadata(),
+            $compilationMetadata = (new Metadata())->merge([
+                $compilableSource->getMetadata(),
+                $parentElementLocatorConstructorCall->getMetadata(),
             ]);
 
-            $compilableSource = (new CompilableSource())
+            $compilableSource = (new Source())
                 ->withStatements([
                     sprintf(
                         '%s, %s',
@@ -52,7 +52,7 @@ class ElementCallArgumentFactory
                         (string) $parentElementLocatorConstructorCall
                     ),
                 ])
-                ->withCompilationMetadata($compilationMetadata);
+                ->withMetadata($compilationMetadata);
         }
 
         return $compilableSource;

@@ -2,8 +2,8 @@
 
 namespace webignition\BasilTranspiler\Action;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InputActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
@@ -54,11 +54,11 @@ class SetActionTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if (!$model instanceof InputActionInterface) {
             throw new NonTranspilableModelException($model);
@@ -97,7 +97,7 @@ class SetActionTranspiler implements TranspilerInterface
             $valuePlaceholder
         );
 
-        return (new CompilableSource())
+        return (new Source())
             ->withPredecessors([$collectionAssignment, $valueAssignment, $mutationCall]);
     }
 }

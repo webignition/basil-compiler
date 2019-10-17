@@ -2,7 +2,7 @@
 
 namespace webignition\BasilTranspiler\Assertion;
 
-use webignition\BasilCompilationSource\CompilableSourceInterface;
+use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
@@ -32,20 +32,20 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
 
     abstract protected function getAssertionCall(
         ComparisonAssertionInterface $assertion,
-        CompilableSourceInterface $examinedValue,
-        CompilableSourceInterface $expectedValue,
+        SourceInterface $examinedValue,
+        SourceInterface $expectedValue,
         VariablePlaceholder $examinedValuePlaceholder,
         VariablePlaceholder $expectedValuePlaceholder
-    ): CompilableSourceInterface;
+    ): SourceInterface;
 
     /**
      * @param ComparisonAssertionInterface $assertion
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      */
-    protected function doTranspile(ComparisonAssertionInterface $assertion): CompilableSourceInterface
+    protected function doTranspile(ComparisonAssertionInterface $assertion): SourceInterface
     {
         $examinedValuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
         $expectedValuePlaceholder = new VariablePlaceholder(VariableNames::EXPECTED_VALUE);

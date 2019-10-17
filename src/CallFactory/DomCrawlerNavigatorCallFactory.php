@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\VariableNames;
@@ -31,77 +31,77 @@ class DomCrawlerNavigatorCallFactory
     }
 
     /**
-     * @param CompilableSourceInterface $arguments
+     * @param SourceInterface $arguments
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createFindCallForTranspiledArguments(
-        CompilableSourceInterface $arguments
-    ): CompilableSourceInterface {
+        SourceInterface $arguments
+    ): SourceInterface {
         return $this->createElementCall($arguments, 'find');
     }
 
     /**
-     * @param CompilableSourceInterface $arguments
+     * @param SourceInterface $arguments
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createFindOneCallForTranspiledArguments(
-        CompilableSourceInterface $arguments
-    ): CompilableSourceInterface {
+        SourceInterface $arguments
+    ): SourceInterface {
         return $this->createElementCall($arguments, 'findOne');
     }
 
     /**
      * @param DomIdentifierInterface $elementIdentifier
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createHasCallForIdentifier(
         DomIdentifierInterface $elementIdentifier
-    ): CompilableSourceInterface {
+    ): SourceInterface {
         $hasElementCallArguments = $this->elementCallArgumentFactory->createElementCallArguments($elementIdentifier);
 
         return $this->createHasCallForTranspiledArguments($hasElementCallArguments);
     }
 
     /**
-     * @param CompilableSourceInterface $arguments
+     * @param SourceInterface $arguments
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createHasCallForTranspiledArguments(
-        CompilableSourceInterface $arguments
-    ): CompilableSourceInterface {
+        SourceInterface $arguments
+    ): SourceInterface {
         return $this->createElementCall($arguments, 'has');
     }
 
     /**
-     * @param CompilableSourceInterface $arguments
+     * @param SourceInterface $arguments
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     public function createHasOneCallForTranspiledArguments(
-        CompilableSourceInterface $arguments
-    ): CompilableSourceInterface {
+        SourceInterface $arguments
+    ): SourceInterface {
         return $this->createElementCall($arguments, 'hasOne');
     }
 
     /**
-     * @param CompilableSourceInterface $arguments
+     * @param SourceInterface $arguments
      * @param string $methodName
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      */
     private function createElementCall(
-        CompilableSourceInterface $arguments,
+        SourceInterface $arguments,
         string $methodName
-    ): CompilableSourceInterface {
+    ): SourceInterface {
         $variableDependencies = new VariablePlaceholderCollection();
         $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
 
-        $compilationMetadata = (new CompilationMetadata())
-            ->merge([$arguments->getCompilationMetadata()])
+        $compilationMetadata = (new Metadata())
+            ->merge([$arguments->getMetadata()])
             ->withAdditionalVariableDependencies($variableDependencies);
 
         $createStatement = sprintf(
@@ -109,8 +109,8 @@ class DomCrawlerNavigatorCallFactory
             (string) $arguments
         );
 
-        return (new CompilableSource())
+        return (new Source())
             ->withStatements([$createStatement])
-            ->withCompilationMetadata($compilationMetadata);
+            ->withMetadata($compilationMetadata);
     }
 }

@@ -7,9 +7,7 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Unit\Action;
 
 use webignition\BasilModel\Action\ActionInterface;
-use webignition\BasilModel\Action\InputAction;
 use webignition\BasilModel\Action\WaitAction;
-use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\PageElementReference;
 use webignition\BasilTranspiler\Action\WaitActionTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;

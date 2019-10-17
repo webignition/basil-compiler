@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
@@ -55,7 +55,7 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
         return $model instanceof NamedDomIdentifierInterface;
     }
 
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if (!$model instanceof NamedDomIdentifierInterface) {
             throw new NonTranspilableModelException($model);
@@ -89,10 +89,10 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
 
         $hasAssignment = clone $hasCall;
         $hasAssignment->prependStatement(-1, $hasPlaceholder . ' = ');
-        $hasAssignment = $hasAssignment->withCompilationMetadata(
-            (new CompilationMetadata())
+        $hasAssignment = $hasAssignment->withMetadata(
+            (new Metadata())
                 ->merge([
-                    $hasCall->getCompilationMetadata(),
+                    $hasCall->getMetadata(),
                 ])
                 ->withVariableExports($hasAssignmentVariableExports)
         );
@@ -104,10 +104,10 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
 
         $elementOrCollectionAssignment = clone $findCall;
         $elementOrCollectionAssignment->prependStatement(-1, $elementPlaceholder . ' = ');
-        $elementOrCollectionAssignment = $elementOrCollectionAssignment->withCompilationMetadata(
-            (new CompilationMetadata())
+        $elementOrCollectionAssignment = $elementOrCollectionAssignment->withMetadata(
+            (new Metadata())
                 ->merge([
-                    $findCall->getCompilationMetadata(),
+                    $findCall->getMetadata(),
                 ])
                 ->withVariableExports($collectionAssignmentVariableExports)
         );
@@ -124,7 +124,7 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
 
         if ($model->includeValue()) {
             if ($hasAttribute) {
-                $valueAssignment = (new CompilableSource())
+                $valueAssignment = (new Source())
                     ->withStatements([
                         sprintf(
                             '%s = %s->getAttribute(\'%s\')',
@@ -143,7 +143,7 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
             $predecessors[] = $valueAssignment;
         }
 
-        return (new CompilableSource())
+        return (new Source())
             ->withPredecessors($predecessors);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\Value;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
@@ -46,23 +46,23 @@ class PagePropertyTranspiler implements TranspilerInterface
     /**
      * @param object $model
      *
-     * @return CompilableSourceInterface
+     * @return SourceInterface
      *
      * @throws NonTranspilableModelException
      * @throws UnknownObjectPropertyException
      */
-    public function transpile(object $model): CompilableSourceInterface
+    public function transpile(object $model): SourceInterface
     {
         if ($this->handles($model) && $model instanceof ObjectValueInterface) {
             $transpiledValue = $this->transpiledValueMap[$model->getProperty()] ?? null;
 
             if (is_string($transpiledValue)) {
-                $compilationMetadata = (new CompilationMetadata())
+                $compilationMetadata = (new Metadata())
                     ->withVariableDependencies($this->variableDependencies);
 
-                return (new CompilableSource())
+                return (new Source())
                     ->withStatements([(string) $transpiledValue])
-                    ->withCompilationMetadata($compilationMetadata);
+                    ->withMetadata($compilationMetadata);
             }
 
             throw new UnknownObjectPropertyException($model);

@@ -2,9 +2,9 @@
 
 namespace webignition\BasilTranspiler\CallFactory;
 
-use webignition\BasilCompilationSource\CompilableSource;
-use webignition\BasilCompilationSource\CompilableSourceInterface;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Source;
+use webignition\BasilCompilationSource\SourceInterface;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilTranspiler\VariableNames;
@@ -16,7 +16,7 @@ class WebDriverElementInspectorCallFactory
         return new WebDriverElementInspectorCallFactory();
     }
 
-    public function createGetValueCall(VariablePlaceholder $collectionPlaceholder): CompilableSourceInterface
+    public function createGetValueCall(VariablePlaceholder $collectionPlaceholder): SourceInterface
     {
         $variableExports = new VariablePlaceholderCollection();
         $variableExports = $variableExports->withAdditionalItems([
@@ -26,15 +26,15 @@ class WebDriverElementInspectorCallFactory
         $variableDependencies = new VariablePlaceholderCollection();
         $inspectorPlaceholder = $variableDependencies->create(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR);
 
-        $compilationMetadata = (new CompilationMetadata())
+        $compilationMetadata = (new Metadata())
             ->withAdditionalVariableDependencies($variableDependencies)
             ->withVariableExports($variableExports);
 
-        $compilableSource = (new CompilableSource())
+        $compilableSource = (new Source())
             ->withStatements([
                 $inspectorPlaceholder . '->getValue(' . $collectionPlaceholder . ')',
             ])
-            ->withCompilationMetadata($compilationMetadata);
+            ->withMetadata($compilationMetadata);
 
         return $compilableSource;
     }

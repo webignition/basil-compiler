@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Action\InputAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
@@ -34,7 +34,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
                 new ClassDependency(Mutator::class),
@@ -144,7 +144,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -221,7 +221,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -298,7 +298,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -407,7 +407,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));
@@ -516,7 +516,7 @@ trait SetActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Mutator::class),
             ]));

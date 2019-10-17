@@ -7,7 +7,7 @@ namespace webignition\BasilTranspiler\Tests\DataProvider\Action;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\CompilationMetadata;
+use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilModel\Action\WaitAction;
 use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Value\DomIdentifierValue;
@@ -21,9 +21,9 @@ trait WaitActionFunctionalDataProviderTrait
     {
         $actionFactory = ActionFactory::createFactory();
 
-        $emptyCompilationMetadata = new CompilationMetadata();
+        $emptyCompilationMetadata = new Metadata();
 
-        $additionalCompilationMetadata = (new CompilationMetadata())
+        $additionalCompilationMetadata = (new Metadata())
             ->withAdditionalClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
             ]));
