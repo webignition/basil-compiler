@@ -45,15 +45,15 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         NamedDomIdentifierInterface $namedDomIdentifier,
-        MetadataInterface $expectedCompilationMetadata,
+        MetadataInterface $expectedMetadata,
         callable $resultAssertions,
         array $additionalVariableIdentifiers = [],
         array $additionalSetupStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
         $source = $this->transpiler->transpile($namedDomIdentifier);
 
-        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($expectedMetadata, $source->getMetadata());
 
         $executableCall = $this->createExecutableCallWithReturn(
             $source,
@@ -64,7 +64,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
             ),
             $additionalSetupStatements,
             [],
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         $resultAssertions(eval($executableCall));
@@ -79,7 +79,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                     new DomIdentifier('input', 1),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -105,7 +105,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))
@@ -117,7 +117,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                         ->withParentIdentifier(new DomIdentifier('form[action="/action2"]')),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -143,7 +143,7 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))

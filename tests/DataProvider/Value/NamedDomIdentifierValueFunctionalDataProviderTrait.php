@@ -29,7 +29,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                     ),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -53,7 +53,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))
@@ -67,7 +67,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                     ),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -91,7 +91,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))
@@ -104,7 +104,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                     ),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -126,7 +126,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))
@@ -141,7 +141,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                     ),
                     new VariablePlaceholder('ELEMENT')
                 ),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -163,7 +163,7 @@ trait NamedDomIdentifierValueFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$inspector = new Inspector();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())
+                'additionalMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ]))

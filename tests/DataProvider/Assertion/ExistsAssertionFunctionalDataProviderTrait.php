@@ -34,7 +34,7 @@ trait ExistsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => (new Metadata())->withClassDependencies(
+                'additionalMetadata' => (new Metadata())->withClassDependencies(
                     new ClassDependencyCollection([
                         new ClassDependency(Inspector::class),
                     ])

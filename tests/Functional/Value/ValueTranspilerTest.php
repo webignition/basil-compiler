@@ -40,15 +40,15 @@ class ValueTranspilerTest extends AbstractTestCase
     public function testTranspile(
         string $fixture,
         ValueInterface $model,
-        MetadataInterface $expectedCompilationMetadata,
+        MetadataInterface $expectedMetadata,
         callable $resultAssertions,
         array $additionalVariableIdentifiers = [],
         array $additionalSetupStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
         $source = $this->transpiler->transpile($model);
 
-        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($expectedMetadata, $source->getMetadata());
 
         $executableCall = $this->createExecutableCallWithReturn(
             $source,
@@ -59,7 +59,7 @@ class ValueTranspilerTest extends AbstractTestCase
             ),
             $additionalSetupStatements,
             [],
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         $resultAssertions(eval($executableCall));
@@ -71,7 +71,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'browser property: size' => [
                 'fixture' => '/empty.html',
                 'model' => new ObjectValue(ObjectValueType::BROWSER_PROPERTY, '$browser.size', 'size'),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
@@ -87,7 +87,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: title' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.title', 'title'),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
@@ -98,7 +98,7 @@ class ValueTranspilerTest extends AbstractTestCase
             'page property: url' => [
                 'fixture' => '/index.html',
                 'model' => new ObjectValue(ObjectValueType::PAGE_PROPERTY, '$page.url', 'url'),
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),

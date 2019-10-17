@@ -56,7 +56,7 @@ class ActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
         $source = $this->transpiler->transpile($action);
 
@@ -66,7 +66,7 @@ class ActionTranspilerTest extends AbstractTestCase
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         eval($executableCall);

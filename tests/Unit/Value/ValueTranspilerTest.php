@@ -89,12 +89,12 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
     public function testTranspile(
         ValueInterface $model,
         array $expectedStatements,
-        MetadataInterface $expectedCompilationMetadata
+        MetadataInterface $expectedMetadata
     ) {
         $source = $this->transpiler->transpile($model);
 
         $this->assertEquals($expectedStatements, $source->getStatements());
-        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($expectedMetadata, $source->getMetadata());
     }
 
     public function transpileDataProvider(): array
@@ -105,14 +105,14 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedStatements' => [
                     '"value"',
                 ],
-                'expectedCompilationMetadata' => new Metadata(),
+                'expectedMetadata' => new Metadata(),
             ],
             'literal string value: integer' => [
                 'value' => new LiteralValue('100'),
                 'expectedStatements' => [
                     '"100"',
                 ],
-                'expectedCompilationMetadata' => new Metadata(),
+                'expectedMetadata' => new Metadata(),
             ],
             'environment parameter value' => [
                 'value' => new ObjectValue(
@@ -123,7 +123,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedStatements' => [
                     (string) new VariablePlaceholder(VariableNames::ENVIRONMENT_VARIABLE_ARRAY) . '[\'KEY\']',
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::ENVIRONMENT_VARIABLE_ARRAY,
                     ])),
@@ -135,7 +135,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '(string) {{ WEBDRIVER_DIMENSION }}->getWidth() . \'x\' . '
                     . '(string) {{ WEBDRIVER_DIMENSION }}->getHeight()',
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ]))->withVariableExports(VariablePlaceholderCollection::createCollection([
@@ -147,7 +147,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedStatements' => [
                     '{{ PANTHER_CLIENT }}->getCurrentURL()',
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
@@ -157,7 +157,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                 'expectedStatements' => [
                     '{{ PANTHER_CLIENT }}->getTitle()',
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
                         VariableNames::PANTHER_CLIENT,
                     ])),
@@ -173,7 +173,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '{{ ELEMENT_NO_PARENT }} = {{ DOM_CRAWLER_NAVIGATOR }}->find(new ElementLocator(\'.selector\'))',
                     '{{ ELEMENT_NO_PARENT }} = {{ WEBDRIVER_ELEMENT_INSPECTOR }}->getValue({{ ELEMENT_NO_PARENT }})'
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -202,7 +202,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     . '->find(new ElementLocator(\'.selector\'), new ElementLocator(\'.parent\'))',
                     '{{ ELEMENT_HAS_PARENT }} = {{ WEBDRIVER_ELEMENT_INSPECTOR }}->getValue({{ ELEMENT_HAS_PARENT }})'
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -229,7 +229,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     '{{ ELEMENT_NO_PARENT }} = {{ DOM_CRAWLER_NAVIGATOR }}->findOne(new ElementLocator(\'.selector\'))',
                     '{{ ELEMENT_NO_PARENT }} = {{ ELEMENT_NO_PARENT }}->getAttribute(\'attribute_name\')',
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))
@@ -259,7 +259,7 @@ class ValueTranspilerTest extends \PHPUnit\Framework\TestCase
                     .'->findOne(new ElementLocator(\'.selector\'), new ElementLocator(\'.parent\'))',
                     '{{ ELEMENT_NO_PARENT }} = {{ ELEMENT_NO_PARENT }}->getAttribute(\'attribute_name\')',
                 ],
-                'expectedCompilationMetadata' => (new Metadata())
+                'expectedMetadata' => (new Metadata())
                     ->withClassDependencies(new ClassDependencyCollection([
                         new ClassDependency(ElementLocator::class),
                     ]))

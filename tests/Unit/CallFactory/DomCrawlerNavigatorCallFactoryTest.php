@@ -33,7 +33,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @var MetadataInterface
      */
-    private $expectedCompilationMetadata;
+    private $expectedMetadata;
 
     protected function setUp(): void
     {
@@ -50,7 +50,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
             VariableNames::DOM_CRAWLER_NAVIGATOR
         );
 
-        $this->expectedCompilationMetadata = (new Metadata())
+        $this->expectedMetadata = (new Metadata())
             ->withClassDependencies($expectedClassDependencies)
             ->withVariableDependencies($expectedVariableDependencies);
     }
@@ -72,7 +72,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($this->expectedMetadata, $source->getMetadata());
     }
 
     public function testCreateHasCallForIdentifier()
@@ -84,7 +84,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($this->expectedMetadata, $source->getMetadata());
     }
 
     public function testCreateHasCallForTranspiledLocator()
@@ -104,6 +104,6 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);
 
-        $this->assertEquals($this->expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($this->expectedMetadata, $source->getMetadata());
     }
 }

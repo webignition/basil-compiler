@@ -38,13 +38,13 @@ class ExecutableCallFactory
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
-        if (null !== $additionalCompilationMetadata) {
+        if (null !== $additionalMetadata) {
             $metadata = $source->getMetadata();
             $metadata = $metadata->merge([
                 $metadata,
-                $additionalCompilationMetadata
+                $additionalMetadata
             ]);
 
             $source = $source->withMetadata($metadata);
@@ -89,7 +89,7 @@ class ExecutableCallFactory
         array $variableIdentifiers = [],
         array $setupStatements = [],
         array $teardownStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
         $statements = $source->getStatements();
         $lastStatementPosition = count($statements) - 1;
@@ -97,16 +97,16 @@ class ExecutableCallFactory
         $lastStatement = 'return ' . $lastStatement;
         $statements[$lastStatementPosition] = $lastStatement;
 
-        $compilableSourceWithReturn = (new Source())
+        $sourceWithReturn = (new Source())
             ->withStatements($statements)
             ->withMetadata($source->getMetadata());
 
         return $this->create(
-            $compilableSourceWithReturn,
+            $sourceWithReturn,
             $variableIdentifiers,
             $setupStatements,
             $teardownStatements,
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
     }
 }

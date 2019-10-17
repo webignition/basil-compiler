@@ -45,12 +45,12 @@ class ElementLocatorCallFactoryTest extends \PHPUnit\Framework\TestCase
     ) {
         $source = $this->factory->createConstructorCall($elementIdentifier);
 
-        $expectedCompilationMetadata = (new Metadata())
+        $expectedMetadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(ElementLocator::class)
             ]));
 
-        $this->assertEquals($expectedCompilationMetadata, $source->getMetadata());
+        $this->assertEquals($expectedMetadata, $source->getMetadata());
 
         $executableCall = $this->executableCallFactory->createWithReturn($source);
 

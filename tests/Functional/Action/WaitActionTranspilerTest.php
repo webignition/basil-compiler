@@ -37,7 +37,7 @@ class WaitActionTranspilerTest extends AbstractTestCase
         array $variableIdentifiers,
         array $additionalSetupStatements,
         array $additionalTeardownStatements,
-        MetadataInterface $additionalCompilationMetadata,
+        MetadataInterface $additionalMetadata,
         int $expectedDuration
     ) {
         $source = $this->transpiler->transpile($action);
@@ -50,7 +50,7 @@ class WaitActionTranspilerTest extends AbstractTestCase
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             $additionalTeardownStatements,
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         $executableCallStatements = explode("\n", $executableCall);

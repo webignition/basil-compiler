@@ -187,7 +187,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 
     public function createHasCallForTranspiledArgumentsDataProvider(): array
     {
-        $expectedCompilationMetadata = (new Metadata())
+        $expectedMetadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(ElementLocator::class)
             ]));
@@ -199,7 +199,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     ->withStatements([
                         'new ElementLocator(\'.non-existent\', 1)'
                     ])
-                    ->withMetadata($expectedCompilationMetadata),
+                    ->withMetadata($expectedMetadata),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, parent does not exist' => [
@@ -209,7 +209,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'.non-existent-child\', 1), ' .
                         'new ElementLocator(\'.non-existent-parent\', 1)'
                     ])
-                    ->withMetadata($expectedCompilationMetadata),
+                    ->withMetadata($expectedMetadata),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, child does not exist' => [
@@ -219,7 +219,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'.non-existent-child\', 1), ' .
                         'new ElementLocator(\'form[action="/action1"]\', 1)'
                     ])
-                    ->withMetadata($expectedCompilationMetadata),
+                    ->withMetadata($expectedMetadata),
                 'expectedHasElement' => false,
             ],
             'hasElement: css selector only' => [
@@ -228,7 +228,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                     ->withStatements([
                         'new ElementLocator(\'h1\', 1)'
                     ])
-                    ->withMetadata($expectedCompilationMetadata),
+                    ->withMetadata($expectedMetadata),
                 'expectedHasElement' => true,
             ],
             'hasElement: css selector with parent' => [
@@ -238,7 +238,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
                         'new ElementLocator(\'input\', 1), ' .
                         'new ElementLocator(\'form[action="/action1"]\', 1)'
                     ])
-                    ->withMetadata($expectedCompilationMetadata),
+                    ->withMetadata($expectedMetadata),
                 'expectedHasElement' => true,
             ],
         ];

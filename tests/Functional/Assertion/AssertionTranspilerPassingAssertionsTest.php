@@ -54,7 +54,7 @@ class AssertionTranspilerPassingAssertionsTest extends AbstractTestCase
         AssertionInterface $assertion,
         array $variableIdentifiers,
         array $additionalSetupStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ) {
         $source = $this->transpiler->transpile($assertion);
 
@@ -64,7 +64,7 @@ class AssertionTranspilerPassingAssertionsTest extends AbstractTestCase
             array_merge(self::VARIABLE_IDENTIFIERS, $variableIdentifiers),
             $additionalSetupStatements,
             [],
-            $additionalCompilationMetadata
+            $additionalMetadata
         );
 
         eval($executableCall);

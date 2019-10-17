@@ -60,15 +60,15 @@ abstract class AbstractTestCase extends PantherTestCase
         array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
         $metadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Navigator::class),
             ]));
 
-        if ($additionalCompilationMetadata instanceof MetadataInterface) {
-            $metadata = $metadata->merge([$additionalCompilationMetadata]);
+        if ($additionalMetadata instanceof MetadataInterface) {
+            $metadata = $metadata->merge([$additionalMetadata]);
         }
 
         return $this->executableCallFactory->create(
@@ -92,15 +92,15 @@ abstract class AbstractTestCase extends PantherTestCase
         array $variableIdentifiers = [],
         array $additionalSetupStatements = [],
         array $additionalTeardownStatements = [],
-        ?MetadataInterface $additionalCompilationMetadata = null
+        ?MetadataInterface $additionalMetadata = null
     ): string {
         $metadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([
                 new ClassDependency(Navigator::class),
             ]));
 
-        if ($additionalCompilationMetadata instanceof MetadataInterface) {
-            $metadata = $metadata->merge([$additionalCompilationMetadata]);
+        if ($additionalMetadata instanceof MetadataInterface) {
+            $metadata = $metadata->merge([$additionalMetadata]);
         }
 
         return $this->executableCallFactory->createWithReturn(

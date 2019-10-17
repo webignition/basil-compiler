@@ -22,7 +22,7 @@ trait IsAssertionFunctionalDataProviderTrait
     {
         $assertionFactory = AssertionFactory::createFactory();
 
-        $additionalCompilationMetadata = (new Metadata())->withClassDependencies(
+        $additionalMetadata = (new Metadata())->withClassDependencies(
             new ClassDependencyCollection([
                 new ClassDependency(Inspector::class),
             ])
@@ -45,7 +45,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, attribute identifier examined value, scalar expected value' => [
                 'fixture' => '/assertions.html',
@@ -63,7 +63,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, environment examined value, scalar expected value' => [
                 'fixture' => '/empty.html',
@@ -118,7 +118,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, element identifier examined value, attribute identifier expected value' => [
                 'fixture' => '/assertions.html',
@@ -141,7 +141,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, attribute identifier examined value, environment expected value' => [
                 'fixture' => '/assertions.html',
@@ -202,7 +202,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, select element identifier examined value, scalar expected value (2)' => [
                 'fixture' => '/form.html',
@@ -220,7 +220,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, option collection element identifier examined value, scalar expected value (1)' => [
                 'fixture' => '/form.html',
@@ -238,7 +238,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, option collection element identifier examined value, scalar expected value (2)' => [
                 'fixture' => '/form.html',
@@ -256,7 +256,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, radio group element identifier examined value, scalar expected value (1)' => [
                 'fixture' => '/form.html',
@@ -274,7 +274,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
             'is comparison, radio group element identifier examined value, scalar expected value (2)' => [
                 'fixture' => '/form.html',
@@ -292,7 +292,7 @@ trait IsAssertionFunctionalDataProviderTrait
                 'additionalSetupStatements' => [
                     '$webDriverElementInspector = Inspector::create();',
                 ],
-                'additionalCompilationMetadata' => $additionalCompilationMetadata,
+                'additionalMetadata' => $additionalMetadata,
             ],
         ];
     }
