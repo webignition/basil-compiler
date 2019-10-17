@@ -8,7 +8,6 @@ use webignition\BasilCompilationSource\CompilationMetadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
-use webignition\BasilTranspiler\Model\VariableAssignment;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\UnknownObjectPropertyException;
@@ -53,11 +52,19 @@ class BrowserPropertyTranspiler implements TranspilerInterface
         $variableDependencies = new VariablePlaceholderCollection();
         $pantherClientPlaceholder = $variableDependencies->create(VariableNames::PANTHER_CLIENT);
 
-        $dimensionAssignment = (new VariableAssignment($webDriverDimensionPlaceholder))
+        $dimensionAssignment = (new CompilableSource())
             ->withStatements([
-                $pantherClientPlaceholder . '->getWebDriver()->manage()->window()->getSize()',
+                sprintf(
+                    '%s = %s->getWebDriver()->manage()->window()->getSize()',
+                    $webDriverDimensionPlaceholder,
+                    $pantherClientPlaceholder
+                ),
             ])
-            ->withCompilationMetadata((new CompilationMetadata())->withVariableDependencies($variableDependencies));
+            ->withCompilationMetadata(
+                (new CompilationMetadata())
+                ->withVariableDependencies($variableDependencies)
+                ->withVariableExports($variableExports)
+            );
 
         $getWidthCall = $webDriverDimensionPlaceholder . '->getWidth()';
         $getHeightCall = $webDriverDimensionPlaceholder . '->getHeight()';
