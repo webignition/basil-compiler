@@ -2,35 +2,8 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-use webignition\BasilCompilationSource\VariablePlaceholder;
-use webignition\BasilModel\Identifier\DomIdentifierInterface;
-
-class NamedDomElementIdentifier implements NamedDomIdentifierInterface
+class NamedDomElementIdentifier extends AbstractNamedDomIdentifier
 {
-    private $identifier;
-    private $placeholder;
-
-    public function __construct(DomIdentifierInterface $identifier, VariablePlaceholder $placeholder)
-    {
-        $this->identifier = $identifier;
-        $this->placeholder = $placeholder;
-    }
-
-    public function getIdentifier(): DomIdentifierInterface
-    {
-        return $this->identifier;
-    }
-
-    public function getPlaceholder(): VariablePlaceholder
-    {
-        return $this->placeholder;
-    }
-
-    public function includeValue(): bool
-    {
-        return null !== $this->identifier->getAttributeName();
-    }
-
     public function asCollection(): bool
     {
         return false;
