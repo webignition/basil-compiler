@@ -66,7 +66,7 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
 
         $elementCallArguments = $this->elementCallArgumentFactory->createElementCallArguments($identifier);
 
-        if ($hasAttribute || false === $model->includeValue()) {
+        if (false === $model->asCollection()) {
             $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
                 $elementCallArguments
             );

@@ -33,6 +33,11 @@ class NamedDomIdentifierValue implements ValueInterface, NamedDomIdentifierInter
         return true;
     }
 
+    public function asCollection(): bool
+    {
+        return null === $this->getIdentifier()->getAttributeName();
+    }
+
     public function isEmpty(): bool
     {
         return $this->domIdentifierValue->isEmpty();

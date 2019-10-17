@@ -28,7 +28,7 @@ trait WaitActionDataProviderTrait
             ],
             'wait action, attribute value' => [
                 'action' => new WaitAction(
-                    'wait $elements.element_name',
+                    'wait $elements.element_name.attribute_name',
                     new DomIdentifierValue(
                         (new DomIdentifier('.duration-selector'))->withAttributeName('attribute_name')
                     )

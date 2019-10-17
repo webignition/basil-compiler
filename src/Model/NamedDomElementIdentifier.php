@@ -2,10 +2,10 @@
 
 namespace webignition\BasilTranspiler\Model;
 
-class NamedDomIdentifier extends AbstractNamedDomIdentifier
+class NamedDomElementIdentifier extends AbstractNamedDomIdentifier
 {
     public function asCollection(): bool
     {
-        return true;
+        return false;
     }
 }

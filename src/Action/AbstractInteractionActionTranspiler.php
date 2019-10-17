@@ -8,7 +8,7 @@ use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Action\InteractionActionInterface;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
-use webignition\BasilTranspiler\Model\NamedDomIdentifier;
+use webignition\BasilTranspiler\Model\NamedDomElementIdentifier;
 use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -60,7 +60,7 @@ abstract class AbstractInteractionActionTranspiler implements TranspilerInterfac
         $variableExports = new VariablePlaceholderCollection();
         $elementPlaceholder = $variableExports->create('ELEMENT');
 
-        $accessor = $this->namedDomIdentifierTranspiler->transpile(new NamedDomIdentifier(
+        $accessor = $this->namedDomIdentifierTranspiler->transpile(new NamedDomElementIdentifier(
             $identifier,
             $elementPlaceholder
         ));

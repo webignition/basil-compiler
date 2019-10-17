@@ -10,7 +10,9 @@ use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\CallFactory\WebDriverElementMutatorCallFactory;
+use webignition\BasilTranspiler\Model\NamedDomIdentifier;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -20,15 +22,18 @@ class SetActionTranspiler implements TranspilerInterface
     private $variableAssignmentFactory;
     private $webDriverElementMutatorCallFactory;
     private $valueTranspiler;
+    private $namedDomIdentifierTranspiler;
 
     public function __construct(
         VariableAssignmentFactory $variableAssignmentFactory,
         WebDriverElementMutatorCallFactory $webDriverElementMutatorCallFactory,
-        ValueTranspiler $valueTranspiler
+        ValueTranspiler $valueTranspiler,
+        NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler
     ) {
         $this->variableAssignmentFactory = $variableAssignmentFactory;
         $this->webDriverElementMutatorCallFactory = $webDriverElementMutatorCallFactory;
         $this->valueTranspiler = $valueTranspiler;
+        $this->namedDomIdentifierTranspiler = $namedDomIdentifierTranspiler;
     }
 
     public static function createTranspiler(): SetActionTranspiler
@@ -36,7 +41,8 @@ class SetActionTranspiler implements TranspilerInterface
         return new SetActionTranspiler(
             VariableAssignmentFactory::createFactory(),
             WebDriverElementMutatorCallFactory::createFactory(),
-            ValueTranspiler::createTranspiler()
+            ValueTranspiler::createTranspiler(),
+            NamedDomIdentifierTranspiler::createTranspiler()
         );
     }
 
@@ -69,15 +75,13 @@ class SetActionTranspiler implements TranspilerInterface
         }
 
         $variableExports = new VariablePlaceholderCollection();
-        $elementLocatorPlaceholder = $variableExports->create('ELEMENT_LOCATOR');
         $collectionPlaceholder = $variableExports->create('COLLECTION');
         $valuePlaceholder = $variableExports->create('VALUE');
 
-        $collectionAssignment = $this->variableAssignmentFactory->createForElementCollection(
+        $collectionAssignment = $this->namedDomIdentifierTranspiler->transpile(new NamedDomIdentifier(
             $identifier,
-            $elementLocatorPlaceholder,
             $collectionPlaceholder
-        );
+        ));
 
         $value = $model->getValue();
 
