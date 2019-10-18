@@ -60,21 +60,6 @@ class AssertionCallFactory
         return new AssertionCallFactory();
     }
 
-    public function createValueMatchesValueAssertionCall(
-        SourceInterface $needle,
-        SourceInterface $haystack,
-        VariablePlaceholder $needlePlaceholder,
-        VariablePlaceholder $haystackPlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $needle,
-            $haystack,
-            $needlePlaceholder,
-            $haystackPlaceholder,
-            self::ASSERT_MATCHES_TEMPLATE
-        );
-    }
-
     public function createValueComparisonAssertionCall(
         SourceInterface $expectedValueCall,
         SourceInterface $actualValueCall,

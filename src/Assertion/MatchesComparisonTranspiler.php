@@ -59,11 +59,12 @@ class MatchesComparisonTranspiler extends AbstractComparisonAssertionTranspiler 
         VariablePlaceholder $examinedValuePlaceholder,
         VariablePlaceholder $expectedValuePlaceholder
     ): SourceInterface {
-        return $this->assertionCallFactory->createValueMatchesValueAssertionCall(
+        return $this->assertionCallFactory->createValueComparisonAssertionCall(
             $expectedValue,
             $examinedValue,
             $expectedValuePlaceholder,
-            $examinedValuePlaceholder
+            $examinedValuePlaceholder,
+            AssertionCallFactory::ASSERT_MATCHES_TEMPLATE
         );
     }
 }
