@@ -131,8 +131,14 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         SourceInterface $source,
         VariablePlaceholder $valuePlaceholder
     ): SourceInterface {
-        return AssertionComparison::EXISTS === $comparison
-            ? $this->assertionCallFactory->createValueIsTrueAssertionCall($source, $valuePlaceholder)
-            : $this->assertionCallFactory->createValueIsFalseAssertionCall($source, $valuePlaceholder);
+        $assertionTemplate = AssertionComparison::EXISTS === $comparison
+            ? AssertionCallFactory::ASSERT_TRUE_TEMPLATE
+            : AssertionCallFactory::ASSERT_FALSE_TEMPLATE;
+
+        return $this->assertionCallFactory->createValueExistenceAssertionCall(
+            $source,
+            $valuePlaceholder,
+            $assertionTemplate
+        );
     }
 }

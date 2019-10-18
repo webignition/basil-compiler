@@ -60,28 +60,6 @@ class AssertionCallFactory
         return new AssertionCallFactory();
     }
 
-    public function createValueIsTrueAssertionCall(
-        SourceInterface $variableAssignmentCall,
-        VariablePlaceholder $placeholder
-    ): SourceInterface {
-        return $this->createValueExistenceAssertionCall(
-            $variableAssignmentCall,
-            $placeholder,
-            self::ASSERT_TRUE_TEMPLATE
-        );
-    }
-
-    public function createValueIsFalseAssertionCall(
-        SourceInterface $variableAssignmentCall,
-        VariablePlaceholder $placeholder
-    ): SourceInterface {
-        return $this->createValueExistenceAssertionCall(
-            $variableAssignmentCall,
-            $placeholder,
-            self::ASSERT_FALSE_TEMPLATE
-        );
-    }
-
     public function createValuesAreEqualAssertionCall(
         SourceInterface $expectedValueCall,
         SourceInterface $actualValueCall,
@@ -184,7 +162,7 @@ class AssertionCallFactory
             ->withMetadata($metadata);
     }
 
-    private function createValueExistenceAssertionCall(
+    public function createValueExistenceAssertionCall(
         SourceInterface $assignmentCall,
         VariablePlaceholder $variablePlaceholder,
         string $assertionTemplate
