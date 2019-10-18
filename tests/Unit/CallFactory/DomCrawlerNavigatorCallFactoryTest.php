@@ -67,7 +67,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 ]))
             );
 
-        $source = $this->factory->createFindCallForTranspiledArguments($findElementCallArguments);
+        $source = $this->factory->createFindCall($findElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);
@@ -75,19 +75,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->expectedMetadata, $source->getMetadata());
     }
 
-    public function testCreateHasCallForIdentifier()
-    {
-        $source = $this->factory->createHasCallForIdentifier(
-            TestIdentifierFactory::createElementIdentifier('.selector')
-        );
-
-        $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
-        $this->assertRegExp($expectedContentPattern, (string) $source);
-
-        $this->assertEquals($this->expectedMetadata, $source->getMetadata());
-    }
-
-    public function testCreateHasCallForTranspiledLocator()
+    public function testCreateHasCall()
     {
         $hasElementCallArguments = (new Source())
             ->withStatements([
@@ -99,7 +87,7 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
                 ]))
             );
 
-        $source = $this->factory->createHasCallForTranspiledArguments($hasElementCallArguments);
+        $source = $this->factory->createHasCall($hasElementCallArguments);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);

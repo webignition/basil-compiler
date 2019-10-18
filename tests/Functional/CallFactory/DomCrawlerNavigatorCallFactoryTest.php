@@ -34,14 +34,14 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createFindCallForTranspiledArgumentsDataProvider
+     * @dataProvider createFindCallDataProvider
      */
-    public function testCreateFindCallForTranspiledArguments(
+    public function testCreateFindCall(
         string $fixture,
         SourceInterface $arguments,
         callable $assertions
     ) {
-        $source = $this->factory->createFindCallForTranspiledArguments($arguments);
+        $source = $this->factory->createFindCall($arguments);
 
         $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
@@ -50,7 +50,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         $assertions($element);
     }
 
-    public function createFindCallForTranspiledArgumentsDataProvider(): array
+    public function createFindCallDataProvider(): array
     {
         return [
             'css selector, no parent' => [
@@ -100,92 +100,21 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider createHasCallForIdentifierDataProvider
+     * @dataProvider createHasCallDataProvider
      */
-    public function testCreateHasCallForIdentifier(
-        string $fixture,
-        DomIdentifierInterface $elementIdentifier,
-        bool $expectedHasElement
-    ) {
-        $source = $this->factory->createHasCallForIdentifier($elementIdentifier);
-
-        $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
-
-        $this->assertSame($expectedHasElement, eval($executableCall));
-    }
-
-    public function createHasCallForIdentifierDataProvider(): array
-    {
-        return [
-            'not hasElement: css selector only' => [
-                'fixture' => '/index.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('.non-existent'),
-                'expectedHasElement' => false,
-            ],
-            'not hasElement: css selector with parent, neither exist' => [
-                'fixture' => '/index.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    '.non-existent-child',
-                    1,
-                    null,
-                    TestIdentifierFactory::createElementIdentifier('.non-existent-parent')
-                ),
-                'expectedHasElement' => false,
-            ],
-            'not hasElement: css selector with parent, parent does not exist' => [
-                'fixture' => '/index.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    '.non-existent-child',
-                    1,
-                    null,
-                    TestIdentifierFactory::createElementIdentifier('.non-existent-parent')
-                ),
-                'expectedHasElement' => false,
-            ],
-            'not hasElement: css selector with parent, child does not exist' => [
-                'fixture' => '/form.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    '.non-existent-child',
-                    1,
-                    null,
-                    TestIdentifierFactory::createElementIdentifier('form[action="/action1"]')
-                ),
-                'expectedHasElement' => false,
-            ],
-            'hasElement: css selector' => [
-                'fixture' => '/index.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier('h1'),
-                'expectedHasElement' => true,
-            ],
-            'hasElement: css selector with parent' => [
-                'fixture' => '/form.html',
-                'elementIdentifier' => TestIdentifierFactory::createElementIdentifier(
-                    'input',
-                    1,
-                    null,
-                    TestIdentifierFactory::createElementIdentifier('form[action="/action1"]')
-                ),
-                'expectedHasElement' => true,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider createHasCallForTranspiledArgumentsDataProvider
-     */
-    public function testCreateHasCallForTranspiledArguments(
+    public function testCreateHasCall(
         string $fixture,
         SourceInterface $arguments,
         bool $expectedHasElement
     ) {
-        $source = $this->factory->createHasCallForTranspiledArguments($arguments);
+        $source = $this->factory->createHasCall($arguments);
 
         $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
         $this->assertSame($expectedHasElement, eval($executableCall));
     }
 
-    public function createHasCallForTranspiledArgumentsDataProvider(): array
+    public function createHasCallDataProvider(): array
     {
         $expectedMetadata = (new Metadata())
             ->withClassDependencies(new ClassDependencyCollection([

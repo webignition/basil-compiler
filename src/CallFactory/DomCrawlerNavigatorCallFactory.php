@@ -6,7 +6,6 @@ use webignition\BasilCompilationSource\Source;
 use webignition\BasilCompilationSource\SourceInterface;
 use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
-use webignition\BasilModel\Identifier\DomIdentifierInterface;
 use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactory
@@ -30,60 +29,23 @@ class DomCrawlerNavigatorCallFactory
         );
     }
 
-    /**
-     * @param SourceInterface $arguments
-     *
-     * @return SourceInterface
-     */
-    public function createFindCallForTranspiledArguments(
-        SourceInterface $arguments
-    ): SourceInterface {
+    public function createFindCall(SourceInterface $arguments): SourceInterface
+    {
         return $this->createElementCall($arguments, 'find');
     }
 
-    /**
-     * @param SourceInterface $arguments
-     *
-     * @return SourceInterface
-     */
-    public function createFindOneCallForTranspiledArguments(
-        SourceInterface $arguments
-    ): SourceInterface {
+    public function createFindOneCall(SourceInterface $arguments): SourceInterface
+    {
         return $this->createElementCall($arguments, 'findOne');
     }
 
-    /**
-     * @param DomIdentifierInterface $elementIdentifier
-     *
-     * @return SourceInterface
-     */
-    public function createHasCallForIdentifier(
-        DomIdentifierInterface $elementIdentifier
-    ): SourceInterface {
-        $hasElementCallArguments = $this->elementCallArgumentFactory->createElementCallArguments($elementIdentifier);
-
-        return $this->createHasCallForTranspiledArguments($hasElementCallArguments);
-    }
-
-    /**
-     * @param SourceInterface $arguments
-     *
-     * @return SourceInterface
-     */
-    public function createHasCallForTranspiledArguments(
-        SourceInterface $arguments
-    ): SourceInterface {
+    public function createHasCall(SourceInterface $arguments): SourceInterface
+    {
         return $this->createElementCall($arguments, 'has');
     }
 
-    /**
-     * @param SourceInterface $arguments
-     *
-     * @return SourceInterface
-     */
-    public function createHasOneCallForTranspiledArguments(
-        SourceInterface $arguments
-    ): SourceInterface {
+    public function createHasOneCall(SourceInterface $arguments): SourceInterface
+    {
         return $this->createElementCall($arguments, 'hasOne');
     }
 
