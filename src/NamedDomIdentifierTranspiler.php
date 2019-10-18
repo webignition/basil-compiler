@@ -67,21 +67,11 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
         $elementCallArguments = $this->elementCallArgumentFactory->createElementCallArguments($identifier);
 
         if (false === $model->asCollection()) {
-            $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCallForTranspiledArguments(
-                $elementCallArguments
-            );
-
-            $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCallForTranspiledArguments(
-                $elementCallArguments
-            );
+            $hasCall = $this->domCrawlerNavigatorCallFactory->createHasOneCall($elementCallArguments);
+            $findCall = $this->domCrawlerNavigatorCallFactory->createFindOneCall($elementCallArguments);
         } else {
-            $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCallForTranspiledArguments(
-                $elementCallArguments
-            );
-
-            $findCall = $this->domCrawlerNavigatorCallFactory->createFindCallForTranspiledArguments(
-                $elementCallArguments
-            );
+            $hasCall = $this->domCrawlerNavigatorCallFactory->createHasCall($elementCallArguments);
+            $findCall = $this->domCrawlerNavigatorCallFactory->createFindCall($elementCallArguments);
         }
 
         $hasAssignmentVariableExports = new VariablePlaceholderCollection();
