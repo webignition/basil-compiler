@@ -9,6 +9,7 @@ use webignition\BasilModel\Action\WaitActionInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -20,20 +21,24 @@ class WaitActionTranspiler implements TranspilerInterface
 
     private $variableAssignmentFactory;
     private $valueTranspiler;
+    private $namedDomIdentifierTranspiler;
 
     public function __construct(
         VariableAssignmentFactory $variableAssignmentFactory,
-        ValueTranspiler $valueTranspiler
+        ValueTranspiler $valueTranspiler,
+        NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler
     ) {
         $this->variableAssignmentFactory = $variableAssignmentFactory;
         $this->valueTranspiler = $valueTranspiler;
+        $this->namedDomIdentifierTranspiler = $namedDomIdentifierTranspiler;
     }
 
     public static function createTranspiler(): WaitActionTranspiler
     {
         return new WaitActionTranspiler(
             VariableAssignmentFactory::createFactory(),
-            ValueTranspiler::createTranspiler()
+            ValueTranspiler::createTranspiler(),
+            NamedDomIdentifierTranspiler::createTranspiler()
         );
     }
 
@@ -61,10 +66,12 @@ class WaitActionTranspiler implements TranspilerInterface
         $duration = $model->getDuration();
 
         if ($duration instanceof DomIdentifierValueInterface) {
-            $duration = new NamedDomIdentifierValue($duration, $durationPlaceholder);
+            $durationAccessor = $this->namedDomIdentifierTranspiler->transpile(
+                new NamedDomIdentifierValue($duration, $durationPlaceholder)
+            );
+        } else {
+            $durationAccessor = $this->valueTranspiler->transpile($duration);
         }
-
-        $durationAccessor = $this->valueTranspiler->transpile($duration);
 
         $durationAssignment = $this->variableAssignmentFactory->createForValueAccessor(
             $durationAccessor,
