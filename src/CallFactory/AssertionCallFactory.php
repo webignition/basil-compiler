@@ -60,36 +60,6 @@ class AssertionCallFactory
         return new AssertionCallFactory();
     }
 
-    public function createValuesAreEqualAssertionCall(
-        SourceInterface $expectedValueCall,
-        SourceInterface $actualValueCall,
-        VariablePlaceholder $expectedValuePlaceholder,
-        VariablePlaceholder $actualValuePlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $expectedValueCall,
-            $actualValueCall,
-            self::ASSERT_EQUALS_TEMPLATE,
-            $expectedValuePlaceholder,
-            $actualValuePlaceholder
-        );
-    }
-
-    public function createValuesAreNotEqualAssertionCall(
-        SourceInterface $expectedValueCall,
-        SourceInterface $actualValueCall,
-        VariablePlaceholder $expectedValuePlaceholder,
-        VariablePlaceholder $actualValuePlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $expectedValueCall,
-            $actualValueCall,
-            self::ASSERT_NOT_EQUALS_TEMPLATE,
-            $expectedValuePlaceholder,
-            $actualValuePlaceholder
-        );
-    }
-
     public function createValueIncludesValueAssertionCall(
         SourceInterface $needle,
         SourceInterface $haystack,
@@ -99,9 +69,9 @@ class AssertionCallFactory
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
-            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE,
             $needlePlaceholder,
-            $haystackPlaceholder
+            $haystackPlaceholder,
+            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE
         );
     }
 
@@ -114,9 +84,9 @@ class AssertionCallFactory
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
-            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE,
             $needlePlaceholder,
-            $haystackPlaceholder
+            $haystackPlaceholder,
+            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE
         );
     }
 
@@ -129,18 +99,18 @@ class AssertionCallFactory
         return $this->createValueComparisonAssertionCall(
             $needle,
             $haystack,
-            self::ASSERT_MATCHES_TEMPLATE,
             $needlePlaceholder,
-            $haystackPlaceholder
+            $haystackPlaceholder,
+            self::ASSERT_MATCHES_TEMPLATE
         );
     }
 
-    private function createValueComparisonAssertionCall(
+    public function createValueComparisonAssertionCall(
         SourceInterface $expectedValueCall,
         SourceInterface $actualValueCall,
-        string $assertionTemplate,
         VariablePlaceholder $expectedValuePlaceholder,
-        VariablePlaceholder $actualValuePlaceholder
+        VariablePlaceholder $actualValuePlaceholder,
+        string $assertionTemplate
     ): SourceInterface {
         $variableDependencies = new VariablePlaceholderCollection();
         $variableDependencies = $variableDependencies->withAdditionalItems([

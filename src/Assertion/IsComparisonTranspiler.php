@@ -58,18 +58,16 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
         VariablePlaceholder $examinedValuePlaceholder,
         VariablePlaceholder $expectedValuePlaceholder
     ): SourceInterface {
-        return AssertionComparison::IS === $assertion->getComparison()
-            ? $this->assertionCallFactory->createValuesAreEqualAssertionCall(
-                $examinedValue,
-                $expectedValue,
-                $examinedValuePlaceholder,
-                $expectedValuePlaceholder
-            )
-            : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall(
-                $examinedValue,
-                $expectedValue,
-                $examinedValuePlaceholder,
-                $expectedValuePlaceholder
-            );
+        $assertionTemplate = AssertionComparison::IS === $assertion->getComparison()
+            ? AssertionCallFactory::ASSERT_EQUALS_TEMPLATE
+            : AssertionCallFactory::ASSERT_NOT_EQUALS_TEMPLATE;
+
+        return $this->assertionCallFactory->createValueComparisonAssertionCall(
+            $examinedValue,
+            $expectedValue,
+            $examinedValuePlaceholder,
+            $expectedValuePlaceholder,
+            $assertionTemplate
+        );
     }
 }
