@@ -59,18 +59,16 @@ class IncludesComparisonTranspiler extends AbstractComparisonAssertionTranspiler
         VariablePlaceholder $examinedValuePlaceholder,
         VariablePlaceholder $expectedValuePlaceholder
     ): SourceInterface {
-        return AssertionComparison::INCLUDES === $assertion->getComparison()
-            ? $this->assertionCallFactory->createValueIncludesValueAssertionCall(
-                $expectedValue,
-                $examinedValue,
-                $expectedValuePlaceholder,
-                $examinedValuePlaceholder
-            )
-            : $this->assertionCallFactory->createValueNotIncludesValueAssertionCall(
-                $expectedValue,
-                $examinedValue,
-                $expectedValuePlaceholder,
-                $examinedValuePlaceholder
-            );
+        $assertionTemplate = AssertionComparison::INCLUDES === $assertion->getComparison()
+            ? AssertionCallFactory::ASSERT_STRING_CONTAINS_STRING_TEMPLATE
+            : AssertionCallFactory::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE;
+
+        return $this->assertionCallFactory->createValueComparisonAssertionCall(
+            $expectedValue,
+            $examinedValue,
+            $expectedValuePlaceholder,
+            $examinedValuePlaceholder,
+            $assertionTemplate
+        );
     }
 }

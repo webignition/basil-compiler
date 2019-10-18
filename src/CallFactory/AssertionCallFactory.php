@@ -60,36 +60,6 @@ class AssertionCallFactory
         return new AssertionCallFactory();
     }
 
-    public function createValueIncludesValueAssertionCall(
-        SourceInterface $needle,
-        SourceInterface $haystack,
-        VariablePlaceholder $needlePlaceholder,
-        VariablePlaceholder $haystackPlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $needle,
-            $haystack,
-            $needlePlaceholder,
-            $haystackPlaceholder,
-            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE
-        );
-    }
-
-    public function createValueNotIncludesValueAssertionCall(
-        SourceInterface $needle,
-        SourceInterface $haystack,
-        VariablePlaceholder $needlePlaceholder,
-        VariablePlaceholder $haystackPlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $needle,
-            $haystack,
-            $needlePlaceholder,
-            $haystackPlaceholder,
-            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE
-        );
-    }
-
     public function createValueMatchesValueAssertionCall(
         SourceInterface $needle,
         SourceInterface $haystack,
