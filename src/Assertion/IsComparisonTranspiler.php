@@ -7,6 +7,7 @@ use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\VariableAssignmentFactory;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
@@ -18,7 +19,8 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
         return new IsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
             VariableAssignmentFactory::createFactory(),
-            ValueTranspiler::createTranspiler()
+            ValueTranspiler::createTranspiler(),
+            NamedDomIdentifierTranspiler::createTranspiler()
         );
     }
 
