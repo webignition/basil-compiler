@@ -3,7 +3,6 @@
 namespace webignition\BasilTranspiler\Assertion;
 
 use webignition\BasilCompilationSource\SourceInterface;
-use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ComparisonAssertionInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
@@ -51,25 +50,10 @@ class IsComparisonTranspiler extends AbstractComparisonAssertionTranspiler imple
         return $this->doTranspile($model);
     }
 
-    protected function getAssertionCall(
-        ComparisonAssertionInterface $assertion,
-        SourceInterface $examinedValue,
-        SourceInterface $expectedValue,
-        VariablePlaceholder $examinedValuePlaceholder,
-        VariablePlaceholder $expectedValuePlaceholder
-    ): SourceInterface {
+    protected function getAssertionTemplate(ComparisonAssertionInterface $assertion): string
+    {
         return AssertionComparison::IS === $assertion->getComparison()
-            ? $this->assertionCallFactory->createValuesAreEqualAssertionCall(
-                $examinedValue,
-                $expectedValue,
-                $examinedValuePlaceholder,
-                $expectedValuePlaceholder
-            )
-            : $this->assertionCallFactory->createValuesAreNotEqualAssertionCall(
-                $examinedValue,
-                $expectedValue,
-                $examinedValuePlaceholder,
-                $expectedValuePlaceholder
-            );
+            ? AssertionCallFactory::ASSERT_EQUALS_TEMPLATE
+            : AssertionCallFactory::ASSERT_NOT_EQUALS_TEMPLATE;
     }
 }

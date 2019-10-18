@@ -30,13 +30,7 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
         $this->valueTranspiler = $valueTranspiler;
     }
 
-    abstract protected function getAssertionCall(
-        ComparisonAssertionInterface $assertion,
-        SourceInterface $examinedValue,
-        SourceInterface $expectedValue,
-        VariablePlaceholder $examinedValuePlaceholder,
-        VariablePlaceholder $expectedValuePlaceholder
-    ): SourceInterface;
+    abstract protected function getAssertionTemplate(ComparisonAssertionInterface $assertion): string;
 
     /**
      * @param ComparisonAssertionInterface $assertion
@@ -74,12 +68,12 @@ abstract class AbstractComparisonAssertionTranspiler implements TranspilerInterf
             $expectedValuePlaceholder
         );
 
-        return $this->getAssertionCall(
-            $assertion,
-            $examinedValueAssignment,
+        return $this->assertionCallFactory->createValueComparisonAssertionCall(
             $expectedValueAssignment,
+            $examinedValueAssignment,
+            $expectedValuePlaceholder,
             $examinedValuePlaceholder,
-            $expectedValuePlaceholder
+            $this->getAssertionTemplate($assertion)
         );
     }
 }

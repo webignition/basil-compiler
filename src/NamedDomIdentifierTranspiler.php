@@ -112,9 +112,10 @@ class NamedDomIdentifierTranspiler implements TranspilerInterface
                 ->withVariableExports($collectionAssignmentVariableExports)
         );
 
-        $elementExistsAssertion = $this->assertionCallFactory->createValueIsTrueAssertionCall(
+        $elementExistsAssertion = $this->assertionCallFactory->createValueExistenceAssertionCall(
             $hasAssignment,
-            $hasPlaceholder
+            $hasPlaceholder,
+            AssertionCallFactory::ASSERT_TRUE_TEMPLATE
         );
 
         $predecessors = [

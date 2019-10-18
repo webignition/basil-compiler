@@ -60,109 +60,12 @@ class AssertionCallFactory
         return new AssertionCallFactory();
     }
 
-    public function createValueIsTrueAssertionCall(
-        SourceInterface $variableAssignmentCall,
-        VariablePlaceholder $placeholder
-    ): SourceInterface {
-        return $this->createValueExistenceAssertionCall(
-            $variableAssignmentCall,
-            $placeholder,
-            self::ASSERT_TRUE_TEMPLATE
-        );
-    }
-
-    public function createValueIsFalseAssertionCall(
-        SourceInterface $variableAssignmentCall,
-        VariablePlaceholder $placeholder
-    ): SourceInterface {
-        return $this->createValueExistenceAssertionCall(
-            $variableAssignmentCall,
-            $placeholder,
-            self::ASSERT_FALSE_TEMPLATE
-        );
-    }
-
-    public function createValuesAreEqualAssertionCall(
+    public function createValueComparisonAssertionCall(
         SourceInterface $expectedValueCall,
         SourceInterface $actualValueCall,
         VariablePlaceholder $expectedValuePlaceholder,
-        VariablePlaceholder $actualValuePlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $expectedValueCall,
-            $actualValueCall,
-            self::ASSERT_EQUALS_TEMPLATE,
-            $expectedValuePlaceholder,
-            $actualValuePlaceholder
-        );
-    }
-
-    public function createValuesAreNotEqualAssertionCall(
-        SourceInterface $expectedValueCall,
-        SourceInterface $actualValueCall,
-        VariablePlaceholder $expectedValuePlaceholder,
-        VariablePlaceholder $actualValuePlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $expectedValueCall,
-            $actualValueCall,
-            self::ASSERT_NOT_EQUALS_TEMPLATE,
-            $expectedValuePlaceholder,
-            $actualValuePlaceholder
-        );
-    }
-
-    public function createValueIncludesValueAssertionCall(
-        SourceInterface $needle,
-        SourceInterface $haystack,
-        VariablePlaceholder $needlePlaceholder,
-        VariablePlaceholder $haystackPlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $needle,
-            $haystack,
-            self::ASSERT_STRING_CONTAINS_STRING_TEMPLATE,
-            $needlePlaceholder,
-            $haystackPlaceholder
-        );
-    }
-
-    public function createValueNotIncludesValueAssertionCall(
-        SourceInterface $needle,
-        SourceInterface $haystack,
-        VariablePlaceholder $needlePlaceholder,
-        VariablePlaceholder $haystackPlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $needle,
-            $haystack,
-            self::ASSERT_STRING_NOT_CONTAINS_STRING_TEMPLATE,
-            $needlePlaceholder,
-            $haystackPlaceholder
-        );
-    }
-
-    public function createValueMatchesValueAssertionCall(
-        SourceInterface $needle,
-        SourceInterface $haystack,
-        VariablePlaceholder $needlePlaceholder,
-        VariablePlaceholder $haystackPlaceholder
-    ): SourceInterface {
-        return $this->createValueComparisonAssertionCall(
-            $needle,
-            $haystack,
-            self::ASSERT_MATCHES_TEMPLATE,
-            $needlePlaceholder,
-            $haystackPlaceholder
-        );
-    }
-
-    private function createValueComparisonAssertionCall(
-        SourceInterface $expectedValueCall,
-        SourceInterface $actualValueCall,
-        string $assertionTemplate,
-        VariablePlaceholder $expectedValuePlaceholder,
-        VariablePlaceholder $actualValuePlaceholder
+        VariablePlaceholder $actualValuePlaceholder,
+        string $assertionTemplate
     ): SourceInterface {
         $variableDependencies = new VariablePlaceholderCollection();
         $variableDependencies = $variableDependencies->withAdditionalItems([
@@ -184,7 +87,7 @@ class AssertionCallFactory
             ->withMetadata($metadata);
     }
 
-    private function createValueExistenceAssertionCall(
+    public function createValueExistenceAssertionCall(
         SourceInterface $assignmentCall,
         VariablePlaceholder $variablePlaceholder,
         string $assertionTemplate
