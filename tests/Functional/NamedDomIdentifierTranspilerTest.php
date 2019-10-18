@@ -13,10 +13,11 @@ use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Identifier\DomIdentifier;
+use webignition\BasilModel\Value\DomIdentifierValue;
 use webignition\BasilTranspiler\Model\NamedDomIdentifier;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierInterface;
+use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\NamedDomIdentifierValueFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\DomElementLocator\ElementLocator;
 use webignition\WebDriverElementCollection\WebDriverElementCollection;
@@ -24,8 +25,6 @@ use webignition\WebDriverElementInspector\Inspector;
 
 class NamedDomIdentifierTranspilerTest extends AbstractTestCase
 {
-    use NamedDomIdentifierValueFunctionalDataProviderTrait;
-
     /**
      * @var NamedDomIdentifierTranspiler
      */
@@ -39,7 +38,6 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider namedDomIdentifierValueFunctionalDataProvider
      * @dataProvider transpileDataProvider
      */
     public function testTranspile(
@@ -73,6 +71,153 @@ class NamedDomIdentifierTranspilerTest extends AbstractTestCase
     public function transpileDataProvider(): array
     {
         return [
+            'element value, no parent' => [
+                'fixture' => '/form.html',
+                'model' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        new DomIdentifier('input', 1)
+                    ),
+                    new VariablePlaceholder('ELEMENT')
+                ),
+                'expectedMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                        VariableNames::WEBDRIVER_ELEMENT_INSPECTOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT',
+                    ])),
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('', $result);
+                },
+                'additionalVariableIdentifiers' => [
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$inspector',
+                ],
+                'additionalSetupStatements' => [
+                    '$inspector = new Inspector();',
+                ],
+                'additionalMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ]))
+            ],
+            'element value, has parent' => [
+                'fixture' => '/form.html',
+                'model' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('input', 1))
+                            ->withParentIdentifier(new DomIdentifier('form[action="/action2"]'))
+                    ),
+                    new VariablePlaceholder('ELEMENT')
+                ),
+                'expectedMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                        VariableNames::WEBDRIVER_ELEMENT_INSPECTOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT',
+                    ])),
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('test', $result);
+                },
+                'additionalVariableIdentifiers' => [
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                    'WEBDRIVER_ELEMENT_INSPECTOR' => '$inspector',
+                ],
+                'additionalSetupStatements' => [
+                    '$inspector = new Inspector();',
+                ],
+                'additionalMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ]))
+            ],
+            'attribute value, no parent' => [
+                'fixture' => '/form.html',
+                'model' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('input', 1))->withAttributeName('name')
+                    ),
+                    new VariablePlaceholder('ELEMENT')
+                ),
+                'expectedMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT',
+                    ])),
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('input-without-value', $result);
+                },
+                'additionalVariableIdentifiers' => [
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                ],
+                'additionalSetupStatements' => [
+                    '$inspector = new Inspector();',
+                ],
+                'additionalMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ]))
+            ],
+            'attribute value, has parent' => [
+                'fixture' => '/form.html',
+                'model' => new NamedDomIdentifierValue(
+                    new DomIdentifierValue(
+                        (new DomIdentifier('input', 1))
+                            ->withAttributeName('name')
+                            ->withParentIdentifier(new DomIdentifier('form[action="/action2"]'))
+                    ),
+                    new VariablePlaceholder('ELEMENT')
+                ),
+                'expectedMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(ElementLocator::class),
+                    ]))
+                    ->withVariableDependencies(VariablePlaceholderCollection::createCollection([
+                        VariableNames::PHPUNIT_TEST_CASE,
+                        VariableNames::DOM_CRAWLER_NAVIGATOR,
+                    ]))
+                    ->withVariableExports(VariablePlaceholderCollection::createCollection([
+                        'HAS',
+                        'ELEMENT',
+                    ])),
+                'resultAssertions' => function ($result) {
+                    $this->assertEquals('input-2', $result);
+                },
+                'additionalVariableIdentifiers' => [
+                    'HAS' => '$has',
+                    'ELEMENT' => '$element',
+                ],
+                'additionalSetupStatements' => [
+                    '$inspector = new Inspector();',
+                ],
+                'additionalMetadata' => (new Metadata())
+                    ->withClassDependencies(new ClassDependencyCollection([
+                        new ClassDependency(Inspector::class),
+                    ]))
+            ],
             'element identifier, no parent' => [
                 'fixture' => '/form.html',
                 'model' => new NamedDomIdentifier(

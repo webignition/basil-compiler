@@ -12,15 +12,12 @@ use webignition\BasilCompilationSource\VariablePlaceholderCollection;
 use webignition\BasilModel\Value\ObjectValue;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilModel\Value\ValueInterface;
-use webignition\BasilTranspiler\Tests\DataProvider\Value\NamedDomIdentifierValueFunctionalDataProviderTrait;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
 
 class ValueTranspilerTest extends AbstractTestCase
 {
-    use NamedDomIdentifierValueFunctionalDataProviderTrait;
-
     /**
      * @var ValueTranspiler
      */
@@ -35,7 +32,6 @@ class ValueTranspilerTest extends AbstractTestCase
 
     /**
      * @dataProvider transpileDataProvider
-     * @dataProvider namedDomIdentifierValueFunctionalDataProvider
      */
     public function testTranspile(
         string $fixture,

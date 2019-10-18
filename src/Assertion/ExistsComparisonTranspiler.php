@@ -12,6 +12,7 @@ use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
+use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
 use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\TranspilerInterface;
@@ -24,17 +25,20 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     private $objectValueTypeExaminer;
     private $valueTranspiler;
     private $domCrawlerNavigatorCallFactory;
+    private $namedDomIdentifierTranspiler;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
         ObjectValueTypeExaminer $objectValueTypeExaminer,
         ValueTranspiler $valueTranspiler,
-        DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory
+        DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
+        NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->objectValueTypeExaminer = $objectValueTypeExaminer;
         $this->valueTranspiler = $valueTranspiler;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
+        $this->namedDomIdentifierTranspiler = $namedDomIdentifierTranspiler;
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
@@ -43,7 +47,8 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             AssertionCallFactory::createFactory(),
             ObjectValueTypeExaminer::createExaminer(),
             ValueTranspiler::createTranspiler(),
-            DomCrawlerNavigatorCallFactory::createFactory()
+            DomCrawlerNavigatorCallFactory::createFactory(),
+            NamedDomIdentifierTranspiler::createTranspiler()
         );
     }
 
@@ -112,7 +117,9 @@ class ExistsComparisonTranspiler implements TranspilerInterface
                 return $this->createAssertionCall($model->getComparison(), $assignment, $valuePlaceholder);
             }
 
-            $accessor = $this->valueTranspiler->transpile(new NamedDomIdentifierValue($value, $valuePlaceholder));
+            $accessor = $this->namedDomIdentifierTranspiler->transpile(
+                new NamedDomIdentifierValue($value, $valuePlaceholder)
+            );
 
             $existence = (new Source())
                 ->withPredecessors([$accessor])
