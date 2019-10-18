@@ -86,10 +86,13 @@ class SetActionTranspiler implements TranspilerInterface
         $value = $model->getValue();
 
         if ($value instanceof DomIdentifierValueInterface) {
-            $value = new NamedDomIdentifierValue($value, $valuePlaceholder);
+            $valueAccessor = $this->namedDomIdentifierTranspiler->transpile(
+                new NamedDomIdentifierValue($value, $valuePlaceholder)
+            );
+        } else {
+            $valueAccessor = $this->valueTranspiler->transpile($value);
         }
 
-        $valueAccessor = $this->valueTranspiler->transpile($value);
         $valueAssignment = $this->variableAssignmentFactory->createForValueAccessor($valueAccessor, $valuePlaceholder);
 
         $mutationCall = $this->webDriverElementMutatorCallFactory->createSetValueCall(
