@@ -11,17 +11,17 @@ use webignition\BasilTranspiler\VariableNames;
 
 class DomCrawlerNavigatorCallFactory
 {
-    private $elementCallArgumentFactory;
+    private $elementLocatorCallFactory;
 
-    public function __construct(ElementCallArgumentFactory $elementCallArgumentFactory)
+    public function __construct(ElementLocatorCallFactory $elementLocatorCallFactory)
     {
-        $this->elementCallArgumentFactory = $elementCallArgumentFactory;
+        $this->elementLocatorCallFactory = $elementLocatorCallFactory;
     }
 
     public static function createFactory(): DomCrawlerNavigatorCallFactory
     {
         return new DomCrawlerNavigatorCallFactory(
-            ElementCallArgumentFactory::createFactory()
+            ElementLocatorCallFactory::createFactory()
         );
     }
 
@@ -49,7 +49,7 @@ class DomCrawlerNavigatorCallFactory
         DomIdentifierInterface $identifier,
         string $methodName
     ): SourceInterface {
-        $arguments = $this->elementCallArgumentFactory->createElementCallArguments($identifier);
+        $arguments = $this->createElementCallArguments($identifier);
 
         $variableDependencies = new VariablePlaceholderCollection();
         $domCrawlerNavigatorPlaceholder = $variableDependencies->create(VariableNames::DOM_CRAWLER_NAVIGATOR);
@@ -66,5 +66,34 @@ class DomCrawlerNavigatorCallFactory
         return (new Source())
             ->withStatements([$createStatement])
             ->withMetadata($metadata);
+    }
+
+    private function createElementCallArguments(DomIdentifierInterface $elementIdentifier): SourceInterface
+    {
+        $source = $this->elementLocatorCallFactory->createConstructorCall($elementIdentifier);
+
+        $parentIdentifier = $elementIdentifier->getParentIdentifier();
+        if ($parentIdentifier instanceof DomIdentifierInterface) {
+            $parentElementLocatorConstructorCall = $this->elementLocatorCallFactory->createConstructorCall(
+                $parentIdentifier
+            );
+
+            $metadata = (new Metadata())->merge([
+                $source->getMetadata(),
+                $parentElementLocatorConstructorCall->getMetadata(),
+            ]);
+
+            $source = (new Source())
+                ->withStatements([
+                    sprintf(
+                        '%s, %s',
+                        (string) $source,
+                        (string) $parentElementLocatorConstructorCall
+                    ),
+                ])
+                ->withMetadata($metadata);
+        }
+
+        return $source;
     }
 }
