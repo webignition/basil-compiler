@@ -7,16 +7,10 @@ declare(strict_types=1);
 namespace webignition\BasilTranspiler\Tests\Functional\CallFactory;
 
 use Facebook\WebDriver\WebDriverElement;
-use webignition\BasilCompilationSource\ClassDependency;
-use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\Source;
-use webignition\BasilCompilationSource\SourceInterface;
-use webignition\BasilCompilationSource\Metadata;
+use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilModel\Identifier\DomIdentifierInterface;
-use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Tests\Functional\AbstractTestCase;
-use webignition\DomElementLocator\ElementLocator;
 use webignition\WebDriverElementCollection\WebDriverElementCollectionInterface;
 
 class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
@@ -38,10 +32,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateFindCall(
         string $fixture,
-        SourceInterface $arguments,
+        DomIdentifierInterface $identifier,
         callable $assertions
     ) {
-        $source = $this->factory->createFindCall($arguments);
+        $source = $this->factory->createFindCall($identifier);
 
         $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
@@ -55,13 +49,7 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
         return [
             'css selector, no parent' => [
                 'fixture' => '/form.html',
-                'arguments' => (new Source())
-                    ->withStatements(['new ElementLocator(\'input\', 1)'])
-                    ->withMetadata(
-                        (new Metadata())->withClassDependencies(new ClassDependencyCollection([
-                            new ClassDependency(ElementLocator::class)
-                        ]))
-                    ),
+                'identifier' => new DomIdentifier('input', 1),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -75,16 +63,8 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
             ],
             'css selector, has parent' => [
                 'fixture' => '/form.html',
-                'arguments' => (new Source())
-                    ->withStatements([
-                        'new ElementLocator(\'input\', 1), ' .
-                        'new ElementLocator(\'form[action="/action2"]\', 1)'
-                    ])
-                    ->withMetadata(
-                        (new Metadata())->withClassDependencies(new ClassDependencyCollection([
-                            new ClassDependency(ElementLocator::class)
-                        ]))
-                    ),
+                'identifier' => (new DomIdentifier('input'))
+                    ->withParentIdentifier(new DomIdentifier('form[action="/action2"]')),
                 'assertions' => function (WebDriverElementCollectionInterface $collection) {
                     $this->assertCount(1, $collection);
 
@@ -104,10 +84,10 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
      */
     public function testCreateHasCall(
         string $fixture,
-        SourceInterface $arguments,
+        DomIdentifierInterface $identifier,
         bool $expectedHasElement
     ) {
-        $source = $this->factory->createHasCall($arguments);
+        $source = $this->factory->createHasCall($identifier);
 
         $executableCall = $this->createExecutableCallWithReturn($source, $fixture);
 
@@ -116,58 +96,33 @@ class DomCrawlerNavigatorCallFactoryTest extends AbstractTestCase
 
     public function createHasCallDataProvider(): array
     {
-        $expectedMetadata = (new Metadata())
-            ->withClassDependencies(new ClassDependencyCollection([
-                new ClassDependency(ElementLocator::class)
-            ]));
-
         return [
             'not hasElement: css selector only' => [
                 'fixture' => '/index.html',
-                'arguments' => (new Source())
-                    ->withStatements([
-                        'new ElementLocator(\'.non-existent\', 1)'
-                    ])
-                    ->withMetadata($expectedMetadata),
+                'identifier' => new DomIdentifier('.non-existent'),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, parent does not exist' => [
                 'fixture' => '/index.html',
-                'arguments' => (new Source())
-                    ->withStatements([
-                        'new ElementLocator(\'.non-existent-child\', 1), ' .
-                        'new ElementLocator(\'.non-existent-parent\', 1)'
-                    ])
-                    ->withMetadata($expectedMetadata),
+                'identifier' => (new DomIdentifier('.non-existent-child', 1))
+                    ->withParentIdentifier(new DomIdentifier('.non-existent-parent', 1)),
                 'expectedHasElement' => false,
             ],
             'not hasElement: css selector with parent, child does not exist' => [
                 'fixture' => '/form.html',
-                'arguments' => (new Source())
-                    ->withStatements([
-                        'new ElementLocator(\'.non-existent-child\', 1), ' .
-                        'new ElementLocator(\'form[action="/action1"]\', 1)'
-                    ])
-                    ->withMetadata($expectedMetadata),
+                'identifier' => (new DomIdentifier('.non-existent-child', 1))
+                    ->withParentIdentifier(new DomIdentifier('form[action="/action1"]', 1)),
                 'expectedHasElement' => false,
             ],
             'hasElement: css selector only' => [
                 'fixture' => '/index.html',
-                'arguments' => (new Source())
-                    ->withStatements([
-                        'new ElementLocator(\'h1\', 1)'
-                    ])
-                    ->withMetadata($expectedMetadata),
+                'identifier' => new DomIdentifier('h1', 1),
                 'expectedHasElement' => true,
             ],
             'hasElement: css selector with parent' => [
                 'fixture' => '/form.html',
-                'arguments' => (new Source())
-                    ->withStatements([
-                        'new ElementLocator(\'input\', 1), ' .
-                        'new ElementLocator(\'form[action="/action1"]\', 1)'
-                    ])
-                    ->withMetadata($expectedMetadata),
+                'identifier' => (new DomIdentifier('input', 1))
+                    ->withParentIdentifier(new DomIdentifier('form[action="/action1"]', 1)),
                 'expectedHasElement' => true,
             ],
         ];

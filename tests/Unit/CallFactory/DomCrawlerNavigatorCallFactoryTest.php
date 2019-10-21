@@ -8,12 +8,11 @@ namespace webignition\BasilTranspiler\Tests\Unit\CallFactory;
 
 use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\Source;
 use webignition\BasilCompilationSource\Metadata;
 use webignition\BasilCompilationSource\MetadataInterface;
 use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilCompilationSource\VariablePlaceholderCollection;
-use webignition\BasilTestIdentifierFactory\TestIdentifierFactory;
+use webignition\BasilModel\Identifier\DomIdentifier;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\VariableNames;
 use webignition\DomElementLocator\ElementLocator;
@@ -57,17 +56,9 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFindCallForTranspiledLocator()
     {
-        $findElementCallArguments = (new Source())
-            ->withStatements([
-                'new ElementLocator(\'.selector\')'
-            ])
-            ->withMetadata(
-                (new Metadata())->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ]))
-            );
+        $identifier = new DomIdentifier('.selector');
 
-        $source = $this->factory->createFindCall($findElementCallArguments);
+        $source = $this->factory->createFindCall($identifier);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->find\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);
@@ -77,17 +68,9 @@ class DomCrawlerNavigatorCallFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateHasCall()
     {
-        $hasElementCallArguments = (new Source())
-            ->withStatements([
-                'new ElementLocator(\'.selector\')'
-            ])
-            ->withMetadata(
-                (new Metadata())->withClassDependencies(new ClassDependencyCollection([
-                    new ClassDependency(ElementLocator::class)
-                ]))
-            );
+        $identifier = new DomIdentifier('.selector');
 
-        $source = $this->factory->createHasCall($hasElementCallArguments);
+        $source = $this->factory->createHasCall($identifier);
 
         $expectedContentPattern = '/^' . $this->domCrawlerNavigatorVariablePlaceholder . '->has\(.*\)$/';
         $this->assertRegExp($expectedContentPattern, (string) $source);
