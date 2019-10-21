@@ -11,7 +11,6 @@ use webignition\BasilModel\Value\DomIdentifierValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
-use webignition\BasilTranspiler\CallFactory\ElementCallArgumentFactory;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
@@ -27,22 +26,19 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     private $valueTranspiler;
     private $domCrawlerNavigatorCallFactory;
     private $namedDomIdentifierTranspiler;
-    private $elementCallArgumentFactory;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
         ObjectValueTypeExaminer $objectValueTypeExaminer,
         ValueTranspiler $valueTranspiler,
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
-        NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler,
-        ElementCallArgumentFactory $elementCallArgumentFactory
+        NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
         $this->objectValueTypeExaminer = $objectValueTypeExaminer;
         $this->valueTranspiler = $valueTranspiler;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->namedDomIdentifierTranspiler = $namedDomIdentifierTranspiler;
-        $this->elementCallArgumentFactory = $elementCallArgumentFactory;
     }
 
     public static function createTranspiler(): ExistsComparisonTranspiler
@@ -52,8 +48,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             ObjectValueTypeExaminer::createExaminer(),
             ValueTranspiler::createTranspiler(),
             DomCrawlerNavigatorCallFactory::createFactory(),
-            NamedDomIdentifierTranspiler::createTranspiler(),
-            ElementCallArgumentFactory::createFactory()
+            NamedDomIdentifierTranspiler::createTranspiler()
         );
     }
 
@@ -114,8 +109,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $identifier = $value->getIdentifier();
 
             if (null === $identifier->getAttributeName()) {
-                $arguments = $this->elementCallArgumentFactory->createElementCallArguments($identifier);
-                $accessor = $this->domCrawlerNavigatorCallFactory->createHasCall($arguments);
+                $accessor = $this->domCrawlerNavigatorCallFactory->createHasCall($identifier);
 
                 $assignment = clone $accessor;
                 $assignment->prependStatement(-1, $valuePlaceholder . ' = ');
