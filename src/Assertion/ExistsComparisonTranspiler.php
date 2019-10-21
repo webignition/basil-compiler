@@ -8,13 +8,14 @@ use webignition\BasilCompilationSource\VariablePlaceholder;
 use webignition\BasilModel\Assertion\AssertionComparison;
 use webignition\BasilModel\Assertion\ExaminationAssertionInterface;
 use webignition\BasilModel\Value\DomIdentifierValueInterface;
+use webignition\BasilModel\Value\ObjectValueInterface;
 use webignition\BasilModel\Value\ObjectValueType;
+use webignition\BasilModel\Value\ValueInterface;
 use webignition\BasilTranspiler\CallFactory\AssertionCallFactory;
 use webignition\BasilTranspiler\CallFactory\DomCrawlerNavigatorCallFactory;
 use webignition\BasilTranspiler\Model\NamedDomIdentifierValue;
 use webignition\BasilTranspiler\NamedDomIdentifierTranspiler;
 use webignition\BasilTranspiler\NonTranspilableModelException;
-use webignition\BasilTranspiler\ObjectValueTypeExaminer;
 use webignition\BasilTranspiler\TranspilerInterface;
 use webignition\BasilTranspiler\Value\ValueTranspiler;
 use webignition\BasilTranspiler\VariableNames;
@@ -22,20 +23,17 @@ use webignition\BasilTranspiler\VariableNames;
 class ExistsComparisonTranspiler implements TranspilerInterface
 {
     private $assertionCallFactory;
-    private $objectValueTypeExaminer;
     private $valueTranspiler;
     private $domCrawlerNavigatorCallFactory;
     private $namedDomIdentifierTranspiler;
 
     public function __construct(
         AssertionCallFactory $assertionCallFactory,
-        ObjectValueTypeExaminer $objectValueTypeExaminer,
         ValueTranspiler $valueTranspiler,
         DomCrawlerNavigatorCallFactory $domCrawlerNavigatorCallFactory,
         NamedDomIdentifierTranspiler $namedDomIdentifierTranspiler
     ) {
         $this->assertionCallFactory = $assertionCallFactory;
-        $this->objectValueTypeExaminer = $objectValueTypeExaminer;
         $this->valueTranspiler = $valueTranspiler;
         $this->domCrawlerNavigatorCallFactory = $domCrawlerNavigatorCallFactory;
         $this->namedDomIdentifierTranspiler = $namedDomIdentifierTranspiler;
@@ -45,7 +43,6 @@ class ExistsComparisonTranspiler implements TranspilerInterface
     {
         return new ExistsComparisonTranspiler(
             AssertionCallFactory::createFactory(),
-            ObjectValueTypeExaminer::createExaminer(),
             ValueTranspiler::createTranspiler(),
             DomCrawlerNavigatorCallFactory::createFactory(),
             NamedDomIdentifierTranspiler::createTranspiler()
@@ -81,7 +78,7 @@ class ExistsComparisonTranspiler implements TranspilerInterface
         $value = $model->getExaminedValue();
         $valuePlaceholder = new VariablePlaceholder(VariableNames::EXAMINED_VALUE);
 
-        $isScalarValue = $this->objectValueTypeExaminer->isOfType($value, [
+        $isScalarValue = $this->isOfType($value, [
             ObjectValueType::BROWSER_PROPERTY,
             ObjectValueType::ENVIRONMENT_PARAMETER,
             ObjectValueType::PAGE_PROPERTY,
@@ -147,5 +144,22 @@ class ExistsComparisonTranspiler implements TranspilerInterface
             $valuePlaceholder,
             $assertionTemplate
         );
+    }
+
+    private function isOfType(ValueInterface $value, array $types): bool
+    {
+        if (!$value instanceof ObjectValueInterface) {
+            return false;
+        }
+
+        $valueType = $value->getType();
+
+        foreach ($types as $type) {
+            if ($type === $valueType) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
