@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c720730f6283afabeda4629059547a5",
+    "content-hash": "6fd911a24d7b095e1b2ef485f3121f27",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -754,16 +754,16 @@
         },
         {
             "name": "webignition/basil-code-generator",
-            "version": "0.6",
+            "version": "0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-code-generator.git",
-                "reference": "8718b483f1ff61352e9b5ae8456ccb47a4cfe023"
+                "reference": "117df11cff9de4c3132eef756970d0d359ff84b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/8718b483f1ff61352e9b5ae8456ccb47a4cfe023",
-                "reference": "8718b483f1ff61352e9b5ae8456ccb47a4cfe023",
+                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/117df11cff9de4c3132eef756970d0d359ff84b6",
+                "reference": "117df11cff9de4c3132eef756970d0d359ff84b6",
                 "shasum": ""
             },
             "require": {
@@ -795,7 +795,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-code-generator",
-            "time": "2019-11-10T19:35:23+00:00"
+            "time": "2019-11-15T11:28:07+00:00"
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
