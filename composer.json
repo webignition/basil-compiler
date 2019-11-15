@@ -1,8 +1,8 @@
 {
-    "name": "webignition/php-basil-compiler",
+    "name": "webignition/basil-compiler",
     "description": "",
     "keywords": [],
-    "homepage": "https://github.com/webignition/php-basil-compiler",
+    "homepage": "https://github.com/webignition/basil-compiler",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -36,11 +36,13 @@
         "ext-json": "*",
         "webignition/php-basil-models": ">=0.91,<1",
         "webignition/php-basil-compilation-source": ">=0.64,<1",
-        "webignition/php-basil-compilable-source-factory": ">=0.3,<1"
+        "webignition/php-basil-compilable-source-factory": ">=0.3,<1",
+        "webignition/basil-code-generator": ">=0.7,<1"
     },
     "require-dev": {
         "phpunit/phpunit": "~8.0",
         "squizlabs/php_codesniffer": "3.*",
-        "phpstan/phpstan": "^0.11.5"
+        "phpstan/phpstan": "^0.11.5",
+        "webignition/php-basil-model-factory": ">=0.34,<1"
     }
 }
