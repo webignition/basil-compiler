@@ -7,6 +7,7 @@ use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\Exception\UnknownObjectPropertyException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedModelException;
+use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
 use webignition\BasilModel\Test\TestInterface;
 
 class Compiler
@@ -52,7 +53,7 @@ class Compiler
         TestInterface $test,
         string $fullyQualifiedBaseClass
     ): string {
-        $classDefinition = $this->classDefinitionFactory->createClassDefinition($test);
+        $classDefinition = $this->createClassDefinition($test);
 
         $metadata = $classDefinition->getMetadata();
         $variableExportIdentifiers = $this->variableIdentifierGenerator->generate($metadata->getVariableExports());
@@ -62,5 +63,31 @@ class Compiler
             $fullyQualifiedBaseClass,
             array_merge($this->externalVariableIdentifiers->get(), $variableExportIdentifiers)
         );
+    }
+
+    /**
+     * @param TestInterface $test
+     *
+     * @return string
+     *
+     * @throws UnknownObjectPropertyException
+     * @throws UnsupportedModelException
+     */
+    public function createClassName(TestInterface $test): string
+    {
+        return $this->createClassDefinition($test)->getName();
+    }
+
+    /**
+     * @param TestInterface $test
+     *
+     * @return ClassDefinitionInterface
+     *
+     * @throws UnknownObjectPropertyException
+     * @throws UnsupportedModelException
+     */
+    private function createClassDefinition(TestInterface $test): ClassDefinitionInterface
+    {
+        return $this->classDefinitionFactory->createClassDefinition($test);
     }
 }

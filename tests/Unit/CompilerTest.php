@@ -177,4 +177,13 @@ class CompilerTest extends TestCase
             ],
         ];
     }
+
+    public function testCreateClassName()
+    {
+        $test = new Test('test name', new Configuration('chrome', 'http://example.com'), []);
+
+        $className = $this->compiler->createClassName($test);
+
+        $this->assertEquals('Generated69ef658fb6e99440777d8bbe69f5bc89Test', $className);
+    }
 }
