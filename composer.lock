@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56d27f578a6e4fd04d7903eca3869b10",
+    "content-hash": "280b2c20cd1cb82f5600b52b2b68a6d4",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -404,26 +404,26 @@
         },
         {
             "name": "symfony/panther",
-            "version": "v0.5.2",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/panther.git",
-                "reference": "6c77f8b3693aff1ea988e10e9a953b9751394540"
+                "reference": "0aeafcf21af2727da3536acf2a9c3778e3a5f222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/panther/zipball/6c77f8b3693aff1ea988e10e9a953b9751394540",
-                "reference": "6c77f8b3693aff1ea988e10e9a953b9751394540",
+                "url": "https://api.github.com/repos/symfony/panther/zipball/0aeafcf21af2727da3536acf2a9c3778e3a5f222",
+                "reference": "0aeafcf21af2727da3536acf2a9c3778e3a5f222",
                 "shasum": ""
             },
             "require": {
                 "facebook/webdriver": "^1.7.1",
                 "php": ">=7.1",
-                "symfony/browser-kit": "^4.3",
-                "symfony/dom-crawler": "^4.3",
-                "symfony/http-client": "^4.3",
+                "symfony/browser-kit": "^4.3 || ^5.0",
+                "symfony/dom-crawler": "^4.3 || ^5.0",
+                "symfony/http-client": "^4.3 || ^5.0",
                 "symfony/polyfill-php72": "^1.9",
-                "symfony/process": "^3.4 || ^4.0"
+                "symfony/process": "^3.4 || ^4.0 || ^5.0"
             },
             "conflict": {
                 "symfony/framework-bundle": ">=4.3 <4.3.4"
@@ -431,9 +431,9 @@
             "require-dev": {
                 "fabpot/goutte": "^3.2.3",
                 "guzzlehttp/guzzle": "^6.3",
-                "symfony/css-selector": "^3.4 || ^4.0",
-                "symfony/framework-bundle": "^3.4 || ^4.0",
-                "symfony/phpunit-bridge": "^4.3.3"
+                "symfony/css-selector": "^3.4 || ^4.0 || ^5.0",
+                "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0",
+                "symfony/phpunit-bridge": "^4.3.3 || ^5.0"
             },
             "type": "library",
             "extra": {
@@ -471,7 +471,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2019-08-27T22:41:08+00:00"
+            "time": "2019-10-28T17:01:40+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -753,33 +753,79 @@
             "time": "2019-09-26T21:17:10+00:00"
         },
         {
-            "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.1",
+            "name": "webignition/basil-code-generator",
+            "version": "0.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "063a3f29453082723be55e3e332527c163d54e22"
+                "url": "https://github.com/webignition/basil-code-generator.git",
+                "reference": "8718b483f1ff61352e9b5ae8456ccb47a4cfe023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/063a3f29453082723be55e3e332527c163d54e22",
-                "reference": "063a3f29453082723be55e3e332527c163d54e22",
+                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/8718b483f1ff61352e9b5ae8456ccb47a4cfe023",
+                "reference": "8718b483f1ff61352e9b5ae8456ccb47a4cfe023",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.2",
-                "webignition/php-basil-compilation-source": ">=0.10,<1",
-                "webignition/php-basil-models": ">=0.88,<1",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.11.0,<1",
-                "webignition/webdriver-element-inspector": ">=0.5,<1",
-                "webignition/webdriver-element-mutator": ">=0.1,<1"
+                "webignition/php-basil-compilation-source": ">=0.63,<1"
             },
             "require-dev": {
                 "phpstan/phpstan": "^0.11.5",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "symfony/panther": "^0.5.1",
+                "webignition/base-panther-test-case": "^0.1.0",
+                "webignition/php-basil-model-factory": ">=0.33,<1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilCodeGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-code-generator",
+            "time": "2019-11-10T19:35:23+00:00"
+        },
+        {
+            "name": "webignition/php-basil-compilable-source-factory",
+            "version": "0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
+                "reference": "b94cdc6cff5fe03ce5152ecb626f0f682ed76149"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/b94cdc6cff5fe03ce5152ecb626f0f682ed76149",
+                "reference": "b94cdc6cff5fe03ce5152ecb626f0f682ed76149",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2",
+                "webignition/basil-code-generator": ">=0.6,<1",
+                "webignition/php-basil-compilation-source": ">=0.64,<1",
+                "webignition/php-basil-models": ">=0.91,<1",
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.13,<1",
+                "webignition/webdriver-element-inspector": ">=0.6,<1",
+                "webignition/webdriver-element-mutator": ">=0.2,<1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.5",
+                "phpunit/phpunit": "~8.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/base-panther-test-case": "^0.2.0",
                 "webignition/php-basil-model-factory": ">=0.33,<1"
             },
             "type": "library",
@@ -799,23 +845,24 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2019-10-22T18:09:13+00:00"
+            "time": "2019-11-14T15:34:51+00:00"
         },
         {
             "name": "webignition/php-basil-compilation-source",
-            "version": "0.10",
+            "version": "0.64",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilation-source.git",
-                "reference": "87f2d193872403825f9f852af9ad018b053930e0"
+                "reference": "e9f4e4dd6b89cf9e8d555b51f9d90f62b8c0b4a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/87f2d193872403825f9f852af9ad018b053930e0",
-                "reference": "87f2d193872403825f9f852af9ad018b053930e0",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/e9f4e4dd6b89cf9e8d555b51f9d90f62b8c0b4a4",
+                "reference": "e9f4e4dd6b89cf9e8d555b51f9d90f62b8c0b4a4",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "php": ">=7.2"
             },
             "require-dev": {
@@ -840,7 +887,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilation-source",
-            "time": "2019-10-17T11:31:07+00:00"
+            "time": "2019-11-10T18:37:36+00:00"
         },
         {
             "name": "webignition/php-basil-context-aware-exception",
@@ -886,16 +933,16 @@
         },
         {
             "name": "webignition/php-basil-models",
-            "version": "0.88",
+            "version": "0.91",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-models.git",
-                "reference": "e294f944997edd2e30cf98abb8e35d0589b1b6e0"
+                "reference": "a7bbda2e31722992893bac16bf1e11afa657dedf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-models/zipball/e294f944997edd2e30cf98abb8e35d0589b1b6e0",
-                "reference": "e294f944997edd2e30cf98abb8e35d0589b1b6e0",
+                "url": "https://api.github.com/repos/webignition/php-basil-models/zipball/a7bbda2e31722992893bac16bf1e11afa657dedf",
+                "reference": "a7bbda2e31722992893bac16bf1e11afa657dedf",
                 "shasum": ""
             },
             "require": {
@@ -929,7 +976,7 @@
             ],
             "description": "Models for basil language objects",
             "homepage": "https://github.com/webignition/php-basil-models",
-            "time": "2019-09-26T18:24:08+00:00"
+            "time": "2019-11-11T08:33:34+00:00"
         },
         {
             "name": "webignition/php-dom-element-locator",
@@ -975,22 +1022,22 @@
         },
         {
             "name": "webignition/symfony-panther-dom-crawler-navigator",
-            "version": "0.11",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/symfony-panther-dom-crawler-navigator.git",
-                "reference": "6b752927bc13001fc7ee9f600482ca23584e074f"
+                "reference": "5784f4eb170bfba01848cddc155c574a18616e81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/6b752927bc13001fc7ee9f600482ca23584e074f",
-                "reference": "6b752927bc13001fc7ee9f600482ca23584e074f",
+                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/5784f4eb170bfba01848cddc155c574a18616e81",
+                "reference": "5784f4eb170bfba01848cddc155c574a18616e81",
                 "shasum": ""
             },
             "require": {
                 "facebook/webdriver": "^1.7.1",
                 "php": ">=7.2",
-                "symfony/panther": "^0.5",
+                "symfony/panther": "^0.6",
                 "webignition/php-dom-element-locator": "^0.1.0",
                 "webignition/web-driver-element-collection": ">=0.5,<1"
             },
@@ -999,7 +1046,8 @@
                 "phpstan/phpstan": "^0.11.15",
                 "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/base-panther-test-case": "^0.1.0"
             },
             "type": "library",
             "autoload": {
@@ -1019,7 +1067,7 @@
             ],
             "description": "Navigate around a symfony panther dom crawler using convenience methods",
             "homepage": "https://github.com/webignition/symfony-panther-dom-crawler-navigatorr",
-            "time": "2019-09-25T17:06:20+00:00"
+            "time": "2019-10-31T17:07:06+00:00"
         },
         {
             "name": "webignition/web-driver-element-collection",
@@ -1068,16 +1116,16 @@
         },
         {
             "name": "webignition/webdriver-element-inspector",
-            "version": "0.5",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/webdriver-element-inspector.git",
-                "reference": "cb60d4cb0d16d03c99bd5f526fb71313b36b679b"
+                "reference": "bcc2c056af1c06dd52b8d411803f9ac4a4cca97f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/cb60d4cb0d16d03c99bd5f526fb71313b36b679b",
-                "reference": "cb60d4cb0d16d03c99bd5f526fb71313b36b679b",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/bcc2c056af1c06dd52b8d411803f9ac4a4cca97f",
+                "reference": "bcc2c056af1c06dd52b8d411803f9ac4a4cca97f",
                 "shasum": ""
             },
             "require": {
@@ -1091,8 +1139,9 @@
                 "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "symfony/panther": "^0.5",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.10,<1"
+                "symfony/panther": "^0.6",
+                "webignition/base-panther-test-case": "^0.1.0",
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.12,<1"
             },
             "type": "library",
             "autoload": {
@@ -1117,20 +1166,20 @@
                 "webdriver",
                 "webdriver-element"
             ],
-            "time": "2019-09-27T11:21:26+00:00"
+            "time": "2019-10-31T17:12:32+00:00"
         },
         {
             "name": "webignition/webdriver-element-mutator",
-            "version": "0.1",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/webdriver-element-mutator.git",
-                "reference": "39c71dd6aea7ba4c476cb00a267b8daa595a503b"
+                "reference": "8da8b1585b6c79c7c70e2ddc80b42f582df5d6e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/webdriver-element-mutator/zipball/39c71dd6aea7ba4c476cb00a267b8daa595a503b",
-                "reference": "39c71dd6aea7ba4c476cb00a267b8daa595a503b",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-mutator/zipball/8da8b1585b6c79c7c70e2ddc80b42f582df5d6e8",
+                "reference": "8da8b1585b6c79c7c70e2ddc80b42f582df5d6e8",
                 "shasum": ""
             },
             "require": {
@@ -1145,10 +1194,10 @@
                 "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "symfony/panther": "^0.5",
+                "webignition/base-panther-test-case": "^0.1.0",
                 "webignition/php-dom-element-locator": ">=0.1,<1",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.11,<1",
-                "webignition/webdriver-element-inspector": ">=0.4,<1"
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.13,<1",
+                "webignition/webdriver-element-inspector": ">=0.6,<1"
             },
             "type": "library",
             "autoload": {
@@ -1173,7 +1222,7 @@
                 "webdriver",
                 "webdriver-element"
             ],
-            "time": "2019-09-26T16:03:26+00:00"
+            "time": "2019-10-31T17:20:52+00:00"
         }
     ],
     "packages-dev": [
