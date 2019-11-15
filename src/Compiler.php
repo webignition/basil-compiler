@@ -14,30 +14,33 @@ class Compiler
     private $classDefinitionFactory;
     private $classGenerator;
     private $variableIdentifierGenerator;
+    private $externalVariableIdentifiers;
 
     public function __construct(
         ClassDefinitionFactory $classDefinitionFactory,
         ClassGenerator $classGenerator,
-        VariableIdentifierGenerator $variableIdentifierGenerator
+        VariableIdentifierGenerator $variableIdentifierGenerator,
+        ExternalVariableIdentifiers $externalVariableIdentifiers
     ) {
         $this->classDefinitionFactory = $classDefinitionFactory;
         $this->classGenerator = $classGenerator;
         $this->variableIdentifierGenerator = $variableIdentifierGenerator;
+        $this->externalVariableIdentifiers = $externalVariableIdentifiers;
     }
 
-    public static function create(): Compiler
+    public static function create(ExternalVariableIdentifiers $externalVariableIdentifiers): Compiler
     {
         return new Compiler(
             ClassDefinitionFactory::createFactory(),
             ClassGenerator::create(),
-            new VariableIdentifierGenerator()
+            new VariableIdentifierGenerator(),
+            $externalVariableIdentifiers
         );
     }
 
     /**
      * @param TestInterface $test
      * @param string $fullyQualifiedBaseClass
-     * @param array $externalVariableIdentifiers
      *
      * @return string
      *
@@ -47,8 +50,7 @@ class Compiler
      */
     public function compile(
         TestInterface $test,
-        string $fullyQualifiedBaseClass,
-        array $externalVariableIdentifiers = []
+        string $fullyQualifiedBaseClass
     ): string {
         $classDefinition = $this->classDefinitionFactory->createClassDefinition($test);
 
@@ -58,7 +60,7 @@ class Compiler
         return $this->classGenerator->createForClassDefinition(
             $classDefinition,
             $fullyQualifiedBaseClass,
-            array_merge($externalVariableIdentifiers, $variableExportIdentifiers)
+            array_merge($this->externalVariableIdentifiers->get(), $variableExportIdentifiers)
         );
     }
 }

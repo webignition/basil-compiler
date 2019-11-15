@@ -4,7 +4,7 @@ namespace webignition\BasilCompiler\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilCompiler\Compiler;
-use webignition\BasilCompiler\Tests\ExternalVariableIdentifiers;
+use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilModel\DataSet\DataSet;
 use webignition\BasilModel\DataSet\DataSetCollection;
 use webignition\BasilModel\Step\Step;
@@ -25,7 +25,15 @@ class CompilerTest extends TestCase
     {
         parent::setUp();
 
-        $this->compiler = Compiler::create();
+        $this->compiler = Compiler::create(new ExternalVariableIdentifiers(
+            '$this->navigator',
+            '$_ENV',
+            'self::$client',
+            'self::$crawler',
+            '$this',
+            'self::$inspector',
+            'self::$mutator'
+        ));
     }
 
     /**
@@ -33,11 +41,7 @@ class CompilerTest extends TestCase
      */
     public function testCompile(TestInterface $test, string $baseClass, string $expectedCode)
     {
-        $generatedCode = $this->compiler->compile(
-            $test,
-            $baseClass,
-            ExternalVariableIdentifiers::IDENTIFIERS
-        );
+        $generatedCode = $this->compiler->compile($test, $baseClass);
 
         $this->assertEquals($expectedCode, $generatedCode);
     }
