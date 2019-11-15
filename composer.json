@@ -1,8 +1,8 @@
 {
-    "name": "webignition/php-basil-transpiler",
+    "name": "webignition/php-basil-compiler",
     "description": "",
     "keywords": [],
-    "homepage": "https://github.com/webignition/php-basil-transpiler",
+    "homepage": "https://github.com/webignition/php-basil-compiler",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -13,12 +13,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "webignition\\BasilTranspiler\\": "src"
+            "webignition\\BasilCompiler\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "webignition\\BasilTranspiler\\Tests\\": "tests"
+            "webignition\\BasilCompiler\\Tests\\": "tests"
         }
     },
     "scripts": {
