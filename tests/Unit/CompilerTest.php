@@ -31,15 +31,13 @@ class CompilerTest extends TestCase
     /**
      * @dataProvider compileDataProvider
      */
-    public function testCompile(TestInterface $test, ?string $baseClass, string $expectedCode)
+    public function testCompile(TestInterface $test, string $baseClass, string $expectedCode)
     {
         $generatedCode = $this->compiler->compile(
             $test,
             $baseClass,
             ExternalVariableIdentifiers::IDENTIFIERS
         );
-
-        echo "\n" . $generatedCode . "\n\n";
 
         $this->assertEquals($expectedCode, $generatedCode);
     }
