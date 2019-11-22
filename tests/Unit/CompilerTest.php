@@ -3,6 +3,8 @@
 namespace webignition\BasilCompiler\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use webignition\BasilActionGenerator\ActionGenerator;
+use webignition\BasilAssertionGenerator\AssertionGenerator;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilModel\DataSet\DataSet;
@@ -11,8 +13,6 @@ use webignition\BasilModel\Step\Step;
 use webignition\BasilModel\Test\Configuration;
 use webignition\BasilModel\Test\Test;
 use webignition\BasilModel\Test\TestInterface;
-use webignition\BasilModelFactory\Action\ActionFactory;
-use webignition\BasilModelFactory\AssertionFactory;
 
 class CompilerTest extends TestCase
 {
@@ -48,8 +48,8 @@ class CompilerTest extends TestCase
 
     public function compileDataProvider(): array
     {
-        $actionFactory = ActionFactory::createFactory();
-        $assertionFactory = AssertionFactory::createFactory();
+        $actionGenerator = ActionGenerator::createGenerator();
+        $assertionGenerator = AssertionGenerator::createGenerator();
 
         return [
             'no steps' => [
@@ -78,10 +78,10 @@ class CompilerTest extends TestCase
                     [
                         'step one' => new Step(
                             [
-                                $actionFactory->createFromActionString('click ".selector"'),
+                                $actionGenerator->generate('click ".selector"'),
                             ],
                             [
-                                $assertionFactory->createFromAssertionString('$page.title is "Page Title"')
+                                $assertionGenerator->generate('$page.title is "Page Title"')
                             ]
                         )
                     ]
@@ -126,7 +126,7 @@ class CompilerTest extends TestCase
                         'step one' => (new Step(
                             [],
                             [
-                                $assertionFactory->createFromAssertionString('$page.title is $data.expected_title')
+                                $assertionGenerator->generate('$page.title is $data.expected_title')
                             ]
                         ))->withDataSetCollection(new DataSetCollection([
                             new DataSet(
