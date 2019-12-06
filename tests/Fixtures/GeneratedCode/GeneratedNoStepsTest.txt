@@ -1,0 +1,10 @@
+use PHPUnit\Framework\TestCase;
+
+class GeneratedNoStepsTest extends TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::$client->request('GET', 'http://example.com');
+    }
+}

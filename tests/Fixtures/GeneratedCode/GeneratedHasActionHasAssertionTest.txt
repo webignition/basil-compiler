@@ -1,0 +1,28 @@
+use webignition\DomElementLocator\ElementLocator;
+use PHPUnit\Framework\TestCase;
+
+class GeneratedHasActionHasAssertionTest extends TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::$client->request('GET', 'http://example.com');
+    }
+
+    public function testBdc4b8bd83e5660d1c62908dc7a7c43a()
+    {
+        // step one
+        // click $".selector"
+        $has = $this->navigator->hasOne(new ElementLocator('.selector'));
+        $this->assertTrue($has);
+        $element = $this->navigator->findOne(new ElementLocator('.selector'));
+        $element->click();
+
+        // $page.title is "Page Title"
+        $expected = "Page Title" ?? null;
+        $expected = (string) $expected;
+        $examined = self::$client->getTitle() ?? null;
+        $examined = (string) $examined;
+        $this->assertEquals($expected, $examined);
+    }
+}
