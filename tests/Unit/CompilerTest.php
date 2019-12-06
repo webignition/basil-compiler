@@ -2,6 +2,7 @@
 
 namespace webignition\BasilCompiler\Tests\Unit;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
@@ -12,6 +13,8 @@ use webignition\BasilParser\Test\TestParser;
 
 class CompilerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Compiler
      */
@@ -35,8 +38,14 @@ class CompilerTest extends TestCase
     /**
      * @dataProvider compileDataProvider
      */
-    public function testCompile(TestInterface $test, string $baseClass, string $expectedCode): void
-    {
+    public function testCompile(
+        string $generatedClassName,
+        TestInterface $test,
+        string $baseClass,
+        string $expectedCode
+    ): void {
+        $this->setGeneratedClassName($this->compiler, $test, $generatedClassName);
+
         $generatedCode = $this->compiler->compile($test, $baseClass);
 
         $this->assertEquals($expectedCode, $generatedCode);
@@ -48,6 +57,7 @@ class CompilerTest extends TestCase
 
         return [
             'no steps' => [
+                'generatedClassName' => 'GeneratedNoStepsTest',
                 'test' => $testParser->parse('', 'test.yml', [
                     'config' => [
                         'browser' => 'chrome',
@@ -58,7 +68,7 @@ class CompilerTest extends TestCase
                 'expectedCode' =>
                     'use PHPUnit\Framework\TestCase;' . "\n" .
                     "\n" .
-                    'class GeneratedD894ed67e2008e18887400a33f7d82b3Test extends TestCase
+                    'class GeneratedNoStepsTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -68,6 +78,7 @@ class CompilerTest extends TestCase
 }',
             ],
             'has step with action and assertion' => [
+                'generatedClassName' => 'GeneratedHasActionHasAssertionTest',
                 'test' => $testParser->parse('', 'test.yml', [
                     'config' => [
                         'browser' => 'chrome',
@@ -87,7 +98,7 @@ class CompilerTest extends TestCase
                     'use webignition\DomElementLocator\ElementLocator;' . "\n" .
                     'use PHPUnit\Framework\TestCase;' . "\n" .
                     "\n" .
-                    'class GeneratedD894ed67e2008e18887400a33f7d82b3Test extends TestCase
+                    'class GeneratedHasActionHasAssertionTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -110,11 +121,11 @@ class CompilerTest extends TestCase
         $examined = self::$client->getTitle() ?? null;
         $examined = (string) $examined;
         $this->assertEquals($expected, $examined);
-
     }
 }',
             ],
             'has step with assertion utilising data set' => [
+                'generatedClassName' => 'GeneratedHasAssertionWithDataTest',
                 'test' => $testParser->parse('', 'test.yml', [
                     'config' => [
                         'browser' => 'chrome',
@@ -135,7 +146,7 @@ class CompilerTest extends TestCase
                 'expectedCode' =>
                     'use PHPUnit\Framework\TestCase;' . "\n" .
                     "\n" .
-                    'class GeneratedD894ed67e2008e18887400a33f7d82b3Test extends TestCase
+                    'class GeneratedHasAssertionWithDataTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -155,7 +166,6 @@ class CompilerTest extends TestCase
         $examined = self::$client->getTitle() ?? null;
         $examined = (string) $examined;
         $this->assertEquals($expected, $examined);
-
     }
 
     public function Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider()
@@ -178,5 +188,31 @@ class CompilerTest extends TestCase
         $className = $this->compiler->createClassName($test);
 
         $this->assertEquals('Generated69ef658fb6e99440777d8bbe69f5bc89Test', $className);
+    }
+
+    private function setGeneratedClassName(Compiler $compiler, TestInterface $test, string $className): void
+    {
+        $compilerReflector = new \ReflectionClass($compiler);
+        $classDefinitionFactoryProperty = $compilerReflector->getProperty('classDefinitionFactory');
+        $classDefinitionFactoryProperty->setAccessible(true);
+
+        $classDefinitionFactory = $classDefinitionFactoryProperty->getValue($compiler);
+
+
+
+        $classDefinitionFactoryReflector = new \ReflectionClass($classDefinitionFactory);
+        $classNameFactoryProperty = $classDefinitionFactoryReflector->getProperty('classNameFactory');
+        $classNameFactoryProperty->setAccessible(true);
+
+        $classNameFactory = $classNameFactoryProperty->getValue($classDefinitionFactory);
+
+        $mockClassNameFactory = \Mockery::mock($classNameFactory);
+        $mockClassNameFactory
+            ->shouldReceive('create')
+            ->with($test)
+            ->andReturn($className);
+
+        $classNameFactoryProperty->setValue($classDefinitionFactory, $mockClassNameFactory);
+        $classDefinitionFactoryProperty->setValue($compiler, $classDefinitionFactory);
     }
 }
