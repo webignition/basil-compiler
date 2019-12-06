@@ -32,6 +32,9 @@ class ExternalVariableIdentifiers
         $this->webDriverElementMutatorName = $webDriverElementMutatorName;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function get(): array
     {
         return [

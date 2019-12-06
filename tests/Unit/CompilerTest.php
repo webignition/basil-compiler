@@ -35,7 +35,7 @@ class CompilerTest extends TestCase
     /**
      * @dataProvider compileDataProvider
      */
-    public function testCompile(TestInterface $test, string $baseClass, string $expectedCode)
+    public function testCompile(TestInterface $test, string $baseClass, string $expectedCode): void
     {
         $generatedCode = $this->compiler->compile($test, $baseClass);
 
@@ -171,7 +171,7 @@ class CompilerTest extends TestCase
         ];
     }
 
-    public function testCreateClassName()
+    public function testCreateClassName(): void
     {
         $test = new Test('test name', new Configuration('chrome', 'http://example.com'), []);
 
