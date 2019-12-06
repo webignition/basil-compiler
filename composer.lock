@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "17e993e8a7efee398b4f89925cd147a4",
+    "content-hash": "d5aef7cfe35297b35da58ac8f77c9958",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -65,56 +65,6 @@
                 "webdriver"
             ],
             "time": "2019-06-13T08:02:18+00:00"
-        },
-        {
-            "name": "psr/http-message",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP messages",
-            "homepage": "https://github.com/php-fig/http-message",
-            "keywords": [
-                "http",
-                "http-message",
-                "psr",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -798,35 +748,80 @@
             "time": "2019-11-15T11:28:07+00:00"
         },
         {
-            "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.3",
+            "name": "webignition/basil-models",
+            "version": "0.19",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "b94cdc6cff5fe03ce5152ecb626f0f682ed76149"
+                "url": "https://github.com/webignition/basil-models.git",
+                "reference": "8c3f2ced0613c028127d59d1c3aaee705fa97f56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/b94cdc6cff5fe03ce5152ecb626f0f682ed76149",
-                "reference": "b94cdc6cff5fe03ce5152ecb626f0f682ed76149",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/8c3f2ced0613c028127d59d1c3aaee705fa97f56",
+                "reference": "8c3f2ced0613c028127d59d1c3aaee705fa97f56",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.5",
+                "phpunit/phpunit": "~8.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilModels\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-models",
+            "time": "2019-12-06T11:43:22+00:00"
+        },
+        {
+            "name": "webignition/php-basil-compilable-source-factory",
+            "version": "0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
+                "reference": "38326fbd66cac17d240c4245e0f7afa355246e2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/38326fbd66cac17d240c4245e0f7afa355246e2f",
+                "reference": "38326fbd66cac17d240c4245e0f7afa355246e2f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.2",
                 "webignition/basil-code-generator": ">=0.6,<1",
+                "webignition/basil-models": ">=0.3,<1",
                 "webignition/php-basil-compilation-source": ">=0.64,<1",
-                "webignition/php-basil-models": ">=0.91,<1",
+                "webignition/php-dom-element-locator": ">=0.1,<1",
                 "webignition/symfony-panther-dom-crawler-navigator": ">=0.13,<1",
                 "webignition/webdriver-element-inspector": ">=0.6,<1",
                 "webignition/webdriver-element-mutator": ">=0.2,<1"
             },
             "require-dev": {
+                "mockery/mockery": "^1.3",
+                "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.11.5",
+                "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
                 "webignition/base-panther-test-case": "^0.2.0",
-                "webignition/php-basil-model-factory": ">=0.33,<1"
+                "webignition/basil-parser": ">=0.7,<1"
             },
             "type": "library",
             "autoload": {
@@ -845,7 +840,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2019-11-14T15:34:51+00:00"
+            "time": "2019-12-02T11:26:24+00:00"
         },
         {
             "name": "webignition/php-basil-compilation-source",
@@ -888,95 +883,6 @@
             ],
             "homepage": "https://github.com/webignition/php-basil-compilation-source",
             "time": "2019-11-10T18:37:36+00:00"
-        },
-        {
-            "name": "webignition/php-basil-context-aware-exception",
-            "version": "0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-basil-context-aware-exception.git",
-                "reference": "c1435f31a79191748f90e091775dbb278510ee41"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-context-aware-exception/zipball/c1435f31a79191748f90e091775dbb278510ee41",
-                "reference": "c1435f31a79191748f90e091775dbb278510ee41",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilContextAwareException\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Models for basil language objects",
-            "homepage": "https://github.com/webignition/php-basil-context-aware-exception",
-            "time": "2019-07-13T14:46:44+00:00"
-        },
-        {
-            "name": "webignition/php-basil-models",
-            "version": "0.91",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-basil-models.git",
-                "reference": "a7bbda2e31722992893bac16bf1e11afa657dedf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-models/zipball/a7bbda2e31722992893bac16bf1e11afa657dedf",
-                "reference": "a7bbda2e31722992893bac16bf1e11afa657dedf",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.2",
-                "psr/http-message": "^1.0",
-                "webignition/php-basil-context-aware-exception": "^0.1.0",
-                "webignition/php-dom-element-locator": ">=0.1,<1"
-            },
-            "require-dev": {
-                "nyholm/psr7": "^1.1",
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilModel\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Models for basil language objects",
-            "homepage": "https://github.com/webignition/php-basil-models",
-            "time": "2019-11-11T08:33:34+00:00"
         },
         {
             "name": "webignition/php-dom-element-locator",
@@ -2004,68 +1910,6 @@
             "time": "2019-09-01T07:51:21+00:00"
         },
         {
-            "name": "nyholm/psr7",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "55ff6b76573f5b242554c9775792bd59fb52e11c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/55ff6b76573f5b242554c9775792bd59fb52e11c",
-                "reference": "55ff6b76573f5b242554c9775792bd59fb52e11c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1",
-                "php-http/message-factory": "^1.0",
-                "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0"
-            },
-            "provide": {
-                "psr/http-factory-implementation": "1.0",
-                "psr/http-message-implementation": "1.0"
-            },
-            "require-dev": {
-                "http-interop/http-factory-tests": "dev-master",
-                "php-http/psr7-integration-tests": "dev-master",
-                "phpunit/phpunit": "^7.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Nyholm\\Psr7\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tobias Nyholm",
-                    "email": "tobias.nyholm@gmail.com"
-                },
-                {
-                    "name": "Martijn van der Ven",
-                    "email": "martijn@vanderven.se"
-                }
-            ],
-            "description": "A fast PHP7 implementation of PSR-7",
-            "homepage": "http://tnyholm.se",
-            "keywords": [
-                "psr-17",
-                "psr-7"
-            ],
-            "time": "2019-09-05T13:24:16+00:00"
-        },
-        {
             "name": "ocramius/package-versions",
             "version": "1.4.0",
             "source": {
@@ -2216,56 +2060,6 @@
             ],
             "description": "Library for handling version information and constraints",
             "time": "2018-07-08T19:19:57+00:00"
-        },
-        {
-            "name": "php-http/message-factory",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message-factory.git",
-                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message-factory/zipball/a478cb11f66a6ac48d8954216cfed9aa06a501a1",
-                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "Factory interfaces for PSR-7 HTTP Message",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "stream",
-                "uri"
-            ],
-            "time": "2015-12-19T14:08:53+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2985,58 +2779,6 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
-        },
-        {
-            "name": "psr/http-factory",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
-                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interfaces for PSR-7 HTTP message factories",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "psr",
-                "psr-17",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "time": "2019-04-30T12:38:16+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -3927,163 +3669,24 @@
             "time": "2019-06-13T22:48:21+00:00"
         },
         {
-            "name": "webignition/basil-action-generator",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-action-generator.git",
-                "reference": "4c1618c4538489b4989d0e4ab0b47776dce39585"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-action-generator/zipball/4c1618c4538489b4989d0e4ab0b47776dce39585",
-                "reference": "4c1618c4538489b4989d0e4ab0b47776dce39585",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2",
-                "webignition/basil-parser": ">=0.4,<1",
-                "webignition/php-basil-model-factory": ">=0.37,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilActionGenerator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Create a basil action model from a basil action string",
-            "homepage": "https://github.com/webignition/basil-action-generator",
-            "keywords": [
-                "directory",
-                "path",
-                "resolver"
-            ],
-            "time": "2019-11-22T18:06:08+00:00"
-        },
-        {
-            "name": "webignition/basil-assertion-generator",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-assertion-generator.git",
-                "reference": "f1af8c2fcd2162f2228de0008a30a0a1f6804eb3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-assertion-generator/zipball/f1af8c2fcd2162f2228de0008a30a0a1f6804eb3",
-                "reference": "f1af8c2fcd2162f2228de0008a30a0a1f6804eb3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2",
-                "webignition/basil-parser": ">=0.4,<1",
-                "webignition/php-basil-model-factory": ">=0.37,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilAssertionGenerator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Create a basil assertion model from a basil assertion string",
-            "homepage": "https://github.com/webignition/basil-assertion-generator",
-            "keywords": [
-                "directory",
-                "path",
-                "resolver"
-            ],
-            "time": "2019-11-22T18:07:29+00:00"
-        },
-        {
-            "name": "webignition/basil-data-structures",
-            "version": "0.13",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-data-structures.git",
-                "reference": "1a3f4a237ca7c52b632ebb381185b5e18417d3d9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-data-structures/zipball/1a3f4a237ca7c52b632ebb381185b5e18417d3d9",
-                "reference": "1a3f4a237ca7c52b632ebb381185b5e18417d3d9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilDataStructure\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Data structures for basil language",
-            "homepage": "https://github.com/webignition/basil-data-structures",
-            "time": "2019-11-22T12:50:58+00:00"
-        },
-        {
             "name": "webignition/basil-parser",
-            "version": "0.4",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-parser.git",
-                "reference": "59cd81a4ee9b28a07c1e4e3dbd91737c3fc51351"
+                "reference": "db0920a8d212ee0b0f4d667fe4f0046dafe08274"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-parser/zipball/59cd81a4ee9b28a07c1e4e3dbd91737c3fc51351",
-                "reference": "59cd81a4ee9b28a07c1e4e3dbd91737c3fc51351",
+                "url": "https://api.github.com/repos/webignition/basil-parser/zipball/db0920a8d212ee0b0f4d667fe4f0046dafe08274",
+                "reference": "db0920a8d212ee0b0f4d667fe4f0046dafe08274",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=7.2",
-                "webignition/basil-data-structures": ">=0.13,<1"
+                "webignition/basil-models": ">=0.19,<1",
+                "webignition/php-path-resolver": ">=0.1,<1"
             },
             "require-dev": {
                 "phpstan/phpstan": "^0.11.5",
@@ -4108,44 +3711,34 @@
             ],
             "description": "Parses raw basil data into basic data structures",
             "homepage": "https://github.com/webignition/basil-parser",
-            "time": "2019-11-22T13:04:50+00:00"
+            "time": "2019-12-06T11:51:08+00:00"
         },
         {
-            "name": "webignition/php-basil-model-factory",
-            "version": "0.37",
+            "name": "webignition/php-path-resolver",
+            "version": "0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webignition/php-basil-model-factory.git",
-                "reference": "d9510826d3200daa92426c7bdffec70b95c9ab4c"
+                "url": "https://github.com/webignition/php-path-resolver.git",
+                "reference": "2e41e8d0644797566674ce02f673ddbfba7d15b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-model-factory/zipball/d9510826d3200daa92426c7bdffec70b95c9ab4c",
-                "reference": "d9510826d3200daa92426c7bdffec70b95c9ab4c",
+                "url": "https://api.github.com/repos/webignition/php-path-resolver/zipball/2e41e8d0644797566674ce02f673ddbfba7d15b3",
+                "reference": "2e41e8d0644797566674ce02f673ddbfba7d15b3",
                 "shasum": ""
             },
             "require": {
-                "ext-mbstring": "*",
-                "nyholm/psr7": "^1.1",
-                "php": ">=7.2",
-                "webignition/basil-data-structures": ">=0.13,<1",
-                "webignition/php-basil-context-aware-exception": "^0.1.0",
-                "webignition/php-basil-models": ">=0.89,<1"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.11.5",
-                "phpstan/phpstan-mockery": "^0.11.3",
                 "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/basil-parser": ">=0.4,<1",
-                "webignition/php-basil-test-identifier-factory": ">=0.6,<1"
+                "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "webignition\\BasilModelFactory\\": "src"
+                    "webignition\\PathResolver\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -4158,9 +3751,14 @@
                     "email": "webignition@gmail.com"
                 }
             ],
-            "description": "Factories to create basil models",
-            "homepage": "https://github.com/webignition/php-basil-model-factory",
-            "time": "2019-11-22T17:54:54+00:00"
+            "description": "Resolve a relative directory path against a base directory path",
+            "homepage": "https://github.com/webignition/php-path-resolver",
+            "keywords": [
+                "directory",
+                "path",
+                "resolver"
+            ],
+            "time": "2019-11-22T15:49:36+00:00"
         },
         {
             "name": "webmozart/assert",
