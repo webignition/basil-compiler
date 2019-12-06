@@ -21,9 +21,12 @@ class VariableIdentifierGeneratorTest extends TestCase
     }
 
     /**
+     * @param VariablePlaceholderCollection $variablePlaceholders
+     * @param array<string, string> $expectedIdentifiers
+     *
      * @dataProvider generateDataProvider
      */
-    public function testGenerate(VariablePlaceholderCollection $variablePlaceholders, array $expectedIdentifiers)
+    public function testGenerate(VariablePlaceholderCollection $variablePlaceholders, array $expectedIdentifiers): void
     {
         $this->assertEquals($expectedIdentifiers, $this->variableIdentifierGenerator->generate($variablePlaceholders));
     }

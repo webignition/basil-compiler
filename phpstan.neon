@@ -1,2 +1,5 @@
 parameters:
   inferPrivatePropertyTypeFromConstructor: true
+  ignoreErrors:
+    # Return type of 'array' of test data providers
+    - '#DataProvider\(\) return type has no value type specified in iterable type array#'
