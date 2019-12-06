@@ -5,10 +5,9 @@ namespace webignition\BasilCompiler;
 use webignition\BasilCodeGenerator\ClassGenerator;
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
-use webignition\BasilCompilableSourceFactory\Exception\UnknownObjectPropertyException;
-use webignition\BasilCompilableSourceFactory\Exception\UnsupportedModelException;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
-use webignition\BasilModel\Test\TestInterface;
+use webignition\BasilModels\Test\TestInterface;
 
 class Compiler
 {
@@ -45,9 +44,8 @@ class Compiler
      *
      * @return string
      *
-     * @throws UnknownObjectPropertyException
      * @throws UnresolvedPlaceholderException
-     * @throws UnsupportedModelException
+     * @throws UnsupportedStepException
      */
     public function compile(
         TestInterface $test,
@@ -70,8 +68,7 @@ class Compiler
      *
      * @return string
      *
-     * @throws UnknownObjectPropertyException
-     * @throws UnsupportedModelException
+     * @throws UnsupportedStepException
      */
     public function createClassName(TestInterface $test): string
     {
@@ -83,8 +80,7 @@ class Compiler
      *
      * @return ClassDefinitionInterface
      *
-     * @throws UnknownObjectPropertyException
-     * @throws UnsupportedModelException
+     * @throws UnsupportedStepException
      */
     private function createClassDefinition(TestInterface $test): ClassDefinitionInterface
     {

@@ -3,16 +3,12 @@
 namespace webignition\BasilCompiler\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilActionGenerator\ActionGenerator;
-use webignition\BasilAssertionGenerator\AssertionGenerator;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
-use webignition\BasilModel\DataSet\DataSet;
-use webignition\BasilModel\DataSet\DataSetCollection;
-use webignition\BasilModel\Step\Step;
-use webignition\BasilModel\Test\Configuration;
-use webignition\BasilModel\Test\Test;
-use webignition\BasilModel\Test\TestInterface;
+use webignition\BasilModels\Test\Configuration;
+use webignition\BasilModels\Test\Test;
+use webignition\BasilModels\Test\TestInterface;
+use webignition\BasilParser\Test\TestParser;
 
 class CompilerTest extends TestCase
 {
@@ -48,21 +44,21 @@ class CompilerTest extends TestCase
 
     public function compileDataProvider(): array
     {
-        $actionGenerator = ActionGenerator::createGenerator();
-        $assertionGenerator = AssertionGenerator::createGenerator();
+        $testParser = TestParser::create();
 
         return [
             'no steps' => [
-                'test' => new Test(
-                    'test name',
-                    new Configuration('chrome', 'http://example.com'),
-                    []
-                ),
+                'test' => $testParser->parse('', 'test.yml', [
+                    'config' => [
+                        'browser' => 'chrome',
+                        'url' => 'http://example.com',
+                    ],
+                ]),
                 'baseClass' => TestCase::class,
                 'expectedCode' =>
                     'use PHPUnit\Framework\TestCase;' . "\n" .
                     "\n" .
-                    'class Generated69ef658fb6e99440777d8bbe69f5bc89Test extends TestCase
+                    'class GeneratedD894ed67e2008e18887400a33f7d82b3Test extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -72,26 +68,26 @@ class CompilerTest extends TestCase
 }',
             ],
             'has step with action and assertion' => [
-                'test' => new Test(
-                    'test name',
-                    new Configuration('chrome', 'http://example.com'),
-                    [
-                        'step one' => new Step(
-                            [
-                                $actionGenerator->generate('click ".selector"'),
-                            ],
-                            [
-                                $assertionGenerator->generate('$page.title is "Page Title"')
-                            ]
-                        )
-                    ]
-                ),
+                'test' => $testParser->parse('', 'test.yml', [
+                    'config' => [
+                        'browser' => 'chrome',
+                        'url' => 'http://example.com',
+                    ],
+                    'step one' => [
+                        'actions' => [
+                            'click $".selector"',
+                        ],
+                        'assertions' => [
+                            '$page.title is "Page Title"',
+                        ],
+                    ],
+                ]),
                 'baseClass' => TestCase::class,
                 'expectedCode' =>
                     'use webignition\DomElementLocator\ElementLocator;' . "\n" .
                     'use PHPUnit\Framework\TestCase;' . "\n" .
                     "\n" .
-                    'class Generated69ef658fb6e99440777d8bbe69f5bc89Test extends TestCase
+                    'class GeneratedD894ed67e2008e18887400a33f7d82b3Test extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -102,7 +98,7 @@ class CompilerTest extends TestCase
     public function testBdc4b8bd83e5660d1c62908dc7a7c43a()
     {
         // step one
-        // click ".selector"
+        // click $".selector"
         $has = $this->navigator->hasOne(new ElementLocator(\'.selector\'));
         $this->assertTrue($has);
         $element = $this->navigator->findOne(new ElementLocator(\'.selector\'));
@@ -119,30 +115,27 @@ class CompilerTest extends TestCase
 }',
             ],
             'has step with assertion utilising data set' => [
-                'test' => new Test(
-                    'test name',
-                    new Configuration('chrome', 'http://example.com'),
-                    [
-                        'step one' => (new Step(
-                            [],
-                            [
-                                $assertionGenerator->generate('$page.title is $data.expected_title')
-                            ]
-                        ))->withDataSetCollection(new DataSetCollection([
-                            new DataSet(
-                                'setZero',
-                                [
-                                    'expected_title' => 'Page Title',
-                                ]
-                            )
-                        ]))
-                    ]
-                ),
+                'test' => $testParser->parse('', 'test.yml', [
+                    'config' => [
+                        'browser' => 'chrome',
+                        'url' => 'http://example.com',
+                    ],
+                    'step one' => [
+                        'assertions' => [
+                            '$page.title is $data.expected_title',
+                        ],
+                        'data' => [
+                            'setZero' => [
+                                'expected_title' => 'Page Title',
+                            ],
+                        ],
+                    ],
+                ]),
                 'baseClass' => TestCase::class,
                 'expectedCode' =>
                     'use PHPUnit\Framework\TestCase;' . "\n" .
                     "\n" .
-                    'class Generated69ef658fb6e99440777d8bbe69f5bc89Test extends TestCase
+                    'class GeneratedD894ed67e2008e18887400a33f7d82b3Test extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
