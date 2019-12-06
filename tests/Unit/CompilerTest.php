@@ -6,6 +6,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
+use webignition\BasilCompiler\Tests\Services\FixturePathFinder;
 use webignition\BasilModels\Test\Configuration;
 use webignition\BasilModels\Test\Test;
 use webignition\BasilModels\Test\TestInterface;
@@ -65,17 +66,7 @@ class CompilerTest extends TestCase
                     ],
                 ]),
                 'baseClass' => TestCase::class,
-                'expectedCode' =>
-                    'use PHPUnit\Framework\TestCase;' . "\n" .
-                    "\n" .
-                    'class GeneratedNoStepsTest extends TestCase
-{
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        self::$client->request(\'GET\', \'http://example.com\');
-    }
-}',
+                'expectedCode' => file_get_contents(FixturePathFinder::find('GeneratedCode/GeneratedNoStepsTest.txt')),
             ],
             'has step with action and assertion' => [
                 'generatedClassName' => 'GeneratedHasActionHasAssertionTest',
@@ -94,35 +85,9 @@ class CompilerTest extends TestCase
                     ],
                 ]),
                 'baseClass' => TestCase::class,
-                'expectedCode' =>
-                    'use webignition\DomElementLocator\ElementLocator;' . "\n" .
-                    'use PHPUnit\Framework\TestCase;' . "\n" .
-                    "\n" .
-                    'class GeneratedHasActionHasAssertionTest extends TestCase
-{
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        self::$client->request(\'GET\', \'http://example.com\');
-    }
-
-    public function testBdc4b8bd83e5660d1c62908dc7a7c43a()
-    {
-        // step one
-        // click $".selector"
-        $has = $this->navigator->hasOne(new ElementLocator(\'.selector\'));
-        $this->assertTrue($has);
-        $element = $this->navigator->findOne(new ElementLocator(\'.selector\'));
-        $element->click();
-
-        // $page.title is "Page Title"
-        $expected = "Page Title" ?? null;
-        $expected = (string) $expected;
-        $examined = self::$client->getTitle() ?? null;
-        $examined = (string) $examined;
-        $this->assertEquals($expected, $examined);
-    }
-}',
+                'expectedCode' => file_get_contents(FixturePathFinder::find(
+                    'GeneratedCode/GeneratedHasActionHasAssertionTest.txt'
+                )),
             ],
             'has step with assertion utilising data set' => [
                 'generatedClassName' => 'GeneratedHasAssertionWithDataTest',
@@ -143,40 +108,9 @@ class CompilerTest extends TestCase
                     ],
                 ]),
                 'baseClass' => TestCase::class,
-                'expectedCode' =>
-                    'use PHPUnit\Framework\TestCase;' . "\n" .
-                    "\n" .
-                    'class GeneratedHasAssertionWithDataTest extends TestCase
-{
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        self::$client->request(\'GET\', \'http://example.com\');
-    }
-
-    /**
-     * @dataProvider Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider
-     */
-    public function testBdc4b8bd83e5660d1c62908dc7a7c43a($expected_title)
-    {
-        // step one
-        // $page.title is $data.expected_title
-        $expected = $expected_title ?? null;
-        $expected = (string) $expected;
-        $examined = self::$client->getTitle() ?? null;
-        $examined = (string) $examined;
-        $this->assertEquals($expected, $examined);
-    }
-
-    public function Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider()
-    {
-        return [
-            \'setZero\' => [
-                \'expected_title\' => \'Page Title\',
-            ],
-        ];
-    }
-}',
+                'expectedCode' => file_get_contents(FixturePathFinder::find(
+                    'GeneratedCode/GeneratedHasAssertionWithDataTest.txt'
+                )),
             ],
         ];
     }

@@ -1,0 +1,33 @@
+use PHPUnit\Framework\TestCase;
+
+class GeneratedHasAssertionWithDataTest extends TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::$client->request('GET', 'http://example.com');
+    }
+
+    /**
+     * @dataProvider Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider
+     */
+    public function testBdc4b8bd83e5660d1c62908dc7a7c43a($expected_title)
+    {
+        // step one
+        // $page.title is $data.expected_title
+        $expected = $expected_title ?? null;
+        $expected = (string) $expected;
+        $examined = self::$client->getTitle() ?? null;
+        $examined = (string) $examined;
+        $this->assertEquals($expected, $examined);
+    }
+
+    public function Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider()
+    {
+        return [
+            'setZero' => [
+                'expected_title' => 'Page Title',
+            ],
+        ];
+    }
+}
