@@ -1,4 +1,4 @@
-use webignition\DomElementLocator\ElementLocator;
+use webignition\DomElementIdentifier\ElementIdentifier;
 use PHPUnit\Framework\TestCase;
 
 class GeneratedHasActionHasAssertionTest extends TestCase
@@ -12,10 +12,12 @@ class GeneratedHasActionHasAssertionTest extends TestCase
     public function testBdc4b8bd83e5660d1c62908dc7a7c43a()
     {
         // step one
-        // click $".selector"
-        $has = $this->navigator->hasOne(new ElementLocator('.selector'));
+        // $".selector" exists <- click $".selector"
+        $has = $this->navigator->hasOne(ElementIdentifier::fromJson('{"locator":".selector"}'));
         $this->assertTrue($has);
-        $element = $this->navigator->findOne(new ElementLocator('.selector'));
+
+        // click $".selector"
+        $element = $this->navigator->findOne(ElementIdentifier::fromJson('{"locator":".selector"}'));
         $element->click();
 
         // $page.title is "Page Title"

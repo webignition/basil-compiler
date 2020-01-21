@@ -59,7 +59,7 @@ class CompilerTest extends TestCase
         return [
             'no steps' => [
                 'generatedClassName' => 'GeneratedNoStepsTest',
-                'test' => $testParser->parse('', 'test.yml', [
+                'test' => $testParser->parse([
                     'config' => [
                         'browser' => 'chrome',
                         'url' => 'http://example.com',
@@ -70,7 +70,7 @@ class CompilerTest extends TestCase
             ],
             'has step with action and assertion' => [
                 'generatedClassName' => 'GeneratedHasActionHasAssertionTest',
-                'test' => $testParser->parse('', 'test.yml', [
+                'test' => $testParser->parse([
                     'config' => [
                         'browser' => 'chrome',
                         'url' => 'http://example.com',
@@ -91,7 +91,7 @@ class CompilerTest extends TestCase
             ],
             'has step with assertion utilising data set' => [
                 'generatedClassName' => 'GeneratedHasAssertionWithDataTest',
-                'test' => $testParser->parse('', 'test.yml', [
+                'test' => $testParser->parse([
                     'config' => [
                         'browser' => 'chrome',
                         'url' => 'http://example.com',
@@ -117,11 +117,14 @@ class CompilerTest extends TestCase
 
     public function testCreateClassName(): void
     {
-        $test = new Test('test name', new Configuration('chrome', 'http://example.com'), []);
+        $test = (new Test(
+            new Configuration('chrome', 'http://example.com'),
+            []
+        ))->withPath('test.yml');
 
         $className = $this->compiler->createClassName($test);
 
-        $this->assertEquals('Generated69ef658fb6e99440777d8bbe69f5bc89Test', $className);
+        $this->assertEquals('GeneratedD894ed67e2008e18887400a33f7d82b3Test', $className);
     }
 
     private function setGeneratedClassName(Compiler $compiler, TestInterface $test, string $className): void
