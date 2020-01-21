@@ -4,9 +4,11 @@ namespace webignition\BasilCompiler\Tests\Unit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilCompiler\Tests\Services\FixturePathFinder;
+use webignition\BasilCompiler\Tests\Services\ObjectReflector;
 use webignition\BasilModels\Test\Configuration;
 use webignition\BasilModels\Test\Test;
 use webignition\BasilModels\Test\TestInterface;
@@ -129,19 +131,8 @@ class CompilerTest extends TestCase
 
     private function setGeneratedClassName(Compiler $compiler, TestInterface $test, string $className): void
     {
-        $compilerReflector = new \ReflectionClass($compiler);
-        $classDefinitionFactoryProperty = $compilerReflector->getProperty('classDefinitionFactory');
-        $classDefinitionFactoryProperty->setAccessible(true);
-
-        $classDefinitionFactory = $classDefinitionFactoryProperty->getValue($compiler);
-
-
-
-        $classDefinitionFactoryReflector = new \ReflectionClass($classDefinitionFactory);
-        $classNameFactoryProperty = $classDefinitionFactoryReflector->getProperty('classNameFactory');
-        $classNameFactoryProperty->setAccessible(true);
-
-        $classNameFactory = $classNameFactoryProperty->getValue($classDefinitionFactory);
+        $classDefinitionFactory = ObjectReflector::getProperty($compiler, 'classDefinitionFactory');
+        $classNameFactory = ObjectReflector::getProperty($classDefinitionFactory, 'classNameFactory');
 
         $mockClassNameFactory = \Mockery::mock($classNameFactory);
         $mockClassNameFactory
@@ -149,7 +140,18 @@ class CompilerTest extends TestCase
             ->with($test)
             ->andReturn($className);
 
-        $classNameFactoryProperty->setValue($classDefinitionFactory, $mockClassNameFactory);
-        $classDefinitionFactoryProperty->setValue($compiler, $classDefinitionFactory);
+        ObjectReflector::setProperty(
+            $classDefinitionFactory,
+            ClassDefinitionFactory::class,
+            'classNameFactory',
+            $mockClassNameFactory
+        );
+
+        ObjectReflector::setProperty(
+            $compiler,
+            Compiler::class,
+            'classDefinitionFactory',
+            $classDefinitionFactory
+        );
     }
 }
