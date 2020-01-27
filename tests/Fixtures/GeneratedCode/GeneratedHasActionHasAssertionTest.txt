@@ -7,12 +7,7 @@ class GeneratedHasActionHasAssertionTest extends TestCase
     {
         parent::setUpBeforeClass();
         self::$client->request('GET', 'http://example.com');
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setBasilTestPath('with-action-and-assertion.yml');
+        self::setBasilTestPath('with-action-and-assertion.yml');
     }
 
     public function testBdc4b8bd83e5660d1c62908dc7a7c43a()
