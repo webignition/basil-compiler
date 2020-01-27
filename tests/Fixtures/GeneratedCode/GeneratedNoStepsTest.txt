@@ -7,4 +7,10 @@ class GeneratedNoStepsTest extends TestCase
         parent::setUpBeforeClass();
         self::$client->request('GET', 'http://example.com');
     }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setBasilTestPath('no-steps.yml');
+    }
 }

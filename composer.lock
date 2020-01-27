@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e4377474ffb5f3d3996501da1a59506",
+    "content-hash": "1d3321feb72a5a419424f668feabb7ef",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -1012,25 +1012,25 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.8",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "5dec2171f783726149dc70cd6d3c40eeb38002a7"
+                "reference": "5c845797832b8ad2c0d72d64ed5c2312fab5a7d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/5dec2171f783726149dc70cd6d3c40eeb38002a7",
-                "reference": "5dec2171f783726149dc70cd6d3c40eeb38002a7",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/5c845797832b8ad2c0d72d64ed5c2312fab5a7d5",
+                "reference": "5c845797832b8ad2c0d72d64ed5c2312fab5a7d5",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.2",
-                "webignition/basil-code-generator": ">=0.6,<1",
+                "webignition/basil-code-generator": ">=0.9,<1",
                 "webignition/basil-dom-identifier-factory": ">=0.6,<1",
                 "webignition/basil-identifier-analyser": ">=0.4,<1",
-                "webignition/basil-models": ">=0.21,<1",
+                "webignition/basil-models": ">=0.26,<1",
                 "webignition/php-basil-compilation-source": ">=0.64,<1",
                 "webignition/php-dom-element-identifier": ">=0.10,<1",
                 "webignition/quoted-string-value-extractor": ">=0.1,<1",
@@ -1045,8 +1045,8 @@
                 "phpstan/phpstan-mockery": "^0.12",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "webignition/base-panther-test-case": ">=0.3,<1",
-                "webignition/basil-parser": ">=0.15,<1",
+                "webignition/base-panther-test-case": ">=0.4,<1",
+                "webignition/basil-parser": ">=0.20,<1",
                 "webignition/symfony-panther-webserver-runner": ">=0.1,<1"
             },
             "type": "library",
@@ -1066,7 +1066,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-01-21T12:28:52+00:00"
+            "time": "2020-01-27T14:27:36+00:00"
         },
         {
             "name": "webignition/php-basil-compilation-source",

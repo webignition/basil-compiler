@@ -8,12 +8,19 @@ class GeneratedHasAssertionWithDataTest extends TestCase
         self::$client->request('GET', 'http://example.com');
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setBasilTestPath('with-action-and-assertion-utilising-data.yml');
+    }
+
     /**
      * @dataProvider Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider
      */
     public function testBdc4b8bd83e5660d1c62908dc7a7c43a($expected_title)
     {
-        // step one
+        $this->setBasilStepName('step one');
+
         // $page.title is $data.expected_title
         $expected = $expected_title ?? null;
         $expected = (string) $expected;
