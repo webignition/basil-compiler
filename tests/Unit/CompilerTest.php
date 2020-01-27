@@ -66,7 +66,7 @@ class CompilerTest extends TestCase
                         'browser' => 'chrome',
                         'url' => 'http://example.com',
                     ],
-                ]),
+                ])->withPath('no-steps.yml'),
                 'baseClass' => TestCase::class,
                 'expectedCode' => file_get_contents(FixturePathFinder::find('GeneratedCode/GeneratedNoStepsTest.txt')),
             ],
@@ -85,7 +85,7 @@ class CompilerTest extends TestCase
                             '$page.title is "Page Title"',
                         ],
                     ],
-                ]),
+                ])->withPath('with-action-and-assertion.yml'),
                 'baseClass' => TestCase::class,
                 'expectedCode' => file_get_contents(FixturePathFinder::find(
                     'GeneratedCode/GeneratedHasActionHasAssertionTest.txt'
@@ -108,7 +108,7 @@ class CompilerTest extends TestCase
                             ],
                         ],
                     ],
-                ]),
+                ])->withPath('with-action-and-assertion-utilising-data.yml'),
                 'baseClass' => TestCase::class,
                 'expectedCode' => file_get_contents(FixturePathFinder::find(
                     'GeneratedCode/GeneratedHasAssertionWithDataTest.txt'
