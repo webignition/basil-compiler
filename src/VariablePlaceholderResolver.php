@@ -30,7 +30,7 @@ class VariablePlaceholderResolver
         if (preg_match('/{{ [^${]+ }}/', $resolvedContent, $placeholderMatches)) {
             $unresolvedPlaceholder = trim($placeholderMatches[0], '{} ');
 
-            throw new UnresolvedPlaceholderException($unresolvedPlaceholder, $content);
+            throw new UnresolvedPlaceholderException($unresolvedPlaceholder, trim($content));
         }
 
         return $resolvedContent;
