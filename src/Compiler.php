@@ -40,19 +40,19 @@ class Compiler
 
     /**
      * @param TestInterface $test
-     * @param ClassDependency $fullyQualifiedBaseClass
+     * @param string $fullyQualifiedBaseClass
      *
      * @return string
      *
      * @throws UnresolvedPlaceholderException
      * @throws UnsupportedStepException
      */
-    public function compile(TestInterface $test, ClassDependency $fullyQualifiedBaseClass): string
+    public function compile(TestInterface $test, string $fullyQualifiedBaseClass): string
     {
         $classDefinition = $this->createClassDefinition($test);
 
         if ($classDefinition instanceof ClassDefinition) {
-            $classDefinition->setBaseClass($fullyQualifiedBaseClass);
+            $classDefinition->setBaseClass(new ClassDependency($fullyQualifiedBaseClass));
         }
 
         $metadata = $classDefinition->getMetadata();
