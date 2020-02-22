@@ -2,7 +2,8 @@
 
 namespace webignition\BasilCompiler;
 
-use webignition\BasilCompilationSource\VariablePlaceholderCollection;
+use webignition\BasilCompilableSource\VariablePlaceholder;
+use webignition\BasilCompilableSource\VariablePlaceholderCollection;
 
 class VariableIdentifierGenerator
 {
@@ -16,6 +17,7 @@ class VariableIdentifierGenerator
         $identifiers = [];
 
         foreach ($variablePlaceholders as $placeholder) {
+            /** @var VariablePlaceholder $placeholder*/
             $identifiers[$placeholder->getName()] = '$' . strtolower($placeholder->getName());
         }
 

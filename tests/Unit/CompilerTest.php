@@ -4,6 +4,7 @@ namespace webignition\BasilCompiler\Tests\Unit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use webignition\BasilCompilableSource\Line\ClassDependency;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
@@ -44,7 +45,7 @@ class CompilerTest extends TestCase
     public function testCompile(
         string $generatedClassName,
         TestInterface $test,
-        string $baseClass,
+        ClassDependency $baseClass,
         string $expectedCode
     ): void {
         $this->setGeneratedClassName($this->compiler, $test, $generatedClassName);
@@ -67,7 +68,7 @@ class CompilerTest extends TestCase
                         'url' => 'http://example.com',
                     ],
                 ])->withPath('no-steps.yml'),
-                'baseClass' => TestCase::class,
+                'baseClass' => new ClassDependency(TestCase::class),
                 'expectedCode' => file_get_contents(FixturePathFinder::find('GeneratedCode/GeneratedNoStepsTest.txt')),
             ],
             'has step with action and assertion' => [
@@ -86,7 +87,7 @@ class CompilerTest extends TestCase
                         ],
                     ],
                 ])->withPath('with-action-and-assertion.yml'),
-                'baseClass' => TestCase::class,
+                'baseClass' => new ClassDependency(TestCase::class),
                 'expectedCode' => file_get_contents(FixturePathFinder::find(
                     'GeneratedCode/GeneratedHasActionHasAssertionTest.txt'
                 )),
@@ -109,7 +110,7 @@ class CompilerTest extends TestCase
                         ],
                     ],
                 ])->withPath('with-action-and-assertion-utilising-data.yml'),
-                'baseClass' => TestCase::class,
+                'baseClass' => new ClassDependency(TestCase::class),
                 'expectedCode' => file_get_contents(FixturePathFinder::find(
                     'GeneratedCode/GeneratedHasAssertionWithDataTest.txt'
                 )),
