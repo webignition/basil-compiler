@@ -57,11 +57,18 @@ class Compiler
 
         $metadata = $classDefinition->getMetadata();
         $variableExportIdentifiers = $this->variableIdentifierGenerator->generate($metadata->getVariableExports());
+        $variableIdentifiers = array_merge($this->externalVariableIdentifiers->get(), $variableExportIdentifiers);
 
-        return $this->variablePlaceholderResolver->resolve(
-            $classDefinition->render(),
-            array_merge($this->externalVariableIdentifiers->get(), $variableExportIdentifiers)
-        );
+        $compiledClass = $classDefinition->render();
+        $compiledClassLines = explode("\n", $compiledClass);
+
+        $resolvedLines = [];
+
+        foreach ($compiledClassLines as $line) {
+            $resolvedLines[] = $this->variablePlaceholderResolver->resolve($line, $variableIdentifiers);
+        }
+
+        return implode("\n", $resolvedLines);
     }
 
     /**

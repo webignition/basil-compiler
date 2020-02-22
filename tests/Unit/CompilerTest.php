@@ -9,6 +9,7 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilCompiler\Tests\Services\FixturePathFinder;
 use webignition\BasilCompiler\Tests\Services\ObjectReflector;
+use webignition\BasilCompiler\UnresolvedPlaceholderException;
 use webignition\BasilModels\Test\Configuration;
 use webignition\BasilModels\Test\Test;
 use webignition\BasilModels\Test\TestInterface;
@@ -115,6 +116,36 @@ class CompilerTest extends TestCase
                 )),
             ],
         ];
+    }
+
+    public function testCompileThrowsUnresolvedPlaceholderException()
+    {
+        $mockExternalVariableIdentifiers = \Mockery::mock(ExternalVariableIdentifiers::class);
+        $mockExternalVariableIdentifiers
+            ->shouldReceive('get')
+            ->andReturn([]);
+
+        ObjectReflector::setProperty(
+            $this->compiler,
+            Compiler::class,
+            'externalVariableIdentifiers',
+            $mockExternalVariableIdentifiers
+        );
+
+        $testParser = TestParser::create();
+
+        $test = $testParser->parse([
+            'config' => [
+                'url' => 'http://example.com',
+            ],
+        ])->withPath('test.yml');
+
+        $this->expectException(UnresolvedPlaceholderException::class);
+        $this->expectExceptionMessage(
+            'Unresolved placeholder "CLIENT" in content "{{ CLIENT }}->request(\'GET\', \'http://example.com\');"'
+        );
+
+        $this->compiler->compile($test, TestCase::class);
     }
 
     public function testCreateClassName(): void
