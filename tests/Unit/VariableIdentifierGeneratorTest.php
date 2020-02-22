@@ -3,7 +3,7 @@
 namespace webignition\BasilCompiler\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilCompilationSource\VariablePlaceholderCollection;
+use webignition\BasilCompilableSource\VariablePlaceholderCollection;
 use webignition\BasilCompiler\VariableIdentifierGenerator;
 
 class VariableIdentifierGeneratorTest extends TestCase
@@ -35,11 +35,11 @@ class VariableIdentifierGeneratorTest extends TestCase
     {
         return [
             'empty' => [
-                'variablePlaceholders' => new VariablePlaceholderCollection(),
+                'variablePlaceholders' => VariablePlaceholderCollection::createDependencyCollection(),
                 'expectedIdentifiers' => [],
             ],
             'non-empty' => [
-                'variablePlaceholders' => VariablePlaceholderCollection::createCollection([
+                'variablePlaceholders' => VariablePlaceholderCollection::createDependencyCollection([
                     'HAS',
                     'ELEMENT',
                     'EXPECTED',
