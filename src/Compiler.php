@@ -2,63 +2,64 @@
 
 namespace webignition\BasilCompiler;
 
-use webignition\BasilCodeGenerator\ClassGenerator;
-use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
+use webignition\BasilCompilableSource\ClassDefinition;
+use webignition\BasilCompilableSource\ClassDefinitionInterface;
+use webignition\BasilCompilableSource\Line\ClassDependency;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
-use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
 use webignition\BasilModels\Test\TestInterface;
 
 class Compiler
 {
     private $classDefinitionFactory;
-    private $classGenerator;
     private $variableIdentifierGenerator;
     private $externalVariableIdentifiers;
+    private $variablePlaceholderResolver;
 
     public function __construct(
         ClassDefinitionFactory $classDefinitionFactory,
-        ClassGenerator $classGenerator,
         VariableIdentifierGenerator $variableIdentifierGenerator,
-        ExternalVariableIdentifiers $externalVariableIdentifiers
+        ExternalVariableIdentifiers $externalVariableIdentifiers,
+        VariablePlaceholderResolver $variablePlaceholderResolver
     ) {
         $this->classDefinitionFactory = $classDefinitionFactory;
-        $this->classGenerator = $classGenerator;
         $this->variableIdentifierGenerator = $variableIdentifierGenerator;
         $this->externalVariableIdentifiers = $externalVariableIdentifiers;
+        $this->variablePlaceholderResolver = $variablePlaceholderResolver;
     }
 
     public static function create(ExternalVariableIdentifiers $externalVariableIdentifiers): Compiler
     {
         return new Compiler(
             ClassDefinitionFactory::createFactory(),
-            ClassGenerator::create(),
             new VariableIdentifierGenerator(),
-            $externalVariableIdentifiers
+            $externalVariableIdentifiers,
+            new VariablePlaceholderResolver()
         );
     }
 
     /**
      * @param TestInterface $test
-     * @param string $fullyQualifiedBaseClass
+     * @param ClassDependency $fullyQualifiedBaseClass
      *
      * @return string
      *
      * @throws UnresolvedPlaceholderException
      * @throws UnsupportedStepException
      */
-    public function compile(
-        TestInterface $test,
-        string $fullyQualifiedBaseClass
-    ): string {
+    public function compile(TestInterface $test, ClassDependency $fullyQualifiedBaseClass): string
+    {
         $classDefinition = $this->createClassDefinition($test);
+
+        if ($classDefinition instanceof ClassDefinition) {
+            $classDefinition->setBaseClass($fullyQualifiedBaseClass);
+        }
 
         $metadata = $classDefinition->getMetadata();
         $variableExportIdentifiers = $this->variableIdentifierGenerator->generate($metadata->getVariableExports());
 
-        return $this->classGenerator->createForClassDefinition(
-            $classDefinition,
-            $fullyQualifiedBaseClass,
+        return $this->variablePlaceholderResolver->resolve(
+            $classDefinition->render(),
             array_merge($this->externalVariableIdentifiers->get(), $variableExportIdentifiers)
         );
     }
