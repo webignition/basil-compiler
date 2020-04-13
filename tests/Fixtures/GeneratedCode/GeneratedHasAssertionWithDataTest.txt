@@ -1,5 +1,4 @@
 use PHPUnit\Framework\TestCase;
-use webignition\BaseBasilTestCase\Statement;
 
 class GeneratedHasAssertionWithDataTest extends TestCase
 {
@@ -18,12 +17,18 @@ class GeneratedHasAssertionWithDataTest extends TestCase
         $this->setBasilStepName('step one');
 
         // $page.title is $data.expected_title
-        $statement = Statement::createAssertion('$page.title is $data.expected_title');
-        $this->currentStatement = $statement;
-        $expected = $expected_title ?? null;
-        $examined = self::$client->getTitle() ?? null;
-        $this->assertEquals($expected, $examined);
-        $this->completedStatements[] = $statement;
+        $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "source": "$page.title is $data.expected_title",
+            "identifier": "$page.title",
+            "comparison": "is",
+            "value": "$data.expected_title"
+        }');
+        $this->expectedValue = $expected_title ?? null;
+        $this->examinedValue = self::$client->getTitle() ?? null;
+        $this->assertEquals(
+            $this->expectedValue,
+            $this->examinedValue
+        );
     }
 
     public function Bdc4b8bd83e5660d1c62908dc7a7c43aDataProvider()

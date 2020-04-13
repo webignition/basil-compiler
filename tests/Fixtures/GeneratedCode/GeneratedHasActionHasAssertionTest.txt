@@ -1,5 +1,4 @@
 use PHPUnit\Framework\TestCase;
-use webignition\BaseBasilTestCase\Statement;
 use webignition\DomElementIdentifier\ElementIdentifier;
 
 class GeneratedHasActionHasAssertionTest extends TestCase
@@ -16,25 +15,49 @@ class GeneratedHasActionHasAssertionTest extends TestCase
         $this->setBasilStepName('step one');
 
         // $".selector" exists <- click $".selector"
-        $statement = Statement::createAssertion('$".selector" exists');
-        $this->currentStatement = $statement;
-        $has = $this->navigator->hasOne(ElementIdentifier::fromJson('{"locator":".selector"}'));
-        $this->assertTrue($has, '{"assertion":{"source":"$\\".selector\\" exists","identifier":"$\\".selector\\"","comparison":"exists"}}');
-        $this->completedStatements[] = $statement;
+        $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "source_type": "action",
+            "source": {
+                "source": "click $\\".selector\\"",
+                "type": "click",
+                "arguments": "$\\".selector\\"",
+                "identifier": "$\\".selector\\""
+            },
+            "identifier": "$\\".selector\\""
+        }');
+        $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
+            "locator": ".selector"
+        }');
+        $this->examinedValue = $this->navigator->hasOne($this->examinedElementIdentifier);
+        $this->assertTrue(
+            $this->examinedValue
+        );
 
         // click $".selector"
-        $statement = Statement::createAction('click $".selector"');
-        $this->currentStatement = $statement;
-        $element = $this->navigator->findOne(ElementIdentifier::fromJson('{"locator":".selector"}'));
+        $this->handledStatements[] = $this->actionFactory->createFromJson('{
+            "source": "click $\\".selector\\"",
+            "type": "click",
+            "arguments": "$\\".selector\\"",
+            "identifier": "$\\".selector\\""
+        }');
+        $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
+            "locator": ".selector"
+        }'));
         $element->click();
-        $this->completedStatements[] = $statement;
+        self::$crawler = self::$client->refreshCrawler();
 
         // $page.title is "Page Title"
-        $statement = Statement::createAssertion('$page.title is "Page Title"');
-        $this->currentStatement = $statement;
-        $expected = "Page Title" ?? null;
-        $examined = self::$client->getTitle() ?? null;
-        $this->assertEquals($expected, $examined);
-        $this->completedStatements[] = $statement;
+        $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "source": "$page.title is \\"Page Title\\"",
+            "identifier": "$page.title",
+            "comparison": "is",
+            "value": "\\"Page Title\\""
+        }');
+        $this->expectedValue = "Page Title" ?? null;
+        $this->examinedValue = self::$client->getTitle() ?? null;
+        $this->assertEquals(
+            $this->expectedValue,
+            $this->examinedValue
+        );
     }
 }

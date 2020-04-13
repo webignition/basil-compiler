@@ -35,7 +35,9 @@ class CompilerTest extends TestCase
             'self::$crawler',
             '$this',
             'self::$inspector',
-            'self::$mutator'
+            'self::$mutator',
+            '$this->actionFactory',
+            '$this->assertionFactory'
         ));
     }
 
