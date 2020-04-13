@@ -13,6 +13,8 @@ class ExternalVariableIdentifiers
     private $phpUnitTestCaseName;
     private $webDriverElementInspectorName;
     private $webDriverElementMutatorName;
+    private $actionFactoryName;
+    private $assertionFactoryName;
 
     public function __construct(
         string $domNavigatorCrawlerName,
@@ -21,7 +23,9 @@ class ExternalVariableIdentifiers
         string $pantherCrawlerName,
         string $phpUnitTestCaseName,
         string $webDriverElementInspectorName,
-        string $webDriverElementMutatorName
+        string $webDriverElementMutatorName,
+        string $actionFactoryName,
+        string $assertionFactoryName
     ) {
         $this->domNavigatorCrawlerName = $domNavigatorCrawlerName;
         $this->environmentVariableArrayName = $environmentVariableArrayName;
@@ -30,6 +34,8 @@ class ExternalVariableIdentifiers
         $this->phpUnitTestCaseName = $phpUnitTestCaseName;
         $this->webDriverElementInspectorName = $webDriverElementInspectorName;
         $this->webDriverElementMutatorName = $webDriverElementMutatorName;
+        $this->actionFactoryName = $actionFactoryName;
+        $this->assertionFactoryName = $assertionFactoryName;
     }
 
     /**
@@ -38,6 +44,8 @@ class ExternalVariableIdentifiers
     public function get(): array
     {
         return [
+            VariableNames::ACTION_FACTORY => $this->actionFactoryName,
+            VariableNames::ASSERTION_FACTORY => $this->assertionFactoryName,
             VariableNames::DOM_CRAWLER_NAVIGATOR => $this->domNavigatorCrawlerName,
             VariableNames::ENVIRONMENT_VARIABLE_ARRAY => $this->environmentVariableArrayName,
             VariableNames::PANTHER_CLIENT => $this->pantherClientName,

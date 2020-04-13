@@ -34,9 +34,9 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "webignition/basil-compilable-source": ">=0.14,<1",
-        "webignition/basil-models": ">=0.29,<1",
-        "webignition/php-basil-compilable-source-factory": ">=0.16,<1"
+        "webignition/basil-compilable-source": ">=0.18,<1",
+        "webignition/basil-models": ">=0.41,<1",
+        "webignition/php-basil-compilable-source-factory": ">=0.32,<1"
     },
     "require-dev": {
         "mockery/mockery": "^1.3",
