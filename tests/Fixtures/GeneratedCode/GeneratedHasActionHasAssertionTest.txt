@@ -16,15 +16,18 @@ class GeneratedHasActionHasAssertionTest extends TestCase
 
         // $".selector" exists <- click $".selector"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
-            "operator": "exists",
-            "source_type": "action",
-            "source": {
+            "container": {
+                "type": "derived-value-operation-assertion",
+                "value": "$\\".selector\\"",
+                "operator": "exists"
+            },
+            "statement": {
+                "statement-type": "action",
                 "source": "click $\\".selector\\"",
                 "type": "click",
                 "arguments": "$\\".selector\\"",
                 "identifier": "$\\".selector\\""
-            },
-            "value": "$\\".selector\\""
+            }
         }');
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": ".selector"
@@ -38,6 +41,7 @@ class GeneratedHasActionHasAssertionTest extends TestCase
 
         // click $".selector"
         $this->handledStatements[] = $this->actionFactory->createFromJson('{
+            "statement-type": "action",
             "source": "click $\\".selector\\"",
             "type": "click",
             "arguments": "$\\".selector\\"",
@@ -51,9 +55,10 @@ class GeneratedHasActionHasAssertionTest extends TestCase
 
         // $page.title is "Page Title"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "statement-type": "assertion",
             "source": "$page.title is \\"Page Title\\"",
             "identifier": "$page.title",
-            "comparison": "is",
+            "operator": "is",
             "value": "\\"Page Title\\""
         }');
         $this->setExpectedValue("Page Title" ?? null);
