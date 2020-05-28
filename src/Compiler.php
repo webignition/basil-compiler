@@ -11,10 +11,10 @@ use webignition\BasilModels\Test\TestInterface;
 
 class Compiler
 {
-    private $classDefinitionFactory;
-    private $variableIdentifierGenerator;
-    private $externalVariableIdentifiers;
-    private $variablePlaceholderResolver;
+    private ClassDefinitionFactory $classDefinitionFactory;
+    private VariableIdentifierGenerator $variableIdentifierGenerator;
+    private ExternalVariableIdentifiers $externalVariableIdentifiers;
+    private VariablePlaceholderResolver $variablePlaceholderResolver;
 
     public function __construct(
         ClassDefinitionFactory $classDefinitionFactory,

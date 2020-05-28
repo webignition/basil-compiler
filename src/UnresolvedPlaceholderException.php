@@ -6,8 +6,8 @@ namespace webignition\BasilCompiler;
 
 class UnresolvedPlaceholderException extends \Exception
 {
-    private $placeholder;
-    private $content;
+    private string $placeholder;
+    private string $content;
 
     public function __construct(string $placeholder, string $content)
     {

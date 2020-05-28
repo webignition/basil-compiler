@@ -6,15 +6,15 @@ use webignition\BasilCompilableSourceFactory\VariableNames;
 
 class ExternalVariableIdentifiers
 {
-    private $domNavigatorCrawlerName;
-    private $environmentVariableArrayName;
-    private $pantherClientName;
-    private $pantherCrawlerName;
-    private $phpUnitTestCaseName;
-    private $webDriverElementInspectorName;
-    private $webDriverElementMutatorName;
-    private $actionFactoryName;
-    private $assertionFactoryName;
+    private string $domNavigatorCrawlerName;
+    private string $environmentVariableArrayName;
+    private string $pantherClientName;
+    private string $pantherCrawlerName;
+    private string $phpUnitTestCaseName;
+    private string $webDriverElementInspectorName;
+    private string $webDriverElementMutatorName;
+    private string $actionFactoryName;
+    private string $assertionFactoryName;
 
     public function __construct(
         string $domNavigatorCrawlerName,

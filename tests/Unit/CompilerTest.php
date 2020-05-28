@@ -19,10 +19,7 @@ class CompilerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Compiler
-     */
-    private $compiler;
+    private Compiler $compiler;
 
     protected function setUp(): void
     {
