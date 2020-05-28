@@ -18,9 +18,10 @@ class GeneratedHasAssertionWithDataTest extends TestCase
 
         // $page.title is $data.expected_title
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "statement-type": "assertion",
             "source": "$page.title is $data.expected_title",
             "identifier": "$page.title",
-            "comparison": "is",
+            "operator": "is",
             "value": "$data.expected_title"
         }');
         $this->setExpectedValue($expected_title ?? null);
