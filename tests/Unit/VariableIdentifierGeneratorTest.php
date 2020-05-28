@@ -8,10 +8,7 @@ use webignition\BasilCompiler\VariableIdentifierGenerator;
 
 class VariableIdentifierGeneratorTest extends TestCase
 {
-    /**
-     * @var VariableIdentifierGenerator
-     */
-    private $variableIdentifierGenerator;
+    private VariableIdentifierGenerator $variableIdentifierGenerator;
 
     protected function setUp(): void
     {

@@ -23,11 +23,11 @@ class GeneratedHasAssertionWithDataTest extends TestCase
             "comparison": "is",
             "value": "$data.expected_title"
         }');
-        $this->expectedValue = $expected_title ?? null;
-        $this->examinedValue = self::$client->getTitle() ?? null;
+        $this->setExpectedValue($expected_title ?? null);
+        $this->setExaminedValue(self::$client->getTitle() ?? null);
         $this->assertEquals(
-            $this->expectedValue,
-            $this->examinedValue
+            $this->getExpectedValue(),
+            $this->getExaminedValue()
         );
     }
 

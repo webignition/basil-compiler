@@ -9,10 +9,7 @@ use webignition\BasilCompiler\VariablePlaceholderResolver;
 
 class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var VariablePlaceholderResolver
-     */
-    private $variablePlaceholderResolver;
+    private VariablePlaceholderResolver $variablePlaceholderResolver;
 
     protected function setUp(): void
     {

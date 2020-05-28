@@ -16,6 +16,7 @@ class GeneratedHasActionHasAssertionTest extends TestCase
 
         // $".selector" exists <- click $".selector"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "operator": "exists",
             "source_type": "action",
             "source": {
                 "source": "click $\\".selector\\"",
@@ -23,14 +24,16 @@ class GeneratedHasActionHasAssertionTest extends TestCase
                 "arguments": "$\\".selector\\"",
                 "identifier": "$\\".selector\\""
             },
-            "identifier": "$\\".selector\\""
+            "value": "$\\".selector\\""
         }');
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": ".selector"
         }');
-        $this->examinedValue = $this->navigator->hasOne($this->examinedElementIdentifier);
+        $this->setBooleanExaminedValue(
+            $this->navigator->hasOne($this->examinedElementIdentifier)
+        );
         $this->assertTrue(
-            $this->examinedValue
+            $this->getBooleanExaminedValue()
         );
 
         // click $".selector"
@@ -44,7 +47,7 @@ class GeneratedHasActionHasAssertionTest extends TestCase
             "locator": ".selector"
         }'));
         $element->click();
-        self::$crawler = self::$client->refreshCrawler();
+        $this->refreshCrawlerAndNavigator();
 
         // $page.title is "Page Title"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
@@ -53,11 +56,11 @@ class GeneratedHasActionHasAssertionTest extends TestCase
             "comparison": "is",
             "value": "\\"Page Title\\""
         }');
-        $this->expectedValue = "Page Title" ?? null;
-        $this->examinedValue = self::$client->getTitle() ?? null;
+        $this->setExpectedValue("Page Title" ?? null);
+        $this->setExaminedValue(self::$client->getTitle() ?? null);
         $this->assertEquals(
-            $this->expectedValue,
-            $this->examinedValue
+            $this->getExpectedValue(),
+            $this->getExaminedValue()
         );
     }
 }
