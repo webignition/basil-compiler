@@ -12,18 +12,15 @@ use webignition\BasilModels\Test\TestInterface;
 class Compiler
 {
     private ClassDefinitionFactory $classDefinitionFactory;
-    private VariableIdentifierGenerator $variableIdentifierGenerator;
     private ExternalVariableIdentifiers $externalVariableIdentifiers;
     private VariablePlaceholderResolver $variablePlaceholderResolver;
 
     public function __construct(
         ClassDefinitionFactory $classDefinitionFactory,
-        VariableIdentifierGenerator $variableIdentifierGenerator,
         ExternalVariableIdentifiers $externalVariableIdentifiers,
         VariablePlaceholderResolver $variablePlaceholderResolver
     ) {
         $this->classDefinitionFactory = $classDefinitionFactory;
-        $this->variableIdentifierGenerator = $variableIdentifierGenerator;
         $this->externalVariableIdentifiers = $externalVariableIdentifiers;
         $this->variablePlaceholderResolver = $variablePlaceholderResolver;
     }
@@ -32,7 +29,6 @@ class Compiler
     {
         return new Compiler(
             ClassDefinitionFactory::createFactory(),
-            new VariableIdentifierGenerator(),
             $externalVariableIdentifiers,
             new VariablePlaceholderResolver()
         );
@@ -55,17 +51,16 @@ class Compiler
             $classDefinition->setBaseClass(new ClassDependency($fullyQualifiedBaseClass));
         }
 
-        $metadata = $classDefinition->getMetadata();
-        $variableExportIdentifiers = $this->variableIdentifierGenerator->generate($metadata->getVariableExports());
-        $variableIdentifiers = array_merge($this->externalVariableIdentifiers->get(), $variableExportIdentifiers);
-
         $compiledClass = $classDefinition->render();
         $compiledClassLines = explode("\n", $compiledClass);
 
         $resolvedLines = [];
 
         foreach ($compiledClassLines as $line) {
-            $resolvedLines[] = $this->variablePlaceholderResolver->resolve($line, $variableIdentifiers);
+            $resolvedLines[] = $this->variablePlaceholderResolver->resolve(
+                $line,
+                $this->externalVariableIdentifiers->get()
+            );
         }
 
         return implode("\n", $resolvedLines);
