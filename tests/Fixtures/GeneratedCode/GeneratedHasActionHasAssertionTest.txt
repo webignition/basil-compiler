@@ -47,10 +47,12 @@ class GeneratedHasActionHasAssertionTest extends TestCase
             "arguments": "$\\".selector\\"",
             "identifier": "$\\".selector\\""
         }');
-        $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
-            "locator": ".selector"
-        }'));
-        $element->click();
+        (function () {
+            $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
+                "locator": ".selector"
+            }'));
+            $element->click();
+        })();
         $this->refreshCrawlerAndNavigator();
 
         // $page.title is "Page Title"

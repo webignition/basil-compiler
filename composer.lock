@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4daaa3777d497080e020415ca452950",
+    "content-hash": "d86fb487763fef81a6e9224263122e35",
     "packages": [
         {
             "name": "webignition/basil-compilable-source",
-            "version": "0.22",
+            "version": "0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compilable-source.git",
-                "reference": "460ed5e36cf8d84a997baad9bd7862ee34c834fa"
+                "reference": "664c34089533f6fbb8d53ac4e95fb5275659598f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compilable-source/zipball/460ed5e36cf8d84a997baad9bd7862ee34c834fa",
-                "reference": "460ed5e36cf8d84a997baad9bd7862ee34c834fa",
+                "url": "https://api.github.com/repos/webignition/basil-compilable-source/zipball/664c34089533f6fbb8d53ac4e95fb5275659598f",
+                "reference": "664c34089533f6fbb8d53ac4e95fb5275659598f",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compilable-source",
-            "time": "2020-05-27T10:58:51+00:00"
+            "time": "2020-06-05T14:59:00+00:00"
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
@@ -136,16 +136,16 @@
         },
         {
             "name": "webignition/basil-models",
-            "version": "0.47",
+            "version": "0.50",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-models.git",
-                "reference": "503008bfa1b0775ccbbf3d6ebd5998def4fdfef0"
+                "reference": "96a9004853be895401520ee404e020bae03e0886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/503008bfa1b0775ccbbf3d6ebd5998def4fdfef0",
-                "reference": "503008bfa1b0775ccbbf3d6ebd5998def4fdfef0",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/96a9004853be895401520ee404e020bae03e0886",
+                "reference": "96a9004853be895401520ee404e020bae03e0886",
                 "shasum": ""
             },
             "require": {
@@ -174,7 +174,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-models",
-            "time": "2020-05-22T16:33:15+00:00"
+            "time": "2020-06-01T09:11:41+00:00"
         },
         {
             "name": "webignition/basil-value-extractor",
@@ -221,25 +221,25 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.40",
+            "version": "0.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "d5a8a233b2db459d759cf5d9e6dac6ec7da6ded6"
+                "reference": "4fb5ce7bdc8d3044c2ba9927bfeeeef533be9358"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/d5a8a233b2db459d759cf5d9e6dac6ec7da6ded6",
-                "reference": "d5a8a233b2db459d759cf5d9e6dac6ec7da6ded6",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/4fb5ce7bdc8d3044c2ba9927bfeeeef533be9358",
+                "reference": "4fb5ce7bdc8d3044c2ba9927bfeeeef533be9358",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.4",
-                "webignition/basil-compilable-source": ">=0.22,<1",
+                "webignition/basil-compilable-source": ">=0.34,<1",
                 "webignition/basil-dom-identifier-factory": ">=0.12,<1",
                 "webignition/basil-identifier-analyser": ">=0.6,<1",
-                "webignition/basil-models": ">=0.47,<1",
+                "webignition/basil-models": ">=0.50,<1",
                 "webignition/php-dom-element-identifier": ">=0.13,<1",
                 "webignition/quoted-string-value-extractor": ">=0.2,<1"
             },
@@ -271,7 +271,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-05-28T15:00:35+00:00"
+            "time": "2020-06-05T15:30:29+00:00"
         },
         {
             "name": "webignition/php-dom-element-identifier",
@@ -2370,16 +2370,16 @@
         },
         {
             "name": "webignition/basil-parser",
-            "version": "0.23",
+            "version": "0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-parser.git",
-                "reference": "a4e20b705666057c441d5d36e2e7d525b32185a4"
+                "reference": "94912c06d10c95c4eee385dcb7988e1a9c459aa6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-parser/zipball/a4e20b705666057c441d5d36e2e7d525b32185a4",
-                "reference": "a4e20b705666057c441d5d36e2e7d525b32185a4",
+                "url": "https://api.github.com/repos/webignition/basil-parser/zipball/94912c06d10c95c4eee385dcb7988e1a9c459aa6",
+                "reference": "94912c06d10c95c4eee385dcb7988e1a9c459aa6",
                 "shasum": ""
             },
             "require": {
@@ -2413,7 +2413,7 @@
             ],
             "description": "Parses raw basil data into basic data structures",
             "homepage": "https://github.com/webignition/basil-parser",
-            "time": "2020-05-22T16:44:11+00:00"
+            "time": "2020-05-29T10:53:28+00:00"
         },
         {
             "name": "webignition/php-path-resolver",
