@@ -1,5 +1,6 @@
 use PHPUnit\Framework\TestCase;
 use webignition\DomElementIdentifier\ElementIdentifier;
+use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class GeneratedHasActionHasAssertionTest extends TestCase
 {
@@ -32,9 +33,14 @@ class GeneratedHasActionHasAssertionTest extends TestCase
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": ".selector"
         }');
-        $this->setBooleanExaminedValue(
-            $this->navigator->hasOne($this->examinedElementIdentifier)
-        );
+        try {
+            $this->setBooleanExaminedValue(
+                $this->navigator->hasOne($this->examinedElementIdentifier)
+            );
+        } catch (InvalidLocatorException $exception) {
+            $this->setLastException($exception);
+            $this->fail("Invalid locator");
+        }
         $this->assertTrue(
             $this->getBooleanExaminedValue()
         );
