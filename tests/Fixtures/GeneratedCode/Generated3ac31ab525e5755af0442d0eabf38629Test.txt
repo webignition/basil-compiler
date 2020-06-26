@@ -1,6 +1,6 @@
 use PHPUnit\Framework\TestCase;
 
-class GeneratedHasAssertionWithDataTest extends TestCase
+class Generated3ac31ab525e5755af0442d0eabf38629Test extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
