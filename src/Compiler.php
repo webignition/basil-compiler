@@ -3,20 +3,16 @@
 namespace webignition\BasilCompiler;
 
 use webignition\BasilCompilableSource\ClassDefinitionInterface;
-use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 
 class Compiler
 {
-    private ClassDefinitionFactory $classDefinitionFactory;
     private ExternalVariableIdentifiers $externalVariableIdentifiers;
     private VariablePlaceholderResolver $variablePlaceholderResolver;
 
     public function __construct(
-        ClassDefinitionFactory $classDefinitionFactory,
         ExternalVariableIdentifiers $externalVariableIdentifiers,
         VariablePlaceholderResolver $variablePlaceholderResolver
     ) {
-        $this->classDefinitionFactory = $classDefinitionFactory;
         $this->externalVariableIdentifiers = $externalVariableIdentifiers;
         $this->variablePlaceholderResolver = $variablePlaceholderResolver;
     }
@@ -24,7 +20,6 @@ class Compiler
     public static function create(ExternalVariableIdentifiers $externalVariableIdentifiers): Compiler
     {
         return new Compiler(
-            ClassDefinitionFactory::createFactory(),
             $externalVariableIdentifiers,
             new VariablePlaceholderResolver()
         );

@@ -12,8 +12,6 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilCompiler\Tests\Services\FixturePathFinder;
 use webignition\BasilCompiler\UnresolvedPlaceholderException;
-use webignition\BasilModels\Test\Configuration;
-use webignition\BasilModels\Test\Test;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
 use webignition\ObjectReflector\ObjectReflector;
