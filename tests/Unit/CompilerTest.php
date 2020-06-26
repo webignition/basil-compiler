@@ -4,13 +4,14 @@ namespace webignition\BasilCompiler\Tests\Unit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use webignition\BasilCompilableSource\ClassDefinition;
+use webignition\BasilCompilableSource\ClassDefinitionInterface;
+use webignition\BasilCompilableSource\Expression\ClassDependency;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilCompiler\Tests\Services\FixturePathFinder;
 use webignition\BasilCompiler\UnresolvedPlaceholderException;
-use webignition\BasilModels\Test\Configuration;
-use webignition\BasilModels\Test\Test;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
 use webignition\ObjectReflector\ObjectReflector;
@@ -41,17 +42,12 @@ class CompilerTest extends TestCase
     /**
      * @dataProvider compileDataProvider
      */
-    public function testCompile(
-        string $generatedClassName,
-        TestInterface $test,
-        string $baseClass,
-        string $expectedCode
-    ): void {
-        $this->setGeneratedClassName($this->compiler, $test, $generatedClassName);
-
-        $generatedCode = $this->compiler->compile($test, $baseClass);
-
-        $this->assertEquals($expectedCode, $generatedCode);
+    public function testCompile(ClassDefinitionInterface $classDefinition, string $expectedCode)
+    {
+        self::assertSame(
+            $expectedCode,
+            $this->compiler->compile($classDefinition)
+        );
     }
 
     public function compileDataProvider(): array
@@ -60,58 +56,63 @@ class CompilerTest extends TestCase
 
         return [
             'no steps' => [
-                'generatedClassName' => 'GeneratedNoStepsTest',
-                'test' => $testParser->parse([
-                    'config' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://example.com',
-                    ],
-                ])->withPath('no-steps.yml'),
-                'baseClass' => TestCase::class,
-                'expectedCode' => file_get_contents(FixturePathFinder::find('GeneratedCode/GeneratedNoStepsTest.txt')),
+                'classDefinition' => $this->createClassDefinitionWithBaseClass(
+                    $testParser->parse([
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com',
+                        ],
+                    ])->withPath('no-steps.yml'),
+                    TestCase::class
+                ),
+                'expectedCode' => file_get_contents(FixturePathFinder::find(
+                    'GeneratedCode/GeneratedB09e22d26fa517085105e76c53d0f0ebTest.txt'
+                )),
             ],
             'has step with action and assertion' => [
-                'generatedClassName' => 'GeneratedHasActionHasAssertionTest',
-                'test' => $testParser->parse([
-                    'config' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://example.com',
-                    ],
-                    'step one' => [
-                        'actions' => [
-                            'click $".selector"',
+                'classDefinition' => $this->createClassDefinitionWithBaseClass(
+                    $testParser->parse([
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com',
                         ],
-                        'assertions' => [
-                            '$page.title is "Page Title"',
+                        'step one' => [
+                            'actions' => [
+                                'click $".selector"',
+                            ],
+                            'assertions' => [
+                                '$page.title is "Page Title"',
+                            ],
                         ],
-                    ],
-                ])->withPath('with-action-and-assertion.yml'),
-                'baseClass' => TestCase::class,
+                    ])->withPath('with-action-and-assertion.yml'),
+                    TestCase::class
+                ),
                 'expectedCode' => file_get_contents(FixturePathFinder::find(
-                    'GeneratedCode/GeneratedHasActionHasAssertionTest.txt'
+                    'GeneratedCode/Generated7aa1e217d2074ae763e26485d89f02efTest.txt'
                 )),
             ],
             'has step with assertion utilising data set' => [
-                'generatedClassName' => 'GeneratedHasAssertionWithDataTest',
-                'test' => $testParser->parse([
-                    'config' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://example.com',
-                    ],
-                    'step one' => [
-                        'assertions' => [
-                            '$page.title is $data.expected_title',
+                'classDefinition' => $this->createClassDefinitionWithBaseClass(
+                    $testParser->parse([
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com',
                         ],
-                        'data' => [
-                            'setZero' => [
-                                'expected_title' => 'Page Title',
+                        'step one' => [
+                            'assertions' => [
+                                '$page.title is $data.expected_title',
+                            ],
+                            'data' => [
+                                'setZero' => [
+                                    'expected_title' => 'Page Title',
+                                ],
                             ],
                         ],
-                    ],
-                ])->withPath('with-action-and-assertion-utilising-data.yml'),
-                'baseClass' => TestCase::class,
+                    ])->withPath('with-action-and-assertion-utilising-data.yml'),
+                    TestCase::class
+                ),
                 'expectedCode' => file_get_contents(FixturePathFinder::find(
-                    'GeneratedCode/GeneratedHasAssertionWithDataTest.txt'
+                    'GeneratedCode/Generated3ac31ab525e5755af0442d0eabf38629Test.txt'
                 )),
             ],
         ];
@@ -139,49 +140,25 @@ class CompilerTest extends TestCase
             ],
         ])->withPath('test.yml');
 
+        $classDefinition = $this->createClassDefinitionWithBaseClass($test, TestCase::class);
+
         $this->expectException(UnresolvedPlaceholderException::class);
         $this->expectExceptionMessage(
             'Unresolved placeholder "CLIENT" in content "{{ CLIENT }}->request(\'GET\', \'http://example.com\');"'
         );
 
-        $this->compiler->compile($test, TestCase::class);
+        $this->compiler->compile($classDefinition);
     }
 
-    public function testCreateClassName(): void
-    {
-        $test = (new Test(
-            new Configuration('chrome', 'http://example.com'),
-            []
-        ))->withPath('test.yml');
+    private function createClassDefinitionWithBaseClass(
+        TestInterface $test,
+        string $baseClass
+    ): ClassDefinitionInterface {
+        $classDefinition = ClassDefinitionFactory::createFactory()->createClassDefinition($test);
+        if ($classDefinition instanceof ClassDefinition) {
+            $classDefinition->setBaseClass(new ClassDependency($baseClass));
+        }
 
-        $className = $this->compiler->createClassName($test);
-
-        $this->assertEquals('GeneratedD894ed67e2008e18887400a33f7d82b3Test', $className);
-    }
-
-    private function setGeneratedClassName(Compiler $compiler, TestInterface $test, string $className): void
-    {
-        $classDefinitionFactory = ObjectReflector::getProperty($compiler, 'classDefinitionFactory');
-        $classNameFactory = ObjectReflector::getProperty($classDefinitionFactory, 'classNameFactory');
-
-        $mockClassNameFactory = \Mockery::mock($classNameFactory);
-        $mockClassNameFactory
-            ->shouldReceive('create')
-            ->with($test)
-            ->andReturn($className);
-
-        ObjectReflector::setProperty(
-            $classDefinitionFactory,
-            ClassDefinitionFactory::class,
-            'classNameFactory',
-            $mockClassNameFactory
-        );
-
-        ObjectReflector::setProperty(
-            $compiler,
-            Compiler::class,
-            'classDefinitionFactory',
-            $classDefinitionFactory
-        );
+        return $classDefinition;
     }
 }

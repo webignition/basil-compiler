@@ -1,6 +1,6 @@
 use PHPUnit\Framework\TestCase;
 
-class GeneratedNoStepsTest extends TestCase
+class GeneratedB09e22d26fa517085105e76c53d0f0ebTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {

@@ -2,7 +2,7 @@ use PHPUnit\Framework\TestCase;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
-class GeneratedHasActionHasAssertionTest extends TestCase
+class Generated7aa1e217d2074ae763e26485d89f02efTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
